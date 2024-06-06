@@ -52,7 +52,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
-        .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.2")),
+        .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.8")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.1.0")),
     ],
     targets: targets
