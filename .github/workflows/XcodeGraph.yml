@@ -29,7 +29,6 @@ jobs:
         os:
           - ubuntu-22.04
           - macOS-13
-          - windows-2022
         swift-version:
           - '5.9'
         swift-compat-ver:
