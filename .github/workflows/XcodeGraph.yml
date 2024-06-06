@@ -75,6 +75,8 @@ jobs:
         with:
           swift-version: ${{ matrix.swift-version }}
       - uses: jdx/mise-action@v2
+      - name: Install dependencies
+        run: tuist install
       - name: Build
         run: tuist build
   lint:
