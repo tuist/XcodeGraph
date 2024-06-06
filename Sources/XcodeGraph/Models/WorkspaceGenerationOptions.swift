@@ -1,4 +1,4 @@
-import TSCUtility
+import Foundation
 
 extension Workspace {
     /// Contains options related to the workspace generation.

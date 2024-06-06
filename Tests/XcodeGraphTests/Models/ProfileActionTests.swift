@@ -1,16 +1,16 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class ProfileActionTests: TuistUnitTestCase {
+final class ProfileActionTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = ProfileAction(
             configurationName: "name",
             executable: .init(
-                projectPath: "/path/to/project",
+                projectPath: try! AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
             arguments: .init(

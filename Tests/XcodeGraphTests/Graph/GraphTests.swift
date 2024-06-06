@@ -1,13 +1,13 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class GraphTests: TuistUnitTestCase {
+final class GraphTests: XCTestCase {
     func test_codable() {
         // Given
-        let subject = Graph.test(name: "name", path: "/path/to")
+        let subject = Graph.test(name: "name", path: try! AbsolutePath(validating: "/path/to"))
 
         // Then
         XCTAssertCodable(subject)

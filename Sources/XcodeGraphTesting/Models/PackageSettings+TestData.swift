@@ -1,6 +1,5 @@
 import Foundation
-import TSCBasic
-import TSCUtility
+import Path
 @testable import XcodeGraph
 
 extension PackageSettings {

@@ -141,10 +141,11 @@ public enum Module: String, CaseIterable {
     }
 
     public var dependencies: [TargetDependency] {
-        var dependencies: [TargetDependency] = switch self {
+        let dependencies: [TargetDependency] = switch self {
         case .xcodeGraph:
             [
                 .external(name: "AnyCodable"),
+                .external(name: "Path")
             ]
         }
         return dependencies
@@ -248,7 +249,6 @@ public enum Module: String, CaseIterable {
                     ),
                     .release(
                         name: "Release",
-
                         settings: [:],
                         xcconfig: nil
                     ),

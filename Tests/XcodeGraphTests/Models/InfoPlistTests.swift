@@ -1,14 +1,13 @@
 import Foundation
-import TSCBasic
+import Path
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
 final class InfoPlistTests: XCTestCase {
     func test_codable_file() {
         // Given
-        let subject = InfoPlist.file(path: "/path/to/file")
+        let subject = InfoPlist.file(path: try! AbsolutePath(validating: "/path/to/file"))
 
         // Then
         XCTAssertCodable(subject)

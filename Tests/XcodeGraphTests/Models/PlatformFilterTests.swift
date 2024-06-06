@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class PlatformFilterTests: TuistUnitTestCase {
+final class PlatformFilterTests: XCTestCase {
     func test_xcodeprojValue() {
         XCTAssertEqual(PlatformFilter.catalyst.xcodeprojValue, "maccatalyst")
         XCTAssertEqual(PlatformFilter.ios.xcodeprojValue, "ios")

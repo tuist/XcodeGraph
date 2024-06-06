@@ -1,6 +1,5 @@
 import Foundation
-import TSCBasic
-import TuistSupport
+import Path
 @testable import XcodeGraph
 
 extension ProfileAction {
@@ -8,7 +7,7 @@ extension ProfileAction {
         configurationName: String = "Beta Release",
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
-        executable: TargetReference? = TargetReference(projectPath: "/Project", name: "App"),
+        executable: TargetReference? = TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App"),
         arguments: Arguments? = Arguments.test()
     ) -> ProfileAction {
         ProfileAction(

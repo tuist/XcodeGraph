@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class WorkspaceGenerationOptionsTests: TuistUnitTestCase {
+final class WorkspaceGenerationOptionsTests: XCTestCase {
     func test_codable_whenDefault() {
         // Given
         let subject = Workspace.GenerationOptions.test()

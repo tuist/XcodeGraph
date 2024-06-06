@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class GraphDependencyTests: TuistUnitTestCase {
+final class GraphDependencyTests: XCTestCase {
     func test_codable_target() {
         // Given
         let subject = GraphDependency.testTarget()

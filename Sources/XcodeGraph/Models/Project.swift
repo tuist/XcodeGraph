@@ -1,6 +1,5 @@
 import Foundation
-import TSCBasic
-import TSCUtility
+import Path
 
 public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebugStringConvertible, Codable {
     // MARK: - Attributes

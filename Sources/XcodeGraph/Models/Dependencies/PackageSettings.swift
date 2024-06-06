@@ -1,5 +1,4 @@
 import Foundation
-import TSCUtility
 
 /// Contains the description of custom SPM settings
 public struct PackageSettings: Equatable, Codable {

@@ -1,16 +1,16 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class CoreDataModelTests: TuistUnitTestCase {
+final class CoreDataModelTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = CoreDataModel(
-            path: "/path/to/model",
+            path: try! AbsolutePath(validating: "/path/to/model"),
             versions: [
-                "/path/to/version",
+                try! AbsolutePath(validating: "/path/to/version"),
             ],
             currentVersion: "1.1.1"
         )

@@ -1,14 +1,14 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class SourceFileTests: TuistUnitTestCase {
+final class SourceFileTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = SourceFile(
-            path: "/path/to/file",
+            path: try! AbsolutePath(validating: "/path/to/file"),
             compilerFlags: "flag",
             contentHash: "hash"
         )

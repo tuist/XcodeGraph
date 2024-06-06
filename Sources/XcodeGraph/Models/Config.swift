@@ -1,6 +1,5 @@
 import Foundation
-import TSCBasic
-import TSCUtility
+import Path
 
 /// This model allows to configure Tuist.
 public struct Config: Equatable, Hashable {

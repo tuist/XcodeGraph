@@ -1,11 +1,8 @@
 import Foundation
-import TuistSupport
 
-struct UnsupportedPlatformError: FatalError, CustomStringConvertible, Equatable {
-    let type: TuistSupport.ErrorType = .abort
-
+public struct UnsupportedPlatformError: Error, CustomStringConvertible, Equatable {
     let input: String
-    var description: String {
+    public var description: String {
         "Specified platform \(input) does not map to any of these supported platforms: \(Platform.allCases.map(\.caseValue).joined(separator: ", ")) "
     }
 }

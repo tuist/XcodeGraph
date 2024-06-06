@@ -16,7 +16,7 @@ func releaseSettings() -> SettingsDictionary {
 func schemes() -> [Scheme] {
     var schemes: [Scheme] = [
         .scheme(
-            name: "Tuist-Workspace",
+            name: "XcodeGraph-Workspace",
             buildAction: .buildAction(targets: Module.allCases.flatMap(\.targets).map(\.name).sorted().map { .target($0) }),
             testAction: .targets(
                 Module.allCases.flatMap(\.testTargets).map { .testableTarget(target: .target($0.name)) }

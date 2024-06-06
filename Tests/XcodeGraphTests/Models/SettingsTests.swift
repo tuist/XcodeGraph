@@ -1,6 +1,5 @@
 import Foundation
-import TSCBasic
-import TuistSupportTesting
+import Path
 import XCTest
 @testable import XcodeGraph
 

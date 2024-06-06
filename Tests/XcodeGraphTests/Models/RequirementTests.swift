@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class RequirementTests: TuistUnitTestCase {
+final class RequirementTests: XCTestCase {
     func test_codable_range() {
         // Given
         let subject = Requirement.range(from: "1.0.0", to: "2.0.0")

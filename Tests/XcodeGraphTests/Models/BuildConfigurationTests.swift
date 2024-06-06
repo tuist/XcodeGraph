@@ -1,11 +1,9 @@
 import Foundation
-import TuistCore
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class BuildConfigurationTests: TuistUnitTestCase {
+final class BuildConfigurationTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = BuildConfiguration(
@@ -23,14 +21,6 @@ final class BuildConfigurationTests: TuistUnitTestCase {
 
     func test_name_returnsTheRightValue_whenRelease() {
         XCTAssertEqual(BuildConfiguration.release.name, "Release")
-    }
-
-    func test_xcodeValue_returnsTheRightValue_whenDebug() {
-        XCTAssertEqual(BuildConfiguration.debug.xcodeValue, "Debug")
-    }
-
-    func test_xcodeValue_returnsTheRightValue_whenRelease() {
-        XCTAssertEqual(BuildConfiguration.release.xcodeValue, "Release")
     }
 
     func test_hashValue() {

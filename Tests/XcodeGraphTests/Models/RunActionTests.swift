@@ -1,21 +1,21 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class RunActionTests: TuistUnitTestCase {
+final class RunActionTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = RunAction(
             configurationName: "name",
             attachDebugger: true,
-            customLLDBInitFile: "/path/to/project",
+            customLLDBInitFile: try! AbsolutePath(validating: "/path/to/project"),
             executable: .init(
-                projectPath: "/path/to/project",
+                projectPath: try! AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
-            filePath: "/path/to/file",
+            filePath: try! AbsolutePath(validating: "/path/to/file"),
             arguments: .init(
                 environmentVariables: [
                     "key": EnvironmentVariable(value: "value", isEnabled: true),

@@ -1,11 +1,10 @@
 import Foundation
-import TSCBasic
-import TuistSupportTesting
+import Path
 @testable import XcodeGraph
 
 extension Cloud {
     public static func test(
-        url: URL = URL.test(),
+        url: URL = URL(string: "https://cloud.tuist.io")!,
         projectId: String = "123",
         options: [Cloud.Option] = []
     ) -> Cloud {

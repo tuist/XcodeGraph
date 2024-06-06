@@ -1,5 +1,5 @@
 import Foundation
-import TSCBasic
+import Path
 
 // swiftlint:disable:next type_body_length
 public struct Target: Equatable, Hashable, Comparable, Codable {
@@ -83,7 +83,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable {
         self.product = product
         self.destinations = destinations
         self.bundleId = bundleId
-        self.productName = productName ?? name.sanitizedModuleName
+        self.productName = productName ?? Target.sanitizedProductNameFrom(targetName: name)
         self.deploymentTargets = deploymentTargets
         self.infoPlist = infoPlist
         self.entitlements = entitlements
@@ -106,6 +106,14 @@ public struct Target: Equatable, Hashable, Comparable, Codable {
         self.mergedBinaryType = mergedBinaryType
         self.mergeable = mergeable
         self.onDemandResourcesTags = onDemandResourcesTags
+    }
+    
+    /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
+    /// - Parameter targetName: The target name.
+    /// - Returns: The sanitized produdct name.
+    public static func sanitizedProductNameFrom(targetName: String) -> String {
+        targetName.replacingOccurrences(of: "-", with: "_")
+            .replacingOccurrences(of: "/", with: "_")
     }
 
     /// Target can be included in the link phase of other targets

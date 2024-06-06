@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class TestActionTests: TuistUnitTestCase {
+final class TestActionTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = TestAction.test()

@@ -1,7 +1,6 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
 final class CompatibleXcodeVersionsTests: XCTestCase {

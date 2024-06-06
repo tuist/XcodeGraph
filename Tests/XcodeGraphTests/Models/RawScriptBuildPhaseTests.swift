@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class RawScriptBuildPhaseTests: TuistUnitTestCase {
+final class RawScriptBuildPhaseTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = RawScriptBuildPhase(

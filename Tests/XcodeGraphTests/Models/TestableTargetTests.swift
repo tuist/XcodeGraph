@@ -1,15 +1,15 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class TestableTargetTests: TuistUnitTestCase {
+final class TestableTargetTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = TestableTarget(
             target: .init(
-                projectPath: "/path/to/project",
+                projectPath: try! AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
             skipped: true,

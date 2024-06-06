@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class SDKSourceTests: TuistUnitTestCase {
+final class SDKSourceTests: XCTestCase {
     func test_codable_developer() {
         // Given
         let subject = SDKSource.developer

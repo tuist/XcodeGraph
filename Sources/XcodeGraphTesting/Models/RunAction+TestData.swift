@@ -1,6 +1,5 @@
 import Foundation
-import TSCBasic
-import TuistSupport
+import Path
 @testable import XcodeGraph
 
 extension RunAction {
@@ -10,7 +9,7 @@ extension RunAction {
         customLLDBInitFile: AbsolutePath? = nil,
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
-        executable: TargetReference? = TargetReference(projectPath: "/Project", name: "App"),
+        executable: TargetReference? = TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App"),
         filePath: AbsolutePath? = nil,
         arguments: Arguments? = Arguments.test(),
         options: RunActionOptions = .init(),

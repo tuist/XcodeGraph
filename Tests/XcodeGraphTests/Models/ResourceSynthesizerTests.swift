@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class ResourceSynthesizerTests: TuistUnitTestCase {
+final class ResourceSynthesizerTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = ResourceSynthesizer(

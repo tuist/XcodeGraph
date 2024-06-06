@@ -1,13 +1,13 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class PackageTests: TuistUnitTestCase {
+final class PackageTests: XCTestCase {
     func test_codable_local() {
         // Given
-        let subject = Package.local(path: "/path/to/package")
+        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/workspace"))
 
         // Then
         XCTAssertCodable(subject)
@@ -26,7 +26,7 @@ final class PackageTests: TuistUnitTestCase {
 
     func test_is_remote_local() {
         // Given
-        let subject = Package.local(path: "/path/to/package")
+        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/package"))
 
         // Then
         XCTAssertFalse(subject.isRemote)

@@ -1,12 +1,11 @@
 import Foundation
-import TSCBasic
-import TuistSupport
+import Path
 @testable import XcodeGraph
 
 extension FrameworkMetadata {
     public static func test(
-        path: AbsolutePath = "/Frameworks/TestFramework.xframework",
-        binaryPath: AbsolutePath = "/Frameworks/TestFramework.xframework/TestFramework",
+        path: AbsolutePath = try! AbsolutePath(validating: "/Frameworks/TestFramework.xframework"),
+        binaryPath: AbsolutePath = try! AbsolutePath(validating: "/Frameworks/TestFramework.xframework/TestFramework"),
         dsymPath: AbsolutePath? = nil,
         bcsymbolmapPaths: [AbsolutePath] = [],
         linking: BinaryLinking = .dynamic,

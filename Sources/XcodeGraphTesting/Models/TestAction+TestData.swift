@@ -1,11 +1,10 @@
 import Foundation
-import TSCBasic
-import TuistSupport
+import Path
 @testable import XcodeGraph
 
 extension TestAction {
     public static func test(
-        targets: [TestableTarget] = [TestableTarget(target: TargetReference(projectPath: "/Project", name: "AppTests"))],
+        targets: [TestableTarget] = [TestableTarget(target: TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "AppTests"))],
         arguments: Arguments? = Arguments.test(),
         configurationName: String = BuildConfiguration.debug.name,
         attachDebugger: Bool = true,

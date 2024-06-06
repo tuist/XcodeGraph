@@ -1,5 +1,4 @@
 import Foundation
-import TuistSupportTesting
 import XcodeGraph
 
 extension IDETemplateMacros {

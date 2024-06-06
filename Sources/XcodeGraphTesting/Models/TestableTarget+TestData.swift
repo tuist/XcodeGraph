@@ -1,10 +1,9 @@
-import TSCBasic
-import TuistSupport
+import Path
 import XcodeGraph
 
 extension TestableTarget {
     public static func test(
-        target: TargetReference = TargetReference(projectPath: "/Project", name: "App"),
+        target: TargetReference = TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App"),
         skipped: Bool = false,
         parallelizable: Bool = false,
         randomExecutionOrdering: Bool = false,

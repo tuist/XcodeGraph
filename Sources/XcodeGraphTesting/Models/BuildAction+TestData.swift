@@ -1,11 +1,10 @@
 import Foundation
-import TSCBasic
-import TuistSupport
+import Path
 @testable import XcodeGraph
 
 extension BuildAction {
     public static func test(
-        targets: [TargetReference] = [TargetReference(projectPath: "/Project", name: "App")],
+        targets: [TargetReference] = [TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App")],
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = []
     ) -> BuildAction {

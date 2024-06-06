@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class BuildRuleCompilerSpecTests: TuistUnitTestCase {
+final class BuildRuleCompilerSpecTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = BuildRule.CompilerSpec.customScript

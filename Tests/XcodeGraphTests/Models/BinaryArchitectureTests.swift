@@ -1,12 +1,9 @@
 import Foundation
-import TSCBasic
-import TuistSupport
+import Path
 import XcodeGraph
 import XCTest
 
-@testable import TuistSupportTesting
-
-final class BinaryArchitectureTests: TuistTestCase {
+final class BinaryArchitectureTests: XCTestCase {
     func test_rawValue() {
         XCTAssertEqual(BinaryArchitecture.x8664.rawValue, "x86_64")
         XCTAssertEqual(BinaryArchitecture.i386.rawValue, "i386")

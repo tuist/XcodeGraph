@@ -1,5 +1,4 @@
-import TSCBasic
-import TSCUtility
+import Path
 
 extension Config {
     public struct GenerationOptions: Codable, Hashable {

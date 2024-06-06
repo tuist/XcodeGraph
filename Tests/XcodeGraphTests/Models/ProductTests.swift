@@ -1,5 +1,4 @@
 import Foundation
-import XcodeProj
 import XCTest
 @testable import XcodeGraph
 
@@ -18,18 +17,6 @@ final class ProductTests: XCTestCase {
 
         // Then
         XCTAssertCodable(subject)
-    }
-
-    func test_xcodeValue() {
-        XCTAssertEqual(Product.app.xcodeValue, PBXProductType.application)
-        XCTAssertEqual(Product.staticLibrary.xcodeValue, PBXProductType.staticLibrary)
-        XCTAssertEqual(Product.dynamicLibrary.xcodeValue, PBXProductType.dynamicLibrary)
-        XCTAssertEqual(Product.framework.xcodeValue, PBXProductType.framework)
-        XCTAssertEqual(Product.unitTests.xcodeValue, PBXProductType.unitTestBundle)
-        XCTAssertEqual(Product.uiTests.xcodeValue, PBXProductType.uiTestBundle)
-        XCTAssertEqual(Product.appExtension.xcodeValue, PBXProductType.appExtension)
-        XCTAssertEqual(Product.stickerPackExtension.xcodeValue, PBXProductType.stickerPack)
-        XCTAssertEqual(Product.appClip.xcodeValue, PBXProductType.onDemandInstallCapableApplication)
     }
 
     func test_description() {

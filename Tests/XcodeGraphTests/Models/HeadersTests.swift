@@ -1,21 +1,21 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class HeadersTests: TuistUnitTestCase {
+final class HeadersTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = Headers(
             public: [
-                "/path/to/public/header",
+                try! AbsolutePath(validating: "/path/to/public/header"),
             ],
             private: [
-                "/path/to/private/header",
+                try! AbsolutePath(validating: "/path/to/private/header"),
             ],
             project: [
-                "/path/to/project/header",
+                try! AbsolutePath(validating: "/path/to/project/header"),
             ]
         )
 

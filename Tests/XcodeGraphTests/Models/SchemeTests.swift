@@ -1,10 +1,9 @@
 import Foundation
 import XCTest
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class SchemeTests: TuistUnitTestCase {
+final class SchemeTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = Scheme.test(name: "name", shared: true)

@@ -1,13 +1,13 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class CopyFileElementTests: TuistUnitTestCase {
+final class CopyFileElementTests: XCTestCase {
     func test_codable_file() {
         // Given
-        let subject = CopyFileElement.file(path: "/path/to/file", condition: .when([.macos]))
+        let subject = CopyFileElement.file(path: try! AbsolutePath(validating: "/path/to/file"), condition: .when([.macos]))
 
         // Then
         XCTAssertCodable(subject)
@@ -15,7 +15,7 @@ final class CopyFileElementTests: TuistUnitTestCase {
 
     func test_codable_folderReference() {
         // Given
-        let subject = CopyFileElement.folderReference(path: "/folder/reference", condition: .when([.macos]))
+        let subject = CopyFileElement.folderReference(path: try! AbsolutePath(validating: "/folder/reference"), condition: .when([.macos]))
 
         // Then
         XCTAssertCodable(subject)

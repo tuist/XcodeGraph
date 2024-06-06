@@ -1,10 +1,10 @@
 import Foundation
 import XCTest
+import Path
 
-@testable import TuistSupportTesting
 @testable import XcodeGraph
 
-final class CopyFilesActionTests: TuistUnitTestCase {
+final class CopyFilesActionTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = CopyFilesAction(
@@ -12,7 +12,7 @@ final class CopyFilesActionTests: TuistUnitTestCase {
             destination: .frameworks,
             subpath: "subpath",
             files: [
-                .file(path: "/path/to/file"),
+                .file(path: try! AbsolutePath(validating: "/path/to/file")),
             ]
         )
 

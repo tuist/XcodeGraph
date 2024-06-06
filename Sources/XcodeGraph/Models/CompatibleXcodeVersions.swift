@@ -1,5 +1,4 @@
 import Foundation
-import struct ProjectDescription.Version
 
 /// Enum that represents all the Xcode versions that a project or set of projects is compatible with.
 public enum CompatibleXcodeVersions: Equatable, Hashable, ExpressibleByArrayLiteral, ExpressibleByStringInterpolation,
