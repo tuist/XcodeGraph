@@ -7,11 +7,7 @@ var targets: [Target] = [
         name: "XcodeGraph",
         dependencies: [
             "AnyCodable",
-            "Mockable",
             "Path",
-        ],
-        swiftSettings: [
-            .define("MOCKING", .when(configuration: .debug)),
         ]
     ),
     .target(
@@ -23,18 +19,6 @@ var targets: [Target] = [
         linkerSettings: [.linkedFramework("XCTest")]
     ),
 ]
-
-#if TUIST
-    import struct ProjectDescription.PackageSettings
-
-    let packageSettings = PackageSettings(
-        productTypes: [
-            "Mockable": .staticFramework,
-            "MockableTest": .staticFramework,
-        ]
-    )
-
-#endif
 
 let package = Package(
     name: "XcodeGraph",
@@ -52,7 +36,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
-        .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.8")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.2.0")),
     ],
     targets: targets
