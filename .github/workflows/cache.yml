@@ -27,7 +27,7 @@ jobs:
         os:
           - macOS-13
         swift-version:
-          - '5.10'
+          - '5.9'
         swift-compat-ver:
           - '5'
     runs-on: ${{ matrix.os }}
