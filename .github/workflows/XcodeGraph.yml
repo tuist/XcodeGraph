@@ -19,6 +19,7 @@ concurrency:
 
 env:
   MISE_EXPERIMENTAL: 1
+  TUIST_CONFIG_CLOUD_TOKEN: ${{ secrets.TUIST_CONFIG_CLOUD_TOKEN }}
 
 jobs:
   spm_build:
@@ -30,7 +31,7 @@ jobs:
           - macOS-13
           - windows-2022
         swift-version:
-          - '5.9'
+          - '5.10'
         swift-compat-ver:
           - '5'
     runs-on: ${{ matrix.os }}
@@ -64,7 +65,7 @@ jobs:
         os:
           - macOS-13
         swift-version:
-          - '5.9'
+          - '5.10'
         swift-compat-ver:
           - '5'
     runs-on: ${{ matrix.os }}
@@ -83,7 +84,7 @@ jobs:
         os:
           - macOS-13
         swift-version:
-          - '5.9'
+          - '5.10'
         swift-compat-ver:
           - '5'
     runs-on: ${{ matrix.os }}

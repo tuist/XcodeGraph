@@ -1,0 +1,41 @@
+name: Cache
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.swift'
+      - '.github/workflows/*.yml'
+  pull_request:
+    paths:
+      - '**/*.swift'
+      - '.github/workflows/*.yml'
+
+concurrency:
+  group: Cache-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MISE_EXPERIMENTAL: 1
+  TUIST_CONFIG_CLOUD_TOKEN: ${{ secrets.TUIST_CONFIG_CLOUD_TOKEN }}
+  
+jobs:
+  warm:
+    name: Warm
+    strategy:
+      matrix:
+        os:
+          - macOS-13
+        swift-version:
+          - '5.10'
+        swift-compat-ver:
+          - '5'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: ${{ matrix.swift-version }}
+      - uses: jdx/mise-action@v2
+      - name: Build
+        run: tuist cache warm
