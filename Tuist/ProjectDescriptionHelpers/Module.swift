@@ -81,7 +81,7 @@ public enum Module: String, CaseIterable {
             target(
                 name: targetName,
                 product: product,
-                dependencies: dependencies + (isStaticProduct ? [.external(name: "Mockable")] : []),
+                dependencies: dependencies,
                 isTestingTarget: false
             ),
         ]
@@ -158,7 +158,7 @@ public enum Module: String, CaseIterable {
             [
             ]
         }
-        dependencies = dependencies + [.target(name: targetName), .external(name: "MockableTest")]
+        dependencies = dependencies + [.target(name: targetName)]
         if let testingTargetName {
             dependencies.append(.target(name: testingTargetName))
         }
