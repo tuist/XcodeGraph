@@ -40,4 +40,4 @@ jobs:
       - name: Install dependencies
         run: tuist install
       - name: Build
-        run: tuist cache warm
+        run: tuist cache
