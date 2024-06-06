@@ -9,6 +9,7 @@ extension RunAction {
         customLLDBInitFile: AbsolutePath? = nil,
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
+        // swiftlint:disable:next force_try
         executable: TargetReference? = TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App"),
         filePath: AbsolutePath? = nil,
         arguments: Arguments? = Arguments.test(),

@@ -86,6 +86,7 @@ public enum Module: String, CaseIterable {
             ),
         ]
     }
+
     public var acceptanceTestsTargetName: String? {
         switch self {
         default:
@@ -145,7 +146,7 @@ public enum Module: String, CaseIterable {
         case .xcodeGraph:
             [
                 .external(name: "AnyCodable"),
-                .external(name: "Path")
+                .external(name: "Path"),
             ]
         }
         return dependencies

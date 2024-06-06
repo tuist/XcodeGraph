@@ -107,7 +107,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable {
         self.mergeable = mergeable
         self.onDemandResourcesTags = onDemandResourcesTags
     }
-    
+
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
     /// - Parameter targetName: The target name.
     /// - Returns: The sanitized produdct name.

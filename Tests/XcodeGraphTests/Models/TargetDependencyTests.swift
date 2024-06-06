@@ -1,6 +1,6 @@
 import Foundation
-import XCTest
 import Path
+import XCTest
 
 @testable import XcodeGraph
 
@@ -41,7 +41,12 @@ final class TargetDependencyTests: XCTestCase {
 
         let subjects: [TargetDependency] = [
             .framework(path: try! AbsolutePath(validating: "/"), status: .required, condition: expected),
-            .library(path: try! AbsolutePath(validating: "/"), publicHeaders: try! AbsolutePath(validating: "/"), swiftModuleMap: try! AbsolutePath(validating: "/"), condition: expected),
+            .library(
+                path: try! AbsolutePath(validating: "/"),
+                publicHeaders: try! AbsolutePath(validating: "/"),
+                swiftModuleMap: try! AbsolutePath(validating: "/"),
+                condition: expected
+            ),
             .sdk(name: "", status: .required, condition: expected),
             .package(product: "", type: .plugin, condition: expected),
             .target(name: "", condition: expected),

@@ -12,7 +12,7 @@ extension XCTestCase {
 
         XCTAssertEqual(subject, decoded, "The subject is not equal to it's encoded & decoded version")
     }
-    
+
     func XCTTry<T>(_ closure: @autoclosure @escaping () throws -> T, file: StaticString = #file, line: UInt = #line) -> T {
         var value: T!
         do {
@@ -22,7 +22,7 @@ extension XCTestCase {
         }
         return value
     }
-    
+
     func XCTAssertEqualDictionaries<T: Hashable>(
         _ first: [T: Any],
         _ second: [T: Any],

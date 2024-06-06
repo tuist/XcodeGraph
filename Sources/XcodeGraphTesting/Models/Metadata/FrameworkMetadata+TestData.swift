@@ -4,7 +4,9 @@ import Path
 
 extension FrameworkMetadata {
     public static func test(
+        // swiftlint:disable:next force_try
         path: AbsolutePath = try! AbsolutePath(validating: "/Frameworks/TestFramework.xframework"),
+        // swiftlint:disable:next force_try
         binaryPath: AbsolutePath = try! AbsolutePath(validating: "/Frameworks/TestFramework.xframework/TestFramework"),
         dsymPath: AbsolutePath? = nil,
         bcsymbolmapPaths: [AbsolutePath] = [],

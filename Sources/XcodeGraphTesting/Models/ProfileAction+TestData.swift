@@ -7,6 +7,7 @@ extension ProfileAction {
         configurationName: String = "Beta Release",
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
+        // swiftlint:disable:next force_try
         executable: TargetReference? = TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App"),
         arguments: Arguments? = Arguments.test()
     ) -> ProfileAction {

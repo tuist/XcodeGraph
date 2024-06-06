@@ -8,7 +8,7 @@ var targets: [Target] = [
         dependencies: [
             "AnyCodable",
             "Mockable",
-            "Path"
+            "Path",
         ],
         swiftSettings: [
             .define("MOCKING", .when(configuration: .debug)),
@@ -21,7 +21,7 @@ var targets: [Target] = [
             "AnyCodable",
         ],
         linkerSettings: [.linkedFramework("XCTest")]
-    )
+    ),
 ]
 
 #if TUIST
@@ -47,13 +47,13 @@ let package = Package(
         .library(
             name: "XcodeGraphTesting",
             targets: ["XcodeGraphTesting"]
-        )
+        ),
 
     ],
     dependencies: [
-        .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7") ),
+        .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.2")),
-        .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.1.0"))
+        .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.1.0")),
     ],
     targets: targets
 )

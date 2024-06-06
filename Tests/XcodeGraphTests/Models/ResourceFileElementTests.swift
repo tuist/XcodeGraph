@@ -1,6 +1,6 @@
 import Foundation
-import XCTest
 import Path
+import XCTest
 
 @testable import XcodeGraph
 
