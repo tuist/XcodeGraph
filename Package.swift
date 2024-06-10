@@ -19,12 +19,7 @@ let package = Package(
         .library(
             name: "XcodeGraph",
             targets: ["XcodeGraph"]
-        ),
-        .library(
-            name: "XcodeGraphTesting",
-            targets: ["XcodeGraphTesting"]
-        ),
-
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
