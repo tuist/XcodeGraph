@@ -9,7 +9,7 @@ var targets: [Target] = [
             "AnyCodable",
             "Path",
         ]
-    )
+    ),
 ]
 
 let package = Package(
@@ -19,7 +19,7 @@ let package = Package(
         .library(
             name: "XcodeGraph",
             targets: ["XcodeGraph"]
-        )
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
