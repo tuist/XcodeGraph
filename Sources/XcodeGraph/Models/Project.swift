@@ -198,8 +198,8 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         public static func empty(
             path: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
             sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
+            // swiftlint:disable:next force_try
             xcodeProjPath: AbsolutePath = try! AbsolutePath(validating: "/test/text.xcodeproj"),
-            // swiftlint:disable:this force_try
             name: String = "Project",
             organizationName: String? = nil,
             defaultKnownRegions: [String]? = nil,
