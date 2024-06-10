@@ -34,6 +34,11 @@ public struct Version: Hashable, Codable, Sendable {
         self.prereleaseIdentifiers = prereleaseIdentifiers
         self.buildMetadataIdentifiers = buildMetadataIdentifiers
     }
+
+    /// Returns the value that Xcode projects use internally.
+    public var xcodeStringValue: String {
+        "\(major)\(minor)\(patch)"
+    }
 }
 
 extension Version: Comparable {
