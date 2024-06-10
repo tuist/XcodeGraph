@@ -149,3 +149,135 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         return buildConfiguration?.name ?? BuildConfiguration.debug.name
     }
 }
+
+#if DEBUG
+    extension Project {
+        public static func test(
+            path: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
+            sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
+            // swiftlint:disable:next force_try
+            xcodeProjPath: AbsolutePath = try! AbsolutePath(validating: "/Project/Project.xcodeproj"),
+            name: String = "Project",
+            organizationName: String? = nil,
+            defaultKnownRegions: [String]? = nil,
+            developmentRegion: String? = nil,
+            options: Options = .test(automaticSchemesOptions: .disabled),
+            settings: Settings = Settings.test(),
+            filesGroup: ProjectGroup = .group(name: "Project"),
+            targets: [Target] = [Target.test()],
+            packages: [Package] = [],
+            schemes: [Scheme] = [],
+            ideTemplateMacros: IDETemplateMacros? = nil,
+            additionalFiles: [FileElement] = [],
+            resourceSynthesizers: [ResourceSynthesizer] = [],
+            lastUpgradeCheck: Version? = nil,
+            isExternal: Bool = false
+        ) -> Project {
+            Project(
+                path: path,
+                sourceRootPath: sourceRootPath,
+                xcodeProjPath: xcodeProjPath,
+                name: name,
+                organizationName: organizationName,
+                defaultKnownRegions: defaultKnownRegions,
+                developmentRegion: developmentRegion,
+                options: options,
+                settings: settings,
+                filesGroup: filesGroup,
+                targets: targets,
+                packages: packages,
+                schemes: schemes,
+                ideTemplateMacros: ideTemplateMacros,
+                additionalFiles: additionalFiles,
+                resourceSynthesizers: resourceSynthesizers,
+                lastUpgradeCheck: lastUpgradeCheck,
+                isExternal: isExternal
+            )
+        }
+
+        public static func empty(
+            path: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
+            sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
+            xcodeProjPath: AbsolutePath = try! AbsolutePath(validating: "/test/text.xcodeproj"),
+            // swiftlint:disable:this force_try
+            name: String = "Project",
+            organizationName: String? = nil,
+            defaultKnownRegions: [String]? = nil,
+            developmentRegion: String? = nil,
+            options: Options = .test(automaticSchemesOptions: .disabled),
+            settings: Settings = .default,
+            filesGroup: ProjectGroup = .group(name: "Project"),
+            targets: [Target] = [],
+            packages: [Package] = [],
+            schemes: [Scheme] = [],
+            ideTemplateMacros: IDETemplateMacros? = nil,
+            additionalFiles: [FileElement] = [],
+            resourceSynthesizers: [ResourceSynthesizer] = [],
+            lastUpgradeCheck: Version? = nil,
+            isExternal: Bool = false
+        ) -> Project {
+            Project(
+                path: path,
+                sourceRootPath: sourceRootPath,
+                xcodeProjPath: xcodeProjPath,
+                name: name,
+                organizationName: organizationName,
+                defaultKnownRegions: defaultKnownRegions,
+                developmentRegion: developmentRegion,
+                options: options,
+                settings: settings,
+                filesGroup: filesGroup,
+                targets: targets,
+                packages: packages,
+                schemes: schemes,
+                ideTemplateMacros: ideTemplateMacros,
+                additionalFiles: additionalFiles,
+                resourceSynthesizers: resourceSynthesizers,
+                lastUpgradeCheck: lastUpgradeCheck,
+                isExternal: isExternal
+            )
+        }
+    }
+
+    extension Project.Options {
+        public static func test(
+            automaticSchemesOptions: AutomaticSchemesOptions = .enabled(
+                targetSchemesGrouping: .byNameSuffix(
+                    build: ["Implementation", "Interface", "Mocks", "Testing"],
+                    test: ["Tests", "IntegrationTests", "UITests", "SnapshotTests"],
+                    run: ["App", "Demo"]
+                ),
+                codeCoverageEnabled: false,
+                testingOptions: []
+            ),
+            disableBundleAccessors: Bool = false,
+            disableShowEnvironmentVarsInScriptPhases: Bool = false,
+            disableSynthesizedResourceAccessors: Bool = false,
+            textSettings: TextSettings = .init(usesTabs: nil, indentWidth: nil, tabWidth: nil, wrapsLines: nil)
+        ) -> Self {
+            .init(
+                automaticSchemesOptions: automaticSchemesOptions,
+                disableBundleAccessors: disableBundleAccessors,
+                disableShowEnvironmentVarsInScriptPhases: disableShowEnvironmentVarsInScriptPhases,
+                disableSynthesizedResourceAccessors: disableSynthesizedResourceAccessors,
+                textSettings: textSettings
+            )
+        }
+    }
+
+    extension Project.Options.TextSettings {
+        public static func test(
+            usesTabs: Bool? = true,
+            indentWidth: UInt? = 2,
+            tabWidth: UInt? = 2,
+            wrapsLines: Bool? = true
+        ) -> Self {
+            .init(
+                usesTabs: usesTabs,
+                indentWidth: indentWidth,
+                tabWidth: tabWidth,
+                wrapsLines: wrapsLines
+            )
+        }
+    }
+#endif

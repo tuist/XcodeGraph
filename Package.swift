@@ -9,15 +9,7 @@ var targets: [Target] = [
             "AnyCodable",
             "Path",
         ]
-    ),
-    .target(
-        name: "XcodeGraphTesting",
-        dependencies: [
-            "XcodeGraph",
-            "AnyCodable",
-        ],
-        linkerSettings: [.linkedFramework("XCTest")]
-    ),
+    )
 ]
 
 let package = Package(

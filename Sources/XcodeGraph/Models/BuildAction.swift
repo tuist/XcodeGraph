@@ -23,3 +23,16 @@ public struct BuildAction: Equatable, Codable {
         self.runPostActionsOnFailure = runPostActionsOnFailure
     }
 }
+
+#if DEBUG
+    extension BuildAction {
+        public static func test(
+            // swiftlint:disable:next force_try
+            targets: [TargetReference] = [TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App")],
+            preActions: [ExecutionAction] = [],
+            postActions: [ExecutionAction] = []
+        ) -> BuildAction {
+            BuildAction(targets: targets, preActions: preActions, postActions: postActions)
+        }
+    }
+#endif

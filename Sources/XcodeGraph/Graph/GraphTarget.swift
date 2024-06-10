@@ -31,3 +31,19 @@ public struct GraphTarget: Equatable, Hashable, Comparable, CustomDebugStringCon
         "Target '\(target.name)' at path '\(project.path)'"
     }
 }
+
+#if DEBUG
+    extension GraphTarget {
+        public static func test(
+            path: AbsolutePath = .root,
+            target: Target = .test(),
+            project: Project = .test()
+        ) -> GraphTarget {
+            GraphTarget(
+                path: path,
+                target: target,
+                project: project
+            )
+        }
+    }
+#endif

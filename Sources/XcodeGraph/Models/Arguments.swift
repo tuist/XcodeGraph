@@ -28,3 +28,17 @@ extension Arguments: Equatable {
             == rhs.launchArguments.sorted { $0.name == $1.name }
     }
 }
+
+#if DEBUG
+    extension Arguments {
+        public static func test(
+            environmentVariables: [String: EnvironmentVariable] = [:],
+            launchArguments: [LaunchArgument] = []
+        ) -> Arguments {
+            Arguments(
+                environmentVariables: environmentVariables,
+                launchArguments: launchArguments
+            )
+        }
+    }
+#endif
