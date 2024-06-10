@@ -36,3 +36,11 @@ public struct IDETemplateMacros: Codable, Hashable {
         return fileHeader
     }
 }
+
+#if DEBUG
+    extension IDETemplateMacros {
+        public static func test(fileHeader: String? = "Header template") -> IDETemplateMacros {
+            IDETemplateMacros(fileHeader: fileHeader)
+        }
+    }
+#endif

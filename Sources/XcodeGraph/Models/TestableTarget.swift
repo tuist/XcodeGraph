@@ -1,4 +1,5 @@
 import Foundation
+import Path
 
 /// Testable target describe target and tests information.
 public struct TestableTarget: Equatable, Hashable, Codable {
@@ -27,3 +28,24 @@ public struct TestableTarget: Equatable, Hashable, Codable {
         self.simulatedLocation = simulatedLocation
     }
 }
+
+#if DEBUG
+    extension TestableTarget {
+        public static func test(
+            // swiftlint:disable:next force_try
+            target: TargetReference = TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App"),
+            skipped: Bool = false,
+            parallelizable: Bool = false,
+            randomExecutionOrdering: Bool = false,
+            simulatedLocation: SimulatedLocation? = nil
+        ) -> TestableTarget {
+            TestableTarget(
+                target: target,
+                skipped: skipped,
+                parallelizable: parallelizable,
+                randomExecutionOrdering: randomExecutionOrdering,
+                simulatedLocation: simulatedLocation
+            )
+        }
+    }
+#endif

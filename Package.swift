@@ -10,14 +10,6 @@ var targets: [Target] = [
             "Path",
         ]
     ),
-    .target(
-        name: "XcodeGraphTesting",
-        dependencies: [
-            "XcodeGraph",
-            "AnyCodable",
-        ],
-        linkerSettings: [.linkedFramework("XCTest")]
-    ),
 ]
 
 let package = Package(
@@ -28,11 +20,6 @@ let package = Package(
             name: "XcodeGraph",
             targets: ["XcodeGraph"]
         ),
-        .library(
-            name: "XcodeGraphTesting",
-            targets: ["XcodeGraphTesting"]
-        ),
-
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),

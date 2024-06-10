@@ -21,3 +21,19 @@ public struct Headers: Equatable, Codable {
         self.project = project
     }
 }
+
+#if DEBUG
+    extension Headers {
+        public static func test(
+            public: [AbsolutePath] = [],
+            private: [AbsolutePath] = [],
+            project: [AbsolutePath] = []
+        ) -> Headers {
+            Headers(
+                public: `public`,
+                private: `private`,
+                project: project
+            )
+        }
+    }
+#endif

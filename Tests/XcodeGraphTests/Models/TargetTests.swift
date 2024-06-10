@@ -2,7 +2,6 @@ import Foundation
 import Path
 import XCTest
 @testable import XcodeGraph
-@testable import XcodeGraphTesting
 
 final class TargetTests: XCTestCase {
     func test_codable() {

@@ -18,8 +18,7 @@ public enum Module: String, CaseIterable {
             targets.append(target(
                 name: acceptanceTestsTargetName,
                 product: .unitTests,
-                dependencies: acceptanceTestDependencies,
-                isTestingTarget: false
+                dependencies: acceptanceTestDependencies
             ))
         }
 
@@ -34,8 +33,7 @@ public enum Module: String, CaseIterable {
                 target(
                     name: unitTestsTargetName,
                     product: .unitTests,
-                    dependencies: unitTestDependencies,
-                    isTestingTarget: false
+                    dependencies: unitTestDependencies
                 )
             )
         }
@@ -45,8 +43,7 @@ public enum Module: String, CaseIterable {
                 target(
                     name: integrationTestsTargetName,
                     product: .unitTests,
-                    dependencies: integrationTestsDependencies,
-                    isTestingTarget: false
+                    dependencies: integrationTestsDependencies
                 )
             )
         }
@@ -59,30 +56,15 @@ public enum Module: String, CaseIterable {
     }
 
     public var targets: [Target] {
-        var targets: [Target] = sourceTargets
-
-        if let testingTargetName {
-            targets.append(
-                target(
-                    name: testingTargetName,
-                    product: product,
-                    dependencies: testingDependencies,
-                    isTestingTarget: true
-                )
-            )
-        }
-
-        return targets + testTargets
+        return sourceTargets + testTargets
     }
 
     public var sourceTargets: [Target] {
-        let isStaticProduct = product == .staticLibrary || product == .staticFramework
         return [
             target(
                 name: targetName,
                 product: product,
-                dependencies: dependencies,
-                isTestingTarget: false
+                dependencies: dependencies
             ),
         ]
     }
@@ -91,13 +73,6 @@ public enum Module: String, CaseIterable {
         switch self {
         default:
             return nil
-        }
-    }
-
-    public var testingTargetName: String? {
-        switch self {
-        default:
-            return "\(rawValue)Testing"
         }
     }
 
@@ -159,9 +134,6 @@ public enum Module: String, CaseIterable {
             ]
         }
         dependencies = dependencies + [.target(name: targetName)]
-        if let testingTargetName {
-            dependencies.append(.target(name: testingTargetName))
-        }
         return dependencies
     }
 
@@ -180,17 +152,13 @@ public enum Module: String, CaseIterable {
             []
         }
         dependencies.append(.target(name: targetName))
-        if let testingTargetName {
-            dependencies.append(contentsOf: [.target(name: testingTargetName)])
-        }
         return dependencies
     }
 
     fileprivate func target(
         name: String,
         product: Product,
-        dependencies: [TargetDependency],
-        isTestingTarget: Bool
+        dependencies: [TargetDependency]
     ) -> Target {
         let rootFolder: String
         switch product {
@@ -201,10 +169,6 @@ public enum Module: String, CaseIterable {
         }
         var debugSettings: ProjectDescription.SettingsDictionary = ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"]
         var releaseSettings: ProjectDescription.SettingsDictionary = [:]
-        if isTestingTarget {
-            debugSettings["ENABLE_TESTING_SEARCH_PATHS"] = "YES"
-            releaseSettings["ENABLE_TESTING_SEARCH_PATHS"] = "YES"
-        }
 
         if let strictConcurrencySetting, product == .framework {
             debugSettings["SWIFT_STRICT_CONCURRENCY"] = .string(strictConcurrencySetting)

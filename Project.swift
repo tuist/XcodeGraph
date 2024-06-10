@@ -48,24 +48,6 @@ func schemes() -> [Scheme] {
                 )
             )
         ),
-        .scheme(
-            name: "TuistUnitTests",
-            buildAction: .buildAction(
-                targets: Module.allCases.flatMap(\.unitTestTargets).map(\.name).sorted()
-                    .map { .target($0) }
-            ),
-            testAction: .targets(
-                Module.allCases.flatMap(\.unitTestTargets).map { .testableTarget(target: .target($0.name)) }
-            ),
-            runAction: .runAction(
-                arguments: .arguments(
-                    environmentVariables: [
-                        "TUIST_CONFIG_SRCROOT": "$(SRCROOT)",
-                        "TUIST_FRAMEWORK_SEARCH_PATHS": "$(FRAMEWORK_SEARCH_PATHS)",
-                    ]
-                )
-            )
-        ),
     ]
     schemes.append(contentsOf: Module.allCases.filter(\.isRunnable).map {
         .scheme(
