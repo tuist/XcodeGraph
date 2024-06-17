@@ -12,13 +12,9 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
         private enum CodingKeys: String, CodingKey {
             case identifier = "LibraryIdentifier"
             case path = "LibraryPath"
+            case platform = "SupportedPlatform"
             case architectures = "SupportedArchitectures"
             case mergeable = "MergeableMetadata"
-        }
-
-        /// It represents the library's platform.
-        public enum Platform: String, Hashable, Codable {
-            case ios
         }
 
         /// Binary name used to import the library
@@ -35,6 +31,8 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
         /// Declares if the library is mergeable or not
         public let mergeable: Bool
 
+        public let platform: Platform
+
         /// Architectures the binary is built for.
         public let architectures: [BinaryArchitecture]
 
@@ -50,11 +48,13 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
             identifier: String,
             path: RelativePath,
             mergeable: Bool,
+            platform: Platform,
             architectures: [BinaryArchitecture]
         ) {
             self.identifier = identifier
             self.path = path
             self.mergeable = mergeable
+            self.platform = platform
             self.architectures = architectures
         }
 
@@ -62,6 +62,7 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             identifier = try container.decode(String.self, forKey: .identifier)
             path = try container.decode(RelativePath.self, forKey: .path)
+            platform = try container.decode(Platform.self, forKey: .platform)
             architectures = try container.decode([BinaryArchitecture].self, forKey: .architectures)
             mergeable = try container.decodeIfPresent(Bool.self, forKey: .mergeable) ?? false
         }
@@ -84,12 +85,14 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
             // swiftlint:disable:next force_try
             path: RelativePath = try! RelativePath(validating: "relative/to/library"),
             mergeable: Bool = false,
+            platform: Platform = .iOS,
             architectures: [BinaryArchitecture] = [.i386]
         ) -> XCFrameworkInfoPlist.Library {
             XCFrameworkInfoPlist.Library(
                 identifier: identifier,
                 path: path,
                 mergeable: mergeable,
+                platform: platform,
                 architectures: architectures
             )
         }
