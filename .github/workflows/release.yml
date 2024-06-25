@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  schedule:
+    # Every Monday at 11:00
+    - cron: '0 10 * * 1'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (optional)'
+        required: false
+        type: string
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: read
+  statuses: write
+
+jobs:
+  weekly:
+    name: Weekly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Determine version
+        id: get_version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "No version provided, calculating next version..."
+          fi
+      - name: Calculate next version
+        if: steps.get_version.outputs.VERSION == ''
+        uses: ietf-tools/semver-action@v1
+        id: semver
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+      - name: Set final version
+        id: set_version
+        run: |
+          if [ -n "${{ steps.get_version.outputs.VERSION }}" ]; then
+            echo "version=${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ steps.semver.outputs.next }}" >> $GITHUB_OUTPUT
+          fi
+      - name: "Generate Tuist Changelog"
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v2
+        with:
+          owner: "tuist"
+          repo: "XcodeGraph"
+          configuration: ".github/changelog-configuration.json"
+      - name: Update Changelog
+        uses: stefanzweifel/changelog-updater-action@v1
+        with:
+          latest-version: ${{ steps.set_version.outputs.version }}
+          release-notes: ${{ steps.changelog.outputs.changelog }}
+          path-to-changelog: CHANGELOG.md
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Version ${{ steps.set_version.outputs.version }}"
+          tagging_message: ${{ steps.set_version.outputs.version }}
+          commit_options: '--allow-empty'
+      - name: Create GitHub Release on the tuist/tuist-cloud repository
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          repository: tuist/XcodeGraph
+          name: ${{ steps.set_version.outputs.version }}
+          tag_name: ${{ steps.set_version.outputs.version }}
+          body: ${{ steps.changelog.outputs.changelog }}
