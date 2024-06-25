@@ -67,7 +67,7 @@ jobs:
           commit_message: "Version ${{ steps.set_version.outputs.version }}"
           tagging_message: ${{ steps.set_version.outputs.version }}
           commit_options: '--allow-empty'
-      - name: Create GitHub Release on the tuist/tuist-cloud repository
+      - name: Create GitHub Release on the tuist/XcodeGraph repository
         uses: softprops/action-gh-release@v1
         with:
           draft: false
