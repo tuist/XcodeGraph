@@ -16,7 +16,7 @@ To install `XcodeGraph`, you can add it to your project or package's `Package.sw
 ```swift
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/tuist/XcodeGraph.git", .upToNextMajor(from: "0.1.0")),
+        .package(url: "https://github.com/tuist/XcodeGraph.git", .upToNextMajor(from: "0.7.0")),
     ],
 )
 ```
