@@ -19,6 +19,9 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
     /// Organization name.
     public var organizationName: String?
 
+    /// Class prefix.
+    public var classPrefix: String?
+
     /// Default known regions
     public var defaultKnownRegions: [String]?
 
@@ -88,6 +91,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         xcodeProjPath: AbsolutePath,
         name: String,
         organizationName: String?,
+        classPrefix: String?,
         defaultKnownRegions: [String]?,
         developmentRegion: String?,
         options: Options,
@@ -107,6 +111,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         self.xcodeProjPath = xcodeProjPath
         self.name = name
         self.organizationName = organizationName
+        self.classPrefix = classPrefix
         self.defaultKnownRegions = defaultKnownRegions
         self.developmentRegion = developmentRegion
         self.options = options
@@ -159,6 +164,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
             xcodeProjPath: AbsolutePath = try! AbsolutePath(validating: "/Project/Project.xcodeproj"),
             name: String = "Project",
             organizationName: String? = nil,
+            classPrefix: String? = nil,
             defaultKnownRegions: [String]? = nil,
             developmentRegion: String? = nil,
             options: Options = .test(automaticSchemesOptions: .disabled),
@@ -179,6 +185,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 xcodeProjPath: xcodeProjPath,
                 name: name,
                 organizationName: organizationName,
+                classPrefix: classPrefix,
                 defaultKnownRegions: defaultKnownRegions,
                 developmentRegion: developmentRegion,
                 options: options,
@@ -202,6 +209,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
             xcodeProjPath: AbsolutePath = try! AbsolutePath(validating: "/test/text.xcodeproj"),
             name: String = "Project",
             organizationName: String? = nil,
+            classPrefix: String? = nil,
             defaultKnownRegions: [String]? = nil,
             developmentRegion: String? = nil,
             options: Options = .test(automaticSchemesOptions: .disabled),
@@ -222,6 +230,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 xcodeProjPath: xcodeProjPath,
                 name: name,
                 organizationName: organizationName,
+                classPrefix: classPrefix,
                 defaultKnownRegions: defaultKnownRegions,
                 developmentRegion: developmentRegion,
                 options: options,
