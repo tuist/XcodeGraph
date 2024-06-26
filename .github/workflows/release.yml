@@ -48,7 +48,7 @@ jobs:
           fi
       - name: "Generate Tuist Changelog"
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v2
+        uses: mikepenz/release-changelog-builder-action@v4
         with:
           owner: "tuist"
           repo: "XcodeGraph"
