@@ -56,18 +56,29 @@ jobs:
           owner: "tuist"
           repo: "XcodeGraph"
           configuration: ".github/changelog-configuration.json"
+      - name: Check if there are categorized PRs
+        id: check_prs
+        run: |
+          if [ "${{ steps.changelog.outputs.categorized_prs }}" = "0" ]; then
+            echo "skip_next_steps=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip_next_steps=false" >> $GITHUB_OUTPUT
+          fi
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
+        if: steps.check_prs.outputs.skip_next_steps != 'true'
         with:
           latest-version: ${{ steps.set_version.outputs.version }}
           release-notes: ${{ steps.changelog.outputs.changelog }}
           path-to-changelog: CHANGELOG.md
       - uses: stefanzweifel/git-auto-commit-action@v5
+        if: steps.check_prs.outputs.skip_next_steps != 'true'
         with:
           commit_message: "Version ${{ steps.set_version.outputs.version }}"
           tagging_message: ${{ steps.set_version.outputs.version }}
           commit_options: '--allow-empty'
       - name: Create GitHub Release on the tuist/XcodeGraph repository
+        if: steps.check_prs.outputs.skip_next_steps != 'true'
         uses: softprops/action-gh-release@v1
         with:
           draft: false
