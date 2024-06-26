@@ -21,8 +21,8 @@ permissions:
   statuses: write
 
 jobs:
-  weekly:
-    name: Weekly
+  continuous:
+    name: Continuous
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
