@@ -11,6 +11,10 @@
       {
         "title": "#### Fixed",
         "labels": ["changelog:fixed"]
+      },
+      {
+        "title": "#### Updated dependencies",
+        "labels": ["changelog:updated-dependencies"]
       }
     ],
     "pr_template": "- ${{TITLE}} [#${{NUMBER}}](https://github.com/tuist/XcodeGraph/pull/${{NUMBER}}) by [@${{AUTHOR}}](https://github.com/${{AUTHOR}})"
