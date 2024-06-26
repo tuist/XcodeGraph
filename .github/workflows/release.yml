@@ -53,6 +53,8 @@ jobs:
           owner: "tuist"
           repo: "XcodeGraph"
           configuration: ".github/changelog-configuration.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if there are categorized PRs
         id: check_prs
         run: |
