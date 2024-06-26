@@ -79,7 +79,7 @@ jobs:
           commit_options: '--allow-empty'
       - name: Create GitHub Release on the tuist/XcodeGraph repository
         if: steps.check_prs.outputs.skip_next_steps != 'true'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           draft: false
           repository: tuist/XcodeGraph
