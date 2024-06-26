@@ -34,20 +34,16 @@ jobs:
           else
             echo "No version provided, calculating next version..."
           fi
-      - name: Calculate next version
-        if: steps.get_version.outputs.VERSION == ''
-        uses: ietf-tools/semver-action@v1
-        id: semver
+      - uses: rmeneely/git-next-version@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          increment: 'minor'
       - name: Set final version
         id: set_version
         run: |
           if [ -n "${{ steps.get_version.outputs.VERSION }}" ]; then
             echo "version=${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
           else
-            echo "version=${{ steps.semver.outputs.next }}" >> $GITHUB_OUTPUT
+            echo "version=${{ env.NEXT_VERSION }}" >> $GITHUB_OUTPUT
           fi
       - name: "Generate Tuist Changelog"
         id: changelog
