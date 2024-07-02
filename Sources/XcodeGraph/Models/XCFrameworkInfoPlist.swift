@@ -9,6 +9,14 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
 
     /// It represents a library inside an .xcframework
     public struct Library: Codable, Hashable, Equatable {
+        public enum Platform: String, CaseIterable, Codable {
+            case iOS = "ios"
+            case macOS = "macos"
+            case tvOS = "tvos"
+            case watchOS = "watchos"
+            case visionOS = "xros" // Note: for visionOS, the rawValue is `xros`
+        }
+
         private enum CodingKeys: String, CodingKey {
             case identifier = "LibraryIdentifier"
             case path = "LibraryPath"
@@ -31,7 +39,7 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
         /// Declares if the library is mergeable or not
         public let mergeable: Bool
 
-        public let platform: Platform
+        public let platform: Self.Platform
 
         /// Architectures the binary is built for.
         public let architectures: [BinaryArchitecture]
