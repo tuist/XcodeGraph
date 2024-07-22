@@ -14,6 +14,7 @@ public struct RunAction: Equatable, Codable {
     public let arguments: Arguments?
     public let options: RunActionOptions
     public let diagnosticsOptions: SchemeDiagnosticsOptions
+    public let metalOptions: MetalOptions?
     public let expandVariableFromTarget: TargetReference?
     public let launchStyle: LaunchStyle
 
@@ -30,6 +31,7 @@ public struct RunAction: Equatable, Codable {
         arguments: Arguments?,
         options: RunActionOptions = .init(),
         diagnosticsOptions: SchemeDiagnosticsOptions,
+        metalOptions: MetalOptions? = nil,
         expandVariableFromTarget: TargetReference? = nil,
         launchStyle: LaunchStyle = .automatically
     ) {
@@ -43,6 +45,7 @@ public struct RunAction: Equatable, Codable {
         self.arguments = arguments
         self.options = options
         self.diagnosticsOptions = diagnosticsOptions
+        self.metalOptions = metalOptions
         self.expandVariableFromTarget = expandVariableFromTarget
         self.launchStyle = launchStyle
     }
@@ -65,6 +68,9 @@ public struct RunAction: Equatable, Codable {
                 mainThreadCheckerEnabled: true,
                 performanceAntipatternCheckerEnabled: true
             ),
+            metalOptions: MetalOptions = XcodeGraph.MetalOptions(
+                apiValidation: true
+            ),
             expandVariableFromTarget: TargetReference? = nil,
             launchStyle: LaunchStyle = .automatically
         ) -> RunAction {
@@ -79,6 +85,7 @@ public struct RunAction: Equatable, Codable {
                 arguments: arguments,
                 options: options,
                 diagnosticsOptions: diagnosticsOptions,
+                metalOptions: metalOptions,
                 expandVariableFromTarget: expandVariableFromTarget,
                 launchStyle: launchStyle
             )
