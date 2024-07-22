@@ -14,7 +14,7 @@ public struct RunAction: Equatable, Codable {
     public let arguments: Arguments?
     public let options: RunActionOptions
     public let diagnosticsOptions: SchemeDiagnosticsOptions
-    public let metalOptions: MetalOptions
+    public let metalOptions: MetalOptions?
     public let expandVariableFromTarget: TargetReference?
     public let launchStyle: LaunchStyle
 
@@ -31,7 +31,7 @@ public struct RunAction: Equatable, Codable {
         arguments: Arguments?,
         options: RunActionOptions = .init(),
         diagnosticsOptions: SchemeDiagnosticsOptions,
-        metalOptions: MetalOptions,
+        metalOptions: MetalOptions? = nil,
         expandVariableFromTarget: TargetReference? = nil,
         launchStyle: LaunchStyle = .automatically
     ) {
