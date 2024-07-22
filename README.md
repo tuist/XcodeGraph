@@ -1,6 +1,6 @@
 # ፨ XcodeGraph
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 XcodeGraph is a Swift Package that contains data structures to model an Xcode projects graph.
@@ -31,6 +31,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://darrarski.pl"><img src="https://avatars.githubusercontent.com/u/1384684?v=4?s=100" width="100px;" alt="Dariusz Rybicki"/><br /><sub><b>Dariusz Rybicki</b></sub></a><br /><a href="https://github.com/tuist/XcodeGraph/commits?author=darrarski" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Binlogo"><img src="https://avatars.githubusercontent.com/u/7845507?v=4?s=100" width="100px;" alt="Binlogo"/><br /><sub><b>Binlogo</b></sub></a><br /><a href="https://github.com/tuist/XcodeGraph/commits?author=Binlogo" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
