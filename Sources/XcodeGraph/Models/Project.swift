@@ -120,7 +120,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         additionalFiles: [FileElement],
         resourceSynthesizers: [ResourceSynthesizer],
         lastUpgradeCheck: Version?,
-        type: ProjectType
+        isExternal: Bool
     ) {
         self.path = path
         self.sourceRootPath = sourceRootPath
@@ -140,7 +140,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         self.additionalFiles = additionalFiles
         self.resourceSynthesizers = resourceSynthesizers
         self.lastUpgradeCheck = lastUpgradeCheck
-        self.type = type
+        self.isExternal = isExternal
     }
 
     // MARK: - CustomStringConvertible
@@ -214,7 +214,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 additionalFiles: additionalFiles,
                 resourceSynthesizers: resourceSynthesizers,
                 lastUpgradeCheck: lastUpgradeCheck,
-                type: type
+                isExternal: isExternal
             )
         }
 
@@ -259,7 +259,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 additionalFiles: additionalFiles,
                 resourceSynthesizers: resourceSynthesizers,
                 lastUpgradeCheck: lastUpgradeCheck,
-                type: type
+                isExternal: isExternal
             )
         }
     }
