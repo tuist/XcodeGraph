@@ -68,7 +68,7 @@ public struct RunAction: Equatable, Codable {
                 mainThreadCheckerEnabled: true,
                 performanceAntipatternCheckerEnabled: true
             ),
-            metalOptions: MetalOptions = XcodeGraph.MetalOptions(
+            metalOptions: MetalOptions? = XcodeGraph.MetalOptions(
                 apiValidation: true
             ),
             expandVariableFromTarget: TargetReference? = nil,
