@@ -5,6 +5,7 @@ import Path
 public struct XCFrameworkMetadata: Equatable {
     public var path: AbsolutePath
     public var infoPlist: XCFrameworkInfoPlist
+    public var primaryBinaryPath: AbsolutePath
     public var linking: BinaryLinking
     public var mergeable: Bool
     public var status: FrameworkStatus
@@ -13,6 +14,7 @@ public struct XCFrameworkMetadata: Equatable {
     public init(
         path: AbsolutePath,
         infoPlist: XCFrameworkInfoPlist,
+        primaryBinaryPath: AbsolutePath,
         linking: BinaryLinking,
         mergeable: Bool,
         status: FrameworkStatus,
@@ -20,6 +22,7 @@ public struct XCFrameworkMetadata: Equatable {
     ) {
         self.path = path
         self.infoPlist = infoPlist
+        self.primaryBinaryPath = primaryBinaryPath
         self.linking = linking
         self.mergeable = mergeable
         self.status = status
@@ -33,6 +36,9 @@ public struct XCFrameworkMetadata: Equatable {
             // swiftlint:disable:next force_try
             path: AbsolutePath = try! AbsolutePath(validating: "/XCFrameworks/XCFramework.xcframework"),
             infoPlist: XCFrameworkInfoPlist = .test(),
+            primaryBinaryPath: AbsolutePath =
+                // swiftlint:disable:next force_try
+                try! AbsolutePath(validating: "/XCFrameworks/XCFramework.xcframework/ios-arm64/XCFramework"),
             linking: BinaryLinking = .dynamic,
             mergeable: Bool = false,
             status: FrameworkStatus = .required,
@@ -41,6 +47,7 @@ public struct XCFrameworkMetadata: Equatable {
             XCFrameworkMetadata(
                 path: path,
                 infoPlist: infoPlist,
+                primaryBinaryPath: primaryBinaryPath,
                 linking: linking,
                 mergeable: mergeable,
                 status: status,

@@ -5,6 +5,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public struct XCFramework: Hashable, CustomStringConvertible, Comparable, Codable {
         public let path: AbsolutePath
         public let infoPlist: XCFrameworkInfoPlist
+        public let primaryBinaryPath: AbsolutePath
         public let linking: BinaryLinking
         public let mergeable: Bool
         public let status: FrameworkStatus
@@ -12,6 +13,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         public init(
             path: AbsolutePath,
             infoPlist: XCFrameworkInfoPlist,
+            primaryBinaryPath: AbsolutePath,
             linking: BinaryLinking,
             mergeable: Bool,
             status: FrameworkStatus,
@@ -19,6 +21,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         ) {
             self.path = path
             self.infoPlist = infoPlist
+            self.primaryBinaryPath = primaryBinaryPath
             self.linking = linking
             self.mergeable = mergeable
             self.status = status
@@ -313,6 +316,8 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         public static func testXCFramework(
             path: AbsolutePath = AbsolutePath.root.appending(try! RelativePath(validating: "Test.xcframework")),
             infoPlist: XCFrameworkInfoPlist = .test(),
+            primaryBinaryPath: AbsolutePath = AbsolutePath.root
+                .appending(try! RelativePath(validating: "Test.xcframework/Test")),
             linking: BinaryLinking = .dynamic,
             status: FrameworkStatus = .required,
             macroPath: AbsolutePath? = nil
@@ -321,6 +326,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
                 GraphDependency.XCFramework(
                     path: path,
                     infoPlist: infoPlist,
+                    primaryBinaryPath: primaryBinaryPath,
                     linking: linking,
                     mergeable: false,
                     status: status,
