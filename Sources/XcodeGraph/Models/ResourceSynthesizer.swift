@@ -15,7 +15,6 @@ public struct ResourceSynthesizer: Equatable, Hashable, Codable {
 
     public enum Parser: String, Equatable, Hashable, Codable {
         case strings
-        case stringsCatalog
         case assets
         case plists
         case fonts
