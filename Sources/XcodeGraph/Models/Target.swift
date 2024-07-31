@@ -50,6 +50,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public let mergeable: Bool
     public let onDemandResourcesTags: OnDemandResourcesTags?
     public let metadata: TargetMetadata
+    public var tags: [TargetTag]
 
     // MARK: - Init
 
@@ -82,6 +83,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         mergeable: Bool = false,
         onDemandResourcesTags: OnDemandResourcesTags? = nil,
         metadata: TargetMetadata = .init(tags: [])
+        tags: [TargetTag] = []
     ) {
         self.name = name
         self.product = product
@@ -111,6 +113,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         self.mergeable = mergeable
         self.onDemandResourcesTags = onDemandResourcesTags
         self.metadata = metadata
+        self.tags = tags
     }
 
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
@@ -416,7 +419,8 @@ extension Sequence<Target> {
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
             mergeable: Bool = false,
-            metadata: TargetMetadata = .test()
+            metadata: TargetMetadata = .test(),
+            tags: [TargetTag] = []
         ) -> Target {
             Target(
                 name: name,
@@ -444,7 +448,8 @@ extension Sequence<Target> {
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
                 mergeable: mergeable,
-                metadata: metadata
+                metadata: metadata,
+                tags: tags
             )
         }
 
@@ -476,7 +481,8 @@ extension Sequence<Target> {
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
             mergeable: Bool = false,
-            metadata: TargetMetadata = .test()
+            metadata: TargetMetadata = .test(),
+            tags: [TargetTag] = []
         ) -> Target {
             Target(
                 name: name,
@@ -504,7 +510,8 @@ extension Sequence<Target> {
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
                 mergeable: mergeable,
-                metadata: metadata
+                metadata: metadata,
+                tags: tags
             )
         }
 
@@ -529,7 +536,8 @@ extension Sequence<Target> {
             filesGroup: ProjectGroup = .group(name: "Project"),
             dependencies: [TargetDependency] = [],
             rawScriptBuildPhases: [RawScriptBuildPhase] = [],
-            onDemandResourcesTags: OnDemandResourcesTags? = nil
+            onDemandResourcesTags: OnDemandResourcesTags? = nil,
+            tags: [TargetTag] = []
         ) -> Target {
             Target(
                 name: name,
@@ -551,7 +559,8 @@ extension Sequence<Target> {
                 filesGroup: filesGroup,
                 dependencies: dependencies,
                 rawScriptBuildPhases: rawScriptBuildPhases,
-                onDemandResourcesTags: onDemandResourcesTags
+                onDemandResourcesTags: onDemandResourcesTags,
+                tags: tags
             )
         }
 
