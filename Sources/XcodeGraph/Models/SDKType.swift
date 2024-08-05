@@ -1,12 +1,20 @@
 import Foundation
 
-public enum SDKType: String, CaseIterable, Equatable {
+public enum SDKType: CaseIterable, Equatable {
     case framework
-    case library = "tbd"
+    case library
+    case swiftLibrary
 
     public static var supportedTypesDescription: String {
         let supportedTypes = allCases
-            .map { ".\($0.rawValue)" }
+            .map {
+                switch $0 {
+                case .framework:
+                    return ".framework"
+                case .library, .swiftLibrary:
+                    return ".tbd"
+                }
+            }
             .joined(separator: ", ")
         return "[\(supportedTypes)]"
     }
