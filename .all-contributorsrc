@@ -1,0 +1,35 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "darrarski",
+      "name": "Dariusz Rybicki",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1384684?v=4",
+      "profile": "http://darrarski.pl",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Binlogo",
+      "name": "Binlogo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7845507?v=4",
+      "profile": "https://github.com/Binlogo",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "XcodeGraph",
+  "projectOwner": "tuist"
+}
