@@ -7,81 +7,84 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (optional)'
-        required: false
+        description: 'The version to release'
         type: string
-
-concurrency:
-  group: release-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 permissions:
   contents: write
   pull-requests: read
   statuses: write
+  packages: write
 
 jobs:
-  continuous:
-    name: Continuous
-    runs-on: ubuntu-latest
+  release:
+    name: Release
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 15
+    if: "!startsWith(github.event.head_commit.message, '[Release]')"
     steps:
-      - uses: actions/checkout@v4
-      - name: Determine version
-        id: get_version
-        run: |
-          if [ -n "${{ github.event.inputs.version }}" ]; then
-            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            echo "No version provided, calculating next version..."
-          fi
-      - uses: rmeneely/git-next-version@v1
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          tag_pattern: '[0-9]*.[0-9]*.[0-9]*'
-          increment: 'minor'
-      - name: Set final version
-        id: set_version
-        run: |
-          if [ -n "${{ steps.get_version.outputs.VERSION }}" ]; then
-            echo "version=${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
-          else
-            echo "version=${{ env.NEXT_VERSION }}" >> $GITHUB_OUTPUT
-          fi
-      - name: "Generate Tuist Changelog"
-        id: changelog
-        uses: mikepenz/release-changelog-builder-action@v4
+          fetch-depth: 0
+      - uses: jdx/mise-action@v2
         with:
-          owner: "tuist"
-          repo: "XcodeGraph"
-          configuration: ".github/changelog-configuration.json"
+          experimental: true
+      - name: Check if there are releasable changes
+        id: is-releasable
+        run: |
+          # Run git cliff and save the output
+          bumped_output=$(git cliff --bump)
+          echo "Bumped output:"
+          echo "${bumped_output}"
+  
+          # Read the content of CHANGELOG.md
+          changelog_content=$(cat CHANGELOG.md)
+          echo "CHANGELOG.md content:"
+          echo "${changelog_content}"
+  
+          # Compare the outputs and set the result
+          if [ "${bumped_output}" = "${changelog_content}" ]; then
+            echo "should-release=false" >> $GITHUB_ENV
+          else
+            echo "should-release=true" >> $GITHUB_ENV
+          fi
+      
+      - name: Get next version
+        id: next-version
+        if: env.should-release == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check if there are categorized PRs
-        id: check_prs
+        run: echo "NEXT_VERSION=$(git cliff --bumped-version)" >> "$GITHUB_OUTPUT"
+      - name: Get release notes
+        id: release-notes
+        if: env.should-release == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ "${{ steps.changelog.outputs.categorized_prs }}" = "0" ]; then
-            echo "skip_next_steps=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip_next_steps=false" >> $GITHUB_OUTPUT
-          fi
-      - name: Update Changelog
-        uses: stefanzweifel/changelog-updater-action@v1
-        if: steps.check_prs.outputs.skip_next_steps != 'true'
+          echo "RELEASE_NOTES<<EOF" >> "$GITHUB_OUTPUT"
+          git cliff --unreleased >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+      - name: Update CHANGELOG.md
+        if: env.should-release == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git cliff --bump -o CHANGELOG.md
+      - name: Commit changes
+        id: auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v5
+        if: env.should-release == 'true'
         with:
-          latest-version: ${{ steps.set_version.outputs.version }}
-          release-notes: ${{ steps.changelog.outputs.changelog }}
-          path-to-changelog: CHANGELOG.md
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        if: steps.check_prs.outputs.skip_next_steps != 'true'
-        with:
-          commit_message: "Version ${{ steps.set_version.outputs.version }}"
-          tagging_message: ${{ steps.set_version.outputs.version }}
           commit_options: '--allow-empty'
-      - name: Create GitHub Release on the tuist/XcodeGraph repository
-        if: steps.check_prs.outputs.skip_next_steps != 'true'
-        uses: softprops/action-gh-release@v1
+          tagging_message: ${{ steps.next-version.outputs.NEXT_VERSION }}
+          skip_dirty_check: true
+          commit_message: "[Release] XcodeGraph ${{ steps.next-version.outputs.NEXT_VERSION }}"
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: env.should-release == 'true'
         with:
           draft: false
           repository: tuist/XcodeGraph
-          name: ${{ steps.set_version.outputs.version }}
-          tag_name: ${{ steps.set_version.outputs.version }}
-          body: ${{ steps.changelog.outputs.changelog }}
+          name: ${{ steps.next-version.outputs.NEXT_VERSION }}
+          tag_name: ${{ steps.next-version.outputs.NEXT_VERSION }}
+          body: ${{ steps.release-notes.outputs.RELEASE_NOTES }}
+          target_commitish: ${{ steps.auto-commit-action.outputs.commit_hash }}
