@@ -47,6 +47,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable {
     public let mergedBinaryType: MergedBinaryType
     public let mergeable: Bool
     public let onDemandResourcesTags: OnDemandResourcesTags?
+    public var tags: [TargetTag]
 
     // MARK: - Init
 
@@ -77,7 +78,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable {
         prune: Bool = false,
         mergedBinaryType: MergedBinaryType = .disabled,
         mergeable: Bool = false,
-        onDemandResourcesTags: OnDemandResourcesTags? = nil
+        onDemandResourcesTags: OnDemandResourcesTags? = nil,
+        tags: [TargetTag] = []
     ) {
         self.name = name
         self.product = product
@@ -106,6 +108,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable {
         self.mergedBinaryType = mergedBinaryType
         self.mergeable = mergeable
         self.onDemandResourcesTags = onDemandResourcesTags
+        self.tags = tags
     }
 
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
@@ -401,7 +404,8 @@ extension Sequence<Target> {
             additionalFiles: [FileElement] = [],
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
-            mergeable: Bool = false
+            mergeable: Bool = false,
+            tags: [TargetTag] = []
         ) -> Target {
             Target(
                 name: name,
@@ -428,7 +432,8 @@ extension Sequence<Target> {
                 additionalFiles: additionalFiles,
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
-                mergeable: mergeable
+                mergeable: mergeable,
+                tags: tags
             )
         }
 
@@ -459,7 +464,8 @@ extension Sequence<Target> {
             additionalFiles: [FileElement] = [],
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
-            mergeable: Bool = false
+            mergeable: Bool = false,
+            tags: [TargetTag] = []
         ) -> Target {
             Target(
                 name: name,
@@ -486,7 +492,8 @@ extension Sequence<Target> {
                 additionalFiles: additionalFiles,
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
-                mergeable: mergeable
+                mergeable: mergeable,
+                tags: tags
             )
         }
 
@@ -511,7 +518,8 @@ extension Sequence<Target> {
             filesGroup: ProjectGroup = .group(name: "Project"),
             dependencies: [TargetDependency] = [],
             rawScriptBuildPhases: [RawScriptBuildPhase] = [],
-            onDemandResourcesTags: OnDemandResourcesTags? = nil
+            onDemandResourcesTags: OnDemandResourcesTags? = nil,
+            tags: [TargetTag] = []
         ) -> Target {
             Target(
                 name: name,
@@ -533,7 +541,8 @@ extension Sequence<Target> {
                 filesGroup: filesGroup,
                 dependencies: dependencies,
                 rawScriptBuildPhases: rawScriptBuildPhases,
-                onDemandResourcesTags: onDemandResourcesTags
+                onDemandResourcesTags: onDemandResourcesTags,
+                tags: tags
             )
         }
 
