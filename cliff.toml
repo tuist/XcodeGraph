@@ -3,7 +3,7 @@
 
 [remote.github]
 owner = "tuist"
-repo = "command"
+repo = "XcodeGraph"
 # token = ""
 
 [changelog]
