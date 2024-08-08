@@ -32,18 +32,13 @@ jobs:
       - name: Check if there are releasable changes
         id: is-releasable
         run: |
-          # Run git cliff and save the output
           bumped_output=$(git cliff --bump)
-          echo "Bumped output:"
-          echo "${bumped_output}"
-  
-          # Read the content of CHANGELOG.md
           changelog_content=$(cat CHANGELOG.md)
-          echo "CHANGELOG.md content:"
-          echo "${changelog_content}"
   
-          # Compare the outputs and set the result
-          if [ "${bumped_output}" = "${changelog_content}" ]; then
+          bumped_hash=$(echo -n "$bumped_output" | shasum -a 256 | awk '{print $1}')
+          changelog_hash=$(echo -n "$changelog_content" | shasum -a 256 | awk '{print $1}')
+
+          if [ "$bumped_hash" != "$changelog_hash" ]; then
             echo "should-release=false" >> $GITHUB_ENV
           else
             echo "should-release=true" >> $GITHUB_ENV
