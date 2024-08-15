@@ -1,12 +1,7 @@
 import Foundation
 import Path
 
-public enum FrameworkStatus: String, Hashable, Codable {
-    case required
-    case optional
-}
-
-public enum SDKStatus: String, Codable {
+public enum LinkingStatus: String, Hashable, Codable {
     case required
     case optional
 }
@@ -20,8 +15,8 @@ public enum TargetDependency: Equatable, Hashable, Codable {
 
     case target(name: String, condition: PlatformCondition? = nil)
     case project(target: String, path: AbsolutePath, condition: PlatformCondition? = nil)
-    case framework(path: AbsolutePath, status: FrameworkStatus, condition: PlatformCondition? = nil)
-    case xcframework(path: AbsolutePath, status: FrameworkStatus, condition: PlatformCondition? = nil)
+    case framework(path: AbsolutePath, status: LinkingStatus, condition: PlatformCondition? = nil)
+    case xcframework(path: AbsolutePath, status: LinkingStatus, condition: PlatformCondition? = nil)
     case library(
         path: AbsolutePath,
         publicHeaders: AbsolutePath,
@@ -29,7 +24,7 @@ public enum TargetDependency: Equatable, Hashable, Codable {
         condition: PlatformCondition? = nil
     )
     case package(product: String, type: PackageType, condition: PlatformCondition? = nil)
-    case sdk(name: String, status: SDKStatus, condition: PlatformCondition? = nil)
+    case sdk(name: String, status: LinkingStatus, condition: PlatformCondition? = nil)
     case xctest
 
     public var condition: PlatformCondition? {

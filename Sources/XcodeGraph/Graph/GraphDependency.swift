@@ -8,7 +8,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         public let primaryBinaryPath: AbsolutePath
         public let linking: BinaryLinking
         public let mergeable: Bool
-        public let status: FrameworkStatus
+        public let status: LinkingStatus
 
         public init(
             path: AbsolutePath,
@@ -16,7 +16,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             primaryBinaryPath: AbsolutePath,
             linking: BinaryLinking,
             mergeable: Bool,
-            status: FrameworkStatus,
+            status: LinkingStatus,
             macroPath _: AbsolutePath?
         ) {
             self.path = path
@@ -60,7 +60,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         bcsymbolmapPaths: [AbsolutePath],
         linking: BinaryLinking,
         architectures: [BinaryArchitecture],
-        status: FrameworkStatus
+        status: LinkingStatus
     )
 
     /// A dependency that represents a pre-compiled library.
@@ -85,7 +85,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     case target(name: String, path: AbsolutePath)
 
     /// A dependency that represents an SDK
-    case sdk(name: String, path: AbsolutePath, status: SDKStatus, source: SDKSource)
+    case sdk(name: String, path: AbsolutePath, status: LinkingStatus, source: SDKSource)
 
     public func hash(into hasher: inout Hasher) {
         switch self {
@@ -294,7 +294,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             bcsymbolmapPaths: [AbsolutePath] = [],
             linking: BinaryLinking = .dynamic,
             architectures: [BinaryArchitecture] = [.armv7],
-            status: FrameworkStatus = .required
+            status: LinkingStatus = .required
         ) -> GraphDependency {
             GraphDependency.framework(
                 path: path,
@@ -319,7 +319,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             primaryBinaryPath: AbsolutePath = AbsolutePath.root
                 .appending(try! RelativePath(validating: "Test.xcframework/Test")),
             linking: BinaryLinking = .dynamic,
-            status: FrameworkStatus = .required,
+            status: LinkingStatus = .required,
             macroPath: AbsolutePath? = nil
         ) -> GraphDependency {
             .xcframework(
@@ -348,7 +348,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         public static func testSDK(
             name: String = "XCTest.framework",
             path: AbsolutePath = AbsolutePath.root.appending(try! RelativePath(validating: "XCTest.framework")),
-            status: SDKStatus = .required,
+            status: LinkingStatus = .required,
             source: SDKSource = .system
         ) -> GraphDependency {
             .sdk(

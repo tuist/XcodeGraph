@@ -33,7 +33,7 @@ public struct DependenciesGraph: Equatable, Codable {
             name: String = "Test",
             // swiftlint:disable:next force_try
             path: AbsolutePath = AbsolutePath.root.appending(try! RelativePath(validating: "Test.xcframework")),
-            status: FrameworkStatus = .required
+            status: LinkingStatus = .required
         ) -> DependenciesGraph {
             let externalDependencies = [name: [TargetDependency.xcframework(path: path, status: status)]]
 
