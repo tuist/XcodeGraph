@@ -8,7 +8,7 @@ public struct XCFrameworkMetadata: Equatable {
     public var primaryBinaryPath: AbsolutePath
     public var linking: BinaryLinking
     public var mergeable: Bool
-    public var status: FrameworkStatus
+    public var status: LinkingStatus
     public var macroPath: AbsolutePath?
 
     public init(
@@ -17,7 +17,7 @@ public struct XCFrameworkMetadata: Equatable {
         primaryBinaryPath: AbsolutePath,
         linking: BinaryLinking,
         mergeable: Bool,
-        status: FrameworkStatus,
+        status: LinkingStatus,
         macroPath: AbsolutePath?
     ) {
         self.path = path
@@ -41,7 +41,7 @@ public struct XCFrameworkMetadata: Equatable {
                 try! AbsolutePath(validating: "/XCFrameworks/XCFramework.xcframework/ios-arm64/XCFramework"),
             linking: BinaryLinking = .dynamic,
             mergeable: Bool = false,
-            status: FrameworkStatus = .required,
+            status: LinkingStatus = .required,
             macroPath: AbsolutePath? = nil
         ) -> XCFrameworkMetadata {
             XCFrameworkMetadata(

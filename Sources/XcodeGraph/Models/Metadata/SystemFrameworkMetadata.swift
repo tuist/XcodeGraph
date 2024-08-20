@@ -5,13 +5,13 @@ import Path
 public struct SystemFrameworkMetadata: Equatable {
     public var name: String
     public var path: AbsolutePath
-    public var status: SDKStatus
+    public var status: LinkingStatus
     public var source: SDKSource
 
     public init(
         name: String,
         path: AbsolutePath,
-        status: SDKStatus,
+        status: LinkingStatus,
         source: SDKSource
     ) {
         self.name = name

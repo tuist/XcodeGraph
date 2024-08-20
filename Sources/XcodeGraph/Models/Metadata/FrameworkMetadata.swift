@@ -9,7 +9,7 @@ public struct FrameworkMetadata: Equatable {
     public var bcsymbolmapPaths: [AbsolutePath]
     public var linking: BinaryLinking
     public var architectures: [BinaryArchitecture]
-    public var status: FrameworkStatus
+    public var status: LinkingStatus
 
     public init(
         path: AbsolutePath,
@@ -18,7 +18,7 @@ public struct FrameworkMetadata: Equatable {
         bcsymbolmapPaths: [AbsolutePath],
         linking: BinaryLinking,
         architectures: [BinaryArchitecture],
-        status: FrameworkStatus
+        status: LinkingStatus
     ) {
         self.path = path
         self.binaryPath = binaryPath
@@ -41,7 +41,7 @@ public struct FrameworkMetadata: Equatable {
             bcsymbolmapPaths: [AbsolutePath] = [],
             linking: BinaryLinking = .dynamic,
             architectures: [BinaryArchitecture] = [.arm64],
-            status: FrameworkStatus = .required
+            status: LinkingStatus = .required
         ) -> FrameworkMetadata {
             FrameworkMetadata(
                 path: path,
