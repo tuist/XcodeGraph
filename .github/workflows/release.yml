@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'The version to release'
+        description: "The version to release"
         type: string
 
 permissions:
@@ -19,7 +19,7 @@ permissions:
 jobs:
   release:
     name: Release
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     timeout-minutes: 15
     if: "!startsWith(github.event.head_commit.message, '[Release]')"
     steps:
@@ -34,16 +34,16 @@ jobs:
         run: |
           bumped_output=$(git cliff --bump)
           changelog_content=$(cat CHANGELOG.md)
-  
+
           bumped_hash=$(echo -n "$bumped_output" | shasum -a 256 | awk '{print $1}')
           changelog_hash=$(echo -n "$changelog_content" | shasum -a 256 | awk '{print $1}')
 
           if [ "$bumped_hash" != "$changelog_hash" ]; then
-            echo "should-release=false" >> $GITHUB_ENV
-          else
             echo "should-release=true" >> $GITHUB_ENV
+          else
+            echo "should-release=false" >> $GITHUB_ENV
           fi
-      
+
       - name: Get next version
         id: next-version
         if: env.should-release == 'true'
@@ -69,7 +69,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         if: env.should-release == 'true'
         with:
-          commit_options: '--allow-empty'
+          commit_options: "--allow-empty"
           tagging_message: ${{ steps.next-version.outputs.NEXT_VERSION }}
           skip_dirty_check: true
           commit_message: "[Release] XcodeGraph ${{ steps.next-version.outputs.NEXT_VERSION }}"
