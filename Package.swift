@@ -23,7 +23,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
-        .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.4")),
+        .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.5")),
     ],
     targets: targets
 )
