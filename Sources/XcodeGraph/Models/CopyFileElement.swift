@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public enum CopyFileElement: Equatable, Hashable, Codable {
+public enum CopyFileElement: Equatable, Hashable, Codable, Sendable {
     case file(path: AbsolutePath, condition: PlatformCondition? = nil, codeSignOnCopy: Bool = false)
     case folderReference(path: AbsolutePath, condition: PlatformCondition? = nil, codeSignOnCopy: Bool = false)
 

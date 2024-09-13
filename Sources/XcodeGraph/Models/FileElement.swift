@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public enum FileElement: Equatable, Hashable, Codable {
+public enum FileElement: Equatable, Hashable, Codable, Sendable {
     case file(path: AbsolutePath)
     case folderReference(path: AbsolutePath)
 

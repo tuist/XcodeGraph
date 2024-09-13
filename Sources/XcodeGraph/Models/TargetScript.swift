@@ -2,12 +2,12 @@ import Foundation
 import Path
 
 /// It represents a target script build phase
-public struct TargetScript: Equatable, Codable {
+public struct TargetScript: Equatable, Codable, Sendable {
     /// Order when the script gets executed.
     ///
     /// - pre: Before the sources and resources build phase.
     /// - post: After the sources and resources build phase.
-    public enum Order: String, Equatable, Codable {
+    public enum Order: String, Equatable, Codable, Sendable {
         case pre
         case post
     }
@@ -17,7 +17,7 @@ public struct TargetScript: Equatable, Codable {
     /// - tool: Executes the tool with the given arguments. Tuist will look up the tool on the environment's PATH.
     /// - scriptPath: Executes the file at the path with the given arguments.
     /// - embedded: Executes the embedded script. This should be a short command.
-    public enum Script: Equatable, Codable {
+    public enum Script: Equatable, Codable, Sendable {
         case tool(path: String, args: [String] = [])
         case scriptPath(path: AbsolutePath, args: [String] = [])
         case embedded(String)

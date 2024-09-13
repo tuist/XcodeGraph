@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - DeploymentTargets
 
-public struct DeploymentTargets: Hashable, Codable {
+public struct DeploymentTargets: Hashable, Codable, Sendable {
     public let iOS: String?
     public let macOS: String?
     public let watchOS: String?

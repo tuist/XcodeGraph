@@ -1,6 +1,6 @@
 import Foundation
 
-public struct SchemeDiagnosticsOptions: Equatable, Codable {
+public struct SchemeDiagnosticsOptions: Equatable, Codable, Sendable {
     public let addressSanitizerEnabled: Bool
     public let detectStackUseAfterReturnEnabled: Bool
     public let threadSanitizerEnabled: Bool

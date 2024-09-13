@@ -1,7 +1,7 @@
 import Foundation
 
 /// Arguments contain commandline arguments passed on launch and Environment variables.
-public struct Arguments: Codable {
+public struct Arguments: Codable, Sendable {
     // MARK: - Attributes
 
     /// Launch arguments that are passed by the scheme when running a scheme action.

@@ -3,11 +3,11 @@ import Path
 
 // MARK: - Plist
 
-public enum Plist {
+public enum Plist: Sendable {
     case infoPlist(InfoPlist)
     case entitlements(Entitlements)
 
-    public indirect enum Value: Equatable, Codable {
+    public indirect enum Value: Equatable, Codable, Sendable {
         case string(String)
         case integer(Int)
         case real(Double)
@@ -92,7 +92,7 @@ extension Dictionary where Value == Plist.Value {
 
 // MARK: - InfoPlist
 
-public enum InfoPlist: Equatable, Codable {
+public enum InfoPlist: Equatable, Codable, Sendable {
     // Path to a user defined info.plist file (already exists on disk).
     case file(path: AbsolutePath)
 
@@ -129,7 +129,7 @@ extension InfoPlist: ExpressibleByStringLiteral {
 
 // MARK: - Entitlements
 
-public enum Entitlements: Equatable, Codable {
+public enum Entitlements: Equatable, Codable, Sendable {
     // Path to a user defined .entitlements file (already exists on disk).
     case file(path: AbsolutePath)
 

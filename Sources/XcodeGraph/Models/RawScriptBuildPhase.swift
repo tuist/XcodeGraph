@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// It represents a raw script build phase.
-public struct RawScriptBuildPhase: Equatable, Codable {
+public struct RawScriptBuildPhase: Equatable, Codable, Sendable {
     /// The  name of the build phase.
     public let name: String
 

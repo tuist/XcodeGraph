@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct TargetReference: Hashable, Codable {
+public struct TargetReference: Hashable, Codable, Sendable {
     public var projectPath: AbsolutePath
     public var name: String
 

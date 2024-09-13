@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public enum SimulatedLocation {
+public enum SimulatedLocation: Sendable {
     case gpxFile(AbsolutePath)
     case reference(String)
 

@@ -1,13 +1,13 @@
 import Foundation
 import Path
 
-public enum LinkingStatus: String, Hashable, Codable {
+public enum LinkingStatus: String, Hashable, Codable, Sendable {
     case required
     case optional
 }
 
-public enum TargetDependency: Equatable, Hashable, Codable {
-    public enum PackageType: String, Equatable, Hashable, Codable {
+public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
+    public enum PackageType: String, Equatable, Hashable, Codable, Sendable {
         case runtime
         case plugin
         case macro

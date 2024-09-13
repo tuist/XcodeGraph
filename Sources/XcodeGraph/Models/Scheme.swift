@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct Scheme: Equatable, Codable {
+public struct Scheme: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     public var name: String

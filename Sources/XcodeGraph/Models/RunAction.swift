@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct RunAction: Equatable, Codable {
+public struct RunAction: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     public let configurationName: String

@@ -1,7 +1,7 @@
 import Foundation
 
 /// It represents an argument that is passed when running a scheme's action
-public struct LaunchArgument: Equatable, Codable, Hashable {
+public struct LaunchArgument: Equatable, Codable, Hashable, Sendable {
     // MARK: - Attributes
 
     /// The name of the launch argument

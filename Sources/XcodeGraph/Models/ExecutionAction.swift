@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// A execution action
-public struct ExecutionAction: Equatable, Codable {
+public struct ExecutionAction: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     /// Name of a script.

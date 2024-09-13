@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MetalOptions: Equatable, Codable {
+public struct MetalOptions: Equatable, Codable, Sendable {
     public var apiValidation: Bool
     public var shaderValidation: Bool
     public var showGraphicsOverview: Bool

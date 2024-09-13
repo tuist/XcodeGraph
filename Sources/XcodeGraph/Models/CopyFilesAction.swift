@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct CopyFilesAction: Equatable, Codable {
+public struct CopyFilesAction: Equatable, Codable, Sendable {
     /// Name of the build phase when the project gets generated.
     public var name: String
 
@@ -15,7 +15,7 @@ public struct CopyFilesAction: Equatable, Codable {
     public var files: [CopyFileElement]
 
     /// Destination path.
-    public enum Destination: String, Equatable, Codable {
+    public enum Destination: String, Equatable, Codable, Sendable {
         case absolutePath
         case productsDirectory
         case wrapper

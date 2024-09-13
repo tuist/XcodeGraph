@@ -1,6 +1,6 @@
 import Foundation
 
-public struct IDETemplateMacros: Codable, Hashable {
+public struct IDETemplateMacros: Codable, Hashable, Sendable {
     private enum CodingKeys: String, CodingKey {
         case fileHeader = "FILEHEADER"
     }

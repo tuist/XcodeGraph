@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public enum ResourceFileElement: Equatable, Hashable, Codable {
+public enum ResourceFileElement: Equatable, Hashable, Codable, Sendable {
     /// A file path (or glob pattern) to include, a list of file paths (or glob patterns) to exclude, ODR tags list and inclusion
     /// condition.
     /// For convenience, a string literal can be used as an alternate way to specify this option.

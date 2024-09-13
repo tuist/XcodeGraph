@@ -1,4 +1,4 @@
-public struct TestingOptions: OptionSet, Codable, Hashable {
+public struct TestingOptions: Sendable, OptionSet, Codable, Hashable {
     public let rawValue: Int
 
     public init(rawValue: Int) {

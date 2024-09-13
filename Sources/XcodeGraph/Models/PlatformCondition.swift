@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct PlatformCondition: Codable, Hashable, Equatable, Comparable {
+public struct PlatformCondition: Codable, Hashable, Equatable, Comparable, Sendable {
     public static func < (lhs: PlatformCondition, rhs: PlatformCondition) -> Bool {
         lhs.platformFilters < rhs.platformFilters
     }

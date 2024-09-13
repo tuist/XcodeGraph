@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// A type that represents a source file.
-public struct SourceFile: ExpressibleByStringLiteral, Equatable, Codable {
+public struct SourceFile: ExpressibleByStringLiteral, Equatable, Codable, Sendable {
     /// Source file path.
     public var path: AbsolutePath
 

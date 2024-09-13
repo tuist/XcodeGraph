@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PrivacyManifest: Codable, Equatable {
+public struct PrivacyManifest: Codable, Equatable, Sendable {
     public var tracking: Bool
 
     public var trackingDomains: [String]
