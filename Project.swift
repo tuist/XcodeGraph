@@ -1,7 +1,9 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let baseSettings: SettingsDictionary = [:]
+let baseSettings: SettingsDictionary = [
+    "SWIFT_STRICT_CONCURRENCY" : "complete"
+]
 
 func debugSettings() -> SettingsDictionary {
     var settings = baseSettings
