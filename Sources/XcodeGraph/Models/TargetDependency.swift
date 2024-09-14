@@ -13,8 +13,8 @@ public enum TargetDependency: Equatable, Hashable, Codable {
         case macro
     }
 
-    case target(name: String, condition: PlatformCondition? = nil)
-    case project(target: String, path: AbsolutePath, condition: PlatformCondition? = nil)
+    case target(name: String, status: LinkingStatus = .required, condition: PlatformCondition? = nil)
+    case project(target: String, path: AbsolutePath, status: LinkingStatus = .required, condition: PlatformCondition? = nil)
     case framework(path: AbsolutePath, status: LinkingStatus, condition: PlatformCondition? = nil)
     case xcframework(path: AbsolutePath, status: LinkingStatus, condition: PlatformCondition? = nil)
     case library(
@@ -29,9 +29,9 @@ public enum TargetDependency: Equatable, Hashable, Codable {
 
     public var condition: PlatformCondition? {
         switch self {
-        case .target(name: _, condition: let condition):
+        case .target(name: _, status: _, condition: let condition):
             condition
-        case .project(target: _, path: _, condition: let condition):
+        case .project(target: _, path: _, status: _, condition: let condition):
             condition
         case .framework(path: _, status: _, condition: let condition):
             condition
@@ -49,10 +49,10 @@ public enum TargetDependency: Equatable, Hashable, Codable {
 
     public func withCondition(_ condition: PlatformCondition?) -> TargetDependency {
         switch self {
-        case .target(name: let name, condition: _):
-            return .target(name: name, condition: condition)
-        case .project(target: let target, path: let path, condition: _):
-            return .project(target: target, path: path, condition: condition)
+        case .target(name: let name, status: let status, condition: _):
+            return .target(name: name, status: status, condition: condition)
+        case .project(target: let target, path: let path, status: let status, condition: _):
+            return .project(target: target, path: path, status: status, condition: condition)
         case .framework(path: let path, status: let status, condition: _):
             return .framework(path: path, status: status, condition: condition)
         case .xcframework(path: let path, status: let status, condition: _):
