@@ -7,7 +7,7 @@ import Foundation
 /// - `project`:  project codegen attribute  `settings = {ATTRIBUTES = (project_codegen, )}`
 /// - `disabled`:  disabled codegen attribute  `settings = {ATTRIBUTES = (no_codegen, )}`
 ///
-public enum FileCodeGen: String, Codable, Equatable {
+public enum FileCodeGen: String, Codable, Equatable, Sendable {
     case `public` = "codegen"
     case `private` = "private_codegen"
     case project = "project_codegen"

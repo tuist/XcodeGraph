@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// Options for the `RunAction` action
-public struct RunActionOptions: Equatable, Codable {
+public struct RunActionOptions: Equatable, Codable, Sendable {
     /// App Language.
     public let language: String?
 
@@ -53,7 +53,7 @@ public struct RunActionOptions: Equatable, Codable {
 }
 
 extension RunActionOptions {
-    public enum GPUFrameCaptureMode: String, Codable, Equatable {
+    public enum GPUFrameCaptureMode: String, Codable, Equatable, Sendable {
         case autoEnabled
         case metal
         case openGL

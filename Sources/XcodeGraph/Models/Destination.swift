@@ -3,11 +3,11 @@ import Foundation
 public typealias Destinations = Set<Destination>
 
 extension Destinations {
-    public static var watchOS: Destinations = [.appleWatch]
-    public static var iOS: Destinations = [.iPhone, .iPad, .macWithiPadDesign]
-    public static var macOS: Destinations = [.mac]
-    public static var tvOS: Destinations = [.appleTv]
-    public static var visionOS: Destinations = [.appleVision]
+    public static let watchOS: Destinations = [.appleWatch]
+    public static let iOS: Destinations = [.iPhone, .iPad, .macWithiPadDesign]
+    public static let macOS: Destinations = [.mac]
+    public static let tvOS: Destinations = [.appleTv]
+    public static let visionOS: Destinations = [.appleVision]
 }
 
 extension Destinations {
@@ -18,7 +18,7 @@ extension Destinations {
 }
 
 /// A supported platform representation.
-public enum Destination: String, Codable, Equatable, CaseIterable {
+public enum Destination: String, Codable, Equatable, CaseIterable, Sendable {
     case iPhone
     case iPad
     case mac

@@ -1,19 +1,19 @@
-import AnyCodable
+@preconcurrency import AnyCodable
 import Foundation
 import Path
 
-public struct ResourceSynthesizer: Equatable, Hashable, Codable {
+public struct ResourceSynthesizer: Equatable, Hashable, Codable, Sendable {
     public let parser: Parser
     public let parserOptions: [String: Parser.Option]
     public let extensions: Set<String>
     public let template: Template
 
-    public enum Template: Equatable, Hashable, Codable {
+    public enum Template: Equatable, Hashable, Codable, Sendable {
         case file(AbsolutePath)
         case defaultTemplate(String)
     }
 
-    public enum Parser: String, Equatable, Hashable, Codable {
+    public enum Parser: String, Equatable, Hashable, Codable, Sendable {
         case strings
         case assets
         case plists
@@ -24,7 +24,7 @@ public struct ResourceSynthesizer: Equatable, Hashable, Codable {
         case yaml
         case files
 
-        public struct Option: Equatable, Hashable, Codable {
+        public struct Option: Equatable, Hashable, Codable, Sendable {
             public var value: Any { anyCodableValue.value }
             private let anyCodableValue: AnyCodable
 

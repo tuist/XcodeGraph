@@ -4,7 +4,7 @@ import Path
 public typealias SettingsDictionary = [String: SettingValue]
 
 public enum SettingValue: ExpressibleByStringInterpolation, ExpressibleByStringLiteral, ExpressibleByArrayLiteral, Equatable,
-    Codable
+    Codable, Sendable
 {
     case string(String)
     case array([String])
@@ -73,7 +73,7 @@ extension SettingsDictionary {
     }
 }
 
-public struct Configuration: Equatable, Codable {
+public struct Configuration: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     public var settings: SettingsDictionary
@@ -98,7 +98,7 @@ public struct Configuration: Equatable, Codable {
     }
 }
 
-public enum DefaultSettings: Codable, Equatable {
+public enum DefaultSettings: Codable, Equatable, Sendable {
     case recommended(excluding: Set<String> = [])
     case essential(excluding: Set<String> = [])
     case none
@@ -114,7 +114,7 @@ extension DefaultSettings {
     }
 }
 
-public struct Settings: Equatable, Codable {
+public struct Settings: Equatable, Codable, Sendable {
     public static let `default` = Settings(
         configurations: [.release: nil, .debug: nil],
         defaultSettings: .recommended

@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct TestPlan: Hashable, Codable {
+public struct TestPlan: Hashable, Codable, Sendable {
     public let name: String
     public let path: AbsolutePath
     public let testTargets: [TestableTarget]

@@ -7,8 +7,8 @@ import Foundation
 /// It hosts the name as well as the variant of
 /// a configuration to help infer the appropriate
 /// default settings.
-public struct BuildConfiguration: Codable {
-    public enum Variant: String, Codable {
+public struct BuildConfiguration: Codable, Sendable {
+    public enum Variant: String, Codable, Sendable {
         case debug, release
     }
 

@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// Testable target describe target and tests information.
-public struct TestableTarget: Equatable, Hashable, Codable {
+public struct TestableTarget: Equatable, Hashable, Codable, Sendable {
     /// The target name and its project path.
     public let target: TargetReference
     /// Skip test target from TestAction.

@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct TestAction: Equatable, Codable {
+public struct TestAction: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     public var testPlans: [TestPlan]?

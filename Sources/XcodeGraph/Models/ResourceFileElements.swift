@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ResourceFileElements: Codable, Equatable {
+public struct ResourceFileElements: Codable, Equatable, Sendable {
     public var resources: [ResourceFileElement]
 
     public var privacyManifest: PrivacyManifest?

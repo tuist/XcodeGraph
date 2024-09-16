@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 // swiftlint:disable:next type_body_length
-public struct Target: Equatable, Hashable, Comparable, Codable {
+public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     // MARK: - Static
 
     // Note: The `.docc` file type is technically both a valid source extension and folder extension

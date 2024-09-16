@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// Represents a Core Data model
-public struct CoreDataModel: Equatable, Codable {
+public struct CoreDataModel: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     /// Relative path to the Core Data model.

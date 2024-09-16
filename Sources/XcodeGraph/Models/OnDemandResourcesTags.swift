@@ -1,4 +1,4 @@
-public struct OnDemandResourcesTags: Codable, Equatable {
+public struct OnDemandResourcesTags: Codable, Equatable, Sendable {
     public let initialInstall: [String]?
     public let prefetchOrder: [String]?
 

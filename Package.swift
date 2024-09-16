@@ -8,6 +8,9 @@ var targets: [Target] = [
         dependencies: [
             "AnyCodable",
             "Path",
+        ],
+        swiftSettings: [
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
 ]

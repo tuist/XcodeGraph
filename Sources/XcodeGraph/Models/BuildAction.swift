@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct BuildAction: Equatable, Codable {
+public struct BuildAction: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     public var targets: [TargetReference]

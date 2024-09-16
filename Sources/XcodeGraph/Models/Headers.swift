@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// Headers
-public struct Headers: Equatable, Codable {
+public struct Headers: Equatable, Codable, Sendable {
     // MARK: - Attributes
 
     public let `public`: [AbsolutePath]
