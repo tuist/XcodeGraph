@@ -10,7 +10,7 @@ var targets: [Target] = [
             "Path",
         ],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency")
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
 ]
