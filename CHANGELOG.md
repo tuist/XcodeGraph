@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2024-09-20
+### Details
+#### Feat
+- Add linking status to target and project by @rgnns in [#45](https://github.com/tuist/XcodeGraph/pull/45)
+
 ## [0.11.7] - 2024-09-19
 ### Details
 #### Chore
@@ -66,8 +71,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Refactor
 - Unify status enums into one linking status by @rgnns in [#32](https://github.com/tuist/XcodeGraph/pull/32)
 
-## New Contributors
-* @rgnns made their first contribution in [#32](https://github.com/tuist/XcodeGraph/pull/32)
 ## [0.10.1] - 2024-08-08
 ### Details
 #### Docs
@@ -99,6 +102,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create .all-contributorsrc [skip ci] by @allcontributors[bot]
 - Update README.md [skip ci] by @allcontributors[bot]
 
+[0.12.0]: https://github.com/tuist/XcodeGraph/compare/0.11.7..0.12.0
 [0.11.7]: https://github.com/tuist/XcodeGraph/compare/0.11.6..0.11.7
 [0.11.6]: https://github.com/tuist/XcodeGraph/compare/0.11.5..0.11.6
 [0.11.5]: https://github.com/tuist/XcodeGraph/compare/0.11.4..0.11.5
