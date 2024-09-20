@@ -82,7 +82,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     case packageProduct(path: AbsolutePath, product: String, type: PackageProductType)
 
     /// A dependency that represents a target that is defined in the project at the given path.
-    case target(name: String, path: AbsolutePath)
+    case target(name: String, path: AbsolutePath, status: LinkingStatus = .required)
 
     /// A dependency that represents an SDK
     case sdk(name: String, path: AbsolutePath, status: LinkingStatus, source: SDKSource)
@@ -107,7 +107,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             hasher.combine(path)
             hasher.combine(product)
             hasher.combine(isPlugin)
-        case let .target(name, path):
+        case let .target(name, path, _):
             hasher.combine("target")
             hasher.combine(name)
             hasher.combine(path)
@@ -225,7 +225,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
 
     public var targetDependency: (name: String, path: AbsolutePath)? {
         switch self {
-        case let .target(name: name, path: path):
+        case let .target(name: name, path: path, _):
             return (name, path)
         default:
             return nil
@@ -269,7 +269,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             return path.basename
         case let .packageProduct(_, product, _):
             return product
-        case let .target(name, _):
+        case let .target(name, _, _):
             return name
         case let .sdk(name, _, _, _):
             return name
