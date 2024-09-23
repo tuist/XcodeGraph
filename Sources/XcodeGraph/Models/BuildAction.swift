@@ -67,16 +67,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
     extension BuildAction {
         public static func test(
             // swiftlint:disable:next force_try
-            targets: [TargetReference] = [TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App")],
-            preActions: [ExecutionAction] = [],
-            postActions: [ExecutionAction] = []
-        ) -> BuildAction {
-            BuildAction(targets: targets.map { Target($0) }, preActions: preActions, postActions: postActions)
-        }
-
-        public static func test(
-            // swiftlint:disable:next force_try
-            targets: [Target] = [],
+            targets: [BuildAction.Target] = [],
             preActions: [ExecutionAction] = [],
             postActions: [ExecutionAction] = []
         ) -> BuildAction {
