@@ -14,6 +14,7 @@ public struct TargetReference: Hashable, Codable, Sendable {
 #if DEBUG
     extension TargetReference {
         public static func test(
+            // swiftlint:disable:next force_try
             projectPath: AbsolutePath = try! AbsolutePath(validating: "/Project"),
             name: String = "TestTarget"
         ) -> Self {

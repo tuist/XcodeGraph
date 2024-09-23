@@ -31,7 +31,10 @@ public struct BuildAction: Equatable, Codable, Sendable {
 
     // MARK: - Init
 
-    @available(*, deprecated, message: "Use the initializer that takes targets as instances of BuildAction.Target")
+    @available(
+        *, deprecated,
+        message: "Use the initializer that takes targets as instances of BuildAction.Target"
+    )
     public init(
         targets: [TargetReference] = [],
         preActions: [ExecutionAction] = [],
@@ -59,14 +62,15 @@ public struct BuildAction: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension BuildAction.Target {
-        public static func test(_ reference: TargetReference = TargetReference.test(), buildFor: [BuildFor]? = nil) -> Self {
+        public static func test(
+            _ reference: TargetReference = TargetReference.test(), buildFor: [BuildFor]? = nil
+        ) -> Self {
             return Self(reference, buildFor: buildFor)
         }
     }
 
     extension BuildAction {
         public static func test(
-            // swiftlint:disable:next force_try
             targets: [BuildAction.Target] = [],
             preActions: [ExecutionAction] = [],
             postActions: [ExecutionAction] = []
