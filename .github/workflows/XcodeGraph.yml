@@ -2,16 +2,16 @@ name: XcodeGraph
 on:
   push:
     branches:
-      - '**'
+      - "**"
     tags-ignore:
-      - '**'
+      - "**"
     paths:
-      - '**/*.swift'
-      - '.github/workflows/*.yml'
+      - "**/*.swift"
+      - ".github/workflows/*.yml"
   pull_request:
     paths:
-      - '**/*.swift'
-      - '.github/workflows/*.yml'
+      - "**/*.swift"
+      - ".github/workflows/*.yml"
 
 concurrency:
   group: XcodeGraph-${{ github.workflow }}-${{ github.ref }}
@@ -30,33 +30,33 @@ jobs:
           - ubuntu-22.04
           - macOS-13
         swift-version:
-          - '5.9'
+          - "5.9"
         swift-compat-ver:
-          - '5'
+          - "5"
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: SwiftyLab/setup-swift@latest
-      with:
-        swift-version: ${{ matrix.swift-version }}
-    # DEBUG mode
-    - name: Build with debug mode.
-      id: debug_build
-      run: swift build --configuration debug -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
-      continue-on-error: true
-    - name: Retry build with debug mode if necessary
-      if: steps.debug_build.outcome == 'failure'
-      run: |
-        swift build --configuration debug -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
-    # RELEASE mode
-    - name: Build with release mode.
-      id: release_build
-      run: swift build --configuration release -Xswiftc -enable-testing -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
-      continue-on-error: true
-    - name: Retry build with release mode if necessary
-      if: steps.release_build.outcome == 'failure'
-      run: |
-        swift build --configuration release -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+      - uses: actions/checkout@v4
+      - uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: ${{ matrix.swift-version }}
+      # DEBUG mode
+      - name: Build with debug mode.
+        id: debug_build
+        run: swift build --configuration debug -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+        continue-on-error: true
+      - name: Retry build with debug mode if necessary
+        if: steps.debug_build.outcome == 'failure'
+        run: |
+          swift build --configuration debug -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+      # RELEASE mode
+      - name: Build with release mode.
+        id: release_build
+        run: swift build --configuration release -Xswiftc -enable-testing -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+        continue-on-error: true
+      - name: Retry build with release mode if necessary
+        if: steps.release_build.outcome == 'failure'
+        run: |
+          swift build --configuration release -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
   tuist_build:
     name: Tuist Build
     strategy:
@@ -64,9 +64,9 @@ jobs:
         os:
           - macOS-13
         swift-version:
-          - '5.9'
+          - "5.9"
         swift-compat-ver:
-          - '5'
+          - "5"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -78,6 +78,27 @@ jobs:
         run: tuist install
       - name: Build
         run: tuist build
+  tuist_test:
+    name: Tuist Test
+    strategy:
+      matrix:
+        os:
+          - macOS-13
+        swift-version:
+          - "5.9"
+        swift-compat-ver:
+          - "5"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: ${{ matrix.swift-version }}
+      - uses: jdx/mise-action@v2
+      - name: Install dependencies
+        run: tuist install
+      - name: Build
+        run: tuist test
   lint:
     name: Lint
     strategy:
@@ -85,9 +106,9 @@ jobs:
         os:
           - macOS-13
         swift-version:
-          - '5.9'
+          - "5.9"
         swift-compat-ver:
-          - '5'
+          - "5"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
