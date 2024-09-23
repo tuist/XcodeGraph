@@ -10,3 +10,14 @@ public struct TargetReference: Hashable, Codable, Sendable {
         self.name = name
     }
 }
+
+#if DEBUG
+    extension TargetReference {
+        public static func test(
+            projectPath: AbsolutePath = try! AbsolutePath(validating: "/Project"),
+            name: String = "TestTarget"
+        ) -> Self {
+            return TargetReference(projectPath: projectPath, name: name)
+        }
+    }
+#endif

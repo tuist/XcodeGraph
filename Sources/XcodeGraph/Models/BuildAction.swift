@@ -16,7 +16,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
         /// A list of Xcode actions when a target should build.
         public var buildFor: [BuildFor]?
 
-        public init(_ reference: TargetReference, buildFor: [BuildFor]?) {
+        public init(_ reference: TargetReference, buildFor: [BuildFor]? = nil) {
             self.reference = reference
             self.buildFor = buildFor
         }
@@ -24,22 +24,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
 
     // MARK: - Attributes
 
-    public var targetsWithBuildFor: [Target]
-    @available(
-        *,
-        deprecated,
-        renamed: "targetsWithBuildFor",
-        message: "Use the initializer that takes targets as instances of BuildAction.Target"
-    )
-    public var targets: [TargetReference] {
-        get {
-            targetsWithBuildFor.map(\.reference)
-        }
-        set {
-            targetsWithBuildFor = newValue.map { Target($0, buildFor: nil) }
-        }
-    }
-
+    public var targets: [Target]
     public var preActions: [ExecutionAction]
     public var postActions: [ExecutionAction]
     public var runPostActionsOnFailure: Bool
@@ -53,19 +38,19 @@ public struct BuildAction: Equatable, Codable, Sendable {
         postActions: [ExecutionAction] = [],
         runPostActionsOnFailure: Bool = false
     ) {
-        targetsWithBuildFor = targets.map { Target($0, buildFor: nil) }
+        self.targets = targets.map { Target($0, buildFor: nil) }
         self.preActions = preActions
         self.postActions = postActions
         self.runPostActionsOnFailure = runPostActionsOnFailure
     }
 
     public init(
-        targetsWithBuildFor: [BuildAction.Target] = [],
+        targets: [BuildAction.Target] = [],
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
         runPostActionsOnFailure: Bool = false
     ) {
-        self.targetsWithBuildFor = targetsWithBuildFor
+        self.targets = targets
         self.preActions = preActions
         self.postActions = postActions
         self.runPostActionsOnFailure = runPostActionsOnFailure
@@ -73,10 +58,25 @@ public struct BuildAction: Equatable, Codable, Sendable {
 }
 
 #if DEBUG
+    extension BuildAction.Target {
+        public static func test(_ reference: TargetReference = TargetReference.test(), buildFor: [BuildFor]? = nil) -> Self {
+            return Self(reference, buildFor: buildFor)
+        }
+    }
+
     extension BuildAction {
         public static func test(
             // swiftlint:disable:next force_try
             targets: [TargetReference] = [TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App")],
+            preActions: [ExecutionAction] = [],
+            postActions: [ExecutionAction] = []
+        ) -> BuildAction {
+            BuildAction(targets: targets.map { Target($0) }, preActions: preActions, postActions: postActions)
+        }
+
+        public static func test(
+            // swiftlint:disable:next force_try
+            targets: [Target] = [],
             preActions: [ExecutionAction] = [],
             postActions: [ExecutionAction] = []
         ) -> BuildAction {
