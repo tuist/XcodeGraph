@@ -8,7 +8,7 @@ final class BuildActionTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = BuildAction(
-            targetsWithBuildFor: [
+            targets: [
                 BuildAction.Target(TargetReference(
                     projectPath: try! AbsolutePath(validating: "/path/to/project"),
                     name: "name"
