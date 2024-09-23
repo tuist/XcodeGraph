@@ -8,11 +8,11 @@ final class BuildActionTests: XCTestCase {
     func test_codable() {
         // Given
         let subject = BuildAction(
-            targets: [
-                .init(
+            targetsWithBuildFor: [
+                BuildAction.Target(TargetReference(
                     projectPath: try! AbsolutePath(validating: "/path/to/project"),
                     name: "name"
-                ),
+                ), buildFor: [.running]),
             ],
             preActions: [
                 .init(
