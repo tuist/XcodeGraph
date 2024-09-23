@@ -145,6 +145,7 @@ public struct Settings: Equatable, Codable, Sendable {
     public func with(base: SettingsDictionary) -> Settings {
         .init(
             base: base,
+            baseDebug: baseDebug,
             configurations: configurations,
             defaultSettings: defaultSettings
         )

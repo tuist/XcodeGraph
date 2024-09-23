@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/Path.git",
       "state" : {
-        "revision" : "e137d6db7a31decd77077613f5c59c745102603e",
-        "version" : "0.3.5"
+        "revision" : "bee1e910422f5c817b58dc593c50d747c4637b9c",
+        "version" : "0.3.6"
       }
     }
   ],
