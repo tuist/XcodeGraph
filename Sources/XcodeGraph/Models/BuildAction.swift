@@ -45,7 +45,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
     }
 
     public init(
-        targets: [BuildAction.Target] = [],
+        targets: [BuildAction.Target],
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
         runPostActionsOnFailure: Bool = false
