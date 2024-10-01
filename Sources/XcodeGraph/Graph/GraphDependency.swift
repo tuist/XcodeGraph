@@ -45,6 +45,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         }
 
         case runtime = "runtime package product"
+        case runtimeEmbedded = "runtime embedded package product"
         case plugin = "plugin package product"
         case macro = "macro package product"
 
@@ -218,6 +219,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
              let .library(path: _, publicHeaders: _, linking: linking, architectures: _, swiftModuleMap: _):
             return linking == .dynamic
         case .bundle: return false
+        case .packageProduct(_, _, type: .runtimeEmbedded): return true
         case .packageProduct: return false
         case .target: return false
         case .sdk: return false
