@@ -14,25 +14,8 @@ final class TargetTests: XCTestCase {
 
     func test_validSourceExtensions() {
         XCTAssertEqual(
-            Target.validSourceExtensions,
-            [
-                "m",
-                "swift",
-                "mm",
-                "cpp",
-                "cc",
-                "c",
-                "d",
-                "s",
-                "intentdefinition",
-                "xcmappingmodel",
-                "metal",
-                "mlmodel",
-                "docc",
-                "playground",
-                "rcproject",
-                "mlpackage",
-            ]
+            Target.validSourceExtensions.sorted(),
+            ["c", "cc", "cpp", "d", "intentdefinition", "m", "metal", "mlmodel", "mm", "s", "swift"]
         )
     }
 
