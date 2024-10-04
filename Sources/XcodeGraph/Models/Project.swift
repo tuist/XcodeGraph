@@ -59,6 +59,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
     public var lastUpgradeCheck: Version?
 
     /// Indicates whether the project is imported through `Package.swift`.
+    @available(*, deprecated, message: "It will be removed in a future version, instead use the `tags` at the target level.")
     public var isExternal: Bool
 
     // MARK: - Init
