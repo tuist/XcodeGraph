@@ -20,6 +20,7 @@ final class TargetTests: XCTestCase {
                 "swift",
                 "mm",
                 "cpp",
+                "c++",
                 "cc",
                 "c",
                 "d",
