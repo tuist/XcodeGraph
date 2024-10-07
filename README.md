@@ -1,6 +1,6 @@
 # ፨ XcodeGraph
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 XcodeGraph is a Swift Package that contains data structures to model an Xcode projects graph.
@@ -34,6 +34,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Binlogo"><img src="https://avatars.githubusercontent.com/u/7845507?v=4?s=100" width="100px;" alt="Binlogo"/><br /><sub><b>Binlogo</b></sub></a><br /><a href="https://github.com/tuist/XcodeGraph/commits?author=Binlogo" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/filipracki"><img src="https://avatars.githubusercontent.com/u/27164368?v=4?s=100" width="100px;" alt="Filip Racki"/><br /><sub><b>Filip Racki</b></sub></a><br /><a href="https://github.com/tuist/XcodeGraph/commits?author=filipracki" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rgnns"><img src="https://avatars.githubusercontent.com/u/811827?v=4?s=100" width="100px;" alt="Gabriel Liévano"/><br /><sub><b>Gabriel Liévano</b></sub></a><br /><a href="https://github.com/tuist/XcodeGraph/commits?author=rgnns" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/fila95"><img src="https://avatars.githubusercontent.com/u/7265334?v=4?s=100" width="100px;" alt="Giovanni Filaferro"/><br /><sub><b>Giovanni Filaferro</b></sub></a><br /><a href="https://github.com/tuist/XcodeGraph/commits?author=fila95" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
