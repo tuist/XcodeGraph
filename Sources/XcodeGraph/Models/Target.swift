@@ -49,6 +49,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public let mergedBinaryType: MergedBinaryType
     public let mergeable: Bool
     public let onDemandResourcesTags: OnDemandResourcesTags?
+    public let metadata: TargetMetadata
 
     // MARK: - Init
 
@@ -79,7 +80,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         prune: Bool = false,
         mergedBinaryType: MergedBinaryType = .disabled,
         mergeable: Bool = false,
-        onDemandResourcesTags: OnDemandResourcesTags? = nil
+        onDemandResourcesTags: OnDemandResourcesTags? = nil,
+        metadata: TargetMetadata = .init(tags: [])
     ) {
         self.name = name
         self.product = product
@@ -108,6 +110,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         self.mergedBinaryType = mergedBinaryType
         self.mergeable = mergeable
         self.onDemandResourcesTags = onDemandResourcesTags
+        self.metadata = metadata
     }
 
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
@@ -403,7 +406,8 @@ extension Sequence<Target> {
             additionalFiles: [FileElement] = [],
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
-            mergeable: Bool = false
+            mergeable: Bool = false,
+            metadata: TargetMetadata = .test()
         ) -> Target {
             Target(
                 name: name,
@@ -430,7 +434,8 @@ extension Sequence<Target> {
                 additionalFiles: additionalFiles,
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
-                mergeable: mergeable
+                mergeable: mergeable,
+                metadata: metadata
             )
         }
 
@@ -461,7 +466,8 @@ extension Sequence<Target> {
             additionalFiles: [FileElement] = [],
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
-            mergeable: Bool = false
+            mergeable: Bool = false,
+            metadata: TargetMetadata = .test()
         ) -> Target {
             Target(
                 name: name,
@@ -488,7 +494,8 @@ extension Sequence<Target> {
                 additionalFiles: additionalFiles,
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
-                mergeable: mergeable
+                mergeable: mergeable,
+                metadata: metadata
             )
         }
 
