@@ -4,6 +4,7 @@ import Path
 public enum LinkingStatus: String, Hashable, Codable, Sendable {
     case required
     case optional
+    case none
 }
 
 public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
