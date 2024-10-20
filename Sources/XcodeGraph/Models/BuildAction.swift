@@ -8,6 +8,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
     public var preActions: [ExecutionAction]
     public var postActions: [ExecutionAction]
     public var runPostActionsOnFailure: Bool
+    public var buildImplicitDependencies: Bool
 
     // MARK: - Init
 
@@ -15,12 +16,14 @@ public struct BuildAction: Equatable, Codable, Sendable {
         targets: [TargetReference] = [],
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
-        runPostActionsOnFailure: Bool = false
+        runPostActionsOnFailure: Bool = false,
+        buildImplicitDependencies: Bool = true
     ) {
         self.targets = targets
         self.preActions = preActions
         self.postActions = postActions
         self.runPostActionsOnFailure = runPostActionsOnFailure
+        self.buildImplicitDependencies = buildImplicitDependencies
     }
 }
 
