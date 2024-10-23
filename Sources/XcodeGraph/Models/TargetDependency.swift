@@ -10,6 +10,7 @@ public enum LinkingStatus: String, Hashable, Codable, Sendable {
 public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
     public enum PackageType: String, Equatable, Hashable, Codable, Sendable {
         case runtime
+        case runtimeEmbedded
         case plugin
         case macro
     }
