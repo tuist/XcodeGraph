@@ -9,6 +9,10 @@ public struct XCFrameworkMetadata: Equatable {
     public var mergeable: Bool
     public var status: LinkingStatus
     public var macroPath: AbsolutePath?
+    /// All `.swiftmodule` files present in the `.xcframework`
+    public var swiftModules: [AbsolutePath]
+    /// All `.modulemap` files present in the `.xcframework`
+    public var moduleMaps: [AbsolutePath]
 
     public init(
         path: AbsolutePath,
@@ -16,7 +20,9 @@ public struct XCFrameworkMetadata: Equatable {
         linking: BinaryLinking,
         mergeable: Bool,
         status: LinkingStatus,
-        macroPath: AbsolutePath?
+        macroPath: AbsolutePath?,
+        swiftModules: [AbsolutePath] = [],
+        moduleMaps: [AbsolutePath] = []
     ) {
         self.path = path
         self.infoPlist = infoPlist
@@ -24,6 +30,8 @@ public struct XCFrameworkMetadata: Equatable {
         self.mergeable = mergeable
         self.status = status
         self.macroPath = macroPath
+        self.swiftModules = swiftModules
+        self.moduleMaps = moduleMaps
     }
 }
 
@@ -36,7 +44,9 @@ public struct XCFrameworkMetadata: Equatable {
             linking: BinaryLinking = .dynamic,
             mergeable: Bool = false,
             status: LinkingStatus = .required,
-            macroPath: AbsolutePath? = nil
+            macroPath: AbsolutePath? = nil,
+            swiftModules: [AbsolutePath] = [],
+            moduleMaps: [AbsolutePath] = []
         ) -> XCFrameworkMetadata {
             XCFrameworkMetadata(
                 path: path,
@@ -44,7 +54,9 @@ public struct XCFrameworkMetadata: Equatable {
                 linking: linking,
                 mergeable: mergeable,
                 status: status,
-                macroPath: macroPath
+                macroPath: macroPath,
+                swiftModules: swiftModules,
+                moduleMaps: moduleMaps
             )
         }
     }
