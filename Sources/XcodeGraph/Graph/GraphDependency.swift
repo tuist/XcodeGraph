@@ -8,6 +8,8 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         public let linking: BinaryLinking
         public let mergeable: Bool
         public let status: LinkingStatus
+        public let swiftModules: [AbsolutePath]
+        public let moduleMaps: [AbsolutePath]
 
         public init(
             path: AbsolutePath,
@@ -15,13 +17,17 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             linking: BinaryLinking,
             mergeable: Bool,
             status: LinkingStatus,
-            macroPath _: AbsolutePath?
+            macroPath _: AbsolutePath?,
+            swiftModules: [AbsolutePath],
+            moduleMaps: [AbsolutePath]
         ) {
             self.path = path
             self.infoPlist = infoPlist
             self.linking = linking
             self.mergeable = mergeable
             self.status = status
+            self.swiftModules = swiftModules
+            self.moduleMaps = moduleMaps
         }
 
         public var description: String {
@@ -314,17 +320,22 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             path: AbsolutePath = AbsolutePath.root.appending(try! RelativePath(validating: "Test.xcframework")),
             infoPlist: XCFrameworkInfoPlist = .test(),
             linking: BinaryLinking = .dynamic,
+            mergeable: Bool = false,
             status: LinkingStatus = .required,
-            macroPath: AbsolutePath? = nil
+            macroPath: AbsolutePath? = nil,
+            swiftModules: [AbsolutePath] = [],
+            moduleMaps: [AbsolutePath] = []
         ) -> GraphDependency {
             .xcframework(
                 GraphDependency.XCFramework(
                     path: path,
                     infoPlist: infoPlist,
                     linking: linking,
-                    mergeable: false,
+                    mergeable: mergeable,
                     status: status,
-                    macroPath: macroPath
+                    macroPath: macroPath,
+                    swiftModules: swiftModules,
+                    moduleMaps: moduleMaps
                 )
             )
         }
