@@ -37,7 +37,7 @@ public struct GraphTarget: Equatable, Hashable, Comparable, CustomDebugStringCon
         public static func test(
             path: AbsolutePath = .root,
             target: Target = .test(),
-            project: Project = .test()
+            project: Project = .test(type: .local)
         ) -> GraphTarget {
             GraphTarget(
                 path: path,
