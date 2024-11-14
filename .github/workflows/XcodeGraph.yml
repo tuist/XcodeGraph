@@ -28,7 +28,7 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - macos-15
+          - macos-14
         swift-version:
           - "5.9"
         swift-compat-ver:
@@ -62,7 +62,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-15
+          - macos-14
         swift-version:
           - "5.9"
         swift-compat-ver:
@@ -85,7 +85,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-15
+          - macos-14
         swift-version:
           - "5.9"
         swift-compat-ver:
