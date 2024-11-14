@@ -29,7 +29,7 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           experimental: true
-          version: v2024.11.8
+          version: 2024.11.8
       - name: Check if there are releasable changes
         id: is-releasable
         run: |
