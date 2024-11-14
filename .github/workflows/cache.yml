@@ -17,7 +17,7 @@ concurrency:
 
 env:
   MISE_EXPERIMENTAL: 1
-  TUIST_CONFIG_CLOUD_TOKEN: ${{ secrets.TUIST_CONFIG_CLOUD_TOKEN }}
+  TUIST_CONFIG_TOKEN: ${{ secrets.TUIST_CONFIG_CLOUD_TOKEN }}
 
 jobs:
   warm:
@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - macOS-13
+          - macOS-15
         swift-version:
           - "5.9"
         swift-compat-ver:
