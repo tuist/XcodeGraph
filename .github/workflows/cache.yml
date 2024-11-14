@@ -4,12 +4,12 @@ on:
     branches:
       - main
     paths:
-      - '**/*.swift'
-      - '.github/workflows/*.yml'
+      - "**/*.swift"
+      - ".github/workflows/*.yml"
   pull_request:
     paths:
-      - '**/*.swift'
-      - '.github/workflows/*.yml'
+      - "**/*.swift"
+      - ".github/workflows/*.yml"
 
 concurrency:
   group: Cache-${{ github.workflow }}-${{ github.ref }}
@@ -17,19 +17,19 @@ concurrency:
 
 env:
   MISE_EXPERIMENTAL: 1
-  TUIST_CONFIG_CLOUD_TOKEN: ${{ secrets.TUIST_CONFIG_CLOUD_TOKEN }}
-  
+  TUIST_CONFIG_TOKEN: ${{ secrets.TUIST_CONFIG_CLOUD_TOKEN }}
+
 jobs:
   warm:
     name: Warm
     strategy:
       matrix:
         os:
-          - macOS-13
+          - macOS-14
         swift-version:
-          - '5.9'
+          - "5.9"
         swift-compat-ver:
-          - '5'
+          - "5"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -37,6 +37,8 @@ jobs:
         with:
           swift-version: ${{ matrix.swift-version }}
       - uses: jdx/mise-action@v2
+        with:
+          version: 2024.11.8
       - name: Install dependencies
         run: tuist install
       - name: Build
