@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0] - 2024-11-14
+### Details
+#### Feat
+- Force release by @pepicrft
+
 ## [0.17.1] - 2024-11-13
 ### Details
 #### Chore
@@ -125,6 +130,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Feat
 - Add linking status to target and project by @rgnns in [#45](https://github.com/tuist/XcodeGraph/pull/45)
 
+## New Contributors
+* @danieleformichelli made their first contribution
 ## [0.11.7] - 2024-09-19
 ### Details
 #### Chore
@@ -140,6 +147,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Chore
 - Sendability conformance by @waltflanagan in [#44](https://github.com/tuist/XcodeGraph/pull/44)
 
+## New Contributors
+* @waltflanagan made their first contribution
 ## [0.11.4] - 2024-09-04
 ### Details
 #### Chore
@@ -211,12 +220,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update .all-contributorsrc [skip ci] by @allcontributors[bot]
 - Update README.md [skip ci] by @allcontributors[bot]
 
+## New Contributors
+* @filipracki made their first contribution
 ## [0.7.0] - 2024-06-25
 ### Details
 #### Docs
 - Create .all-contributorsrc [skip ci] by @allcontributors[bot]
 - Update README.md [skip ci] by @allcontributors[bot]
 
+## New Contributors
+* @darrarski made their first contribution
+[0.18.0]: https://github.com/tuist/XcodeGraph/compare/0.17.1..0.18.0
 [0.17.1]: https://github.com/tuist/XcodeGraph/compare/0.17.0..0.17.1
 [0.17.0]: https://github.com/tuist/XcodeGraph/compare/0.16.3..0.17.0
 [0.16.3]: https://github.com/tuist/XcodeGraph/compare/0.16.2..0.16.3
