@@ -267,7 +267,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
             additionalFiles: [FileElement] = [],
             resourceSynthesizers: [ResourceSynthesizer] = [],
             lastUpgradeCheck: Version? = nil,
-            isExternal: Bool = false
+            isExternal: Bool
         ) -> Project {
             Project(
                 path: path,
@@ -312,7 +312,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
             additionalFiles: [FileElement] = [],
             resourceSynthesizers: [ResourceSynthesizer] = [],
             lastUpgradeCheck: Version? = nil,
-            type: ProjectType
+            type: ProjectType = .local
         ) -> Project {
             Project(
                 path: path,
