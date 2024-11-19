@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.0] - 2024-11-19
+### Details
+#### Feat
+- Add new `Target.metadata` attribute by @hiltonc in [#41](https://github.com/tuist/XcodeGraph/pull/41)
+
+## New Contributors
+* @hiltonc made their first contribution in [#41](https://github.com/tuist/XcodeGraph/pull/41)
 ## [0.18.3] - 2024-11-15
 ### Details
 #### Chore
@@ -245,6 +252,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[0.19.0]: https://github.com/tuist/XcodeGraph/compare/0.18.3..0.19.0
 [0.18.3]: https://github.com/tuist/XcodeGraph/compare/0.18.2..0.18.3
 [0.18.2]: https://github.com/tuist/XcodeGraph/compare/0.18.1..0.18.2
 [0.18.1]: https://github.com/tuist/XcodeGraph/compare/0.18.0..0.18.1
