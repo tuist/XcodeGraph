@@ -33,7 +33,7 @@ jobs:
       - name: Check if there are releasable changes
         id: is-releasable
         run: |
-          bumped_output=$(git cliff --bump)
+          bumped_output=$(git cliff --bump --unreleased)
           changelog_content=$(cat CHANGELOG.md)
 
           bumped_hash=$(echo -n "$bumped_output" | shasum -a 256 | awk '{print $1}')
