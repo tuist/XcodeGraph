@@ -34,7 +34,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: SwiftyLab/setup-swift@latest
+      - name: Setup Swift
+        if: matrix.os == 'ubuntu-22.04'
+        uses: SwiftyLab/setup-swift@latest
         with:
           swift-version: ${{ matrix.swift-version }}
       # DEBUG mode
