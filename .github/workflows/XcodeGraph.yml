@@ -28,51 +28,44 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - macos-14
+          - macos-15
         swift-version:
           - "5.9"
-        swift-compat-ver:
-          - "5"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: SwiftyLab/setup-swift@latest
+      - name: Setup Swift
+        if: matrix.os == 'ubuntu-22.04'
+        uses: SwiftyLab/setup-swift@latest
         with:
           swift-version: ${{ matrix.swift-version }}
       # DEBUG mode
       - name: Build with debug mode.
         id: debug_build
-        run: swift build --configuration debug -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+        run: swift build --configuration debug
         continue-on-error: true
       - name: Retry build with debug mode if necessary
         if: steps.debug_build.outcome == 'failure'
         run: |
-          swift build --configuration debug -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+          swift build --configuration debug
       # RELEASE mode
       - name: Build with release mode.
         id: release_build
-        run: swift build --configuration release -Xswiftc -enable-testing -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+        run: swift build --configuration release
         continue-on-error: true
       - name: Retry build with release mode if necessary
         if: steps.release_build.outcome == 'failure'
         run: |
-          swift build --configuration release -Xswiftc -swift-version -Xswiftc ${{ matrix.swift-compat-ver }}
+          swift build --configuration release
   tuist_build:
     name: Tuist Build
     strategy:
       matrix:
         os:
-          - macos-14
-        swift-version:
-          - "5.9"
-        swift-compat-ver:
-          - "5"
+          - macos-15
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: SwiftyLab/setup-swift@latest
-        with:
-          swift-version: ${{ matrix.swift-version }}
       - uses: jdx/mise-action@v2
         with:
           version: 2024.11.8
@@ -85,17 +78,10 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-14
-        swift-version:
-          - "5.9"
-        swift-compat-ver:
-          - "5"
+          - macos-15
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: SwiftyLab/setup-swift@latest
-        with:
-          swift-version: ${{ matrix.swift-version }}
       - uses: jdx/mise-action@v2
         with:
           version: 2024.11.8
