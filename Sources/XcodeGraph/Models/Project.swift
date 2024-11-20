@@ -79,7 +79,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
     public var isExternal: Bool
 
     /// It represents the type of project.
-    public var type: ProjectType?
+    public var type: ProjectType
 
     // MARK: - Init
 
@@ -146,6 +146,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         self.resourceSynthesizers = resourceSynthesizers
         self.lastUpgradeCheck = lastUpgradeCheck
         self.isExternal = isExternal
+        type = .external(hash: nil)
     }
 
     /// Initializes the project with its attributes.
