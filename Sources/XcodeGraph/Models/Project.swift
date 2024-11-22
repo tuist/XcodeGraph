@@ -74,81 +74,11 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
     /// The version in which a check happened related to recommended settings after updating Xcode.
     public var lastUpgradeCheck: Version?
 
-    /// Indicates whether the project is imported through `Package.swift`.
-    @available(*, deprecated, renamed: "type", message: "Use project type instead")
-    public var isExternal: Bool
-
     /// It represents the type of project.
     public var type: ProjectType
 
     // MARK: - Init
-
-    /// Initializes the project with its attributes.
-    ///
-    /// - Parameters:
-    ///   - path: Path to the folder that contains the project manifest.
-    ///   - sourceRootPath: Path to the directory where the Xcode project will be generated.
-    ///   - xcodeProjPath: Path to the Xcode project that will be generated.
-    ///   - name: Project name.
-    ///   - organizationName: Organization name.
-    ///   - defaultKnownRegions: Default known regions.
-    ///   - developmentRegion: Development region.
-    ///   - options: Additional project options.
-    ///   - settings: The settings to apply at the project level
-    ///   - filesGroup: The root group to place project files within
-    ///   - targets: The project targets
-    ///                      *(Those won't be included in any build phases)*
-    ///   - packages: Project swift packages.
-    ///   - schemes: Project schemes.
-    ///   - ideTemplateMacros: IDE template macros that represent content of IDETemplateMacros.plist.
-    ///   - additionalFiles: The additional files to include in the project
-    ///   - resourceSynthesizers: `ResourceSynthesizers` that will be applied on individual target's resources
-    ///   - lastUpgradeCheck: The version in which a check happened related to recommended settings after updating Xcode.
-    ///   - isExternal: Indicates whether the project is imported through `Package.swift`.
-    @available(*, deprecated, message: "Use the constructor that takes type: insead of isExternal:")
-    public init(
-        path: AbsolutePath,
-        sourceRootPath: AbsolutePath,
-        xcodeProjPath: AbsolutePath,
-        name: String,
-        organizationName: String?,
-        classPrefix: String?,
-        defaultKnownRegions: [String]?,
-        developmentRegion: String?,
-        options: Options,
-        settings: Settings,
-        filesGroup: ProjectGroup,
-        targets: [Target],
-        packages: [Package],
-        schemes: [Scheme],
-        ideTemplateMacros: IDETemplateMacros?,
-        additionalFiles: [FileElement],
-        resourceSynthesizers: [ResourceSynthesizer],
-        lastUpgradeCheck: Version?,
-        isExternal: Bool
-    ) {
-        self.path = path
-        self.sourceRootPath = sourceRootPath
-        self.xcodeProjPath = xcodeProjPath
-        self.name = name
-        self.organizationName = organizationName
-        self.classPrefix = classPrefix
-        self.defaultKnownRegions = defaultKnownRegions
-        self.developmentRegion = developmentRegion
-        self.options = options
-        self.targets = Dictionary(uniqueKeysWithValues: targets.map { ($0.name, $0) })
-        self.packages = packages
-        self.schemes = schemes
-        self.settings = settings
-        self.filesGroup = filesGroup
-        self.ideTemplateMacros = ideTemplateMacros
-        self.additionalFiles = additionalFiles
-        self.resourceSynthesizers = resourceSynthesizers
-        self.lastUpgradeCheck = lastUpgradeCheck
-        self.isExternal = isExternal
-        type = .external(hash: nil)
-    }
-
+    
     /// Initializes the project with its attributes.
     ///
     /// - Parameters:
@@ -210,10 +140,6 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         self.additionalFiles = additionalFiles
         self.resourceSynthesizers = resourceSynthesizers
         self.lastUpgradeCheck = lastUpgradeCheck
-        isExternal = switch type {
-        case .external: true
-        case .local: false
-        }
         self.type = type
     }
 
@@ -247,52 +173,6 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
 
 #if DEBUG
     extension Project {
-        @available(*, deprecated, message: "Use test that takes a project type instead of isExternal attribute.")
-        public static func test(
-            path: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
-            sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
-            // swiftlint:disable:next force_try
-            xcodeProjPath: AbsolutePath = try! AbsolutePath(validating: "/Project/Project.xcodeproj"),
-            name: String = "Project",
-            organizationName: String? = nil,
-            classPrefix: String? = nil,
-            defaultKnownRegions: [String]? = nil,
-            developmentRegion: String? = nil,
-            options: Options = .test(automaticSchemesOptions: .disabled),
-            settings: Settings = Settings.test(),
-            filesGroup: ProjectGroup = .group(name: "Project"),
-            targets: [Target] = [Target.test()],
-            packages: [Package] = [],
-            schemes: [Scheme] = [],
-            ideTemplateMacros: IDETemplateMacros? = nil,
-            additionalFiles: [FileElement] = [],
-            resourceSynthesizers: [ResourceSynthesizer] = [],
-            lastUpgradeCheck: Version? = nil,
-            isExternal: Bool
-        ) -> Project {
-            Project(
-                path: path,
-                sourceRootPath: sourceRootPath,
-                xcodeProjPath: xcodeProjPath,
-                name: name,
-                organizationName: organizationName,
-                classPrefix: classPrefix,
-                defaultKnownRegions: defaultKnownRegions,
-                developmentRegion: developmentRegion,
-                options: options,
-                settings: settings,
-                filesGroup: filesGroup,
-                targets: targets,
-                packages: packages,
-                schemes: schemes,
-                ideTemplateMacros: ideTemplateMacros,
-                additionalFiles: additionalFiles,
-                resourceSynthesizers: resourceSynthesizers,
-                lastUpgradeCheck: lastUpgradeCheck,
-                isExternal: isExternal
-            )
-        }
-
         public static func test(
             path: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
             sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
@@ -337,53 +217,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 type: type
             )
         }
-
-        @available(*, deprecated, message: "Use empty that takes a project type instead of isExternal attribute.")
-        public static func empty(
-            path: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
-            sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
-            // swiftlint:disable:next force_try
-            xcodeProjPath: AbsolutePath = try! AbsolutePath(validating: "/test/text.xcodeproj"),
-            name: String = "Project",
-            organizationName: String? = nil,
-            classPrefix: String? = nil,
-            defaultKnownRegions: [String]? = nil,
-            developmentRegion: String? = nil,
-            options: Options = .test(automaticSchemesOptions: .disabled),
-            settings: Settings = .default,
-            filesGroup: ProjectGroup = .group(name: "Project"),
-            targets: [Target] = [],
-            packages: [Package] = [],
-            schemes: [Scheme] = [],
-            ideTemplateMacros: IDETemplateMacros? = nil,
-            additionalFiles: [FileElement] = [],
-            resourceSynthesizers: [ResourceSynthesizer] = [],
-            lastUpgradeCheck: Version? = nil,
-            isExternal: Bool
-        ) -> Project {
-            Project(
-                path: path,
-                sourceRootPath: sourceRootPath,
-                xcodeProjPath: xcodeProjPath,
-                name: name,
-                organizationName: organizationName,
-                classPrefix: classPrefix,
-                defaultKnownRegions: defaultKnownRegions,
-                developmentRegion: developmentRegion,
-                options: options,
-                settings: settings,
-                filesGroup: filesGroup,
-                targets: targets,
-                packages: packages,
-                schemes: schemes,
-                ideTemplateMacros: ideTemplateMacros,
-                additionalFiles: additionalFiles,
-                resourceSynthesizers: resourceSynthesizers,
-                lastUpgradeCheck: lastUpgradeCheck,
-                isExternal: isExternal
-            )
-        }
-
+        
         public static func empty(
             path: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
             sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
