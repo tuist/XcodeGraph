@@ -78,7 +78,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
     public var type: ProjectType
 
     // MARK: - Init
-    
+
     /// Initializes the project with its attributes.
     ///
     /// - Parameters:
@@ -217,7 +217,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 type: type
             )
         }
-        
+
         public static func empty(
             path: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
             sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/test/"), // swiftlint:disable:this force_try
