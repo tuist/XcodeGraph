@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2024-11-22
+### Details
+#### Feat
+- Major release 1.0 by @pepicrft in [#81](https://github.com/tuist/XcodeGraph/pull/81)
+
 ## [0.19.5] - 2024-11-21
 ### Details
 #### Chore
@@ -277,6 +282,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.0.0]: https://github.com/tuist/XcodeGraph/compare/0.19.5..1.0.0
 [0.19.5]: https://github.com/tuist/XcodeGraph/compare/0.19.4..0.19.5
 [0.19.4]: https://github.com/tuist/XcodeGraph/compare/0.19.3..0.19.4
 [0.19.3]: https://github.com/tuist/XcodeGraph/compare/0.19.2..0.19.3
