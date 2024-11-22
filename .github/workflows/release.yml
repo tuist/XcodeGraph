@@ -51,15 +51,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: echo "NEXT_VERSION=$(git cliff --bumped-version)" >> "$GITHUB_OUTPUT"
-      - name: Get release notes
-        id: release-notes
-        if: env.should-release == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "RELEASE_NOTES<<EOF" >> "$GITHUB_OUTPUT"
-          git cliff --unreleased >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
       - name: Update CHANGELOG.md
         if: env.should-release == 'true'
         env:
@@ -74,6 +65,15 @@ jobs:
           tagging_message: ${{ steps.next-version.outputs.NEXT_VERSION }}
           skip_dirty_check: true
           commit_message: "[Release] XcodeGraph ${{ steps.next-version.outputs.NEXT_VERSION }}"
+      - name: Get release notes
+        id: release-notes
+        if: env.should-release == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "RELEASE_NOTES<<EOF" >> "$GITHUB_OUTPUT"
+          git cliff --latest >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: env.should-release == 'true'
