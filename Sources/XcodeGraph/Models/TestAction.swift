@@ -17,6 +17,8 @@ public struct TestAction: Equatable, Codable, Sendable {
     public var diagnosticsOptions: SchemeDiagnosticsOptions
     public var language: String?
     public var region: String?
+    public var captureScreenshotsAutomatically: Bool
+    public var deleteScreenshotsWhenEachTestSucceeds: Bool
     public var preferredScreenCaptureFormat: ScreenCaptureFormat?
     public var skippedTests: [String]?
 
@@ -36,6 +38,8 @@ public struct TestAction: Equatable, Codable, Sendable {
         language: String? = nil,
         region: String? = nil,
         preferredScreenCaptureFormat: ScreenCaptureFormat? = nil,
+        captureScreenshotsAutomatically: Bool,
+        deleteScreenshotsWhenEachTestSucceeds: Bool,
         testPlans: [TestPlan]? = nil,
         skippedTests: [String]? = nil
     ) {
@@ -53,6 +57,8 @@ public struct TestAction: Equatable, Codable, Sendable {
         self.language = language
         self.region = region
         self.preferredScreenCaptureFormat = preferredScreenCaptureFormat
+        self.captureScreenshotsAutomatically = captureScreenshotsAutomatically
+        self.deleteScreenshotsWhenEachTestSucceeds = deleteScreenshotsWhenEachTestSucceeds
         self.skippedTests = skippedTests
     }
 }
@@ -77,6 +83,8 @@ public struct TestAction: Equatable, Codable, Sendable {
             language: String? = nil,
             region: String? = nil,
             preferredScreenCaptureFormat: ScreenCaptureFormat? = nil,
+            captureScreenshotsAutomatically: Bool = false,
+            deleteScreenshotsWhenEachTestSucceeds: Bool = false,
             testPlans: [TestPlan]? = nil,
             skippedTests: [String]? = nil
         ) -> TestAction {
@@ -94,6 +102,8 @@ public struct TestAction: Equatable, Codable, Sendable {
                 language: language,
                 region: region,
                 preferredScreenCaptureFormat: preferredScreenCaptureFormat,
+                captureScreenshotsAutomatically: captureScreenshotsAutomatically,
+                deleteScreenshotsWhenEachTestSucceeds: deleteScreenshotsWhenEachTestSucceeds,
                 testPlans: testPlans,
                 skippedTests: skippedTests
             )
