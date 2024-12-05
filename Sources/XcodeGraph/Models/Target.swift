@@ -128,12 +128,12 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
 
     /// Returns whether a target is exclusive to a single platform
     public func isExclusiveTo(_ platform: Platform) -> Bool {
-        destinations.map(\.platform).allSatisfy { $0 == platform }
+        destinations.allSatisfy { $0.platform == platform }
     }
 
     /// Returns whether a target supports a platform
     public func supports(_ platform: Platform) -> Bool {
-        destinations.map(\.platform).contains(platform)
+        destinations.contains { $0.platform == platform }
     }
 
     /// List of platforms this target deploys to
@@ -227,10 +227,17 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
              .macro,
              .dynamicLibrary,
              .staticLibrary,
-             .staticFramework,
              .xpc:
             return false
+
+        case .staticFramework:
+            return containsResources
         }
+    }
+
+    /// Returns true if the target contains resources or CoreData models
+    public var containsResources: Bool {
+        !resources.resources.isEmpty || !coreDataModels.isEmpty
     }
 
     public var legacyPlatform: Platform {
@@ -239,10 +246,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
 
     /// Returns true if the target is an AppClip
     public var isAppClip: Bool {
-        if case .appClip = product {
-            return true
-        }
-        return false
+        product == .appClip
     }
 
     /// Determines if the target is an embeddable watch application
