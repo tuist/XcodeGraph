@@ -259,6 +259,12 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         product == .xpc
     }
 
+    /// Determines if the target is an embeddable plugin
+    /// i.e. a product that can be bundled with a host macOS application or a Mac Catalyst application
+    public func isEmbeddablePlugin() -> Bool {
+        supports(.macOS) && product == .bundle
+    }
+
     /// Determines if the target is an embeddable system extension
     /// i.e. a product that can be bundled with a host macOS application
     public func isEmbeddableSystemExtension() -> Bool {
@@ -275,6 +281,12 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     /// i.e. a product that can be bundled with a macOS application
     public func canEmbedSystemExtensions() -> Bool {
         supports(.macOS) && product == .app
+    }
+
+    /// Determines if the target is able to embed a plugin
+    /// i.e. a product that can be bundled with a macOS application or a Mac Catalyst application
+    public func canEmbedPlugins() -> Bool {
+        (supports(.macOS) || supportsCatalyst) && product == .app
     }
 
     /// Return the a set of PlatformFilters to control linking based on what platform is being compiled
