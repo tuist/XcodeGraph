@@ -186,6 +186,12 @@ public enum Module: String, CaseIterable {
         default:
             rootFolder = "Sources"
         }
+        let resources: ResourceFileElements = switch self {
+        case .xcodeGraph, .xcodeProjToGraph:
+            []
+        case .testSupport:
+            ["Fixtures"]
+        }
         var debugSettings: ProjectDescription.SettingsDictionary = ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"]
         var releaseSettings: ProjectDescription.SettingsDictionary = [:]
 
@@ -215,7 +221,8 @@ public enum Module: String, CaseIterable {
             bundleId: "io.tuist.\(name)",
             deploymentTargets: .macOS("12.0"),
             infoPlist: .default,
-            sources: ["\(rootFolder)/\(name)/**/*.swift"],
+            sources: [.glob("\(rootFolder)/\(name)/**/*.swift", excluding: ["**/Fixtures/**"])],
+            resources: resources,
             dependencies: dependencies,
             settings: settings
         )
