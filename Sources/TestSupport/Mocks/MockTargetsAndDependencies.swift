@@ -3,8 +3,8 @@ import Path
 import XcodeGraph
 @testable @preconcurrency import XcodeProj
 
-public extension PBXTargetDependency {
-    static func mock(
+extension PBXTargetDependency {
+    public static func mock(
         name: String? = "App",
         target: PBXTarget? = nil,
         targetProxy: PBXContainerItemProxy? = nil,
@@ -24,8 +24,8 @@ public extension PBXTargetDependency {
     }
 }
 
-public extension PBXContainerItemProxy {
-    static func mock(
+extension PBXContainerItemProxy {
+    public static func mock(
         containerPortal: PBXContainerItemProxy.ContainerPortal,
         proxyType: PBXContainerItemProxy.ProxyType = .nativeTarget,
         remoteGlobalID: PBXContainerItemProxy.RemoteGlobalID = .string("TARGET_REF"),
@@ -43,8 +43,8 @@ public extension PBXContainerItemProxy {
     }
 }
 
-public extension PBXTargetDependency {
-    static func mockTargetDependency(
+extension PBXTargetDependency {
+    public static func mockTargetDependency(
         name: String,
         platformFilters: [String]? = nil,
         platformFilter: String? = nil,
@@ -66,7 +66,7 @@ public extension PBXTargetDependency {
         return dep
     }
 
-    static func mockPackageProductDependency(
+    public static func mockPackageProductDependency(
         productName: String,
         pbxProj: PBXProj
     ) -> PBXTargetDependency {
@@ -79,7 +79,7 @@ public extension PBXTargetDependency {
         return dep
     }
 
-    static func mockProxyDependency(
+    public static func mockProxyDependency(
         remoteInfo: String,
         proxyType: PBXContainerItemProxy.ProxyType,
         containerPortal: PBXContainerItemProxy.ContainerPortal,
@@ -96,7 +96,7 @@ public extension PBXTargetDependency {
         )
         pbxProj.add(object: proxy)
 
-        if let remoteObject = remoteObject {
+        if let remoteObject {
             proxy.remoteGlobalID = .object(remoteObject)
         }
 
@@ -108,8 +108,8 @@ public extension PBXTargetDependency {
     }
 }
 
-public extension XCSwiftPackageProductDependency {
-    static func mock(
+extension XCSwiftPackageProductDependency {
+    public static func mock(
         productName: String,
         package: XCRemoteSwiftPackageReference? = nil,
         isPlugin: Bool = false,
@@ -123,8 +123,8 @@ public extension XCSwiftPackageProductDependency {
     }
 }
 
-public extension PBXNativeTarget {
-    static func mock(
+extension PBXNativeTarget {
+    public static func mock(
         name: String = "App",
         buildConfigurationList: XCConfigurationList? = nil,
         buildRules: [PBXBuildRule]? = nil,
@@ -137,14 +137,14 @@ public extension PBXNativeTarget {
     ) -> PBXNativeTarget {
         let resolvedProduct =
             product
-            ?? PBXFileReference.mock(
-                sourceTree: .buildProductsDir,
-                explicitFileType: "wrapper.application",
-                path: "App.app",
-                lastKnownFileType: nil,
-                includeInIndex: false,
-                pbxProj: pbxProj
-            )
+                ?? PBXFileReference.mock(
+                    sourceTree: .buildProductsDir,
+                    explicitFileType: "wrapper.application",
+                    path: "App.app",
+                    lastKnownFileType: nil,
+                    includeInIndex: false,
+                    pbxProj: pbxProj
+                )
 
         let resolvedBuildConfigList = buildConfigurationList ?? XCConfigurationList.mock(proj: pbxProj)
         let resolvedBuildRules = buildRules ?? [PBXBuildRule.mock(pbxProj: pbxProj)]

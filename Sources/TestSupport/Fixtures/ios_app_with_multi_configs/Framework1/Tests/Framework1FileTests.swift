@@ -3,15 +3,15 @@ import XCTest
 @testable import Framework1
 
 class Framework1Tests: XCTestCase {
-  func testHello() {
-    let sut = Framework1File()
+    func testHello() {
+        let sut = Framework1File()
 
-    XCTAssertEqual("Framework1File.hello()", sut.hello())
-  }
+        XCTAssertEqual("Framework1File.hello()", sut.hello())
+    }
 
-  func testHelloFromFramework2() {
-    let sut = Framework1File()
+    func testHelloFromFramework2() {
+        let sut = Framework1File()
 
-    XCTAssertEqual("Framework1File -> Framework2File.hello()", sut.helloFromFramework2())
-  }
+        XCTAssertEqual("Framework1File -> Framework2File.hello()", sut.helloFromFramework2())
+    }
 }

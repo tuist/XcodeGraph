@@ -2,7 +2,7 @@ import Core
 import Foundation
 
 public class DataClass {
-  let core = CoreClass()
+    let core = CoreClass()
 
-  public init() {}
+    public init() {}
 }

@@ -1,5 +1,5 @@
 import Foundation
 
 public class CoreClass {
-  public init() {}
+    public init() {}
 }

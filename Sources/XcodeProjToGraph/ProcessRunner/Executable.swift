@@ -26,9 +26,9 @@ public enum Executable<Output: Sendable>: Sendable {
     /// - Returns: A `String` representing the absolute path to the executable.
     public var path: String {
         switch self {
-        case .lipo(_, _, let path):
+        case let .lipo(_, _, path):
             return path
-        case .custom(let executablePath, _, _):
+        case let .custom(executablePath, _, _):
             return executablePath
         }
     }
@@ -38,9 +38,9 @@ public enum Executable<Output: Sendable>: Sendable {
     /// - Returns: An array of `String` arguments.
     public var arguments: [String] {
         switch self {
-        case .lipo(let lipoArgs, _, _):
+        case let .lipo(lipoArgs, _, _):
             return lipoArgs.toArguments()
-        case .custom(_, let args, _):
+        case let .custom(_, args, _):
             return args
         }
     }
@@ -50,9 +50,9 @@ public enum Executable<Output: Sendable>: Sendable {
     /// - Returns: A closure that takes a `ProcessResult` and returns an `Output` value or throws an error.
     public var parser: (ProcessResult) throws -> Output {
         switch self {
-        case .lipo(_, let parser, _):
+        case let .lipo(_, parser, _):
             return parser
-        case .custom(_, _, let parser):
+        case let .custom(_, _, parser):
             return parser
         }
     }

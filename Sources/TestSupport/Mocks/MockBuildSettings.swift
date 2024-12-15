@@ -1,18 +1,10 @@
-//
-//  Mc.swift
-//  XcodeGraphMapper
-//
-//  Created by Andy Kolean on 12/13/24.
-//
-
-
 import Foundation
 import Path
 import XcodeGraph
 @testable @preconcurrency import XcodeProj
 
-public extension XCBuildConfiguration {
-    static func mock(
+extension XCBuildConfiguration {
+    public static func mock(
         name: String = "Debug",
         buildSettings: [String: Sendable] = MockDefaults.defaultDebugSettings,
         baseConfiguration: PBXFileReference? = nil,
@@ -29,8 +21,8 @@ public extension XCBuildConfiguration {
     }
 }
 
-public extension XCConfigurationList {
-    static func mock(
+extension XCConfigurationList {
+    public static func mock(
         configs: [(name: String, settings: [String: Sendable])] = [
             ("Debug", MockDefaults.defaultDebugSettings),
             ("Release", MockDefaults.defaultReleaseSettings),

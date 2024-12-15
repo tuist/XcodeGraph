@@ -3,5 +3,5 @@ import Foundation
 import UIKit
 
 class UIComponentA: UIView {
-  let data = DataClass()
+    let data = DataClass()
 }

@@ -3,17 +3,17 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
+    var window: UIWindow?
 
-  func applicationDidFinishLaunching(_: UIApplication) {
-    let framework1 = Framework1File()
+    func applicationDidFinishLaunching(_: UIApplication) {
+        let framework1 = Framework1File()
 
-    print(hello())
-    print("AppDelegate -> \(framework1.hello())")
-    print("AppDelegate -> \(framework1.helloFromFramework2())")
-  }
+        print(hello())
+        print("AppDelegate -> \(framework1.hello())")
+        print("AppDelegate -> \(framework1.helloFromFramework2())")
+    }
 
-  func hello() -> String {
-    "AppDelegate.hello()"
-  }
+    func hello() -> String {
+        "AppDelegate.hello()"
+    }
 }

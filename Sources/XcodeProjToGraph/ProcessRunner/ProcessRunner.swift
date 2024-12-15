@@ -1,6 +1,6 @@
 import Foundation
 
-public final class ProcessRunner {
+public enum ProcessRunner {
     /// Runs the given executable asynchronously and processes its result using the associated parser.
     ///
     /// - Parameters:
@@ -43,9 +43,8 @@ public final class ProcessRunner {
                 let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
                 let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
 
-                guard
-                    let stdoutString = String(data: stdoutData, encoding: .utf8),
-                    let stderrString = String(data: stderrData, encoding: .utf8)
+                guard let stdoutString = String(data: stdoutData, encoding: .utf8),
+                      let stderrString = String(data: stderrData, encoding: .utf8)
                 else {
                     continuation.resume(throwing: ProcessRunnerError.invalidUTF8InOutput)
                     return
@@ -54,7 +53,7 @@ public final class ProcessRunner {
                 let exitCode = process.terminationStatus
                 let result = ProcessResult(exitCode: exitCode, stdout: stdoutString, stderr: stderrString)
 
-                if throwOnNonZeroExit && !result.succeeded {
+                if throwOnNonZeroExit, !result.succeeded {
                     continuation.resume(throwing: ProcessRunnerError.nonZeroExitCode(exitCode, result.stderr))
                     return
                 }

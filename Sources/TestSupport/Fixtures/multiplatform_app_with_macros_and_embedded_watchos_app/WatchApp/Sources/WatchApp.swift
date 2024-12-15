@@ -4,18 +4,18 @@ import SwiftUI
 
 @CasePathable
 enum WatchAppAction {
-  case home
+    case home
 }
 
 @main
 struct WatchApp: App {
-  init() {
-    ModuleA.test()
-  }
-
-  var body: some Scene {
-    WindowGroup {
-      ContentView()
+    init() {
+        ModuleA.test()
     }
-  }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
 }

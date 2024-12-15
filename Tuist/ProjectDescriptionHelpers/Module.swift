@@ -134,10 +134,9 @@ public enum Module: String, CaseIterable {
                 .external(name: "XcodeProj"),
             ]
         case .testSupport:
-                [
-                    .target(name: Module.xcodeProjToGraph.rawValue)
-                ]
-
+            [
+                .target(name: Module.xcodeProjToGraph.rawValue),
+            ]
         }
         return dependencies
     }
@@ -152,8 +151,6 @@ public enum Module: String, CaseIterable {
                 .target(name: Module.testSupport.rawValue),
                 .external(name: "InlineSnapshotTesting"),
             ]
-
-
         }
         dependencies = dependencies + [.target(name: targetName)]
         return dependencies

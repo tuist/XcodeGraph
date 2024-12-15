@@ -3,8 +3,8 @@ import Path
 import XcodeGraph
 @testable @preconcurrency import XcodeProj
 
-public extension XCScheme.TestableReference {
-    static func mock(
+extension XCScheme.TestableReference {
+    public static func mock(
         skipped: Bool,
         parallelization: XCScheme.TestParallelization = .none,
         randomExecutionOrdering: Bool = false,
@@ -27,8 +27,8 @@ public extension XCScheme.TestableReference {
     }
 }
 
-public extension XCScheme {
-    static func mock(
+extension XCScheme {
+    public static func mock(
         name: String = "DefaultScheme",
         buildAction: BuildAction? = nil,
         testAction: TestAction? = nil,
@@ -53,8 +53,8 @@ public extension XCScheme {
     }
 }
 
-public extension XCUserData {
-    static func mock(
+extension XCUserData {
+    public static func mock(
         userName: String = "user",
         schemes: [XCScheme] = [],
         schemeManagement: XCSchemeManagement? = XCSchemeManagement(
@@ -64,7 +64,7 @@ public extension XCUserData {
                     shared: true,
                     orderHint: 0,
                     isShown: true
-                )
+                ),
             ],
             suppressBuildableAutocreation: nil
         )

@@ -3,8 +3,8 @@ import Path
 import XcodeGraph
 @testable @preconcurrency import XcodeProj
 
-public extension PBXBuildFile {
-    static func mock(
+extension PBXBuildFile {
+    public static func mock(
         file: PBXFileElement,
         settings: [String: Any]? = nil,
         pbxProj: PBXProj
@@ -15,8 +15,8 @@ public extension PBXBuildFile {
     }
 }
 
-public extension PBXBuildRule {
-    static func mock(
+extension PBXBuildRule {
+    public static func mock(
         compilerSpec: String = BuildRule.CompilerSpec.appleClang.rawValue,
         fileType: String = BuildRule.FileType.cSource.rawValue,
         isEditable: Bool = true,
@@ -48,8 +48,8 @@ public extension PBXBuildRule {
     }
 }
 
-public extension PBXSourcesBuildPhase {
-    static func mock(
+extension PBXSourcesBuildPhase {
+    public static func mock(
         files: [PBXBuildFile],
         pbxProj: PBXProj
     ) -> PBXSourcesBuildPhase {
@@ -59,8 +59,8 @@ public extension PBXSourcesBuildPhase {
     }
 }
 
-public extension PBXResourcesBuildPhase {
-    static func mock(
+extension PBXResourcesBuildPhase {
+    public static func mock(
         files: [PBXBuildFile],
         pbxProj: PBXProj
     ) -> PBXResourcesBuildPhase {
@@ -70,8 +70,8 @@ public extension PBXResourcesBuildPhase {
     }
 }
 
-public extension PBXFrameworksBuildPhase {
-    static func mock(
+extension PBXFrameworksBuildPhase {
+    public static func mock(
         files: [PBXBuildFile],
         pbxProj: PBXProj
     ) -> PBXFrameworksBuildPhase {
@@ -81,8 +81,8 @@ public extension PBXFrameworksBuildPhase {
     }
 }
 
-public extension PBXShellScriptBuildPhase {
-    static func mock(
+extension PBXShellScriptBuildPhase {
+    public static func mock(
         name: String? = "Embed Precompiled Frameworks",
         shellScript: String = "#!/bin/sh\necho 'Mock Shell Script'",
         inputPaths: [String] = [],
@@ -117,8 +117,8 @@ public extension PBXShellScriptBuildPhase {
     }
 }
 
-public extension PBXCopyFilesBuildPhase {
-    static func mock(
+extension PBXCopyFilesBuildPhase {
+    public static func mock(
         name: String? = "Embed Frameworks",
         dstPath: String = "",
         dstSubfolderSpec: PBXCopyFilesBuildPhase.SubFolder = .frameworks,

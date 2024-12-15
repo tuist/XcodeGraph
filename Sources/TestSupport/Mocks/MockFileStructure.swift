@@ -3,8 +3,8 @@ import Path
 import XcodeGraph
 @testable @preconcurrency import XcodeProj
 
-public extension PBXFileReference {
-    static func mock(
+extension PBXFileReference {
+    public static func mock(
         sourceTree: PBXSourceTree = .group,
         name: String? = nil,
         explicitFileType: String? = nil,
@@ -24,13 +24,14 @@ public extension PBXFileReference {
         )
         pbxProj.add(object: file)
         if addToMainGroup, let project = pbxProj.projects.first,
-           let mainGroup = project.mainGroup {
+           let mainGroup = project.mainGroup
+        {
             mainGroup.children.append(file)
         }
         return file
     }
 
-    static func mockProject(
+    public static func mockProject(
         path: String = "App.xcodeproj",
         name: String? = "App",
         sourceTree: PBXSourceTree = .sourceRoot,
@@ -52,8 +53,8 @@ public extension PBXFileReference {
     }
 }
 
-public extension PBXVariantGroup {
-    static func mockVariant(
+extension PBXVariantGroup {
+    public static func mockVariant(
         children: [PBXFileElement] = [],
         sourceTree: PBXSourceTree = .group,
         name: String? = "MainGroup",
@@ -77,8 +78,8 @@ public extension PBXVariantGroup {
     }
 }
 
-public extension PBXGroup {
-    static func mock(
+extension PBXGroup {
+    public static func mock(
         children: [PBXFileElement] = [],
         sourceTree: PBXSourceTree = .group,
         name: String? = "MainGroup",
@@ -102,8 +103,8 @@ public extension PBXGroup {
     }
 }
 
-public extension XCVersionGroup {
-    static func mock(
+extension XCVersionGroup {
+    public static func mock(
         currentVersion: PBXFileReference? = nil,
         children: [PBXFileElement] = [],
         path: String = "DefaultGroup",
@@ -129,7 +130,7 @@ public extension XCVersionGroup {
             indentWidth: indentWidth,
             tabWidth: tabWidth
         )
-        if let currentVersion = currentVersion {
+        if let currentVersion {
             pbxProj.add(object: currentVersion)
         }
         if let project = pbxProj.projects.first, let mainGroup = project.mainGroup {

@@ -19,19 +19,19 @@ extension PBXProject {
     ) -> PBXProject {
         let resolvedMainGroup =
             mainGroup
-            ?? PBXGroup.mock(
-                children: [],
-                sourceTree: .group,
-                name: "MainGroup",
-                path: "/tmp/TestProject",
-                pbxProj: pbxProj,
-                addToMainGroup: false
-            )
+                ?? PBXGroup.mock(
+                    children: [],
+                    sourceTree: .group,
+                    name: "MainGroup",
+                    path: "/tmp/TestProject",
+                    pbxProj: pbxProj,
+                    addToMainGroup: false
+                )
 
         let resolvedBuildConfigList = buildConfigurationList ?? XCConfigurationList.mock(proj: pbxProj)
         pbxProj.add(object: resolvedBuildConfigList)
 
-        if let productsGroup = productsGroup {
+        if let productsGroup {
             pbxProj.add(object: productsGroup)
         }
 
@@ -87,17 +87,17 @@ extension XcodeProj {
     public static func mock(
         projectName: String = "MainApp",
         targets: [PBXTarget] = [],
-        schemes: [XCScheme] = []
+        schemes _: [XCScheme] = []
     ) -> XcodeProj {
         let pbxProj = PBXProj()
         let target = targets.first ?? PBXNativeTarget.mock(pbxProj: pbxProj)
 
-        let _ = XCBuildConfiguration.mock(
+        _ = XCBuildConfiguration.mock(
             name: "Debug",
             buildSettings: MockDefaults.defaultDebugSettings,
             pbxProj: pbxProj
         )
-        let _ = XCBuildConfiguration.mock(
+        _ = XCBuildConfiguration.mock(
             name: "Release",
             buildSettings: MockDefaults.defaultReleaseSettings,
             pbxProj: pbxProj
@@ -132,7 +132,7 @@ extension PBXObjectReference {
 }
 
 extension PBXProj {
-  public func add(objects: [PBXObject]) {
-    objects.forEach { add(object: $0) }
-  }
+    public func add(objects: [PBXObject]) {
+        objects.forEach { add(object: $0) }
+    }
 }

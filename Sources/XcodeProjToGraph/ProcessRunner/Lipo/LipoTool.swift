@@ -4,7 +4,7 @@ import Foundation
 ///
 /// `LipoTool` provides a high-level interface for running `lipo -archs` on given paths
 /// to determine which architectures a binary contains.
-public final class LipoTool {
+public enum LipoTool {
     /// Runs `lipo -archs` on the given paths and returns a `LipoArchsResult`.
     ///
     /// This method asynchronously executes `lipo -archs` using `ProcessRunner.run`,

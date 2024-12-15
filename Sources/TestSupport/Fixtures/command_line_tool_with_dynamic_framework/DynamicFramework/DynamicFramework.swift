@@ -1,5 +1,5 @@
 import Foundation
 
 public struct DynamicFramework {
-  public init() {}
+    public init() {}
 }

@@ -1,11 +1,11 @@
 import Foundation
 import InlineSnapshotTesting
 import Path
+import RegexBuilder
 import Testing
 import XcodeGraph
-import XcodeProjToGraph
 import XcodeProj
-import RegexBuilder
+import XcodeProjToGraph
 
 @testable import TestSupport
 
@@ -44,7 +44,6 @@ struct IntegrationTests {
         line: UInt = #line,
         column: UInt = #column
     ) async throws {
-
         let path = try fixture().absolutePath()
 
         let fullGraph: XcodeGraph.Graph = try await ProjectParser.parse(atPath: path.pathString)
@@ -166,33 +165,33 @@ extension XcodeGraph.Graph {
     }
 
     func minimizeGraph() -> Graph {
-            var graph = self
-            graph.workspace.schemes = []
-            graph.workspace.generationOptions = .test()
+        var graph = self
+        graph.workspace.schemes = []
+        graph.workspace.generationOptions = .test()
 
-            for (key, project) in graph.projects {
-                graph.projects[key]?.schemes = []
-                graph.projects[key]?.resourceSynthesizers = []
-                graph.projects[key]?.settings = Settings(configurations: [:])
+        for (key, project) in graph.projects {
+            graph.projects[key]?.schemes = []
+            graph.projects[key]?.resourceSynthesizers = []
+            graph.projects[key]?.settings = Settings(configurations: [:])
 
-                for targetKey in project.targets.keys {
-                    graph.projects[key]?.targets[targetKey]?.scripts = []
-                    graph.projects[key]?.targets[targetKey]?.playgrounds = []
-                    graph.projects[key]?.targets[targetKey]?.rawScriptBuildPhases = []
-                    graph.projects[key]?.targets[targetKey]?.playgrounds = []
-                    graph.projects[key]?.targets[targetKey]?.buildRules = []
-                    graph.projects[key]?.targets[targetKey]?.settings = nil
-                    graph.projects[key]?.targets[targetKey]?.infoPlist = nil
-                    graph.projects[key]?.targets[targetKey]?.destinations = []
-                }
+            for targetKey in project.targets.keys {
+                graph.projects[key]?.targets[targetKey]?.scripts = []
+                graph.projects[key]?.targets[targetKey]?.playgrounds = []
+                graph.projects[key]?.targets[targetKey]?.rawScriptBuildPhases = []
+                graph.projects[key]?.targets[targetKey]?.playgrounds = []
+                graph.projects[key]?.targets[targetKey]?.buildRules = []
+                graph.projects[key]?.targets[targetKey]?.settings = nil
+                graph.projects[key]?.targets[targetKey]?.infoPlist = nil
+                graph.projects[key]?.targets[targetKey]?.destinations = []
             }
+        }
 
-            return graph
+        return graph
     }
 }
 
 extension AbsolutePath: @retroactive AnySnapshotStringConvertible {
-  public var snapshotDescription: String {
-      return self.pathString
-  }
+    public var snapshotDescription: String {
+        return pathString
+    }
 }

@@ -3,7 +3,6 @@ import Path
 
 /// Represents errors that may occur during project or dependency mapping processes.
 enum MappingError: Error, LocalizedError, Equatable {
-
     // MARK: - Project Mapping Errors
 
     /// The provided path does not exist.
@@ -48,33 +47,32 @@ enum MappingError: Error, LocalizedError, Equatable {
     /// A localized description of the error.
     var errorDescription: String? {
         switch self {
-
         // Project Mapping Cases
-        case .pathNotFound(let path):
+        case let .pathNotFound(path):
             return "The specified path does not exist: \(path)"
-        case .unknownProjectType(let path):
+        case let .unknownProjectType(path):
             return "The project type for the path '\(path)' could not be determined."
         case .noProjectsFound:
             return "No Xcode projects were found."
-        case .missingFilesGroup(let targetName):
+        case let .missingFilesGroup(targetName):
             return "The files group is missing for the target '\(targetName)'."
         case .missingMergedBinaryType:
             return "The merged binary type is missing for the target."
-        case .missingRepositoryURL(let packageName):
+        case let .missingRepositoryURL(packageName):
             return "The repository URL is missing for the package '\(packageName)'."
-        case .generic(let message):
+        case let .generic(message):
             return message
 
         // Target Mapping Cases
-        case .missingBundleIdentifier(let targetName):
+        case let .missingBundleIdentifier(targetName):
             return "The bundle identifier is missing for the target '\(targetName)'."
-        case .targetNotFound(let targetName, let path):
+        case let .targetNotFound(targetName, path):
             return "The target '\(targetName)' could not be found in the project at path: \(path.pathString)."
 
         // Dependency Mapping Cases
-        case .frameworkNotFound(let name, let path):
+        case let .frameworkNotFound(name, path):
             return "The required framework '\(name)' was not found at path: \(path.pathString)."
-        case .unknownDependencyType(let name):
+        case let .unknownDependencyType(name):
             return "An unknown dependency type '\(name)' was encountered."
         }
     }

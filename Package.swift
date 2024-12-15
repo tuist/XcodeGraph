@@ -18,24 +18,24 @@ let targets: [Target] = [
         dependencies: [
             "XcodeGraph",
             .product(name: "Path", package: "Path"),
-            .product(name: "XcodeProj", package: "XcodeProj")
+            .product(name: "XcodeProj", package: "XcodeProj"),
         ],
         path: "Sources/XcodeProjToGraph"
     ),
     .target(
         name: "TestSupport",
         dependencies: [
-            "XcodeProjToGraph"
+            "XcodeProjToGraph",
         ],
         path: "Sources/TestSupport",
         resources: [
-            .copy("Fixtures")
+            .copy("Fixtures"),
         ]
     ),
     .testTarget(
         name: "XcodeGraphTests",
         dependencies: [
-            "XcodeGraph"
+            "XcodeGraph",
         ],
         path: "Tests/XcodeGraphTests"
     ),
@@ -58,15 +58,15 @@ let package = Package(
             name: "XcodeGraph",
             targets: ["XcodeGraph"]
         ),
-        .library(name: "XcodeProjToGraph", targets: ["XcodeProjToGraph"])
+        .library(name: "XcodeProjToGraph", targets: ["XcodeProjToGraph"]),
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
         .package(url: "https://github.com/tuist/XcodeProj", from: "8.25.0"),
         .package(
-          url: "https://github.com/pointfreeco/swift-snapshot-testing",
-          from: "1.17.0"
+            url: "https://github.com/pointfreeco/swift-snapshot-testing",
+            from: "1.17.0"
         ),
     ],
 

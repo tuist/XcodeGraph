@@ -3,13 +3,13 @@
 import PackageDescription
 
 let package = Package(
-  name: "LocalSwiftPackage",
-  products: [
-    .library(name: "LocalSwiftPackage", targets: ["LocalSwiftPackage"])
-  ],
-  targets: [
-    .target(
-      name: "LocalSwiftPackage"
-    )
-  ]
+    name: "LocalSwiftPackage",
+    products: [
+        .library(name: "LocalSwiftPackage", targets: ["LocalSwiftPackage"]),
+    ],
+    targets: [
+        .target(
+            name: "LocalSwiftPackage"
+        ),
+    ]
 )
