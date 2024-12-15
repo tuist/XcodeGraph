@@ -3,6 +3,8 @@ import ProjectDescription
 
 public enum Module: String, CaseIterable {
     case xcodeGraph = "XcodeGraph"
+    case xcodeProjToGraph = "XcodeProjToGraph"
+    case testSupport = "TestSupport"
 
     public var isRunnable: Bool {
         switch self {
@@ -78,14 +80,16 @@ public enum Module: String, CaseIterable {
 
     public var unitTestsTargetName: String? {
         switch self {
-        default:
+        case .xcodeGraph, .xcodeProjToGraph:
             return "\(rawValue)Tests"
+        case .testSupport:
+            return nil
         }
     }
 
     public var integrationTestsTargetName: String? {
         switch self {
-        case .xcodeGraph:
+        case .xcodeGraph, .xcodeProjToGraph, .testSupport:
             return nil
         }
     }
@@ -123,15 +127,33 @@ public enum Module: String, CaseIterable {
                 .external(name: "AnyCodable"),
                 .external(name: "Path"),
             ]
+        case .xcodeProjToGraph:
+            [
+                .target(name: Module.xcodeGraph.rawValue),
+                .external(name: "Path"),
+                .external(name: "XcodeProj"),
+            ]
+        case .testSupport:
+                [
+                    .target(name: Module.xcodeProjToGraph.rawValue)
+                ]
+
         }
         return dependencies
     }
 
     public var unitTestDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph:
+        case .xcodeGraph, .testSupport:
             [
             ]
+        case .xcodeProjToGraph:
+            [
+                .target(name: Module.testSupport.rawValue),
+                .external(name: "InlineSnapshotTesting"),
+            ]
+
+
         }
         dependencies = dependencies + [.target(name: targetName)]
         return dependencies
@@ -139,7 +161,7 @@ public enum Module: String, CaseIterable {
 
     public var testingDependencies: [TargetDependency] {
         let dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph:
+        case .xcodeGraph, .xcodeProjToGraph, .testSupport:
             [
             ]
         }
@@ -148,7 +170,7 @@ public enum Module: String, CaseIterable {
 
     public var integrationTestsDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph:
+        case .xcodeGraph, .xcodeProjToGraph, .testSupport:
             []
         }
         dependencies.append(.target(name: targetName))

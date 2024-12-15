@@ -1,5 +1,5 @@
 /// The metadata associated with a target.
-public struct TargetMetadata: Codable, Equatable {
+public struct TargetMetadata: Codable, Equatable, Sendable {
     public var tags: Set<String>
 
     public init(

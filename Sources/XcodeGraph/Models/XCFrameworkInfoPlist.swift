@@ -2,14 +2,14 @@ import Foundation
 import Path
 
 /// It represents th Info.plist contained in an .xcframework bundle.
-public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable {
+public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable, Sendable {
     private enum CodingKeys: String, CodingKey {
         case libraries = "AvailableLibraries"
     }
 
     /// It represents a library inside an .xcframework
-    public struct Library: Codable, Hashable, Equatable {
-        public enum Platform: String, CaseIterable, Codable {
+    public struct Library: Codable, Hashable, Equatable, Sendable {
+        public enum Platform: String, CaseIterable, Codable, Sendable {
             case iOS = "ios"
             case macOS = "macos"
             case tvOS = "tvos"

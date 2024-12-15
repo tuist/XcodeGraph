@@ -1,6 +1,6 @@
 import Foundation
 
-public enum BinaryArchitecture: String, Codable {
+public enum BinaryArchitecture: String, Codable, Sendable {
     case x8664 = "x86_64"
     case i386
     case armv7
@@ -11,7 +11,7 @@ public enum BinaryArchitecture: String, Codable {
     case arm64e
 }
 
-public enum BinaryLinking: String, Hashable, Codable {
+public enum BinaryLinking: String, Hashable, Codable, Sendable {
     case `static`, dynamic
 }
 
