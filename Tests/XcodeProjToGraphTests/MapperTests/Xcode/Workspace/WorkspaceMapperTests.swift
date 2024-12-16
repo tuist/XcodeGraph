@@ -1,4 +1,3 @@
-import AEXML
 import Foundation
 import Path
 import PathKit
@@ -83,7 +82,7 @@ struct WorkspaceMapperTests {
         let tempDirectory = FileManager.default.temporaryDirectory
         let path = tempDirectory.appendingPathComponent("MyWorkspace.xcworkspace")
         // Arrange: A workspace with one project and a schemes directory
-        let workspacePath = try AbsolutePath(validating: path.path())
+        let workspacePath = try AbsolutePath(validating: path.path)
 
         // Create a mock `.xcscheme` file in `xcshareddata/xcschemes`
         let sharedDataDir = workspacePath.pathString + "/xcshareddata/xcschemes"

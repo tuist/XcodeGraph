@@ -27,10 +27,7 @@ let targets: [Target] = [
         dependencies: [
             "XcodeProjToGraph",
         ],
-        path: "Sources/TestSupport",
-        resources: [
-            .copy("Fixtures"),
-        ]
+        path: "Sources/TestSupport"
     ),
     .testTarget(
         name: "XcodeGraphTests",
@@ -43,8 +40,7 @@ let targets: [Target] = [
         name: "XcodeProjToGraphTests",
         dependencies: [
             "XcodeProjToGraph",
-            "TestSupport",
-            .product(name: "InlineSnapshotTesting", package: "swift-snapshot-testing"),
+            "TestSupport"
         ],
         path: "Tests/XcodeProjToGraphTests"
     ),
@@ -63,11 +59,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
-        .package(url: "https://github.com/tuist/XcodeProj", from: "8.25.0"),
-        .package(
-            url: "https://github.com/pointfreeco/swift-snapshot-testing",
-            from: "1.17.0"
-        ),
+        .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "8.25.0"))
     ],
 
     targets: targets

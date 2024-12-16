@@ -39,7 +39,7 @@ struct PackageMapperTests {
             versionRequirement: .upToNextMajorVersion("1.0.0")
         )
 
-        let requirement = await mapper.mapRequirement(package: package)
+        let requirement = mapper.mapRequirement(package: package)
         #expect(requirement == .upToNextMajor("1.0.0"))
     }
 
@@ -50,7 +50,7 @@ struct PackageMapperTests {
             versionRequirement: .upToNextMinorVersion("1.2.0")
         )
 
-        let requirement = await mapper.mapRequirement(package: package)
+        let requirement = mapper.mapRequirement(package: package)
         #expect(requirement == .upToNextMinor("1.2.0"))
     }
 
@@ -61,7 +61,7 @@ struct PackageMapperTests {
             versionRequirement: .exact("1.2.3")
         )
 
-        let requirement = await mapper.mapRequirement(package: package)
+        let requirement = mapper.mapRequirement(package: package)
         #expect(requirement == .exact("1.2.3"))
     }
 
@@ -72,7 +72,7 @@ struct PackageMapperTests {
             versionRequirement: .range(from: "1.0.0", to: "2.0.0")
         )
 
-        let requirement = await mapper.mapRequirement(package: package)
+        let requirement = mapper.mapRequirement(package: package)
         #expect(requirement == .range(from: "1.0.0", to: "2.0.0"))
     }
 
@@ -83,7 +83,7 @@ struct PackageMapperTests {
             versionRequirement: .branch("main")
         )
 
-        let requirement = await mapper.mapRequirement(package: package)
+        let requirement = mapper.mapRequirement(package: package)
         #expect(requirement == .branch("main"))
     }
 
@@ -94,7 +94,7 @@ struct PackageMapperTests {
             versionRequirement: .revision("abc123")
         )
 
-        let requirement = await mapper.mapRequirement(package: package)
+        let requirement = mapper.mapRequirement(package: package)
         #expect(requirement == .revision("abc123"))
     }
 
@@ -105,7 +105,7 @@ struct PackageMapperTests {
             versionRequirement: nil
         )
 
-        let requirement = await mapper.mapRequirement(package: package)
+        let requirement = mapper.mapRequirement(package: package)
         #expect(requirement == .upToNextMajor("0.0.0"))
     }
 

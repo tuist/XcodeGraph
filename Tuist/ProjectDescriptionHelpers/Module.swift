@@ -148,8 +148,7 @@ public enum Module: String, CaseIterable {
             ]
         case .xcodeProjToGraph:
             [
-                .target(name: Module.testSupport.rawValue),
-                .external(name: "InlineSnapshotTesting"),
+                .target(name: Module.testSupport.rawValue)
             ]
         }
         dependencies = dependencies + [.target(name: targetName)]
@@ -190,7 +189,7 @@ public enum Module: String, CaseIterable {
         case .xcodeGraph, .xcodeProjToGraph:
             []
         case .testSupport:
-            ["Fixtures"]
+            []
         }
         var debugSettings: ProjectDescription.SettingsDictionary = ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"]
         var releaseSettings: ProjectDescription.SettingsDictionary = [:]
@@ -222,7 +221,6 @@ public enum Module: String, CaseIterable {
             deploymentTargets: .macOS("12.0"),
             infoPlist: .default,
             sources: [.glob("\(rootFolder)/\(name)/**/*.swift", excluding: ["**/Fixtures/**"])],
-            resources: resources,
             dependencies: dependencies,
             settings: settings
         )
