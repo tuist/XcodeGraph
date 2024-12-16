@@ -98,7 +98,7 @@ enum SchemeMapperType {
 ///
 /// // 'schemes' now contains a list of domain Scheme models ready for further use.
 /// ```
-final class SchemeMapper: SchemeMapping {
+public final class SchemeMapper: SchemeMapping {
     private let graphType: GraphType
 
     /// Initializes the mapper with the given graph type.

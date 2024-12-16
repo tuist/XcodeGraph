@@ -2,7 +2,7 @@ import XcodeGraph
 import XcodeProj
 
 /// A mapper for platform-related conditions, extracting platform filters from `PBXTargetDependency`.
-enum PlatformConditionMapper {
+public enum PlatformConditionMapper {
     /// Maps the platform filters on a given `PBXTargetDependency` into a `PlatformCondition`.
     ///
     /// Returns `nil` if no filters apply, meaning the dependency isn't restricted by platform and

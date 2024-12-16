@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// Represents errors that may occur during project or dependency mapping processes.
-enum MappingError: Error, LocalizedError, Equatable {
+public enum MappingError: Error, LocalizedError, Equatable {
     // MARK: - Project Mapping Errors
 
     /// The provided path does not exist.
@@ -44,7 +44,7 @@ enum MappingError: Error, LocalizedError, Equatable {
 
     // MARK: - Error Descriptions
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case let .pathNotFound(path):
             return "The specified path does not exist: \(path)"
