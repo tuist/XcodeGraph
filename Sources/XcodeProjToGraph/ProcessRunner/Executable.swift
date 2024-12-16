@@ -1,9 +1,11 @@
 import Foundation
 
+// MARK: - Executable
+
 /// Represents an executable command with its arguments, executable path, and a parser for the output.
 ///
-/// This enum is used to define commands like `lipo` or custom executables, encapsulating the logic
-/// for their arguments, path, and output processing.
+/// Used to define commands like `lipo` or custom executables, encapsulating the logic
+/// for arguments, path, and output processing.
 public enum Executable<Output: Sendable>: Sendable {
     /// A `lipo` command, used for managing universal binaries.
     ///
@@ -22,8 +24,6 @@ public enum Executable<Output: Sendable>: Sendable {
     case custom(String, [String], @Sendable (ProcessResult) throws -> Output)
 
     /// The path to the executable.
-    ///
-    /// - Returns: A `String` representing the absolute path to the executable.
     public var path: String {
         switch self {
         case let .lipo(_, _, path):
@@ -34,8 +34,6 @@ public enum Executable<Output: Sendable>: Sendable {
     }
 
     /// The arguments to pass to the executable.
-    ///
-    /// - Returns: An array of `String` arguments.
     public var arguments: [String] {
         switch self {
         case let .lipo(lipoArgs, _, _):
@@ -46,8 +44,6 @@ public enum Executable<Output: Sendable>: Sendable {
     }
 
     /// A parser to convert the `ProcessResult` into the desired `Output` type.
-    ///
-    /// - Returns: A closure that takes a `ProcessResult` and returns an `Output` value or throws an error.
     public var parser: (ProcessResult) throws -> Output {
         switch self {
         case let .lipo(_, parser, _):

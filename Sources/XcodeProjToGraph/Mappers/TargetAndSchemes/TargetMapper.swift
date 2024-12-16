@@ -3,37 +3,63 @@ import Path
 import XcodeGraph
 import XcodeProj
 
-/// A type that maps a `PBXTarget` into a domain `Target` model, extracting platform, product, settings, sources,
-/// resources, scripts, dependencies, and other configuration details.
+/// A protocol defining how to map a `PBXTarget` into a domain `Target` model.
+///
+/// Conforming types transform a raw `PBXTarget` from the Xcode project model into a fully-realized `Target`
+/// that includes product information, build settings, source files, resources, scripts, dependencies,
+/// build rules, and other essential configuration details.
 protocol TargetMapping: Sendable {
-    /// Maps the given PBX target into a `Target` domain model.
+    /// Maps the given `PBXTarget` into a `Target` domain model.
+    ///
+    /// By inspecting the target’s build settings, build phases, and dependencies, implementers produce a `Target`
+    /// that can be used for code generation, analysis, and other downstream operations.
     ///
     /// - Parameter pbxTarget: The `PBXTarget` to map.
-    /// - Returns: A fully mapped `Target` model.
-    /// - Throws: A `MappingError` if required information is missing or invalid.
+    /// - Returns: A fully mapped `Target` model containing all relevant information extracted from the `PBXTarget`.
+    /// - Throws: A `MappingError` if required information (e.g., a bundle identifier) is missing or invalid.
     func map(pbxTarget: PBXTarget) async throws -> Target
 }
 
 /// A mapper that converts a `PBXTarget` into a domain `Target` model.
 ///
-/// The `TargetMapper` relies on:
-/// - `SettingsMapper` to map build settings and configurations.
-/// - `BuildPhaseMapper` to map source files, resources, scripts, copy files, headers, and related build phases.
-/// - `DependencyMapper` to map target dependencies.
-/// - `BuildRuleMapper` to map custom build rules.
+/// `TargetMapper` orchestrates a multi-step process to produce a rich `Target` model:
+/// - Uses `SettingsMapper` to translate `XCConfigurationList` into domain-specific build settings.
+/// - Uses `BuildPhaseMapper` to enumerate and map sources, resources, headers, scripts, copy files, frameworks, core data models,
+/// and raw script phases.
+/// - Uses `BuildPhaseMapper` as well to identify additional files that are not tied to any build phase, ensuring a complete
+/// picture of the project's file structure.
+/// - Uses `DependencyMapper` to resolve target dependencies (e.g., other targets, packages).
+/// - Uses `BuildRuleMapper` to incorporate custom build rules.
 ///
-/// The resulting `Target` object contains comprehensive information needed for further graph operations
-/// such as code generation, analysis, or integration with other tooling.
+/// The final `Target` includes data about the platform, product type, build settings, files, dependencies, and more.
+/// This comprehensive model is crucial for downstream tasks like code generation, dependency analysis, and tooling integration.
+///
+/// **Example Usage:**
+/// ```swift
+/// // Assume you have a ProjectProvider instance and a PBXTarget obtained from an Xcode project.
+/// let projectProvider: ProjectProviding = ...
+/// let pbxTarget: PBXTarget = ...
+///
+/// // Create a TargetMapper to handle the mapping of PBXTarget to Target.
+/// let targetMapper = TargetMapper(projectProvider: projectProvider)
+///
+/// // Perform the mapping
+/// let target = try await targetMapper.map(pbxTarget: pbxTarget)
+///
+/// // 'target' now contains a fully resolved Target model, including settings, sources, resources, dependencies, and more.
+/// // This model can be used for code generation, analysis, or integration with custom development workflows.
+/// ```
 public final class TargetMapper: TargetMapping {
     private let projectProvider: ProjectProviding
     private let settingsMapper: SettingsMapping
     private let buildPhaseMapper: BuildPhaseMapping
     private let dependencyMapper: DependencyMapping
-    private let buildRuleMapper: BuildRuleMapper
+    private let buildRuleMapper: BuildRuleMapping
 
     /// Creates a new `TargetMapper` instance.
     ///
-    /// - Parameter projectProvider: Provides access to the project’s paths, `XcodeProj`, and related information.
+    /// - Parameter projectProvider: A provider granting access to project paths, the `XcodeProj`, and related data needed for
+    /// resolution.
     public init(projectProvider: ProjectProviding) {
         self.projectProvider = projectProvider
         settingsMapper = SettingsMapper()
@@ -43,14 +69,18 @@ public final class TargetMapper: TargetMapping {
     }
 
     public func map(pbxTarget: PBXTarget) async throws -> Target {
+        // Extract platform, product, and deployment targets
         let platform = try pbxTarget.platform()
         let deploymentTargets = try pbxTarget.deploymentTargets()
         let product = pbxTarget.productType()
 
+        // Map build settings
         let settings = try await settingsMapper.map(
             projectProvider: projectProvider,
             configurationList: pbxTarget.buildConfigurationList
         )
+
+        // Map various build phases
         let sources = try await buildPhaseMapper.mapSources(target: pbxTarget)
         let resources = try await buildPhaseMapper.mapResources(target: pbxTarget)
         let headers = try await buildPhaseMapper.mapHeaders(target: pbxTarget)
@@ -58,13 +88,20 @@ public final class TargetMapper: TargetMapping {
         let copyFiles = try await buildPhaseMapper.mapCopyFiles(target: pbxTarget)
         let coreDataModels = try await buildPhaseMapper.mapCoreDataModels(target: pbxTarget)
         let rawScriptBuildPhases = try await buildPhaseMapper.mapRawScriptBuildPhases(target: pbxTarget)
-        let additionalFiles: [FileElement] = [] // Currently no extra files
 
+        // Map any additional files not included in the known build phases
+        let additionalFiles = try await buildPhaseMapper.mapAdditionalFiles(target: pbxTarget)
+
+        // Convert resource files to domain-specific `ResourceFileElements`
         let resourceFileElements = ResourceFileElements(resources)
+
+        // Map build rules
         let buildRules = try await buildRuleMapper.mapBuildRules(target: pbxTarget)
 
+        // Extract environment variables
         let environmentVariables = pbxTarget.extractEnvironmentVariables()
 
+        // Extract various target-level metadata and settings
         let launchArguments = try extractLaunchArguments(from: pbxTarget)
         let filesGroup = try extractFilesGroup(from: pbxTarget)
         let playgrounds = try await extractPlaygrounds(from: pbxTarget)
@@ -74,10 +111,12 @@ public final class TargetMapper: TargetMapping {
         let onDemandResourcesTags = try extractOnDemandResourcesTags(from: pbxTarget)
         let metadata = try extractMetadata(from: pbxTarget)
 
+        // Resolve dependencies (targets, packages, frameworks)
         let targetDependencies = try await dependencyMapper.mapDependencies(target: pbxTarget)
         let frameworkDependencies = try await buildPhaseMapper.mapFrameworks(target: pbxTarget)
         let allDependencies = targetDependencies + frameworkDependencies
 
+        // Construct the final `Target` model
         return Target(
             name: pbxTarget.name,
             destinations: platform,
@@ -136,9 +175,7 @@ public final class TargetMapper: TargetMapping {
             from: data,
             options: .mutableContainersAndLeaves,
             format: &format
-        ) as? [String: Any]
-        else {
-            // TODO: - Better Error Message
+        ) as? [String: Any] else {
             throw MappingError.generic("Failed to cast plist contents to a dictionary.")
         }
 
@@ -229,7 +266,7 @@ public final class TargetMapper: TargetMapping {
     }
 
     private func extractOnDemandResourcesTags(from _: PBXTarget) throws -> OnDemandResourcesTags? {
-        // TODO: - implement if needed
+        // TODO: implement if needed
         return nil
     }
 
@@ -244,35 +281,5 @@ public final class TargetMapper: TargetMapping {
             }
         }
         return TargetMetadata(tags: tags)
-    }
-}
-
-extension PBXTarget {
-    enum EnvironmentExtractor {
-        static func extract(from buildSettings: BuildSettings) -> [String: EnvironmentVariable] {
-            guard let envVars = buildSettings.stringDict(for: .environmentVariables) else {
-                return [:]
-            }
-            return envVars.reduce(into: [:]) { result, pair in
-                result[pair.key] = EnvironmentVariable(value: pair.value, isEnabled: true)
-            }
-        }
-    }
-
-    /// Extracts environment variables from all build configurations of the target.
-    ///
-    /// If multiple configurations define environment variables with the same name, the last one processed
-    /// takes precedence.
-    public func extractEnvironmentVariables() -> [String: EnvironmentVariable] {
-        buildConfigurationList?.buildConfigurations.reduce(into: [:]) { result, config in
-            result.merge(EnvironmentExtractor.extract(from: config.buildSettings)) { current, _ in current
-            }
-        } ?? [:]
-    }
-
-    /// Returns the build settings from the "Debug" build configuration, or an empty dictionary if not present.
-    var debugBuildSettings: [String: Any] {
-        buildConfigurationList?.buildConfigurations.first(where: { $0.name == "Debug" })?.buildSettings
-            ?? [:]
     }
 }

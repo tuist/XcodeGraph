@@ -4,6 +4,7 @@ import XcodeGraph
 
 // MARK: - Workspace Fixtures
 
+/// Provides references to sample Xcode workspace fixtures for testing.
 public enum WorkspaceFixture: String, CaseIterable {
     case commandLineToolWithDynamicFramework =
         "command_line_tool_with_dynamic_framework/CommandLineTool"
@@ -23,9 +24,18 @@ public enum WorkspaceFixture: String, CaseIterable {
 
     public var fileExtension: String { "xcworkspace" }
 
+    /// Returns the absolute path to the fixture workspace. Adjust the base path as needed.
     public func absolutePath() throws -> AbsolutePath {
-        return try AbsolutePath.resolvePath(
-            "/Users/andykolean/Developer/XcodeGraphMapper/Tests/TestSupport/Fixtures/\(rawValue).xcworkspace"
-        )
+        print(#filePath)
+
+        let relativePath = try RelativePath(validating: "Fixtures/\(rawValue).\(fileExtension)")
+        let p = try AbsolutePath.resolvePath(#filePath)
+            .parentDirectory
+            .parentDirectory
+            .appending(relativePath)
+
+        print(p)
+
+        return p
     }
 }

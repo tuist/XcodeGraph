@@ -170,3 +170,21 @@ extension PBXNativeTarget {
         return target
     }
 }
+
+extension XCRemoteSwiftPackageReference {
+    static func mock(
+        repositoryURL: String,
+        versionRequirement: VersionRequirement?
+    ) -> XCRemoteSwiftPackageReference {
+        return XCRemoteSwiftPackageReference(
+            repositoryURL: repositoryURL,
+            versionRequirement: versionRequirement
+        )
+    }
+}
+
+extension XCLocalSwiftPackageReference {
+    static func mock(relativePath: String) -> XCLocalSwiftPackageReference {
+        return XCLocalSwiftPackageReference(relativePath: relativePath)
+    }
+}

@@ -3,16 +3,17 @@ import XcodeGraph
 import XcodeProj
 
 @testable import TestSupport
-@testable import XcodeProjToGraph // Adjust to access BuildRuleMapper, BuildRule, etc.
+@testable import XcodeProjToGraph
 
+@Suite
 struct BuildRuleMapperTests {
     let mapper = BuildRuleMapper()
 
-    @Test func testMapBuildRulesWithKnownCompilerSpecAndFileType() async throws {
-        // Using a known compiler spec from the enum, e.g. .appleClang
+    @Test("Maps build rules with known compiler spec and file type successfully")
+    func testMapBuildRulesWithKnownCompilerSpecAndFileType() async throws {
+        let projectProvider = MockProjectProvider()
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
         let knownFileType = BuildRule.FileType.cSource.rawValue
-        let projectProvider = MockProjectProvider()
 
         let buildRule = PBXBuildRule.mock(
             compilerSpec: knownCompilerSpec,
@@ -27,24 +28,28 @@ struct BuildRuleMapperTests {
             pbxProj: projectProvider.pbxProj
         )
 
-        let target = PBXNativeTarget.mock(buildRules: [buildRule], pbxProj: projectProvider.pbxProj)
+        let target = PBXNativeTarget.mock(
+            buildRules: [buildRule],
+            pbxProj: projectProvider.pbxProj
+        )
+
         let rules = try await mapper.mapBuildRules(target: target)
 
         #expect(rules.count == 1)
-        let rule = rules.first
-        try #require(rule != nil)
-        #expect(rule?.compilerSpec.rawValue == knownCompilerSpec)
-        #expect(rule?.fileType.rawValue == knownFileType)
-        #expect(rule?.filePatterns == "*.c")
-        #expect(rule?.name == "C Rule")
-        #expect(rule?.outputFiles == ["$(DERIVED_FILE_DIR)/output.c.o"])
-        #expect(rule?.inputFiles == ["$(SRCROOT)/main.c"])
-        #expect(rule?.outputFilesCompilerFlags == ["-O2"])
-        #expect(rule?.script == "echo Building C sources")
-        #expect(rule?.runOncePerArchitecture == false)
+        let rule = try #require(rules.first)
+        #expect(rule.compilerSpec.rawValue == knownCompilerSpec)
+        #expect(rule.fileType.rawValue == knownFileType)
+        #expect(rule.filePatterns == "*.c")
+        #expect(rule.name == "C Rule")
+        #expect(rule.outputFiles == ["$(DERIVED_FILE_DIR)/output.c.o"])
+        #expect(rule.inputFiles == ["$(SRCROOT)/main.c"])
+        #expect(rule.outputFilesCompilerFlags == ["-O2"])
+        #expect(rule.script == "echo Building C sources")
+        #expect(rule.runOncePerArchitecture == false)
     }
 
-    @Test func testMapBuildRulesWithUnknownCompilerSpec() async throws {
+    @Test("Skips build rules when compiler spec is unknown")
+    func testMapBuildRulesWithUnknownCompilerSpec() async throws {
         let projectProvider = MockProjectProvider()
         let unknownCompilerSpec = "com.apple.compilers.unknown"
         let knownFileType = "sourcecode.c.c"
@@ -61,11 +66,12 @@ struct BuildRuleMapperTests {
         )
         let rules = try await mapper.mapBuildRules(target: target)
 
-        // Unknown compiler spec means the rule should be skipped
-        #expect(rules.count == 0)
+        // Unknown compiler spec -> rule is skipped
+        #expect(rules.isEmpty == true)
     }
 
-    @Test func testMapBuildRulesWithUnknownFileType() async throws {
+    @Test("Skips build rules when file type is unknown")
+    func testMapBuildRulesWithUnknownFileType() async throws {
         let projectProvider = MockProjectProvider()
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
         let unknownFileType = "sourcecode.unknown"
@@ -82,11 +88,12 @@ struct BuildRuleMapperTests {
         )
         let rules = try await mapper.mapBuildRules(target: target)
 
-        // Unknown file type means the rule should be skipped
-        #expect(rules.count == 0)
+        // Unknown file type -> rule is skipped
+        #expect(rules.isEmpty == true)
     }
 
-    @Test func testMapBuildRulesWithMixedValidAndInvalid() async throws {
+    @Test("Includes only valid build rules when mixed with invalid ones")
+    func testMapBuildRulesWithMixedValidAndInvalid() async throws {
         let projectProvider = MockProjectProvider()
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
         let knownFileType = BuildRule.FileType.cSource.rawValue

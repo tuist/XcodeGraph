@@ -2,7 +2,6 @@ import Messages
 import UIKit
 
 class MessagesViewController: MSMessagesAppViewController {
-
     // MARK: - Conversation Handling
 
     override func willBecomeActive(with _: MSConversation) {

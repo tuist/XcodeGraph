@@ -158,12 +158,12 @@ public final class BuildPhaseMapper: BuildPhaseMapping {
         guard let pbxProject = xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
-            throw MappingError.noProjectsFound
+            throw MappingError.noProjectsFound(path: projectProvider.xcodeProjPath.pathString)
         }
 
         let allFiles = try await collectFiles(from: mainGroup)
         let filesInBuildPhases = try await getFilesInBuildPhases(target: target)
-        let additionalFiles = allFiles.subtracting(filesInBuildPhases)
+        let additionalFiles = allFiles.subtracting(filesInBuildPhases).sorted()
 
         return additionalFiles.map { FileElement.file(path: $0) }
     }
@@ -266,13 +266,16 @@ public final class BuildPhaseMapper: BuildPhaseMapping {
     }
 
     private func mapResourceElement(_ buildFile: PBXBuildFile) async throws -> [ResourceFileElement] {
-        try await mapResourceElement(buildFile.file)
+        guard let file = buildFile.file else { return [] }
+        if let variantGroup = file as? PBXVariantGroup {
+            return try await mapVariantGroup(variantGroup)
+        } else {
+            return try await mapResourceElement(file)
+        }
     }
 
-    private func mapResourceElement(_ fileElement: PBXFileElement?) async throws -> [ResourceFileElement] {
-        if let fileRef = fileElement,
-           let pathString = try fileRef.fullPath(sourceRoot: projectProvider.sourcePathString)
-        {
+    private func mapResourceElement(_ fileElement: PBXFileElement) async throws -> [ResourceFileElement] {
+        if let pathString = try fileElement.fullPath(sourceRoot: projectProvider.sourcePathString) {
             let absPath = try AbsolutePath.resolvePath(pathString)
             return [.file(path: absPath)]
         }

@@ -2,6 +2,7 @@ import Foundation
 import Path
 import XcodeGraph
 
+/// Common file extensions encountered in Xcode projects and their associated artifacts.
 enum FileExtension: String {
     case xcodeproj
     case xcworkspace
@@ -15,25 +16,30 @@ enum FileExtension: String {
 }
 
 extension AbsolutePath {
+    /// Attempts to resolve an array of path strings into `AbsolutePath` instances.
+    ///
+    /// - Parameter paths: The string paths to resolve.
+    /// - Returns: An array of `AbsolutePath` if resolution succeeds.
     public static func resolvePaths(
-        _ paths: [String]?,
-        file _: String = #file,
-        line _: Int = #line,
-        function _: String = #function
+        _ paths: [String]?
     ) throws -> [AbsolutePath] {
         return try paths?.compactMap { try AbsolutePath.resolvePath($0) } ?? []
     }
 
+    /// Attempts to resolve an optional path string into an `AbsolutePath`.
+    ///
+    /// - Parameter path: The path string to resolve.
+    /// - Returns: An `AbsolutePath` or `nil` if the path is `nil`.
     public static func resolveOptionalPath(
-        _ path: String?,
-        file _: String = #file,
-        line _: Int = #line,
-        function _: String = #function
+        _ path: String?
     ) throws -> AbsolutePath? {
         guard let path else { return nil }
         return try AbsolutePath.resolvePath(path)
     }
 
+    /// Resolves a path string into an `AbsolutePath`, optionally relative to another path.
+    ///
+    /// Throws an error if the path is invalid.
     public static func resolvePath(
         _ path: String,
         relativeTo: AbsolutePath? = nil,
@@ -54,13 +60,15 @@ extension AbsolutePath {
             """
             throw NSError(
                 domain: "GraphMapperError", code: 1,
-                userInfo: [
-                    NSLocalizedDescriptionKey: message,
-                ]
+                userInfo: [NSLocalizedDescriptionKey: message]
             )
         }
     }
 
+    /// Maps a path by its extension to a `TargetDependency` if applicable.
+    ///
+    /// - Parameter condition: Optional platform condition.
+    /// - Returns: A `TargetDependency` if the extension matches known dependency types.
     public func mapByExtension(condition: PlatformCondition?) -> TargetDependency? {
         let status: LinkingStatus = .required
         let absPath = self

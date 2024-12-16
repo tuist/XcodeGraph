@@ -3,26 +3,31 @@ import XcodeGraph
 
 @testable import XcodeProjToGraph
 
+@Suite
 struct ConfigurationMatcherTests {
-    @Test func testVariantDetectionForDebug() async throws {
+    @Test("Detects 'Debug' variants from configuration names")
+    func testVariantDetectionForDebug() async throws {
         #expect(ConfigurationMatcher.variant(forName: "Debug") == .debug)
         #expect(ConfigurationMatcher.variant(forName: "development") == .debug)
         #expect(ConfigurationMatcher.variant(forName: "dev") == .debug)
     }
 
-    @Test func testVariantDetectionForRelease() async throws {
+    @Test("Detects 'Release' variants from configuration names")
+    func testVariantDetectionForRelease() async throws {
         #expect(ConfigurationMatcher.variant(forName: "Release") == .release)
         #expect(ConfigurationMatcher.variant(forName: "prod") == .release)
         #expect(ConfigurationMatcher.variant(forName: "production") == .release)
     }
 
-    @Test func testVariantFallbackToDebug() async throws {
-        // Names that don't match debug/release keywords should fall back to debug
+    @Test("Falls back to 'Debug' variant for unrecognized configuration names")
+    func testVariantFallbackToDebug() async throws {
+        // Names without debug/release keywords default to .debug
         #expect(ConfigurationMatcher.variant(forName: "Staging") == .debug)
         #expect(ConfigurationMatcher.variant(forName: "CustomConfig") == .debug)
     }
 
-    @Test func testValidateConfigurationName() async throws {
+    @Test("Validates configuration names based on allowed patterns")
+    func testValidateConfigurationName() async throws {
         #expect(ConfigurationMatcher.validateConfigurationName("Debug") == true)
         #expect(ConfigurationMatcher.validateConfigurationName("Release") == true)
 

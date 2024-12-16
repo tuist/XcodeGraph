@@ -17,7 +17,7 @@ extension IntegrationTests {
         try #require(graph != nil)
     }
 
-    @Test
+    @Test("Maps an iOS app with a remote Swift package into the correct graph")
     func iosAppWithRemoteSwiftPackage() async throws {
         try await assertGraph {
             .iosAppWithRemoteSwiftPackage
@@ -121,7 +121,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "App"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_remote_swift_package/Support/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_remote_swift_package/Support/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_remote_swift_package/Tests/AppTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App"
                         ▿ copyFiles: 1 element
@@ -173,7 +182,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_remote_swift_package/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_remote_swift_package/Support/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_remote_swift_package/Support/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.AppTests"
                         ▿ copyFiles: 1 element

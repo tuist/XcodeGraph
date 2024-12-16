@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps a multiplatform app with macros and an embedded watchOS app into the correct graph")
     func multiplatformAppWithMacrosAndEmbeddedWatchosApp() async throws {
         try await assertGraph {
             .multiplatformAppWithMacrosAndEmbeddedWatchosApp
@@ -167,7 +167,52 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "App"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 15 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleA-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros_Testable-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleATests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Macros/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/ModuleA.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Tests/ModuleATests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchConfig.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App"
                         ▿ copyFiles: 2 elements
@@ -261,7 +306,61 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "ModuleA"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 18 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/TestApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleA-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros_Testable-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleATests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Macros/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Tests/ModuleATests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchConfig.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.modulea"
                         ▿ copyFiles: 1 element
@@ -324,7 +423,64 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "ModuleAMacros"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 19 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/TestApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleA-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros_Testable-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleATests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/ModuleA.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Tests/ModuleATests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchConfig.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.moduleamacros"
                         ▿ copyFiles: 1 element
@@ -377,7 +533,64 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "ModuleAMacros_Testable"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 19 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/TestApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleA-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros_Testable-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleATests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/ModuleA.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Tests/ModuleATests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchConfig.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.moduleamacros.testable"
                         ▿ copyFiles: 1 element
@@ -429,7 +642,64 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "ModuleATests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 19 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/TestApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleA-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros_Testable-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleATests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Macros/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/ModuleA.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/WatchApp/Sources/WatchConfig.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.moduleatests"
                         ▿ copyFiles: 1 element
@@ -491,7 +761,49 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "WatchApp"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 14 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/App/Sources/TestApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleA-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleAMacros_Testable-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/InfoPlists/ModuleATests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistAssets+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Derived/Sources/TuistBundle+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Macros/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/Macros.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Sources/ModuleA.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/multiplatform_app_with_macros_and_embedded_watchos_app/Modules/ModuleA/Tests/ModuleATests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App.watchkitapp"
                         ▿ copyFiles: 1 element

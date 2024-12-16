@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps an iOS app with extensions into the correct graph")
     func iosAppWithExtensions() async throws {
         try await assertGraph {
             .iosAppWithExtensions
@@ -152,7 +152,76 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "App"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 23 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App"
                         ▿ copyFiles: 3 elements
@@ -241,7 +310,76 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppIntentExtension"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 23 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App.AppIntentExtension"
                         ▿ copyFiles: 1 element
@@ -299,7 +437,76 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppWithMessagesExtension"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 23 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App2"
                         ▿ copyFiles: 2 elements
@@ -372,7 +579,79 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Bundle"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 24 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App.Bundle"
                         ▿ copyFiles: 1 element
@@ -423,7 +702,70 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "MessageExtension"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 21 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App2.MessageExtension"
                         ▿ copyFiles: 1 element
@@ -470,7 +812,7 @@ extension IntegrationTests {
                                 - inclusionCondition: Optional<PlatformCondition>.none
                             ▿ ResourceFileElement
                               ▿ file: (3 elements)
-                                - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard
+                                - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
                                 - tags: 0 elements
                                 - inclusionCondition: Optional<PlatformCondition>.none
                         - scripts: 0 elements
@@ -497,7 +839,79 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "NotificationServiceExtension"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 24 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App.NotificationServiceExtension"
                         ▿ copyFiles: 1 element
@@ -549,7 +963,79 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "StaticFramework"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 24 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App.StaticFramework"
                         ▿ copyFiles: 1 element
@@ -601,7 +1087,79 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "StickersPackExtension"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 24 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+WidgetExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App.StickersPackExtension"
                         ▿ copyFiles: 1 element
@@ -652,7 +1210,70 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "WidgetExtension"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 21 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Bundle/dummy.jpg
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/AppIntentExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/Bundle-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/MessageExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/NotificationServiceExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StaticFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/StickersPackExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/InfoPlists/WidgetExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistAssets+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Derived/Sources/TuistBundle+MessageExtension.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Resources/Base.lproj/MainInterface.storyboard/Base.lproj/MainInterface.storyboard
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_extensions/StickersPackExtension/Stickers.xcassets
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App.WidgetExtension"
                         ▿ copyFiles: 2 elements

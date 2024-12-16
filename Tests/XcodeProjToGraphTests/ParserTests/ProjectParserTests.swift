@@ -28,8 +28,8 @@ struct ProjectParserTests {
         return try AbsolutePath(validating: mockDirectory)
     }
 
-    /// Test parsing a valid `.xcworkspace` file
-    @Test func testParseWorkspace() async throws {
+    @Test("Parses a directory containing a valid .xcworkspace file")
+    func testParseWorkspace() async throws {
         // Arrange
         let mockDirectory = try createMockDirectory(withContents: ["MyWorkspace.xcworkspace"])
         let workspacePath = mockDirectory.appending(component: "MyWorkspace.xcworkspace")
@@ -41,8 +41,8 @@ struct ProjectParserTests {
         #expect(graph.name == "MyWorkspace")
     }
 
-    /// Test parsing a valid `.xcodeproj` file
-    @Test func testParseXcodeProject() async throws {
+    @Test("Parses a directory containing a valid .xcodeproj file")
+    func testParseXcodeProject() async throws {
         // Arrange
         let mockDirectory = try createMockDirectory(withContents: ["MyProject.xcodeproj"])
         let projectPath = mockDirectory.appending(component: "MyProject.xcodeproj")
@@ -54,8 +54,8 @@ struct ProjectParserTests {
         #expect(graph.name == "Workspace")
     }
 
-    /// Test parsing when directory contains both `.xcworkspace` and `.xcodeproj`
-    @Test func testParseDirectoryWithWorkspaceAndProject() async throws {
+    @Test("Parses a directory with both .xcworkspace and .xcodeproj, preferring the workspace")
+    func testParseDirectoryWithWorkspaceAndProject() async throws {
         // Arrange
         let mockDirectory = try createMockDirectory(withContents: [
             "MyWorkspace.xcworkspace", "MyProject.xcodeproj",
@@ -64,30 +64,31 @@ struct ProjectParserTests {
         // Act
         let graph = try await ProjectParser.parse(atPath: mockDirectory.pathString)
 
+        // Assert
         #expect(graph.name == "MyWorkspace")
     }
 
-    /// Test parsing when the directory contains no valid project files
-    @Test func testParseDirectoryNoProjects() async throws {
+    @Test("Throws an error when no valid project files are found")
+    func testParseDirectoryNoProjects() async throws {
         // Arrange
         let mockDirectory = try createMockDirectory(withContents: ["ReadMe.md", "file.txt"])
 
         // Act & Assert
-        await #expect(throws: MappingError.noProjectsFound) {
+        await #expect(throws: MappingError.noProjectsFound(path: mockDirectory.pathString)) {
             try await ProjectParser.parse(atPath: mockDirectory.pathString)
         }
     }
 
-    /// Test handling a non-existent path
-    @Test func testParseNonExistentPath() async throws {
+    @Test("Throws an error for a non-existent directory path")
+    func testParseNonExistentPath() async throws {
         // Act & Assert
         await #expect(throws: MappingError.pathNotFound(path: "/non/existent/path")) {
             try await ProjectParser.parse(atPath: "/non/existent/path")
         }
     }
 
-    /// Test parsing when only `.xcodeproj` exists in the directory
-    @Test func testParseDirectoryOnlyXcodeProj() async throws {
+    @Test("Parses a directory with only an .xcodeproj file")
+    func testParseDirectoryOnlyXcodeProj() async throws {
         // Arrange
         let mockDirectory = try createMockDirectory(withContents: ["MyProject.xcodeproj"])
 

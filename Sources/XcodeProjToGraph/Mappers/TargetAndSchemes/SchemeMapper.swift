@@ -3,58 +3,67 @@ import Path
 import XcodeGraph
 import XcodeProj
 
-/// A protocol defining how to map XCScheme objects and their associated actions
-/// into domain `Scheme` models.
+/// A protocol defining how to map `XCScheme` objects and their associated actions into domain `Scheme` models.
+///
+/// Conforming types transform raw `XCScheme` instances—along with their build, test, run, archive, profile,
+/// and analyze actions—into fully-realized `Scheme` models. This enables further analysis, code generation,
+/// or integration with custom tooling based on standardized scheme data.
 protocol SchemeMapping: Sendable {
     /// Maps an array of `XCScheme` instances into `Scheme` models.
     ///
     /// - Parameters:
-    ///   - xcschemes: An array of `XCScheme` to map.
-    ///   - shared: A Boolean indicating whether the schemes are shared.
-    /// - Returns: An array of mapped `Scheme` models.
-    /// - Throws: If any scheme cannot be mapped.
+    ///   - xcschemes: An array of `XCScheme` instances to map.
+    ///   - shared: A Boolean indicating whether these schemes are shared.
+    /// - Returns: An array of mapped `Scheme` instances representing the provided XCSchemes.
+    /// - Throws: If any scheme cannot be fully resolved or mapped.
     func mapSchemes(xcschemes: [XCScheme], shared: Bool) async throws -> [Scheme]
 
     /// Maps a single `XCScheme` into a `Scheme` model.
     ///
     /// - Parameters:
     ///   - xcscheme: The `XCScheme` to map.
-    ///   - shared: Indicates whether the scheme is shared.
-    /// - Returns: A `Scheme` model.
-    /// - Throws: If any scheme action cannot be mapped.
+    ///   - shared: A Boolean indicating whether the scheme is shared.
+    /// - Returns: A `Scheme` model corresponding to the given `XCScheme`.
+    /// - Throws: If any of the scheme's actions (build, test, run, etc.) cannot be resolved.
     func mapScheme(xcscheme: XCScheme, shared: Bool) async throws -> Scheme
 
     /// Maps an `XCScheme.BuildAction` into a `BuildAction` model.
-    /// - Parameter action: The optional XCScheme.BuildAction.
-    /// - Returns: A `BuildAction` instance or `nil` if action is `nil`.
-    /// - Throws: If target references cannot be mapped.
+    ///
+    /// - Parameter action: The `XCScheme.BuildAction` to map, if any.
+    /// - Returns: A `BuildAction` instance, or `nil` if `action` is `nil`.
+    /// - Throws: If any target references in the build action cannot be resolved.
     func mapBuildAction(action: XCScheme.BuildAction?) async throws -> BuildAction?
 
     /// Maps an `XCScheme.LaunchAction` into a `RunAction` model.
-    /// - Parameter action: The optional XCScheme.LaunchAction.
-    /// - Returns: A `RunAction` instance or `nil` if action is `nil`.
-    /// - Throws: If the executable reference cannot be mapped.
+    ///
+    /// - Parameter action: The `XCScheme.LaunchAction` to map, if any.
+    /// - Returns: A `RunAction` instance, or `nil` if `action` is `nil`.
+    /// - Throws: If the executable reference cannot be resolved.
     func mapRunAction(action: XCScheme.LaunchAction?) async throws -> RunAction?
 
     /// Maps an `XCScheme.TestAction` into a `TestAction` model.
-    /// - Parameter action: The optional XCScheme.TestAction.
-    /// - Returns: A `TestAction` instance or `nil` if action is `nil`.
-    /// - Throws: If test targets cannot be mapped.
+    ///
+    /// - Parameter action: The `XCScheme.TestAction` to map, if any.
+    /// - Returns: A `TestAction` instance, or `nil` if `action` is `nil`.
+    /// - Throws: If any test target references cannot be resolved.
     func mapTestAction(action: XCScheme.TestAction?) async throws -> TestAction?
 
     /// Maps an `XCScheme.ArchiveAction` into an `ArchiveAction` model.
-    /// - Parameter action: The optional `XCScheme.ArchiveAction`.
-    /// - Returns: An `ArchiveAction` instance or `nil` if action is `nil`.
+    ///
+    /// - Parameter action: The `XCScheme.ArchiveAction` to map, if any.
+    /// - Returns: An `ArchiveAction` instance, or `nil` if `action` is `nil`.
     func mapArchiveAction(action: XCScheme.ArchiveAction?) async throws -> ArchiveAction?
 
     /// Maps an `XCScheme.ProfileAction` into a `ProfileAction` model.
-    /// - Parameter action: The optional `XCScheme.ProfileAction`.
-    /// - Returns: A `ProfileAction` instance or `nil` if action is `nil`.
+    ///
+    /// - Parameter action: The `XCScheme.ProfileAction` to map, if any.
+    /// - Returns: A `ProfileAction` instance, or `nil` if `action` is `nil`.
     func mapProfileAction(action: XCScheme.ProfileAction?) async throws -> ProfileAction?
 
     /// Maps an `XCScheme.AnalyzeAction` into an `AnalyzeAction` model.
-    /// - Parameter action: The optional `XCScheme.AnalyzeAction`.
-    /// - Returns: An `AnalyzeAction` instance or `nil` if action is `nil`.
+    ///
+    /// - Parameter action: The `XCScheme.AnalyzeAction` to map, if any.
+    /// - Returns: An `AnalyzeAction` instance, or `nil` if `action` is `nil`.
     func mapAnalyzeAction(action: XCScheme.AnalyzeAction?) async throws -> AnalyzeAction?
 }
 
@@ -69,16 +78,33 @@ enum SchemeMapperType {
 /// A mapper responsible for converting `XCScheme` objects (and related Xcode scheme configurations)
 /// into domain `Scheme` models.
 ///
-/// `SchemeMapper` handles the mapping of build, test, run, archive, profile, and analyze actions
-/// within a scheme. It resolves references to targets, environment variables, and launch arguments,
-/// producing a `Scheme` model that can be used for further analysis, generation, or tooling tasks.
+/// `SchemeMapper` resolves references to targets, environment variables, launch arguments, and all actions within
+/// a scheme (build, test, run, archive, profile, analyze). The resulting `Scheme` models enable consumers
+/// to analyze scheme configurations, generate code, or integrate with custom tooling pipelines.
+///
+/// **Example Usage:**
+/// ```swift
+/// // Assume you have determined the graphType (e.g., from a workspace or a single project)
+/// let graphType: GraphType = ...
+///
+/// // Create a SchemeMapper
+/// let schemeMapper = try SchemeMapper(graphType: graphType)
+///
+/// // Obtain an array of XCScheme instances (perhaps from XcodeProj's shared or user schemes)
+/// let xcschemes: [XCScheme] = ...
+///
+/// // Map the schemes into Scheme models
+/// let schemes = try await schemeMapper.mapSchemes(xcschemes: xcschemes, shared: true)
+///
+/// // 'schemes' now contains a list of domain Scheme models ready for further use.
+/// ```
 final class SchemeMapper: SchemeMapping {
     private let graphType: GraphType
 
     /// Initializes the mapper with the given graph type.
     ///
-    /// - Parameter graphType: The graph type (workspace or project) influencing how target references are resolved.
-    /// - Throws: `MappingError.noProjectsFound` if the required project information is missing.
+    /// - Parameter graphType: The graph type (workspace or project) that influences how target references are resolved.
+    /// - Throws: `MappingError.noProjectsFound` if required project information is missing.
     public init(graphType: GraphType) throws {
         self.graphType = graphType
     }
@@ -241,12 +267,11 @@ final class SchemeMapper: SchemeMapping {
 
     /// Maps a `XCScheme.BuildableReference` to a `TargetReference`.
     ///
-    /// This involves resolving the container path and the target name.
-    /// Depending on whether we're dealing with a workspace or a standalone project,
-    /// the logic may differ.
+    /// This step involves resolving the container path and the target name, which differ depending on whether
+    /// the scheme originates from a workspace or a standalone project.
     ///
     /// - Parameter buildableReference: The `XCScheme.BuildableReference` to map.
-    /// - Returns: A `TargetReference` representing the target in the given container.
+    /// - Returns: A `TargetReference` representing the target in the resolved container.
     /// - Throws: If the referenced container cannot be resolved.
     private func mapTargetReference(buildableReference: XCScheme.BuildableReference) async throws
         -> TargetReference
@@ -268,5 +293,23 @@ final class SchemeMapper: SchemeMapping {
             projectPath: projectPath,
             name: targetName
         )
+    }
+}
+
+extension SchemeMapper {
+    /// Maps the given Xcode schemes asynchronously.
+    ///
+    /// This is a convenience method similar to `mapSchemes(xcschemes:shared:)`,
+    /// but specifically defined for asynchronous mapping flows.
+    ///
+    /// - Parameters:
+    ///   - xcschemes: An array of `XCScheme` instances to map.
+    ///   - shared: A Boolean indicating whether the schemes are shared.
+    /// - Returns: An array of mapped `Scheme` instances.
+    /// - Throws: If mapping any scheme fails.
+    func mapSchemesAsync(xcschemes: [XCScheme], shared: Bool) async throws -> [Scheme] {
+        try await xcschemes.asyncCompactMap { scheme in
+            try await self.mapScheme(xcscheme: scheme, shared: shared)
+        }
     }
 }

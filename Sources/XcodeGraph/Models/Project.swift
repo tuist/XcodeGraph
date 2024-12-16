@@ -12,7 +12,7 @@ public enum ProjectType: Hashable, Equatable, Codable, CustomStringConvertible, 
     public var description: String {
         switch self {
         case .local: "local project"
-        case let .external(hash): "external project"
+        case .external: "external project"
         }
     }
 }

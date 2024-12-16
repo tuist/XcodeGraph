@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps an iOS app with SPM dependencies into the correct graph")
     func iosAppWithSpmDependencies() async throws {
         try await assertGraph {
             .iosAppWithSpmDependencies
@@ -110,7 +110,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "App"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/AppTests/AppTests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/Derived/InfoPlists/AppTests-Info.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.app"
                         ▿ copyFiles: 2 elements
@@ -196,7 +205,31 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 8 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/App/Resources/Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/App/Resources/Preview Content/Preview Assets.xcassets
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/App/Sources/AppApp.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/App/Sources/ContentView.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/Derived/InfoPlists/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/Derived/InfoPlists/AppTests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/Derived/Sources/TuistAssets+App.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_spm_dependencies/Derived/Sources/TuistBundle+App.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.app.tests"
                         ▿ copyFiles: 1 element

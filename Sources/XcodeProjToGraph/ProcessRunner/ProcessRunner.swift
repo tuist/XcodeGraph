@@ -1,5 +1,8 @@
 import Foundation
 
+// MARK: - ProcessRunner
+
+/// A utility for running shell commands asynchronously and parsing their results.
 public enum ProcessRunner {
     /// Runs the given executable asynchronously and processes its result using the associated parser.
     ///
@@ -8,9 +11,10 @@ public enum ProcessRunner {
     ///   - environment: An optional dictionary of environment variables for the process.
     ///   - workingDirectory: An optional path for the process's working directory.
     ///   - throwOnNonZeroExit: If `true`, throws an error for non-zero exit codes. Defaults to `true`.
+    ///   - fileManager: A `FileManager` instance, defaulting to `.default`.
     /// - Returns: The structured output parsed from the process's result.
     /// - Throws:
-    ///   - `ProcessRunnerError` for issues like non-zero exit codes, invalid UTF-8, or failure to run.
+    ///   - `ProcessRunnerError` for issues like non-zero exit codes, invalid UTF-8, or a failure to run.
     @discardableResult
     public static func run<T: Sendable>(
         executable: Executable<T>,
@@ -30,8 +34,8 @@ public enum ProcessRunner {
             process.executableURL = URL(fileURLWithPath: execPath)
             process.arguments = executable.arguments
             process.environment = environment ?? ProcessInfo.processInfo.environment
-            if let wd = workingDirectory {
-                process.currentDirectoryURL = URL(fileURLWithPath: wd)
+            if let workingDirectory {
+                process.currentDirectoryURL = URL(fileURLWithPath: workingDirectory)
             }
 
             let stdoutPipe = Pipe()
@@ -46,6 +50,7 @@ public enum ProcessRunner {
                 guard let stdoutString = String(data: stdoutData, encoding: .utf8),
                       let stderrString = String(data: stderrData, encoding: .utf8)
                 else {
+                    // More descriptive error message on UTF-8 failure
                     continuation.resume(throwing: ProcessRunnerError.invalidUTF8InOutput)
                     return
                 }

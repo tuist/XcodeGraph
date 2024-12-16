@@ -2,40 +2,56 @@ import Foundation
 import Path
 import PathKit
 import XcodeGraph
-import XcodeProj
+@preconcurrency import XcodeProj
 
-/// A type that maps an `.xcworkspace` structure into a `Workspace` model.
+/// A protocol defining how to map an `.xcworkspace` structure into a `Workspace` domain model.
+///
+/// Conforming types parse a given `XCWorkspace` and extract all referenced projects, schemes, and other relevant information,
+/// resulting in a coherent `Workspace` model that can be used for code generation, analysis, or further tooling.
 protocol WorkspaceMapping: Sendable {
     /// Maps the current workspace into a `Workspace` model.
     ///
+    /// This process gathers `.xcodeproj` references, shared schemes, and configuration options from the `.xcworkspace`,
+    /// consolidating them into a domain-level `Workspace` object.
+    ///
     /// - Returns: A `Workspace` instance representing the mapped workspace.
-    /// - Throws: If any portion of the mapping process fails.
+    /// - Throws: If any portion of the mapping process fails (e.g., due to invalid paths or unreadable scheme files).
     func map() async throws -> Workspace
 }
 
-/// A mapper that translates a provided workspace into a `Workspace` model.
+/// A mapper that converts a provided `.xcworkspace` into a `Workspace` model, extracting project paths, schemes,
+/// and related data.
 ///
-/// The `WorkspaceMapper` extracts project paths, maps schemes, and sets up generation options and
-/// additional files. The resulting `Workspace` can then be used as an input to other processes,
-/// such as code generation, analysis, or further transformations.
+/// `WorkspaceMapper` focuses on:
+/// - Identifying `.xcodeproj` files referenced by the workspace.
+/// - Mapping shared schemes defined within the workspace.
+/// - Constructing a `Workspace` model with default generation options and placeholders for additional files or IDE templates.
+///
+/// **Example Usage:**
+/// ```swift
+/// // Assume you have a WorkspaceProvider initialized for a given `.xcworkspace`.
+/// let workspaceProvider: WorkspaceProviding = ...
+///
+/// // Create a WorkspaceMapper instance
+/// let workspaceMapper = WorkspaceMapper(workspaceProvider: workspaceProvider)
+///
+/// // Map the workspace into a domain-level Workspace model
+/// let workspace = try await workspaceMapper.map()
+///
+/// // 'workspace' now contains references to all identified projects and schemes, enabling further analysis
+/// // or code generation tasks.
+/// ```
 public final class WorkspaceMapper: WorkspaceMapping {
-    private let workspaceProvider: WorkspaceProviding
+    public let workspaceProvider: WorkspaceProviding
 
     /// Creates a new `WorkspaceMapper`.
     ///
-    /// - Parameter workspaceProvider: A provider capable of supplying a parsed `XCWorkspace` and its file paths.
+    /// - Parameter workspaceProvider: A provider capable of supplying a parsed `XCWorkspace` and its associated paths.
+    ///   This allows the mapper to discover referenced projects and shared schemes.
     public init(workspaceProvider: WorkspaceProviding) {
         self.workspaceProvider = workspaceProvider
     }
 
-    /// Maps the current workspace into a `Workspace` model.
-    ///
-    /// This method identifies all `.xcodeproj` files in the workspace, maps any detected schemes,
-    /// and constructs a fully-populated `Workspace` instance. It sets default generation options,
-    /// and includes hooks for adding additional files or IDE template macros if needed.
-    ///
-    /// - Returns: A fully constructed `Workspace` instance.
-    /// - Throws: If extracting projects or mapping schemes fails.
     public func map() async throws -> Workspace {
         let xcworkspace = workspaceProvider.xcworkspace
         let xcWorkspacePath = workspaceProvider.xcWorkspacePath
@@ -44,7 +60,7 @@ public final class WorkspaceMapper: WorkspaceMapping {
         let projectAbsolutePaths = projectPaths.map { $0 }
 
         let workspaceName = xcWorkspacePath.basenameWithoutExt
-        let schemes = try await mapSchemes(from: srcPath)
+        let schemes = try await mapSchemes(from: xcWorkspacePath)
 
         let ideTemplateMacros: IDETemplateMacros? = nil
         let additionalFiles: [FileElement] = []
@@ -69,27 +85,26 @@ public final class WorkspaceMapper: WorkspaceMapping {
 
     /// Recursively extracts all `.xcodeproj` paths from the workspace’s file and group references.
     ///
+    /// This traversal ensures that all projects included in nested groups are discovered,
+    /// providing a complete picture of the workspace’s project set.
+    ///
     /// - Parameters:
     ///   - elements: The array of `XCWorkspaceDataElement` representing files or groups in the workspace.
     ///   - srcPath: The source directory path used as a base for resolving relative references.
     /// - Returns: An array of absolute paths to `.xcodeproj` directories.
-    /// - Throws: If resolving any referenced path fails.
-    private func extractProjectPaths(from elements: [XCWorkspaceDataElement], srcPath: AbsolutePath)
-        throws -> [AbsolutePath]
-    {
+    /// - Throws: If resolving any referenced path fails (e.g., invalid relative paths).
+    private func extractProjectPaths(
+        from elements: [XCWorkspaceDataElement],
+        srcPath: AbsolutePath
+    ) throws -> [AbsolutePath] {
         var paths = [AbsolutePath]()
 
         for element in elements {
             switch element {
             case let .file(ref):
-                let refPath = Path(ref.location.path)
-                if refPath.extension?.lowercased() == "xcodeproj" {
-                    do {
-                        let absPath = try ref.absolutePath(srcPath: srcPath)
-                        paths.append(absPath)
-                    } catch {
-                        print("⚠️ Could not resolve absolute path for \(ref.location.path): \(error)")
-                    }
+                let refPath = try ref.absolutePath(srcPath: srcPath)
+                if refPath.fileExtension == .xcodeproj {
+                    paths.append(refPath)
                 }
             case let .group(group):
                 let groupPaths = try extractProjectPaths(
@@ -105,9 +120,12 @@ public final class WorkspaceMapper: WorkspaceMapping {
 
     /// Maps all shared schemes found within the workspace.
     ///
+    /// Shared schemes are typically located in the `xcshareddata/xcschemes` directory inside the workspace.
+    /// If present, they are parsed and mapped into `Scheme` models that can be integrated into the `Workspace`.
+    ///
     /// - Parameter srcPath: The source path of the workspace.
     /// - Returns: An array of mapped `Scheme` instances.
-    /// - Throws: If reading or mapping any of the schemes fails.
+    /// - Throws: If reading or mapping any of the schemes fails (e.g., invalid `.xcscheme` files or missing references).
     private func mapSchemes(from srcPath: AbsolutePath) async throws -> [Scheme] {
         var schemes = [Scheme]()
         let sharedDataPath = Path(srcPath.pathString) + "xcshareddata/xcschemes"

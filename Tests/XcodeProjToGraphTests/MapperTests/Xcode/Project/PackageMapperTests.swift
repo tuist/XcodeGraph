@@ -6,6 +6,7 @@ import XcodeProj
 @testable import TestSupport
 @testable import XcodeProjToGraph
 
+@Suite
 struct PackageMapperTests {
     let mapper: PackageMapper
     let projectProvider: MockProjectProvider
@@ -16,7 +17,8 @@ struct PackageMapperTests {
         mapper = PackageMapper(projectProvider: provider)
     }
 
-    @Test func testMapPackageWithValidURL() async throws {
+    @Test("Maps a remote package with a valid URL and up-to-next-major requirement")
+    func testMapPackageWithValidURL() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: .upToNextMajorVersion("1.0.0")
@@ -24,14 +26,14 @@ struct PackageMapperTests {
 
         let result = try await mapper.map(package: package)
         #expect(
-            result
-                == .remote(
-                    url: "https://github.com/example/package.git", requirement: .upToNextMajor("1.0.0")
-                )
+            result == .remote(
+                url: "https://github.com/example/package.git", requirement: .upToNextMajor("1.0.0")
+            )
         )
     }
 
-    @Test func testMapRequirementUpToNextMajor() async throws {
+    @Test("Maps an up-to-next-major version requirement correctly")
+    func testMapRequirementUpToNextMajor() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: .upToNextMajorVersion("1.0.0")
@@ -41,7 +43,8 @@ struct PackageMapperTests {
         #expect(requirement == .upToNextMajor("1.0.0"))
     }
 
-    @Test func testMapRequirementUpToNextMinor() async throws {
+    @Test("Maps an up-to-next-minor version requirement correctly")
+    func testMapRequirementUpToNextMinor() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: .upToNextMinorVersion("1.2.0")
@@ -51,7 +54,8 @@ struct PackageMapperTests {
         #expect(requirement == .upToNextMinor("1.2.0"))
     }
 
-    @Test func testMapRequirementExact() async throws {
+    @Test("Maps an exact version requirement correctly")
+    func testMapRequirementExact() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: .exact("1.2.3")
@@ -61,7 +65,8 @@ struct PackageMapperTests {
         #expect(requirement == .exact("1.2.3"))
     }
 
-    @Test func testMapRequirementRange() async throws {
+    @Test("Maps a range version requirement correctly")
+    func testMapRequirementRange() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: .range(from: "1.0.0", to: "2.0.0")
@@ -71,7 +76,8 @@ struct PackageMapperTests {
         #expect(requirement == .range(from: "1.0.0", to: "2.0.0"))
     }
 
-    @Test func testMapRequirementBranch() async throws {
+    @Test("Maps a branch-based version requirement correctly")
+    func testMapRequirementBranch() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: .branch("main")
@@ -81,7 +87,8 @@ struct PackageMapperTests {
         #expect(requirement == .branch("main"))
     }
 
-    @Test func testMapRequirementRevision() async throws {
+    @Test("Maps a revision-based version requirement correctly")
+    func testMapRequirementRevision() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: .revision("abc123")
@@ -91,7 +98,8 @@ struct PackageMapperTests {
         #expect(requirement == .revision("abc123"))
     }
 
-    @Test func testMapRequirementNoVersionRequirement() async throws {
+    @Test("Maps a missing version requirement to up-to-next-major(0.0.0)")
+    func testMapRequirementNoVersionRequirement() async throws {
         let package = XCRemoteSwiftPackageReference.mock(
             repositoryURL: "https://github.com/example/package.git",
             versionRequirement: nil
@@ -101,36 +109,15 @@ struct PackageMapperTests {
         #expect(requirement == .upToNextMajor("0.0.0"))
     }
 
-    @Test func testMapLocalPackage() async throws {
-        // Arrange
+    @Test("Maps a local package reference correctly")
+    func testMapLocalPackage() async throws {
         let localPackage = XCLocalSwiftPackageReference.mock(relativePath: "Packages/Example")
 
-        // Act
         let result = try await mapper.map(package: localPackage)
 
-        // Assert
         let expectedPath = projectProvider.sourceDirectory.appending(
             try RelativePath(validating: "Packages/Example")
         )
         #expect(result == .local(path: expectedPath))
-    }
-}
-
-// Extension to support testing
-extension XCRemoteSwiftPackageReference {
-    static func mock(
-        repositoryURL: String,
-        versionRequirement: VersionRequirement?
-    ) -> XCRemoteSwiftPackageReference {
-        return XCRemoteSwiftPackageReference(
-            repositoryURL: repositoryURL,
-            versionRequirement: versionRequirement
-        )
-    }
-}
-
-extension XCLocalSwiftPackageReference {
-    static func mock(relativePath: String) -> XCLocalSwiftPackageReference {
-        return XCLocalSwiftPackageReference(relativePath: relativePath)
     }
 }

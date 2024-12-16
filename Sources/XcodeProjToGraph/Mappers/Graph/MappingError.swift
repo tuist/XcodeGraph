@@ -12,7 +12,7 @@ enum MappingError: Error, LocalizedError, Equatable {
     case unknownProjectType(path: String)
 
     /// No projects were found in the Xcode project file.
-    case noProjectsFound
+    case noProjectsFound(path: String)
 
     /// The main files group is missing for a target.
     case missingFilesGroup(targetName: String)
@@ -44,16 +44,14 @@ enum MappingError: Error, LocalizedError, Equatable {
 
     // MARK: - Error Descriptions
 
-    /// A localized description of the error.
     var errorDescription: String? {
         switch self {
-        // Project Mapping Cases
         case let .pathNotFound(path):
             return "The specified path does not exist: \(path)"
         case let .unknownProjectType(path):
             return "The project type for the path '\(path)' could not be determined."
-        case .noProjectsFound:
-            return "No Xcode projects were found."
+        case let .noProjectsFound(path):
+            return "No Xcode projects were found at: \(path)"
         case let .missingFilesGroup(targetName):
             return "The files group is missing for the target '\(targetName)'."
         case .missingMergedBinaryType:
@@ -62,14 +60,10 @@ enum MappingError: Error, LocalizedError, Equatable {
             return "The repository URL is missing for the package '\(packageName)'."
         case let .generic(message):
             return message
-
-        // Target Mapping Cases
         case let .missingBundleIdentifier(targetName):
             return "The bundle identifier is missing for the target '\(targetName)'."
         case let .targetNotFound(targetName, path):
             return "The target '\(targetName)' could not be found in the project at path: \(path.pathString)."
-
-        // Dependency Mapping Cases
         case let .frameworkNotFound(name, path):
             return "The required framework '\(name)' was not found at path: \(path.pathString)."
         case let .unknownDependencyType(name):

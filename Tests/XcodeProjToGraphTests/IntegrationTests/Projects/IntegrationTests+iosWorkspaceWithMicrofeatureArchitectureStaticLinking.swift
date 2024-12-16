@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps an iOS workspace using microfeature architecture with static linking into the correct graph")
     func iosWorkspaceWithMicrofeatureArchitectureStaticLinking() async throws {
         try await assertGraph {
             .iosWorkspaceWithMicrofeatureArchitectureStaticLinking
@@ -168,7 +168,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Core"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Tests/CoreClassTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Core"
                         ▿ copyFiles: 1 element
@@ -220,7 +229,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "CoreTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Sources/CoreClass.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.CoreTests"
                         ▿ copyFiles: 1 element
@@ -320,7 +338,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Data"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Tests/FrameworkATests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Data"
                         ▿ copyFiles: 2 elements
@@ -377,7 +404,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "DataTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Sources/DataClass.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.DataFrameworkTests"
                         ▿ copyFiles: 1 element
@@ -477,7 +513,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "FrameworkA"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Tests/FrameworkATests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.FrameworkA"
                         ▿ copyFiles: 2 elements
@@ -534,7 +579,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "FrameworkATests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Sources/FrameworkA.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.FrameworkATests"
                         ▿ copyFiles: 1 element
@@ -634,7 +688,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "FeatureContracts"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Tests/FrameworkAContractTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.FeatureContracts"
                         ▿ copyFiles: 2 elements
@@ -697,7 +760,19 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "FeatureContractsTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 4 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Sources/FeatureAContract.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Sources/FeatureBContract.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.FeatureContractsTests"
                         ▿ copyFiles: 1 element
@@ -797,7 +872,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "UIComponents"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Tests/UIComponentATests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.UIComponents"
                         ▿ copyFiles: 2 elements
@@ -854,7 +938,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "UIComponentsTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Sources/UIComponentA.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.UIComponentsTests"
                         ▿ copyFiles: 1 element
@@ -954,7 +1047,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "StaticApp"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Tests/AppTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.StaticApp"
                         ▿ copyFiles: 1 element
@@ -1006,7 +1108,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "StaticAppTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.StaticAppTests"
                         ▿ copyFiles: 1 element

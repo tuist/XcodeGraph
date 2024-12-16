@@ -6,6 +6,7 @@ import XcodeProj
 @testable import TestSupport
 @testable import XcodeProjToGraph
 
+@Suite
 struct TargetDependencyExtensionsTests {
     let sourceDirectory = try! AbsolutePath.resolvePath("/tmp/TestProject")
 
@@ -21,7 +22,8 @@ struct TargetDependencyExtensionsTests {
         ),
     ]
 
-    @Test func testTargetGraphDependency_Target() async throws {
+    @Test("Resolves a target dependency into a target graph dependency")
+    func testTargetGraphDependency_Target() async throws {
         let dependency = TargetDependency.target(name: "App", status: .required, condition: nil)
         let graphDep = try await dependency.graphDependency(
             sourceDirectory: sourceDirectory,
@@ -30,7 +32,8 @@ struct TargetDependencyExtensionsTests {
         #expect(graphDep == .target(name: "App", path: sourceDirectory, status: .required))
     }
 
-    @Test func testTargetGraphDependencyFramework_Project() async throws {
+    @Test("Resolves a project-based framework dependency to a dynamic framework in the graph")
+    func testTargetGraphDependencyFramework_Project() async throws {
         let dependency = TargetDependency.project(
             target: "MyProjectTarget",
             path: sourceDirectory,
@@ -52,11 +55,12 @@ struct TargetDependencyExtensionsTests {
                 default:
                     return false
                 }
-            })() != false
+            })() == true
         )
     }
 
-    @Test func testTargetGraphDependencyLibrary_Project() async throws {
+    @Test("Resolves a project-based dynamic library dependency correctly")
+    func testTargetGraphDependencyLibrary_Project() async throws {
         let dependency = TargetDependency.project(
             target: "MyProjectDynamicLibrary",
             path: sourceDirectory,
@@ -76,11 +80,12 @@ struct TargetDependencyExtensionsTests {
             )
             #expect(linking == .dynamic)
         default:
-            Issue.record()
+            Issue.record("Expected a library graph dependency.")
         }
     }
 
-    @Test func testTargetGraphDependency_Framework() async throws {
+    @Test("Resolves a framework file dependency into a dynamic framework graph dependency")
+    func testTargetGraphDependency_Framework() async throws {
         let frameworkPath = sourceDirectory.appending(component: "MyFramework.framework")
         let dependency = TargetDependency.framework(
             path: frameworkPath, status: .required, condition: nil
@@ -100,11 +105,12 @@ struct TargetDependencyExtensionsTests {
                 default:
                     return false
                 }
-            })() != false
+            })() == true
         )
     }
 
-    @Test func testTargetGraphDependency_XCFramework() async throws {
+    @Test("Resolves an XCFramework dependency to the correct .xcframework graph dependency")
+    func testTargetGraphDependency_XCFramework() async throws {
         let xcframeworkPath = sourceDirectory.appending(component: "MyXCFramework.xcframework")
         let dependency = TargetDependency.xcframework(
             path: xcframeworkPath, status: .required, condition: nil
@@ -123,11 +129,12 @@ struct TargetDependencyExtensionsTests {
                 default:
                     return false
                 }
-            })() != false
+            })() == true
         )
     }
 
-    @Test func testTargetGraphDependency_Library() async throws {
+    @Test("Resolves a static library dependency to a static library graph dependency")
+    func testTargetGraphDependency_Library() async throws {
         let libPath = sourceDirectory.appending(component: "libMyLib.a")
         let headersPath = sourceDirectory.appending(component: "include")
         let dependency = TargetDependency.library(
@@ -150,11 +157,12 @@ struct TargetDependencyExtensionsTests {
                 default:
                     return false
                 }
-            })() != false
+            })() == true
         )
     }
 
-    @Test func testTargetGraphDependency_Package() async throws {
+    @Test("Resolves a package product dependency to a package product graph dependency")
+    func testTargetGraphDependency_Package() async throws {
         let dependency = TargetDependency.package(
             product: "MyPackageProduct", type: .runtime, condition: nil
         )
@@ -169,7 +177,8 @@ struct TargetDependencyExtensionsTests {
         )
     }
 
-    @Test func testTargetGraphDependency_SDK() async throws {
+    @Test("Resolves an SDK dependency to the correct SDK graph dependency")
+    func testTargetGraphDependency_SDK() async throws {
         let dependency = TargetDependency.sdk(name: "MySDK", status: .optional, condition: nil)
         let graphDep = try await dependency.graphDependency(
             sourceDirectory: sourceDirectory,
@@ -185,11 +194,12 @@ struct TargetDependencyExtensionsTests {
                 default:
                     return false
                 }
-            })() != false
+            })() == true
         )
     }
 
-    @Test func testTargetGraphDependency_XCTest() async throws {
+    @Test("Resolves an XCTest dependency to an XCFramework graph dependency")
+    func testTargetGraphDependency_XCTest() async throws {
         let dependency = TargetDependency.xctest
         let graphDep = try await dependency.graphDependency(
             sourceDirectory: sourceDirectory,
@@ -205,11 +215,12 @@ struct TargetDependencyExtensionsTests {
                 default:
                     return false
                 }
-            })() != false
+            })() == true
         )
     }
 
-    @Test func testMapProjectGraphDependency_TargetNotFound() async throws {
+    @Test("Throws a MappingError when a project target does not exist in allTargetsMap")
+    func testMapProjectGraphDependency_TargetNotFound() async throws {
         let dependency = TargetDependency.project(
             target: "NonExistentTarget",
             path: sourceDirectory,

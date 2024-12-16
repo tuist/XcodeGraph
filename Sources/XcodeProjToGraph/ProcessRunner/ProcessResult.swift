@@ -1,13 +1,10 @@
 import Foundation
 
-/// Represents the result of executing a process.
-///
-/// This struct encapsulates the process's exit code, standard output, and standard error streams,
-/// and provides a convenience property to determine if the process succeeded.
+// MARK: - ProcessResult
+
+/// Represents the result of executing a process, including exit code, stdout, and stderr.
 public struct ProcessResult: Sendable, CustomStringConvertible {
-    /// The exit code of the process.
-    ///
-    /// A value of `0` typically indicates success, while non-zero values represent errors.
+    /// The exit code of the process. `0` typically indicates success.
     public let exitCode: Int32
 
     /// The standard output of the process as a `String`.
@@ -17,8 +14,6 @@ public struct ProcessResult: Sendable, CustomStringConvertible {
     public let stderr: String
 
     /// Indicates whether the process exited successfully.
-    ///
-    /// - Returns: `true` if the exit code is `0`, otherwise `false`.
     public var succeeded: Bool {
         exitCode == 0
     }

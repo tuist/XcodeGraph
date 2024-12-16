@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps a macOS app with a system extension into the correct graph")
     func macosAppWithSystemExtension() async throws {
         try await assertGraph {
             .macosAppWithSystemExtension
@@ -103,7 +103,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "MainApp"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/macos_app_with_system_extension/Derived/InfoPlists/SystemExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/macos_app_with_system_extension/MainApp/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/macos_app_with_system_extension/SystemExtension/Sources/main.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.MainApp"
                         ▿ copyFiles: 2 elements
@@ -166,7 +175,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "SystemExtension"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/macos_app_with_system_extension/Derived/InfoPlists/SystemExtension-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/macos_app_with_system_extension/MainApp/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/macos_app_with_system_extension/MainApp/Sources/main.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.SystemExtension"
                         ▿ copyFiles: 1 element

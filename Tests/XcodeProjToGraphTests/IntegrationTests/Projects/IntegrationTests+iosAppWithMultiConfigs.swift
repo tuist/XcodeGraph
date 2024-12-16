@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps an iOS app with multiple configurations into the correct graph")
     func iosAppWithMultiConfigs() async throws {
         try await assertGraph {
             .iosAppWithMultiConfigs
@@ -129,7 +129,25 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "App"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 6 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/App/Support/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/App/Support/AppTests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/App/Tests/AppDelegateTests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Debug.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Release.xcconfig
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App"
                         ▿ copyFiles: 1 element
@@ -181,7 +199,25 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 6 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/App/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/App/Support/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/App/Support/AppTests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Debug.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Release.xcconfig
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.AppTests"
                         ▿ copyFiles: 1 element
@@ -281,7 +317,25 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework1"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 6 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Debug.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Release.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework1/Support/Framework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework1/Support/Framework1Tests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework1/Tests/Framework1FileTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework1"
                         ▿ copyFiles: 1 element
@@ -333,7 +387,25 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework1Tests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 6 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Debug.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Release.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework1/Sources/Framework1File.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework1/Support/Framework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework1/Support/Framework1Tests-Info.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework1Tests"
                         ▿ copyFiles: 1 element
@@ -433,7 +505,28 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework2"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 7 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Debug.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Release.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Target.Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework2/Support/Framework2-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework2/Support/Framework2Tests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework2/Tests/Framework2FileTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework2"
                         ▿ copyFiles: 1 element
@@ -485,7 +578,28 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework2Tests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 7 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Debug.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Release.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/ConfigurationFiles/Target.Beta.xcconfig
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework2/Sources/Framework2File.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework2/Support/Framework2-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_multi_configs/Framework2/Support/Framework2Tests-Info.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework2Tests"
                         ▿ copyFiles: 1 element

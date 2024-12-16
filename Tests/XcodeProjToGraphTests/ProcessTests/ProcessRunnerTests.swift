@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import TestSupport
 import XcodeProjToGraph
 
 @Suite
@@ -16,14 +17,15 @@ struct ProcessRunnerTests {
 
         // Make the file executable
         try FileManager.default.setAttributes(
-            [.posixPermissions: 0o755], ofItemAtPath: mockExecutablePath
+            [.posixPermissions: 0o755],
+            ofItemAtPath: mockExecutablePath
         )
 
         return mockExecutablePath
     }
 
-    /// Test that `ProcessRunner` runs a valid executable successfully and parses the result.
-    @Test func testRun_ValidExecutable_Success() async throws {
+    @Test("Runs a valid executable and returns expected output")
+    func testRun_ValidExecutable_Success() async throws {
         // Arrange
         let mockExecutablePath = try createTemporaryExecutable(
             withContent: """
@@ -53,8 +55,8 @@ struct ProcessRunnerTests {
         #expect(output == "Hello, World!")
     }
 
-    /// Test that `ProcessRunner` throws an error if the executable does not exist.
-    @Test func testRun_ExecutableNotFound_ThrowsError() async throws {
+    @Test("Throws an error if the executable does not exist")
+    func testRun_ExecutableNotFound_ThrowsError() async throws {
         // Arrange
         let nonExistentExecutable = Executable.custom(
             "/nonexistent/path",
@@ -73,8 +75,8 @@ struct ProcessRunnerTests {
         }
     }
 
-    /// Test that `ProcessRunner` throws an error on non-zero exit when `throwOnNonZeroExit` is enabled.
-    @Test func testRun_NonZeroExitCode_ThrowsError() async throws {
+    @Test("Throws an error on non-zero exit code when throwOnNonZeroExit is enabled")
+    func testRun_NonZeroExitCode_ThrowsError() async throws {
         // Arrange
         let mockExecutablePath = try createTemporaryExecutable(
             withContent: """
@@ -100,8 +102,8 @@ struct ProcessRunnerTests {
         }
     }
 
-    /// Test that `ProcessRunner` does not throw on non-zero exit when `throwOnNonZeroExit` is disabled.
-    @Test func testRun_NonZeroExitCode_NoThrow() async throws {
+    @Test("Does not throw on non-zero exit code when throwOnNonZeroExit is disabled")
+    func testRun_NonZeroExitCode_NoThrow() async throws {
         // Arrange
         let mockExecutablePath = try createTemporaryExecutable(
             withContent: """
@@ -114,7 +116,7 @@ struct ProcessRunnerTests {
             mockExecutablePath,
             [],
             { result in
-                result.exitCode // Simply return the exit code for validation.
+                result.exitCode // Return the exit code for validation
             }
         )
 
@@ -126,11 +128,12 @@ struct ProcessRunnerTests {
             throwOnNonZeroExit: false
         )
 
+        // Assert
         #expect(exitCode == 1)
     }
 
-    /// Test that `ProcessRunner` parses UTF-8 output correctly.
-    @Test func testRun_ParsesUtf8Output() async throws {
+    @Test("Parses UTF-8 output correctly")
+    func testRun_ParsesUtf8Output() async throws {
         // Arrange
         let mockExecutablePath = try createTemporaryExecutable(
             withContent: """
@@ -160,14 +163,14 @@ struct ProcessRunnerTests {
         #expect(output == "你好, 世界!")
     }
 
-    /// Test that `ProcessRunner` throws an error if the output is not valid UTF-8.
-    @Test func testRun_InvalidUtf8Output_ThrowsError() async throws {
+    @Test("Throws an error if the output is not valid UTF-8")
+    func testRun_InvalidUtf8Output_ThrowsError() async throws {
         // Arrange
         let mockExecutablePath = try createTemporaryExecutable(
             withContent: """
             #!/bin/sh
             echo -e '\\xff'  # Invalid UTF-8 sequence
-
+            exit 0
             """
         )
 

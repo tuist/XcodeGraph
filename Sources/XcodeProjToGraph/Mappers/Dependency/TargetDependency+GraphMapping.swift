@@ -69,6 +69,8 @@ extension TargetDependency {
                 case .dynamicLibrary, .textBasedDynamicLibrary:
                     return .dynamic
                 default:
+                    // Fallback: If the extension isn't recognized, default to dynamic linking.
+                    // Future maintainers might refine this logic if other file types appear.
                     return .dynamic
                 }
             }()

@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps a command-line tool with a dynamic framework dependency into the correct graph")
     func commandLineToolWithDynamicFramework() async throws {
         try await assertGraph {
             .commandLineToolWithDynamicFramework
@@ -103,7 +103,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "CommandLineTool"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/command_line_tool_with_dynamic_framework/Derived/InfoPlists/CommandLineTool-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/command_line_tool_with_dynamic_framework/Derived/InfoPlists/DynamicFramework-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/command_line_tool_with_dynamic_framework/DynamicFramework/DynamicFramework.swift
                         - buildRules: 0 elements
                         - bundleId: "com.example.commandlinetool"
                         ▿ copyFiles: 1 element
@@ -160,7 +169,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "DynamicFramework"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/command_line_tool_with_dynamic_framework/CommandLineTool/main.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/command_line_tool_with_dynamic_framework/Derived/InfoPlists/CommandLineTool-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/command_line_tool_with_dynamic_framework/Derived/InfoPlists/DynamicFramework-Info.plist
                         - buildRules: 0 elements
                         - bundleId: "com.example.dynamicframework"
                         ▿ copyFiles: 1 element

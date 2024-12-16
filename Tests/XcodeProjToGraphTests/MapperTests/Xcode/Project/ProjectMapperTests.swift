@@ -6,8 +6,10 @@ import XcodeProj
 @testable import TestSupport
 @testable import XcodeProjToGraph
 
+@Suite
 struct ProjectMapperTests {
-    @Test func testMapBasicProject() async throws {
+    @Test("Maps a basic project with default attributes")
+    func testMapBasicProject() async throws {
         let mockProvider = MockProjectProvider()
         let mapper = ProjectMapper(projectProvider: mockProvider)
 
@@ -20,7 +22,8 @@ struct ProjectMapperTests {
         #expect(project.type == .local)
     }
 
-    @Test func testMapProjectWithCustomAttributes() async throws {
+    @Test("Maps a project with custom attributes (org name, class prefix, upgrade check)")
+    func testMapProjectWithCustomAttributes() async throws {
         let pbxProj = PBXProj()
         let provider = MockProjectProvider(
             projectName: "CustomProject",
@@ -45,9 +48,9 @@ struct ProjectMapperTests {
         #expect(project.lastUpgradeCheck == "1500")
     }
 
-    @Test func testMapProjectWithTargets() async throws {
+    @Test("Maps a project that contains targets")
+    func testMapProjectWithTargets() async throws {
         let mockProvider = MockProjectProvider()
-
         let configList = XCConfigurationList.mock(
             configs: [("Debug", ["PRODUCT_BUNDLE_IDENTIFIER": "com.example.app"])],
             proj: mockProvider.pbxProj
@@ -64,13 +67,14 @@ struct ProjectMapperTests {
         try mockProvider.pbxProject().targets.append(target)
 
         let project = try await mapper.mapProject()
-        print(project.targets)
+
         #expect(project.targets.count == 1)
         #expect(project.targets.first?.value.name == "ExampleApp")
         #expect(project.targets.first?.value.product == .app)
     }
 
-    @Test func testMapProjectWithRemotePackages() async throws {
+    @Test("Maps a project with remote package dependencies")
+    func testMapProjectWithRemotePackages() async throws {
         let mockProvider = MockProjectProvider()
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -91,7 +95,8 @@ struct ProjectMapperTests {
         #expect(requirement == .upToNextMajor("1.0.0"))
     }
 
-    @Test func testMapProjectWithKnownRegions() async throws {
+    @Test("Maps a project with known regions")
+    func testMapProjectWithKnownRegions() async throws {
         let mockProvider = MockProjectProvider()
         try mockProvider.pbxProject().knownRegions = ["en", "es", "fr"]
         let mapper = ProjectMapper(projectProvider: mockProvider)
@@ -104,7 +109,8 @@ struct ProjectMapperTests {
         #expect(project.defaultKnownRegions?.contains("fr") == true)
     }
 
-    @Test func testMapProjectWithDevelopmentRegion() async throws {
+    @Test("Maps a project with a custom development region")
+    func testMapProjectWithDevelopmentRegion() async throws {
         let mockProvider = MockProjectProvider()
         try mockProvider.pbxProject().developmentRegion = "fr"
         let mapper = ProjectMapper(projectProvider: mockProvider)
@@ -114,7 +120,8 @@ struct ProjectMapperTests {
         #expect(project.developmentRegion == "fr")
     }
 
-    @Test func testMapProjectWithResourceSynthesizers() async throws {
+    @Test("Maps a project with default resource synthesizers")
+    func testMapProjectWithResourceSynthesizers() async throws {
         let mockProvider = MockProjectProvider()
         let mapper = ProjectMapper(projectProvider: mockProvider)
 
@@ -143,7 +150,8 @@ struct ProjectMapperTests {
         #expect(actualParsers == expectedParsers)
     }
 
-    @Test func testMapProjectWithSchemes() async throws {
+    @Test("Maps a project with associated schemes")
+    func testMapProjectWithSchemes() async throws {
         let mockProvider = MockProjectProvider()
         let scheme = XCScheme.mock(name: "TestScheme")
         mockProvider.xcodeProj.sharedData = XCSharedData(schemes: [scheme])

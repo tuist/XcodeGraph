@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps an iOS app with transitive static libraries into the correct graph")
     func iosAppWithStaticLibraries() async throws {
         try await assertGraph {
             .iosAppWithStaticLibraries
@@ -154,7 +154,13 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "A"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 2 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/A/Tests/ATests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/C/prebuilt/C/libC.a
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.A"
                         ▿ copyFiles: 2 elements
@@ -211,7 +217,10 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "ATests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 1 element
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/A/Sources/A.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.ATests"
                         ▿ copyFiles: 1 element
@@ -317,7 +326,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "B"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Tests/BTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.B"
                         ▿ copyFiles: 1 element
@@ -369,7 +387,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "BTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Sources/B.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.BTests"
                         ▿ copyFiles: 1 element
@@ -469,7 +496,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "App"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Tests.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Tests/AppTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App"
                         ▿ copyFiles: 1 element
@@ -527,7 +563,19 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 4 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Modules/C/prebuilt/C/libC.a
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_static_libraries/Tests.plist
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.AppTests"
                         ▿ copyFiles: 1 element

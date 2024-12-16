@@ -1,5 +1,6 @@
 import Foundation
 
+/// Errors that can occur when running processes with `ProcessRunner`.
 public enum ProcessRunnerError: Error, LocalizedError, Equatable {
     case executableNotFound(String)
     case failedToRunProcess(String)

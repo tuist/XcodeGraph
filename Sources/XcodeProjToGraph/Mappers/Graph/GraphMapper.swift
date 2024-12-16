@@ -4,11 +4,12 @@ import PathKit
 import XcodeGraph
 import XcodeProj
 
-/// Specifies the type of graph to generate.
+/// Specifies the type of graph to generate for code analysis or tooling tasks.
 ///
-/// - `.workspace(WorkspaceProviding)`: Constructs a graph from a workspace provided by a type conforming to `WorkspaceProviding`.
-/// - `.project(AbsolutePath)`: Constructs a graph from a single project located at the given path, treating it as a workspace
-/// with one project.
+/// `GraphType` allows you to choose whether to build a graph from a single project or from an entire workspace:
+/// - `.workspace(WorkspaceProviding)`: Constructs a graph from a workspace (potentially containing multiple projects).
+/// - `.project(AbsolutePath)`: Constructs a graph from a single project at the given path, treating it as a workspace with one
+/// project.
 public enum GraphType: Sendable {
     case workspace(WorkspaceProviding)
     case project(AbsolutePath)
@@ -16,25 +17,49 @@ public enum GraphType: Sendable {
 
 /// A mapper that constructs a complete `XcodeGraph.Graph` from a given workspace or project.
 ///
-/// This mapper aggregates data from projects, packages, and dependencies to produce a fully
-/// formed graph. It resolves each project, maps targets, packages, and dependencies, and then
-/// assembles them into a final `XcodeGraph.Graph` model.
+/// `GraphMapper` orchestrates the process of aggregating data from all relevant sources:
+/// - Projects (via `ProjectMapper`),
+/// - Targets, Packages, and Dependencies (translated into a uniform graph model),
+/// - Platform-specific conditions for dependencies (e.g., iOS-only frameworks),
 ///
-/// The resulting graph can be used for analysis, generation of derived artifacts, or other
-/// tooling tasks.
+/// The resulting `XcodeGraph.Graph` model can be used for:
+/// - Dependency analysis: Understand how targets and packages interrelate.
+/// - Code generation: Produce derived artifacts, such as resource accessors or configuration files.
+/// - Tooling integration: Serve as input to custom build tools, linters, or visualizers.
 ///
-/// Typical usage involves creating a `GraphMapper` with a specified `GraphType` and then calling
-/// `xcodeGraph()` to produce the graph.
+/// **Example Usage:**
+/// ```swift
+/// // Suppose you have a WorkspaceProvider for a workspace:
+/// let workspaceProvider: WorkspaceProviding = ...
+/// let graphMapper = GraphMapper(graphType: .workspace(workspaceProvider))
+///
+/// // Or, for a single project:
+/// let projectPath: AbsolutePath = ...
+/// let graphMapper = GraphMapper(graphType: .project(projectPath))
+///
+/// // Construct the graph:
+/// let graph = try await graphMapper.xcodeGraph()
+///
+/// // 'graph' now contains a unified representation of projects, targets, packages, and dependencies.
+/// // You can analyze it, generate code, or integrate it with other developer tools.
+/// ```
 public final class GraphMapper: Sendable {
+    // MARK: - Properties
+
     private let projectProviderClosure: @Sendable (AbsolutePath) async throws -> ProjectProviding
     public let graphType: GraphType
 
-    /// Initializes the mapper with a specified graph type and an optional project provider closure.
+    // MARK: - Initialization
+
+    /// Initializes the mapper with a specified `GraphType` and an optional project provider closure.
+    ///
+    /// The `projectProviderClosure` allows for custom logic when creating `ProjectProviding` instances. By default,
+    /// it initializes a `ProjectProvider` from the given path.
     ///
     /// - Parameters:
-    ///   - graphType: The type of graph (workspace or project) to map.
-    ///   - projectProviderClosure: A closure that, given a project path, returns a `ProjectProviding`.
-    ///     By default, it initializes a `ProjectProvider` from the given `AbsolutePath`.
+    ///   - graphType: The type of graph to build (workspace or project).
+    ///   - projectProviderClosure: A closure that returns a `ProjectProviding` instance for a given project path.
+    ///     If not provided, a default closure is used that instantiates a `ProjectProvider` from the given path.
     public init(
         graphType: GraphType,
         projectProviderClosure: @escaping @Sendable (AbsolutePath) async throws -> ProjectProviding = {
@@ -46,11 +71,19 @@ public final class GraphMapper: Sendable {
         self.projectProviderClosure = projectProviderClosure
     }
 
-    /// Constructs an `XcodeGraph.Graph` by mapping all projects, packages, and dependencies within the specified workspace or
+    // MARK: - Mapping Logic
+
+    /// Constructs an `XcodeGraph.Graph` by mapping all projects, packages, and dependencies from the specified workspace or
     /// project.
     ///
-    /// - Returns: A fully mapped `XcodeGraph.Graph` containing projects, packages, dependencies, and conditions.
-    /// - Throws: An error if project mapping or dependency resolution fails.
+    /// This method:
+    /// 1. Builds a `Workspace` model from either a workspace or a single project.
+    /// 2. For each project in the workspace, uses `ProjectMapper` to produce a `Project` model.
+    /// 3. Aggregates all projects, packages, targets, and dependencies into a single `Graph`.
+    /// 4. Attaches platform conditions to edges, respecting platform-specific dependencies.
+    ///
+    /// - Returns: A fully mapped `Graph` containing all discovered projects, packages, dependencies, and conditions.
+    /// - Throws: If mapping projects, packages, or dependencies fails (e.g., due to missing files or invalid settings).
     public func xcodeGraph() async throws -> XcodeGraph.Graph {
         var projectProviders = [AbsolutePath: ProjectProviding]()
         var projects: [AbsolutePath: Project] = [:]
@@ -71,6 +104,7 @@ public final class GraphMapper: Sendable {
                 )
             }
 
+        // Map each project in the workspace
         let projectResults = try await workspace.projects.lazy.asyncCompactMap { path in
             do {
                 let provider = try await self.projectProviderClosure(path)
@@ -78,6 +112,7 @@ public final class GraphMapper: Sendable {
                 let project = try await projectMapper.mapProject()
                 return (path, provider, project)
             } catch {
+                // If one project fails to map, it's skipped. Consider logging this or throwing an error for strict usage.
                 return nil
             }
         }
@@ -87,18 +122,16 @@ public final class GraphMapper: Sendable {
             projects[path] = project
         }
 
+        // Build a map of all targets for easy target-based dependency resolution
         let allTargetsMap = Dictionary(
             projects.values.flatMap(\.targets),
-            uniquingKeysWith: { existing, _ in
-                existing
-            }
+            uniquingKeysWith: { existing, _ in existing }
         )
 
+        // Process dependencies for each project and target
         for (path, project) in projects {
             if !project.packages.isEmpty {
-                packages[path] = Dictionary(
-                    uniqueKeysWithValues: project.packages.map { ($0.url, $0) }
-                )
+                packages[path] = Dictionary(uniqueKeysWithValues: project.packages.map { ($0.url, $0) })
             }
 
             for (name, target) in project.targets {
@@ -122,6 +155,7 @@ public final class GraphMapper: Sendable {
             }
         }
 
+        // Return the assembled graph
         return Graph(
             name: workspace.name,
             path: workspace.path,

@@ -8,7 +8,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps an iOS app with a transitive framework dependency into the correct graph")
     func ios_app_with_transitive_framework() async throws {
         try await assertGraph {
             .ios_app_with_transitive_framework
@@ -216,7 +216,22 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "App"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 5 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Config/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Config/AppTests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Tests/AppDelegateTests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/UITests/AppUITest.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/iOS/Framework2.framework
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.App"
                         ▿ copyFiles: 1 element
@@ -268,7 +283,22 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 5 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Config/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Config/AppTests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/UITests/AppUITest.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/iOS/Framework2.framework
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.AppTests"
                         ▿ copyFiles: 1 element
@@ -325,7 +355,22 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "AppUITests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 5 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Config/App-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Config/AppTests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Sources/AppDelegate.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/App/Tests/AppDelegateTests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/iOS/Framework2.framework
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.AppUITests"
                         ▿ copyFiles: 1 element
@@ -425,7 +470,19 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework1-iOS"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 4 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Config/Framework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Framework1FileTests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/Mac/Framework2.framework
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework1"
                         ▿ copyFiles: 1 element
@@ -482,7 +539,19 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework1-macOS"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 4 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Config/Framework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Framework1FileTests.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/iOS/Framework2.framework
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework1"
                         ▿ copyFiles: 1 element
@@ -539,7 +608,22 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework1Tests-iOS"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 5 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Config/Framework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Sources/Framework1File.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/Mac/Framework2.framework
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/iOS/Framework2.framework
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework1Tests"
                         ▿ copyFiles: 1 element
@@ -596,7 +680,22 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "Framework1Tests-macOS"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 5 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Config/Framework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Sources/Framework1File.swift
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/Mac/Framework2.framework
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/Framework2/prebuilt/iOS/Framework2.framework
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.Framework1Tests"
                         ▿ copyFiles: 1 element
@@ -696,7 +795,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "StaticFramework1"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Derived/InfoPlists/StaticFramework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Derived/InfoPlists/StaticFramework1Tests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Tests/Framework1FileTests.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.StaticFramework1"
                         ▿ copyFiles: 1 element
@@ -753,7 +861,16 @@ extension IntegrationTests {
                     ▿ (2 elements)
                       - key: "StaticFramework1Tests"
                       ▿ value: Target
-                        - additionalFiles: 0 elements
+                        ▿ additionalFiles: 3 elements
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Derived/InfoPlists/StaticFramework1-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Derived/InfoPlists/StaticFramework1Tests-Info.plist
+                          ▿ FileElement
+                            ▿ file: (1 element)
+                              - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Sources/Framework1File.swift
                         - buildRules: 0 elements
                         - bundleId: "io.tuist.StaticFramework1Tests"
                         ▿ copyFiles: 1 element

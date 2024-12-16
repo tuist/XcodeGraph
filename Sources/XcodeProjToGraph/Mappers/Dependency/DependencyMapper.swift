@@ -31,11 +31,32 @@ protocol DependencyTypeMapper: Sendable {
     func mapDependency(_ dependency: PBXTargetDependency) async throws -> TargetDependency?
 }
 
-/// A mapper that orchestrates the mapping of all target dependencies by leveraging multiple specialized mappers.
+/// A mapper that orchestrates the mapping of all target dependencies using multiple specialized mappers.
 ///
-/// The `DependencyMapper` tries each registered `DependencyTypeMapper` in turn, returning the first successful result.
-/// This design allows for easy extension of dependency types without modifying a single large mapper.
-final class DependencyMapper: DependencyMapping {
+/// `DependencyMapper` tries each registered `DependencyTypeMapper` in turn until it finds one that can map a given
+/// `PBXTargetDependency`. This design supports adding new dependency types without modifying a single large mapping function.
+///
+/// **Example Usage:**
+/// ```swift
+/// // Assume you have a ProjectProvider instance for your Xcode project:
+/// let projectProvider: ProjectProviding = ...
+///
+/// // Create a DependencyMapper to handle dependencies in a target.
+/// let dependencyMapper = DependencyMapper(projectProvider: projectProvider)
+///
+/// // Retrieve a PBXTarget from your XcodeProj:
+/// let pbxTarget: PBXTarget = ...
+///
+/// // Map all dependencies of the PBXTarget into TargetDependency models:
+/// let targetDependencies = try await dependencyMapper.mapDependencies(target: pbxTarget)
+///
+/// // 'targetDependencies' now contains a uniform list of dependencies (targets, packages, frameworks, etc.)
+/// // which can be analyzed, transformed, or used for code generation.
+/// ```
+///
+/// This straightforward integration lets you focus on what to do with the resolved dependencies,
+/// rather than the nuances of resolving them from Xcode's project structure.
+public final class DependencyMapper: DependencyMapping {
     private let projectProvider: ProjectProviding
     private let typeMappers: [DependencyTypeMapper]
 
@@ -147,11 +168,14 @@ final class ProxyDependencyMapper: DependencyTypeMapper {
         switch remoteGlobalID {
         case let .object(object):
             if let fileReference = object as? PBXFileReference {
+                // If `fileMapper.mapDependency` returns nil, it means this file type
+                // doesn't map to a known `TargetDependency` (e.g., unsupported extension).
                 return try await fileMapper.mapDependency(
                     pathString: fileReference.path,
                     condition: condition
                 )
             } else if let referenceProxy = object as? PBXReferenceProxy {
+                // Similarly, nil here indicates that the referenced file isn't a supported dependency type.
                 return try await fileMapper.mapDependency(
                     pathString: referenceProxy.path,
                     condition: condition

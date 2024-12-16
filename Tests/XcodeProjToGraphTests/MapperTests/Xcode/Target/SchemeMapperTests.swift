@@ -4,6 +4,7 @@ import Testing
 @testable import XcodeProj
 @testable import XcodeProjToGraph
 
+@Suite
 struct SchemeMapperTests {
     let mockProvider: MockProjectProvider
     let mapper: SchemeMapper
@@ -14,8 +15,9 @@ struct SchemeMapperTests {
         mapper = try SchemeMapper(graphType: .project(mockProvider.sourceDirectory))
     }
 
-    @Test func testMapSharedProjectSchemes() async throws {
-        // Setup shared scheme data
+    @Test("Maps shared project schemes correctly")
+    func testMapSharedProjectSchemes() async throws {
+        // Setup a shared scheme
         let xcscheme = XCScheme.mock(name: "SharedScheme")
 
         let schemes = try await mapper.mapSchemes(xcschemes: [xcscheme], shared: true)
@@ -24,8 +26,9 @@ struct SchemeMapperTests {
         #expect(schemes[0].shared == true)
     }
 
-    @Test func testMapUserSchemes() async throws {
-        // Setup user scheme data
+    @Test("Maps user (non-shared) project schemes correctly")
+    func testMapUserSchemes() async throws {
+        // Setup a user scheme
         let xcscheme = XCScheme.mock(name: "UserScheme")
         let schemes = try await mapper.mapSchemes(xcschemes: [xcscheme], shared: false)
 
@@ -34,7 +37,8 @@ struct SchemeMapperTests {
         #expect(schemes[0].shared == false)
     }
 
-    @Test func testMapBuildAction() async throws {
+    @Test("Maps a build action within a scheme")
+    func testMapBuildAction() async throws {
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
             blueprintIdentifier: "123",
@@ -62,7 +66,8 @@ struct SchemeMapperTests {
         #expect(mappedAction?.findImplicitDependencies == true)
     }
 
-    @Test func testMapTestAction() async throws {
+    @Test("Maps a test action with testable references, coverage, and environment")
+    func testMapTestAction() async throws {
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
             blueprintIdentifier: "123",
@@ -75,16 +80,8 @@ struct SchemeMapperTests {
             buildableReference: targetRef
         )
 
-        let envVar = XCScheme.EnvironmentVariable(
-            variable: "TEST_ENV",
-            value: "test_value",
-            enabled: true
-        )
-
-        let launchArg = XCScheme.CommandLineArguments.CommandLineArgument(
-            name: "test_arg",
-            enabled: true
-        )
+        let envVar = XCScheme.EnvironmentVariable(variable: "TEST_ENV", value: "test_value", enabled: true)
+        let launchArg = XCScheme.CommandLineArguments.CommandLineArgument(name: "test_arg", enabled: true)
 
         let testAction = XCScheme.TestAction(
             buildConfiguration: "Debug",
@@ -109,7 +106,8 @@ struct SchemeMapperTests {
         #expect(mappedAction?.region == "US")
     }
 
-    @Test func testMapRunAction() async throws {
+    @Test("Maps a run action with environment variables and launch arguments")
+    func testMapRunAction() async throws {
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
             blueprintIdentifier: "123",
@@ -119,16 +117,8 @@ struct SchemeMapperTests {
 
         let runnable = XCScheme.BuildableProductRunnable(buildableReference: targetRef)
 
-        let envVar = XCScheme.EnvironmentVariable(
-            variable: "RUN_ENV",
-            value: "run_value",
-            enabled: true
-        )
-
-        let launchArg = XCScheme.CommandLineArguments.CommandLineArgument(
-            name: "run_arg",
-            enabled: true
-        )
+        let envVar = XCScheme.EnvironmentVariable(variable: "RUN_ENV", value: "run_value", enabled: true)
+        let launchArg = XCScheme.CommandLineArguments.CommandLineArgument(name: "run_arg", enabled: true)
 
         let launchAction = XCScheme.LaunchAction(
             pathRunnable: try XCScheme.PathRunnable(element: runnable.xmlElement()),
@@ -147,7 +137,8 @@ struct SchemeMapperTests {
         #expect(mappedAction?.arguments?.launchArguments.first?.name == "run_arg")
     }
 
-    @Test func testMapArchiveAction() async throws {
+    @Test("Maps an archive action with organizer reveal enabled")
+    func testMapArchiveAction() async throws {
         let archiveAction = XCScheme.ArchiveAction(
             buildConfiguration: "Release",
             revealArchiveInOrganizer: true
@@ -159,7 +150,8 @@ struct SchemeMapperTests {
         #expect(mappedAction?.revealArchiveInOrganizer == true)
     }
 
-    @Test func testMapProfileAction() async throws {
+    @Test("Maps a profile action to a runnable and configuration")
+    func testMapProfileAction() async throws {
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
             blueprintIdentifier: "123",
@@ -180,7 +172,8 @@ struct SchemeMapperTests {
         #expect(mappedAction?.configurationName == "Release")
     }
 
-    @Test func testMapAnalyzeAction() async throws {
+    @Test("Maps an analyze action to the appropriate configuration")
+    func testMapAnalyzeAction() async throws {
         let analyzeAction = XCScheme.AnalyzeAction(buildConfiguration: "Debug")
 
         let mappedAction = try await mapper.mapAnalyzeAction(action: analyzeAction)
@@ -188,7 +181,8 @@ struct SchemeMapperTests {
         #expect(mappedAction?.configurationName == "Debug")
     }
 
-    @Test func testMapTargetReference() async throws {
+    @Test("Maps target references in a scheme's build action")
+    func testMapTargetReference() async throws {
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
             blueprintIdentifier: "123",
@@ -196,13 +190,11 @@ struct SchemeMapperTests {
             blueprintName: "App"
         )
 
-        // Create a build action entry that uses the target reference
         let buildActionEntry = XCScheme.BuildAction.Entry(
             buildableReference: targetRef,
             buildFor: [.running]
         )
 
-        // Create a scheme with a build action that uses our target reference
         let buildAction = XCScheme.BuildAction(
             buildActionEntries: [buildActionEntry],
             parallelizeBuild: true,
@@ -213,15 +205,14 @@ struct SchemeMapperTests {
 
         let mapped = try await mapper.mapScheme(xcscheme: scheme, shared: true)
 
-        // Verify the target reference was properly mapped
         let mappedBuildAction = try #require(mapped.buildAction)
-
         #expect(mappedBuildAction.targets.count == 1)
         #expect(mappedBuildAction.targets[0].name == "App")
         #expect(mappedBuildAction.targets[0].projectPath == mockProvider.sourceDirectory)
     }
 
-    @Test func testNilActions() async throws {
+    @Test("Handles schemes without any actions gracefully")
+    func testNilActions() async throws {
         let scheme = XCScheme.mock(
             buildAction: nil,
             testAction: nil,

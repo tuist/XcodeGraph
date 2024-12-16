@@ -6,7 +6,8 @@ import XcodeProj
 @testable import TestSupport
 @testable import XcodeProjToGraph
 
-struct PBXTargetMapperTests {
+@Suite
+struct TargetMapperTests {
     let mockProvider = MockProjectProvider()
     let mapper: TargetMapping
 
@@ -14,7 +15,8 @@ struct PBXTargetMapperTests {
         mapper = TargetMapper(projectProvider: mockProvider)
     }
 
-    @Test func testMapBasicTarget() async throws {
+    @Test("Maps a basic target with a product bundle identifier")
+    func testMapBasicTarget() async throws {
         let target = createTarget(
             name: "App",
             productType: .application,
@@ -28,7 +30,8 @@ struct PBXTargetMapperTests {
         #expect(mapped.bundleId == "com.example.app")
     }
 
-    @Test func testMapTargetWithMissingBundleId() async throws {
+    @Test("Throws an error if the target is missing a bundle identifier")
+    func testMapTargetWithMissingBundleId() async throws {
         let target = createTarget(
             name: "App",
             productType: .application,
@@ -40,7 +43,8 @@ struct PBXTargetMapperTests {
         }
     }
 
-    @Test func testMapTargetWithEnvironmentVariables() async throws {
+    @Test("Maps a target with environment variables")
+    func testMapTargetWithEnvironmentVariables() async throws {
         let target = createTarget(
             name: "App",
             productType: .application,
@@ -55,7 +59,8 @@ struct PBXTargetMapperTests {
         #expect(mapped.environmentVariables["TEST_VAR"]?.isEnabled == true)
     }
 
-    @Test func testMapTargetWithLaunchArguments() async throws {
+    @Test("Maps a target with launch arguments")
+    func testMapTargetWithLaunchArguments() async throws {
         let target = createTarget(
             name: "App",
             productType: .application,
@@ -73,7 +78,8 @@ struct PBXTargetMapperTests {
         #expect(mapped.launchArguments == expected)
     }
 
-    @Test func testMapTargetWithSourceFiles() async throws {
+    @Test("Maps a target with source files")
+    func testMapTargetWithSourceFiles() async throws {
         let sourceFile = PBXFileReference.mock(
             path: "ViewController.swift",
             lastKnownFileType: "sourcecode.swift",
@@ -94,7 +100,8 @@ struct PBXTargetMapperTests {
         #expect(mapped.sources[0].path.basename == "ViewController.swift")
     }
 
-    @Test func testMapTargetWithMetadata() async throws {
+    @Test("Maps a target with metadata tags")
+    func testMapTargetWithMetadata() async throws {
         let target = createTarget(
             name: "App",
             productType: .application,

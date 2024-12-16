@@ -3,73 +3,80 @@ import Path
 import XcodeGraph
 import XcodeProj
 
-/// A protocol for mapping `XCSwiftPackageReference` instances to `Package` models.
+/// A protocol defining how to map both remote and local Swift package references into `Package` models.
+///
+/// Conforming types provide methods to translate `XCRemoteSwiftPackageReference` and `XCLocalSwiftPackageReference`
+/// objects into `Package` instances, resolving URLs, version requirements, and file paths as needed.
 protocol PackageMapping: Sendable {
     /// Maps a remote Swift package reference to a `Package`.
     ///
+    /// This method inspects the repository URL and version requirement from the provided `XCRemoteSwiftPackageReference`
+    /// and constructs a `Package` model that can be integrated into the overall project graph.
+    ///
     /// - Parameter package: The remote Swift package reference.
-    /// - Returns: A `Package` representing the remote package.
-    /// - Throws: If required repository information is missing or invalid.
+    /// - Returns: A `Package` representing the remote package, including its URL and version requirement.
+    /// - Throws: `MappingError.missingRepositoryURL` if the remote package has no repository URL.
     func map(package: XCRemoteSwiftPackageReference) async throws -> Package
 
     /// Maps a local Swift package reference to a `Package`.
     ///
+    /// This method resolves the provided local package path relative to the project's source directory,
+    /// constructing a `.local` `Package` model that can be used in the project graph.
+    ///
     /// - Parameter package: The local Swift package reference.
-    /// - Returns: A `Package` representing the local package.
-    /// - Throws: If the package path cannot be validated.
+    /// - Returns: A `Package` representing the local package, including its resolved filesystem path.
+    /// - Throws: If the provided path is invalid or cannot be resolved relative to the project's source directory.
     func map(package: XCLocalSwiftPackageReference) async throws -> Package
 }
 
-/// A mapper that converts remote and local Swift package references into `Package` models.
+/// A mapper that converts remote and local Swift package references into domain `Package` models.
 ///
-/// The `PackageMapper` uses the provided `ProjectProviding` to resolve local package paths relative
-/// to the project's source directory. For remote packages, it uses the repository URL and version requirement
-/// from the `XCRemoteSwiftPackageReference` to construct a `Package` with the appropriate `Requirement`.
-final class PackageMapper: PackageMapping {
+/// `PackageMapper` uses `ProjectProviding` to resolve paths and retrieves remote package information from
+/// `XCRemoteSwiftPackageReference`
+/// instances. By extracting repository URLs, version requirements, and local paths, `PackageMapper` produces `Package`
+/// models that can be integrated into a broader Xcode project graph.
+///
+/// Example usage:
+/// ```swift
+/// let packageMapper = PackageMapper(projectProvider: provider)
+/// let remotePackage = try await packageMapper.map(package: remoteRef)
+/// let localPackage = try await packageMapper.map(package: localRef)
+/// ```
+public final class PackageMapper: PackageMapping {
     private let projectProvider: ProjectProviding
 
-    /// Creates a new `PackageMapper`.
+    /// Creates a new `PackageMapper` with the given project provider.
     ///
-    /// - Parameter projectProvider: A provider that offers access to the project's directory structure
-    ///   and additional metadata.
+    /// - Parameter projectProvider: Provides access to the project's directory structure and metadata,
+    ///   enabling resolution of local package paths and contextual validation.
     init(projectProvider: ProjectProviding) {
         self.projectProvider = projectProvider
     }
 
-    /// Maps an `XCRemoteSwiftPackageReference` to a `Package`.
-    ///
-    /// - Parameter package: The `XCRemoteSwiftPackageReference` to map.
-    /// - Returns: A `Package` instance representing the mapped remote package.
-    /// - Throws: `MappingError.missingRepositoryURL` if the repository URL is not found.
     public func map(package: XCRemoteSwiftPackageReference) async throws -> Package {
         guard let repositoryURL = package.repositoryURL else {
             throw MappingError.missingRepositoryURL(packageName: package.name ?? "Unknown Package")
         }
 
-        let requirement = await mapRequirement(package: package)
+        let requirement = mapRequirement(package: package)
         return .remote(url: repositoryURL, requirement: requirement)
     }
 
-    /// Maps an `XCLocalSwiftPackageReference` to a `Package`.
-    ///
-    /// - Parameter package: The `XCLocalSwiftPackageReference` to map.
-    /// - Returns: A `Package` instance representing the mapped local package.
-    /// - Throws: If the relative path is invalid.
     public func map(package: XCLocalSwiftPackageReference) async throws -> Package {
         let relativePath = try RelativePath(validating: package.relativePath)
         let path = projectProvider.sourceDirectory.appending(relativePath)
         return .local(path: path)
     }
 
-    /// Maps the version requirement of an `XCRemoteSwiftPackageReference` to a `Package.Requirement`.
+    /// Maps the version requirement of a remote Swift package to a `Package.Requirement`.
     ///
-    /// This method converts the version requirement specified in the Xcode project into a `Requirement`
-    /// used by the internal `Package` model. It supports all standard SwiftPM versioning schemes,
-    /// including major/minor constraints, exact versions, ranges, branches, and revisions.
+    /// By examining the `XCRemoteSwiftPackageReference`'s `versionRequirement`, this method determines the correct
+    /// versioning scheme (exact, range, branch, revision, or up-to-next-major/minor) and returns a `Requirement`
+    /// that captures this information.
     ///
-    /// - Parameter package: The `XCRemoteSwiftPackageReference` whose requirement to map.
-    /// - Returns: A `Package.Requirement` representing the version requirement.
-    public func mapRequirement(package: XCRemoteSwiftPackageReference) async -> Requirement {
+    /// - Parameter package: The `XCRemoteSwiftPackageReference` containing the version requirement.
+    /// - Returns: A `Package.Requirement` reflecting the specified versioning scheme.
+    public func mapRequirement(package: XCRemoteSwiftPackageReference) -> Requirement {
         guard let versionRequirement = package.versionRequirement else {
             return .upToNextMajor("0.0.0")
         }

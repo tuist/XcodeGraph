@@ -5,8 +5,8 @@ import XcodeProjToGraph
 
 @Suite
 struct LipoToolTests {
-    /// Test that `LipoTool.archs` successfully parses valid output.
-    @Test func testArchs_ValidOutput() async throws {
+    @Test("Parses multiple architectures correctly from Lipo output")
+    func testArchs_ValidOutput() async throws {
         // Arrange
         let mockExecutablePath = try MockFileCreator.createTemporaryExecutable(
             withContent: """
@@ -25,8 +25,8 @@ struct LipoToolTests {
         #expect(result.architectures == [.arm64, .x8664])
     }
 
-    /// Test that `LipoTool.archs` handles a single architecture output.
-    @Test func testArchs_SingleArchitecture() async throws {
+    @Test("Handles a single architecture output")
+    func testArchs_SingleArchitecture() async throws {
         // Arrange
         let mockExecutablePath = try MockFileCreator.createTemporaryExecutable(
             withContent: """
@@ -45,8 +45,8 @@ struct LipoToolTests {
         #expect(result.architectures == [.arm64])
     }
 
-    /// Test that `LipoTool.archs` throws an error on non-zero exit code.
-    @Test func testArchs_NonZeroExitCode() async throws {
+    @Test("Throws an error when Lipo returns a non-zero exit code")
+    func testArchs_NonZeroExitCode() async throws {
         // Arrange
         let mockExecutablePath = try MockFileCreator.createTemporaryExecutable(
             withContent: """
@@ -62,8 +62,8 @@ struct LipoToolTests {
         }
     }
 
-    /// Test that `LipoTool.archs` handles empty output gracefully.
-    @Test func testArchs_EmptyOutput() async throws {
+    @Test("Handles empty output gracefully")
+    func testArchs_EmptyOutput() async throws {
         // Arrange
         let mockExecutablePath = try MockFileCreator.createTemporaryExecutable(
             withContent: """
@@ -82,8 +82,8 @@ struct LipoToolTests {
         #expect(result.architectures.isEmpty == true)
     }
 
-    /// Test that `LipoTool.archs` throws an error if the executable does not exist.
-    @Test func testArchs_ExecutableNotFound() async throws {
+    @Test("Throws an error if the Lipo executable is not found")
+    func testArchs_ExecutableNotFound() async throws {
         // Arrange
         let nonExistentExecutable = "/nonexistent/path/to/lipo"
 

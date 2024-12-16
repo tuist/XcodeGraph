@@ -9,7 +9,7 @@ import XcodeProjToGraph
 @testable import TestSupport
 
 extension IntegrationTests {
-    @Test
+    @Test("Maps a large iOS app project into the correct graph")
     func iosAppLarge() async throws {
         let path = try WorkspaceFixture.iosAppLarge.absolutePath()
 

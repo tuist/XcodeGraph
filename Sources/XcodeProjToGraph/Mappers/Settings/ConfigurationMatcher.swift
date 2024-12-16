@@ -28,7 +28,7 @@ enum ConfigurationMatcher {
     public static func variant(forName name: String) -> BuildConfiguration.Variant {
         let lowercased = name.lowercased()
         return patterns.first { pattern in
-            pattern.keywords.contains { lowercased.contains($0) }
+            pattern.keywords.first(where: { lowercased.contains($0) }) != nil
         }?.variant ?? .debug
     }
 
