@@ -1,6 +1,6 @@
-// swift-tools-version:6.0
+// swift-tools-version:5.9
 
-@preconcurrency import PackageDescription
+import PackageDescription
 
 let targets: [Target] = [
     .target(
@@ -61,6 +61,5 @@ let package = Package(
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
         .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "8.25.0"))
     ],
-
     targets: targets
 )
