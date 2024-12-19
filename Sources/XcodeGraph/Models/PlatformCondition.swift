@@ -65,7 +65,7 @@ public struct PlatformCondition: Codable, Hashable, Equatable, Comparable, Senda
 
 #if DEBUG
     extension PlatformCondition {
-        public static func test(_ platformFilters: PlatformFilters) throws -> PlatformCondition? {
+        static func test(_ platformFilters: PlatformFilters) throws -> PlatformCondition? {
             .when(platformFilters)
         }
     }

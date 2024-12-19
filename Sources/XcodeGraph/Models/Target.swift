@@ -390,7 +390,7 @@ extension Sequence<Target> {
     extension Target {
         /// Creates a Target with test data
         /// Note: Referenced paths may not exist
-        public static func test(
+        static func test(
             name: String = "Target",
             destinations: Destinations = [.iPhone, .iPad],
             product: Product = .app,
@@ -450,7 +450,7 @@ extension Sequence<Target> {
 
         /// Creates a Target with test data
         /// Note: Referenced paths may not exist
-        public static func test(
+        static func test(
             name: String = "Target",
             platform: Platform,
             product: Product = .app,
