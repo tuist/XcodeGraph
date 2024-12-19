@@ -3,8 +3,7 @@ import ProjectDescription
 
 public enum Module: String, CaseIterable {
     case xcodeGraph = "XcodeGraph"
-    case xcodeProjToGraph = "XcodeProjToGraph"
-    case testSupport = "TestSupport"
+    case XcodeProjMapper
 
     public var isRunnable: Bool {
         switch self {
@@ -80,7 +79,7 @@ public enum Module: String, CaseIterable {
 
     public var unitTestsTargetName: String? {
         switch self {
-        case .xcodeGraph, .xcodeProjToGraph:
+        case .xcodeGraph, .XcodeProjMapper:
             return "\(rawValue)Tests"
         case .testSupport:
             return nil
@@ -89,7 +88,7 @@ public enum Module: String, CaseIterable {
 
     public var integrationTestsTargetName: String? {
         switch self {
-        case .xcodeGraph, .xcodeProjToGraph, .testSupport:
+        case .xcodeGraph, .XcodeProjMapper, .testSupport:
             return nil
         }
     }
@@ -127,7 +126,7 @@ public enum Module: String, CaseIterable {
                 .external(name: "AnyCodable"),
                 .external(name: "Path"),
             ]
-        case .xcodeProjToGraph:
+        case .XcodeProjMapper:
             [
                 .target(name: Module.xcodeGraph.rawValue),
                 .external(name: "Path"),
@@ -135,7 +134,7 @@ public enum Module: String, CaseIterable {
             ]
         case .testSupport:
             [
-                .target(name: Module.xcodeProjToGraph.rawValue),
+                .target(name: Module.XcodeProjMapper.rawValue),
             ]
         }
         return dependencies
@@ -146,9 +145,9 @@ public enum Module: String, CaseIterable {
         case .xcodeGraph, .testSupport:
             [
             ]
-        case .xcodeProjToGraph:
+        case .XcodeProjMapper:
             [
-                .target(name: Module.testSupport.rawValue)
+                .target(name: Module.testSupport.rawValue),
             ]
         }
         dependencies = dependencies + [.target(name: targetName)]
@@ -157,7 +156,7 @@ public enum Module: String, CaseIterable {
 
     public var testingDependencies: [TargetDependency] {
         let dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .xcodeProjToGraph, .testSupport:
+        case .xcodeGraph, .XcodeProjMapper, .testSupport:
             [
             ]
         }
@@ -166,7 +165,7 @@ public enum Module: String, CaseIterable {
 
     public var integrationTestsDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .xcodeProjToGraph, .testSupport:
+        case .xcodeGraph, .XcodeProjMapper, .testSupport:
             []
         }
         dependencies.append(.target(name: targetName))
@@ -186,7 +185,7 @@ public enum Module: String, CaseIterable {
             rootFolder = "Sources"
         }
         let resources: ResourceFileElements = switch self {
-        case .xcodeGraph, .xcodeProjToGraph:
+        case .xcodeGraph, .XcodeProjMapper:
             []
         case .testSupport:
             []

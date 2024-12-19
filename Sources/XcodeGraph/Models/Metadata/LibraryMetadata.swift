@@ -26,7 +26,7 @@ public struct LibraryMetadata: Equatable {
 
 #if DEBUG
     extension LibraryMetadata {
-        public static func test(
+        static func test(
             // swiftlint:disable:next force_try
             path: AbsolutePath = try! AbsolutePath(validating: "/Libraries/libTest/libTest.a"),
             // swiftlint:disable:next force_try

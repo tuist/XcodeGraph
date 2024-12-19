@@ -31,7 +31,7 @@ extension Arguments: Equatable {
 
 #if DEBUG
     extension Arguments {
-        public static func test(
+        static func test(
             environmentVariables: [String: EnvironmentVariable] = [:],
             launchArguments: [LaunchArgument] = []
         ) -> Arguments {

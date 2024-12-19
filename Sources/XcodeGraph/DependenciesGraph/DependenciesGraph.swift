@@ -22,7 +22,7 @@ public struct DependenciesGraph: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension DependenciesGraph {
-        public static func test(
+        static func test(
             externalDependencies: [String: [TargetDependency]] = [:],
             externalProjects: [AbsolutePath: Project] = [:]
         ) -> Self {
@@ -43,7 +43,7 @@ public struct DependenciesGraph: Equatable, Codable, Sendable {
             )
         }
 
-        public static func test(
+        static func test(
             packageFolder: AbsolutePath
         ) -> Self {
             let externalDependencies = [

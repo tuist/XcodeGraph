@@ -14,7 +14,7 @@ public struct AnalyzeAction: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension AnalyzeAction {
-        public static func test(configurationName: String = "Beta Release") -> AnalyzeAction {
+        static func test(configurationName: String = "Beta Release") -> AnalyzeAction {
             AnalyzeAction(configurationName: configurationName)
         }
     }

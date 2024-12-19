@@ -59,7 +59,7 @@ public struct TestAction: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension TestAction {
-        public static func test(
+        static func test(
             targets: [TestableTarget] = [TestableTarget(target: TargetReference(
                 // swiftlint:disable:next force_try
                 projectPath: try! AbsolutePath(validating: "/Project"),

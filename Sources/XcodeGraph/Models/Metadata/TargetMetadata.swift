@@ -11,7 +11,7 @@ public struct TargetMetadata: Codable, Equatable, Sendable {
 
 #if DEBUG
     extension TargetMetadata {
-        public static func test(
+        static func test(
             tags: Set<String> = []
         ) -> TargetMetadata {
             TargetMetadata(

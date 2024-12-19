@@ -78,6 +78,10 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable, Sendable {
 
     /// List of libraries that are part of the .xcframework.
     public let libraries: [Library]
+
+    public init(libraries: [Library]) {
+        self.libraries = libraries
+    }
 }
 
 #if DEBUG

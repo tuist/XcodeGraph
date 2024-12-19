@@ -29,7 +29,7 @@ public struct ProfileAction: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension ProfileAction {
-        public static func test(
+        static func test(
             configurationName: String = "Beta Release",
             preActions: [ExecutionAction] = [],
             postActions: [ExecutionAction] = [],

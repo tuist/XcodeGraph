@@ -13,7 +13,7 @@ public struct ResourceSynthesizer: Equatable, Hashable, Codable, Sendable {
         case defaultTemplate(String)
     }
 
-    public enum Parser: String, Equatable, Hashable, Codable, Sendable {
+    public enum Parser: String, CaseIterable, Equatable, Hashable, Codable, Sendable {
         case strings
         case stringsCatalog
         case assets
@@ -98,7 +98,7 @@ extension ResourceSynthesizer.Parser.Option: ExpressibleByArrayLiteral {
 
 #if DEBUG
     extension XcodeGraph.ResourceSynthesizer {
-        public static func test(
+        static func test(
             parser: Parser = .assets,
             parserOptions: [String: Parser.Option] = [:],
             extensions: Set<String> = ["xcassets"],
