@@ -60,7 +60,7 @@ struct MockProjectProvider: ProjectProviding {
     }
 
     func pbxProject() throws -> PBXProject {
-        try #require(xcodeProj.pbxproj.projects.first)
+        try xcodeProj.mainPBXProject()
     }
 
     /// Creates a basic mock project provider with a unique temporary directory.

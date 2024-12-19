@@ -25,7 +25,7 @@ extension PBXProjectMapper {
         let mapper = GraphMapper(graphType: graphType) { path in
             guard let provider = projectProviders[path] else {
                 Issue.record("Unexpected project path requested: \(path)")
-                throw ProjectProvidingError.noProjectsFound(path: path.pathString)
+                throw XcodeProjMapper.XcodeProjError.noProjectsFound
             }
             return provider
         }

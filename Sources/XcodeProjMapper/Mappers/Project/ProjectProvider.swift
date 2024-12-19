@@ -4,18 +4,6 @@ import PathKit
 import XcodeGraph
 import XcodeProj
 
-/// Errors that may occur while providing project information.
-enum ProjectProvidingError: LocalizedError, Equatable {
-    case noProjectsFound(path: String)
-
-    var errorDescription: String? {
-        switch self {
-        case let .noProjectsFound(path):
-            return "No `PBXProject` was found in the `.xcodeproj` at: \(path)."
-        }
-    }
-}
-
 /// A protocol that defines how to provide access to an Xcode project and its underlying components.
 ///
 /// Conforming types must supply:
@@ -32,12 +20,6 @@ protocol ProjectProviding {
 
     /// The parsed `XcodeProj` instance representing the Xcode project.
     var xcodeProj: XcodeProj { get }
-
-    /// Returns the main `PBXProject` object from the `.xcodeproj`.
-    ///
-    /// - Throws: `ProjectProvidingError.noProjectsFound` if no projects are found.
-    /// - Returns: A `PBXProject` representing the primary project definition.
-    func pbxProject() throws -> PBXProject
 }
 
 extension ProjectProviding {
@@ -70,12 +52,5 @@ struct ProjectProvider: ProjectProviding {
     /// project structure.
     var sourceDirectory: AbsolutePath {
         xcodeProjPath.parentDirectory
-    }
-
-    func pbxProject() throws -> PBXProject {
-        guard let pbxProject = xcodeProj.pbxproj.projects.first else {
-            throw ProjectProvidingError.noProjectsFound(path: xcodeProjPath.pathString)
-        }
-        return pbxProject
     }
 }

@@ -20,7 +20,7 @@ struct PBXProjectMapper {
     /// - Throws: If reading or transforming project data fails.
     func map(projectProvider: ProjectProviding) throws -> Project {
         let settingsMapper = XCConfigurationMapper()
-        let pbxProject = try projectProvider.pbxProject()
+        let pbxProject = try projectProvider.xcodeProj.mainPBXProject()
 
         let settings = try settingsMapper.map(
             projectProvider: projectProvider,

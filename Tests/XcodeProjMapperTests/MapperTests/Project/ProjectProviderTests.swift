@@ -1,7 +1,7 @@
+import Path
 import Testing
 import XcodeGraph
 import XcodeProj
-import Path
 @testable import XcodeProjMapper
 
 @Suite
@@ -30,7 +30,7 @@ struct ProjectProviderTests {
             xcodeProj: xcodeProj
         )
 
-        let project = try provider.pbxProject()
+        let project = try provider.xcodeProj.mainPBXProject()
         #expect(project.name == "TestProject")
     }
 
@@ -48,16 +48,11 @@ struct ProjectProviderTests {
             xcodeProj: xcodeProj
         )
 
-        #expect(throws: ProjectProvidingError.noProjectsFound(path: "/tmp/EmptyProject.xcodeproj")) {
-            _ = try provider.pbxProject()
-        }
-
         #expect {
-            _ = try provider.pbxProject()
+            _ = try provider.xcodeProj.mainPBXProject()
         } throws: { error in
-            return error.localizedDescription == "No `PBXProject` was found in the `.xcodeproj` at: /tmp/EmptyProject.xcodeproj."
+            return error.localizedDescription == "No `PBXProject` was found in the `.xcodeproj`"
         }
-
     }
 
     @Test("Verifies sourceDirectory is parent of xcodeProjPath")

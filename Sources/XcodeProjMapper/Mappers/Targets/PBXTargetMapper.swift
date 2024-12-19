@@ -227,7 +227,6 @@ struct PBXTargetMapper: TargetMapping {
         return nil
     }
 
-
     /// Recursively collects all files from a given `PBXGroup`.
     private func collectAllFiles(from group: PBXGroup, projectProvider: ProjectProviding) throws -> Set<AbsolutePath> {
         var files = Set<AbsolutePath>()

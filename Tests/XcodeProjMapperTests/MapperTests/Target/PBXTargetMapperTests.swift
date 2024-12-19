@@ -1,9 +1,9 @@
+import Foundation
 import Path
 import Testing
 import XcodeGraph
 import XcodeProj
 @testable import XcodeProjMapper
-import Foundation
 
 @Suite
 struct PBXTargetMapperTests {
@@ -142,14 +142,14 @@ struct PBXTargetMapperTests {
             name: "Debug",
             buildSettings: [
                 "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "CODE_SIGN_ENTITLEMENTS": "App.entitlements"
+                "CODE_SIGN_ENTITLEMENTS": "App.entitlements",
             ]
         )
         let releaseConfig = XCBuildConfiguration(
             name: "Release",
             buildSettings: [
                 "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "CODE_SIGN_ENTITLEMENTS": "App.entitlements"
+                "CODE_SIGN_ENTITLEMENTS": "App.entitlements",
             ]
         )
 
@@ -172,7 +172,6 @@ struct PBXTargetMapperTests {
         let mapped = try mapper.map(pbxTarget: target, projectProvider: provider)
         #expect(mapped.entitlements == .file(path: entitlementsPath))
     }
-
 
     @Test("Throws noProjectsFound when pbxProj has no projects")
     func testMapTarget_noProjectsFound() throws {
@@ -228,7 +227,7 @@ struct PBXTargetMapperTests {
         let plistContent: [String: Any] = [
             "CFBundleIdentifier": "com.example.app",
             "CFBundleName": "ExampleApp",
-            "CFVersion": 1.4
+            "CFVersion": 1.4,
         ]
         let data = try PropertyListSerialization.data(fromPropertyList: plistContent, format: .xml, options: 0)
         try data.write(to: URL(fileURLWithPath: plistPath.pathString))
@@ -238,7 +237,7 @@ struct PBXTargetMapperTests {
             productType: .application,
             buildSettings: [
                 "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "INFOPLIST_FILE": relativePath.pathString
+                "INFOPLIST_FILE": relativePath.pathString,
             ]
         )
         var mockProvider = MockProjectProvider(pbxProj: PBXProj())
@@ -277,7 +276,7 @@ struct PBXTargetMapperTests {
             productType: .application,
             buildSettings: [
                 "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "INFOPLIST_FILE": relativePath.pathString
+                "INFOPLIST_FILE": relativePath.pathString,
             ]
         )
         var mockProvider = MockProjectProvider(pbxProj: PBXProj())
@@ -289,7 +288,8 @@ struct PBXTargetMapperTests {
         #expect {
             _ = try mapper.extractInfoPlist(from: target, projectProvider: mockProvider)
         } throws: { error in
-            return error.localizedDescription == "Failed to read a valid plist dictionary from file at: \(invalidPlistPath.pathString)."
+            return error
+                .localizedDescription == "Failed to read a valid plist dictionary from file at: \(invalidPlistPath.pathString)."
         }
     }
 

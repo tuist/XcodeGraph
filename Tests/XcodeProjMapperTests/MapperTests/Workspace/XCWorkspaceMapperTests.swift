@@ -37,9 +37,9 @@ struct XCWorkspaceMapperTests {
                 name: "NestedGroup",
                 children: [
                     .test(relativePath: "ProjectB.xcodeproj"),
-                    .test(relativePath: "Notes.txt")
+                    .test(relativePath: "Notes.txt"),
                 ]
-            ))
+            )),
         ])
 
         let provider = MockWorkspaceProvider(
@@ -85,7 +85,7 @@ struct XCWorkspaceMapperTests {
         let workspacePath = try AbsolutePath(validating: "/tmp/MyWorkspace.xcworkspace")
 
         let xcworkspace = XCWorkspace.test(withElements: [
-            .test(relativePath: "App.xcodeproj")
+            .test(relativePath: "App.xcodeproj"),
         ])
 
         let provider = MockWorkspaceProvider(
@@ -109,12 +109,11 @@ struct XCWorkspaceMapperTests {
         #expect(workspace.name == "AnotherWorkspace")
     }
 
-
     @Test("Resolves absolute path in XCWorkspaceDataFileRef")
     func testMap_AbsolutePath() throws {
         let workspacePath = try AbsolutePath(validating: "/tmp/AbsWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
-            .file(XCWorkspaceDataFileRef(location: .absolute("/Users/SomeUser/ProjectC.xcodeproj")))
+            .file(XCWorkspaceDataFileRef(location: .absolute("/Users/SomeUser/ProjectC.xcodeproj"))),
         ]
 
         let xcworkspace = XCWorkspace(data: XCWorkspaceData(children: elements))
@@ -129,7 +128,7 @@ struct XCWorkspaceMapperTests {
     func testMap_ContainerPath() throws {
         let workspacePath = try AbsolutePath(validating: "/tmp/ContainerWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
-            .file(XCWorkspaceDataFileRef(location: .container("Nested/ProjectD.xcodeproj")))
+            .file(XCWorkspaceDataFileRef(location: .container("Nested/ProjectD.xcodeproj"))),
         ]
 
         let xcworkspace = XCWorkspace(data: XCWorkspaceData(children: elements))
@@ -145,7 +144,7 @@ struct XCWorkspaceMapperTests {
     func testMap_DeveloperPath() throws {
         let workspacePath = try AbsolutePath(validating: "/tmp/DevWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
-            .file(XCWorkspaceDataFileRef(location: .developer("Platforms/iPhoneOS.platform/Developer/ProjectE.xcodeproj")))
+            .file(XCWorkspaceDataFileRef(location: .developer("Platforms/iPhoneOS.platform/Developer/ProjectE.xcodeproj"))),
         ]
 
         let xcworkspace = XCWorkspace(data: XCWorkspaceData(children: elements))
@@ -161,8 +160,8 @@ struct XCWorkspaceMapperTests {
         let workspacePath = try AbsolutePath(validating: "/tmp/GroupWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
             .group(XCWorkspaceDataGroup(location: .group("MyGroup"), name: "MyGroup", children: [
-                .file(XCWorkspaceDataFileRef(location: .group("Subfolder/ProjectF.xcodeproj")))
-            ]))
+                .file(XCWorkspaceDataFileRef(location: .group("Subfolder/ProjectF.xcodeproj"))),
+            ])),
         ]
 
         let xcworkspace = XCWorkspace(data: XCWorkspaceData(children: elements))
@@ -177,7 +176,7 @@ struct XCWorkspaceMapperTests {
     func testMap_CurrentPath() throws {
         let workspacePath = try AbsolutePath(validating: "/tmp/CurrentWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
-            .file(XCWorkspaceDataFileRef(location: .current("RelativePath/ProjectG.xcodeproj")))
+            .file(XCWorkspaceDataFileRef(location: .current("RelativePath/ProjectG.xcodeproj"))),
         ]
 
         let xcworkspace = XCWorkspace(data: XCWorkspaceData(children: elements))
@@ -192,7 +191,7 @@ struct XCWorkspaceMapperTests {
     func testMap_OtherPath() throws {
         let workspacePath = try AbsolutePath(validating: "/tmp/OtherWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
-            .file(XCWorkspaceDataFileRef(location: .other("customscheme", "Path/ProjectH.xcodeproj")))
+            .file(XCWorkspaceDataFileRef(location: .other("customscheme", "Path/ProjectH.xcodeproj"))),
         ]
 
         let xcworkspace = XCWorkspace(data: XCWorkspaceData(children: elements))

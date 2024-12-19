@@ -1,14 +1,13 @@
- import Foundation
- import Path
- import XcodeGraph
- import XcodeProj
- import XcodeProjMapper
+import Foundation
+import Path
+import XcodeGraph
+import XcodeProj
+import XcodeProjMapper
 
+import Testing
+import XCTest
 
- import XCTest
- import Testing
-
- class PerformanceTests: XCTestCase {
+class PerformanceTests: XCTestCase {
     func testFullGraphParsingPerformance_iosAppLarge() throws {
         let path = try WorkspaceFixture.iosAppLarge.absolutePath()
         let parser = ProjectParser()
@@ -54,31 +53,30 @@
 //            _ = try parser.parse(at: path.pathString)
 //        }
 //    }
- }
+}
 
-
- extension XCTestCase {
-  func measureAsync(
-    timeout: TimeInterval = 30.0,
-    for block: @escaping () throws -> Void,
-    file: StaticString = #file,
-    line: UInt = #line
-  ) {
-    measureMetrics(
-        [.wallClockTime],
-      automaticallyStartMeasuring: true
+extension XCTestCase {
+    func measureAsync(
+        timeout: TimeInterval = 30.0,
+        for block: @escaping () throws -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
     ) {
-      let expectation = expectation(description: "finished")
-      Task { @MainActor in
-        do {
-          try block()
-          expectation.fulfill()
-        } catch {
-          XCTFail(error.localizedDescription, file: file, line: line)
-          expectation.fulfill()
+        measureMetrics(
+            [.wallClockTime],
+            automaticallyStartMeasuring: true
+        ) {
+            let expectation = expectation(description: "finished")
+            Task { @MainActor in
+                do {
+                    try block()
+                    expectation.fulfill()
+                } catch {
+                    XCTFail(error.localizedDescription, file: file, line: line)
+                    expectation.fulfill()
+                }
+            }
+            wait(for: [expectation], timeout: timeout)
         }
-      }
-      wait(for: [expectation], timeout: timeout)
     }
-  }
- }
+}
