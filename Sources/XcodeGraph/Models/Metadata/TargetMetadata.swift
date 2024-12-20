@@ -1,5 +1,5 @@
 /// The metadata associated with a target.
-public struct TargetMetadata: Codable, Equatable {
+public struct TargetMetadata: Codable, Equatable, Sendable {
     public var tags: Set<String>
 
     public init(
@@ -11,7 +11,7 @@ public struct TargetMetadata: Codable, Equatable {
 
 #if DEBUG
     extension TargetMetadata {
-        public static func test(
+        static func test(
             tags: Set<String> = []
         ) -> TargetMetadata {
             TargetMetadata(
