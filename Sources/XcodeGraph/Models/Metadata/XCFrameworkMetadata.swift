@@ -37,7 +37,7 @@ public struct XCFrameworkMetadata: Equatable {
 
 #if DEBUG
     extension XCFrameworkMetadata {
-        public static func test(
+        static func test(
             // swiftlint:disable:next force_try
             path: AbsolutePath = try! AbsolutePath(validating: "/XCFrameworks/XCFramework.xcframework"),
             infoPlist: XCFrameworkInfoPlist = .test(),

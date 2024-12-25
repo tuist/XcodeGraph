@@ -41,7 +41,7 @@ public struct Scheme: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension Scheme {
-        public static func test(
+        static func test(
             name: String = "Test",
             shared: Bool = false,
             buildAction: BuildAction? = BuildAction.test(),
