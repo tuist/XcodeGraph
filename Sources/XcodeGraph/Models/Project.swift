@@ -12,7 +12,7 @@ public enum ProjectType: Hashable, Equatable, Codable, CustomStringConvertible, 
     public var description: String {
         switch self {
         case .local: "local project"
-        case let .external(hash): "external project"
+        case .external: "external project"
         }
     }
 }
@@ -120,7 +120,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         additionalFiles: [FileElement],
         resourceSynthesizers: [ResourceSynthesizer],
         lastUpgradeCheck: Version?,
-        isExternal: Bool
+        type: ProjectType
     ) {
         self.path = path
         self.sourceRootPath = sourceRootPath
@@ -140,7 +140,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
         self.additionalFiles = additionalFiles
         self.resourceSynthesizers = resourceSynthesizers
         self.lastUpgradeCheck = lastUpgradeCheck
-        self.isExternal = isExternal
+        self.type = type
     }
 
     // MARK: - CustomStringConvertible
@@ -214,7 +214,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 additionalFiles: additionalFiles,
                 resourceSynthesizers: resourceSynthesizers,
                 lastUpgradeCheck: lastUpgradeCheck,
-                isExternal: isExternal
+                type: type
             )
         }
 
@@ -259,7 +259,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
                 additionalFiles: additionalFiles,
                 resourceSynthesizers: resourceSynthesizers,
                 lastUpgradeCheck: lastUpgradeCheck,
-                isExternal: isExternal
+                type: type
             )
         }
     }

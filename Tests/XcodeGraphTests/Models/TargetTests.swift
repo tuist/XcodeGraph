@@ -16,23 +16,7 @@ final class TargetTests: XCTestCase {
         XCTAssertEqual(
             Target.validSourceExtensions,
             [
-                "m",
-                "swift",
-                "mm",
-                "cpp",
-                "c++",
-                "cc",
-                "c",
-                "d",
-                "s",
-                "intentdefinition",
-                "xcmappingmodel",
-                "metal",
-                "mlmodel",
-                "docc",
-                "playground",
-                "rcproject",
-                "mlpackage",
+                "m", "swift", "mm", "cpp", "c++", "cc", "c", "d", "s", "intentdefinition", "metal", "mlmodel",
             ]
         )
     }
