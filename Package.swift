@@ -13,6 +13,13 @@ var targets: [Target] = [
             .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
+    .testTarget(
+        name: "XcodeGraphTests",
+        dependencies: [.target(name: "XcodeGraph")],
+        swiftSettings: [
+            .enableExperimentalFeature("StrictConcurrency"),
+        ]
+    ),
 ]
 
 let package = Package(
