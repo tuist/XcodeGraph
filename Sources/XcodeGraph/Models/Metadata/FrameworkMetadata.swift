@@ -32,7 +32,7 @@ public struct FrameworkMetadata: Equatable {
 
 #if DEBUG
     extension FrameworkMetadata {
-        static func test(
+        public static func test(
             // swiftlint:disable:next force_try
             path: AbsolutePath = try! AbsolutePath(validating: "/Frameworks/TestFramework.xframework"),
             // swiftlint:disable:next force_try

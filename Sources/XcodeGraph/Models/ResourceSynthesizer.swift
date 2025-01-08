@@ -98,7 +98,7 @@ extension ResourceSynthesizer.Parser.Option: ExpressibleByArrayLiteral {
 
 #if DEBUG
     extension XcodeGraph.ResourceSynthesizer {
-        static func test(
+        public static func test(
             parser: Parser = .assets,
             parserOptions: [String: Parser.Option] = [:],
             extensions: Set<String> = ["xcassets"],

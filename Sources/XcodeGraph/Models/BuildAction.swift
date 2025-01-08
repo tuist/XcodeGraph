@@ -29,7 +29,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension BuildAction {
-        static func test(
+        public static func test(
             // swiftlint:disable:next force_try
             targets: [TargetReference] = [TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App")],
             preActions: [ExecutionAction] = [],

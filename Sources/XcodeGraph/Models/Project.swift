@@ -173,7 +173,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
 
 #if DEBUG
     extension Project {
-        static func test(
+        public static func test(
             path: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
             sourceRootPath: AbsolutePath = try! AbsolutePath(validating: "/Project"), // swiftlint:disable:this force_try
             // swiftlint:disable:next force_try
@@ -265,8 +265,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
     }
 
     extension Project.Options {
-        @usableFromInline
-        static func test(
+        public static func test(
             automaticSchemesOptions: AutomaticSchemesOptions = .enabled(
                 targetSchemesGrouping: .byNameSuffix(
                     build: ["Implementation", "Interface", "Mocks", "Testing"],
@@ -292,7 +291,7 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
     }
 
     extension Project.Options.TextSettings {
-        static func test(
+        public static func test(
             usesTabs: Bool? = true,
             indentWidth: UInt? = 2,
             tabWidth: UInt? = 2,

@@ -160,7 +160,7 @@ extension [String: SettingValue] {
 
 #if DEBUG
     extension Configuration {
-        static func test(
+        public static func test(
             settings: SettingsDictionary = [:],
             xcconfig: AbsolutePath? = try! AbsolutePath(validating: "/Config.xcconfig") // swiftlint:disable:this force_try
         ) -> Configuration {
@@ -169,7 +169,7 @@ extension [String: SettingValue] {
     }
 
     extension Settings {
-        static func test(
+        public static func test(
             base: SettingsDictionary,
             debug: Configuration,
             release: Configuration
@@ -180,7 +180,7 @@ extension [String: SettingValue] {
             )
         }
 
-        static func test(
+        public static func test(
             base: SettingsDictionary = [:],
             baseDebug: SettingsDictionary = [:],
             configurations: [BuildConfiguration: Configuration?] = [:]
@@ -192,7 +192,7 @@ extension [String: SettingValue] {
             )
         }
 
-        static func test(defaultSettings: DefaultSettings) -> Settings {
+        public static func test(defaultSettings: DefaultSettings) -> Settings {
             Settings(
                 base: [:],
                 configurations: [

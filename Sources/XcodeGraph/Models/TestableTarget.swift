@@ -65,7 +65,7 @@ public struct TestableTarget: Equatable, Hashable, Codable, Sendable {
 
 #if DEBUG
     extension TestableTarget {
-        static func test(
+        public static func test(
             // swiftlint:disable:next force_try
             target: TargetReference = TargetReference(projectPath: try! AbsolutePath(validating: "/Project"), name: "App"),
             skipped: Bool = false,

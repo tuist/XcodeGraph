@@ -24,7 +24,7 @@ public struct Headers: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension Headers {
-        static func test(
+        public static func test(
             public: [AbsolutePath] = [],
             private: [AbsolutePath] = [],
             project: [AbsolutePath] = []

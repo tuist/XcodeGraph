@@ -41,7 +41,7 @@ public struct RawScriptBuildPhase: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension RawScriptBuildPhase {
-        static func test(
+        public static func test(
             name: String = "Test",
             script: String = "",
             showEnvVarsInLog: Bool = false,

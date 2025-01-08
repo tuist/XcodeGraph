@@ -53,7 +53,7 @@ public struct RunAction: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension RunAction {
-        static func test(
+        public static func test(
             configurationName: String = BuildConfiguration.debug.name,
             attachDebugger: Bool = true,
             customLLDBInitFile: AbsolutePath? = nil,

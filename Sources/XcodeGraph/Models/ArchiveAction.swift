@@ -29,7 +29,7 @@ public struct ArchiveAction: Equatable, Codable, Sendable {
 
 #if DEBUG
     extension ArchiveAction {
-        static func test(
+        public static func test(
             configurationName: String = "Beta Release",
             revealArchiveInOrganizer: Bool = true,
             customArchiveName: String? = nil,
