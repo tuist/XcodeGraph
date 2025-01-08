@@ -44,7 +44,7 @@ protocol TargetMapping {
     /// - Returns: A fully mapped `Target` model.
     /// - Throws: `TargetMappingError` if required data (like a bundle identifier) is missing,
     ///           or if necessary files/groups cannot be found.
-    func map(pbxTarget: PBXTarget, projectProvider: ProjectProviding) throws -> Target
+    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> Target
 }
 
 /// A mapper that converts a `PBXTarget` into a domain `Target` model.
@@ -87,49 +87,49 @@ struct PBXTargetMapper: TargetMapping {
         self.buildRuleMapper = buildRuleMapper
     }
 
-    func map(pbxTarget: PBXTarget, projectProvider: ProjectProviding) throws -> Target {
+    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> Target {
         let platform = try pbxTarget.platform()
         let deploymentTargets = try pbxTarget.deploymentTargets()
         let productType = pbxTarget.productType?.mapProductType()
         let product = try productType.throwing(PlatformInferenceError.noPlatformInferred(pbxTarget.name))
 
         let settings = try settingsMapper.map(
-            projectProvider: projectProvider,
+            xcodeProj: xcodeProj,
             configurationList: pbxTarget.buildConfigurationList
         )
 
         let sources = try pbxTarget.sourcesBuildPhase().map {
-            try sourcesMapper.map($0, projectProvider: projectProvider)
+            try sourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
 
         let resources = try pbxTarget.resourcesBuildPhase().map {
-            try resourcesMapper.map($0, projectProvider: projectProvider)
+            try resourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
 
         let headers = try pbxTarget.headersBuildPhase().map {
-            try headersMapper.map($0, projectProvider: projectProvider)
+            try headersMapper.map($0, xcodeProj: xcodeProj)
         } ?? nil
 
         let runScriptPhases = pbxTarget.runScriptBuildPhases()
         let scripts = try scriptsMapper.map(
             runScriptPhases,
             buildPhases: pbxTarget.buildPhases,
-            projectProvider: projectProvider
+            xcodeProj: xcodeProj
         )
         let rawScriptBuildPhases = scriptsMapper.mapRawScriptBuildPhases(runScriptPhases)
 
         let copyFilesPhases = pbxTarget.copyFilesBuildPhases()
-        let copyFiles = try copyFilesMapper.map(copyFilesPhases, projectProvider: projectProvider)
+        let copyFiles = try copyFilesMapper.map(copyFilesPhases, xcodeProj: xcodeProj)
 
         let resourceFiles = try pbxTarget.resourcesBuildPhase()?.files ?? []
-        let coreDataModels = try coreDataModelsMapper.map(resourceFiles, projectProvider: projectProvider)
+        let coreDataModels = try coreDataModelsMapper.map(resourceFiles, xcodeProj: xcodeProj)
 
         let frameworksPhase = try pbxTarget.frameworksBuildPhase()
         let frameworks = try frameworksPhase.map {
-            try frameworksMapper.map($0, projectProvider: projectProvider)
+            try frameworksMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
 
-        let additionalFiles = try mapAdditionalFiles(from: pbxTarget, projectProvider: projectProvider)
+        let additionalFiles = try mapAdditionalFiles(from: pbxTarget, xcodeProj: xcodeProj)
         let resourceFileElements = ResourceFileElements(resources)
 
         let buildRules = try pbxTarget.buildRules.compactMap {
@@ -138,8 +138,8 @@ struct PBXTargetMapper: TargetMapping {
 
         let environmentVariables = pbxTarget.extractEnvironmentVariables()
         let launchArguments = try pbxTarget.launchArguments()
-        let filesGroup = try extractFilesGroup(from: pbxTarget, projectProvider: projectProvider)
-        let playgrounds = try extractPlaygrounds(from: pbxTarget, projectProvider: projectProvider)
+        let filesGroup = try extractFilesGroup(from: pbxTarget, xcodeProj: xcodeProj)
+        let playgrounds = try extractPlaygrounds(from: pbxTarget, xcodeProj: xcodeProj)
         let prune = try pbxTarget.prune()
         let mergedBinaryType = try pbxTarget.mergedBinaryType()
         let mergeable = try pbxTarget.mergeable()
@@ -147,7 +147,7 @@ struct PBXTargetMapper: TargetMapping {
         let metadata = try pbxTarget.metadata()
 
         let targetDependencies = try pbxTarget.dependencies.compactMap {
-            try dependencyMapper.map($0, projectProvider: projectProvider)
+            try dependencyMapper.map($0, xcodeProj: xcodeProj)
         }
         let allDependencies = (targetDependencies + frameworks).sorted { $0.name < $1.name }
 
@@ -158,8 +158,8 @@ struct PBXTargetMapper: TargetMapping {
             productName: pbxTarget.productName ?? pbxTarget.name,
             bundleId: try pbxTarget.bundleIdentifier(),
             deploymentTargets: deploymentTargets,
-            infoPlist: try extractInfoPlist(from: pbxTarget, projectProvider: projectProvider),
-            entitlements: try extractEntitlements(from: pbxTarget, projectProvider: projectProvider),
+            infoPlist: try extractInfoPlist(from: pbxTarget, xcodeProj: xcodeProj),
+            entitlements: try extractEntitlements(from: pbxTarget, xcodeProj: xcodeProj),
             settings: settings,
             sources: sources,
             resources: resourceFileElements,
@@ -186,22 +186,22 @@ struct PBXTargetMapper: TargetMapping {
     // MARK: - Private
 
     /// Identifies files not included in any build phase, returning them as `FileElement` models.
-    private func mapAdditionalFiles(from pbxTarget: PBXTarget, projectProvider: ProjectProviding) throws -> [FileElement] {
-        guard let pbxProject = projectProvider.xcodeProj.pbxproj.projects.first,
+    private func mapAdditionalFiles(from pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> [FileElement] {
+        guard let pbxProject = xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
-            throw TargetMappingError.noProjectsFound(path: projectProvider.xcodeProjPath.pathString)
+            throw TargetMappingError.noProjectsFound(path: try xcodeProj.pathOrThrow.pathString)
         }
 
-        let allFiles = try collectAllFiles(from: mainGroup, projectProvider: projectProvider)
-        let filesInBuildPhases = try filesReferencedByBuildPhases(pbxTarget: pbxTarget, projectProvider: projectProvider)
+        let allFiles = try collectAllFiles(from: mainGroup, xcodeProj: xcodeProj)
+        let filesInBuildPhases = try filesReferencedByBuildPhases(pbxTarget: pbxTarget, xcodeProj: xcodeProj)
         let additionalFiles = allFiles.subtracting(filesInBuildPhases).sorted()
         return additionalFiles.map { FileElement.file(path: $0) }
     }
 
     /// Extracts the main files group for the target.
-    private func extractFilesGroup(from target: PBXTarget, projectProvider: ProjectProviding) throws -> ProjectGroup {
-        guard let pbxProject = projectProvider.xcodeProj.pbxproj.projects.first,
+    private func extractFilesGroup(from target: PBXTarget, xcodeProj: XcodeProj) throws -> ProjectGroup {
+        guard let pbxProject = xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
             throw TargetMappingError.missingFilesGroup(targetName: target.name)
@@ -210,9 +210,9 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts and parses the project's Info.plist as a dictionary, or returns an empty dictionary if none is found.
-    private func extractInfoPlist(from target: PBXTarget, projectProvider: ProjectProviding) throws -> InfoPlist {
+    private func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) throws -> InfoPlist {
         if let plistPath = try target.infoPlistPath() {
-            let path = projectProvider.sourceDirectory.appending(try RelativePath(validating: plistPath))
+            let path = try xcodeProj.srcPathOrThrow.appending(try RelativePath(validating: plistPath))
             let plistDictionary = try readPlistAsDictionary(at: path)
             return .dictionary(plistDictionary)
         }
@@ -220,25 +220,25 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts the target's entitlements file, if present.
-    func extractEntitlements(from target: PBXTarget, projectProvider: ProjectProviding) throws -> Entitlements? {
+    func extractEntitlements(from target: PBXTarget, xcodeProj: XcodeProj) throws -> Entitlements? {
         if let entitlementsPath = try target.entitlementsPath() {
-            let path = projectProvider.sourceDirectory.appending(try RelativePath(validating: entitlementsPath))
+            let path = try xcodeProj.srcPathOrThrow.appending(try RelativePath(validating: entitlementsPath))
             return Entitlements.file(path: path)
         }
         return nil
     }
 
     /// Recursively collects all files from a given `PBXGroup`.
-    private func collectAllFiles(from group: PBXGroup, projectProvider: ProjectProviding) throws -> Set<AbsolutePath> {
+    private func collectAllFiles(from group: PBXGroup, xcodeProj: XcodeProj) throws -> Set<AbsolutePath> {
         var files = Set<AbsolutePath>()
         for child in group.children {
             if let file = child as? PBXFileReference,
-               let pathString = try file.fullPath(sourceRoot: projectProvider.sourcePathString)
+               let pathString = try file.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
             {
                 let path = try AbsolutePath(validating: pathString)
                 files.insert(path)
             } else if let subgroup = child as? PBXGroup {
-                files.formUnion(try collectAllFiles(from: subgroup, projectProvider: projectProvider))
+                files.formUnion(try collectAllFiles(from: subgroup, xcodeProj: xcodeProj))
             }
         }
         return files
@@ -247,13 +247,13 @@ struct PBXTargetMapper: TargetMapping {
     /// Identifies all files referenced by any build phase in the target.
     private func filesReferencedByBuildPhases(
         pbxTarget: PBXTarget,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> Set<AbsolutePath> {
         let filePaths = try pbxTarget.buildPhases.compactMap(\.files)
             .flatMap { $0 }
             .compactMap { buildFile -> AbsolutePath? in
                 guard let fileRef = buildFile.file,
-                      let filePath = try fileRef.fullPath(sourceRoot: projectProvider.sourceDirectory.pathString)
+                      let filePath = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
                 else { return nil }
                 return try AbsolutePath(validating: filePath)
             }
@@ -261,9 +261,9 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts playground files from the target's sources.
-    private func extractPlaygrounds(from pbxTarget: PBXTarget, projectProvider: ProjectProviding) throws -> [AbsolutePath] {
+    private func extractPlaygrounds(from pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> [AbsolutePath] {
         let sources = try pbxTarget.sourcesBuildPhase().map {
-            try sourcesMapper.map($0, projectProvider: projectProvider)
+            try sourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
         return sources.filter { $0.path.fileExtension == .playground }.map(\.path)
     }

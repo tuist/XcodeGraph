@@ -4,18 +4,18 @@ import XcodeGraph
 import XcodeProj
 
 protocol PBXCoreDataModelsBuildPhaseMapping {
-    func map(_ resourceFiles: [PBXBuildFile], projectProvider: ProjectProviding) throws -> [CoreDataModel]
+    func map(_ resourceFiles: [PBXBuildFile], xcodeProj: XcodeProj) throws -> [CoreDataModel]
 }
 
 struct PBXCoreDataModelsBuildPhaseMapper: PBXCoreDataModelsBuildPhaseMapping {
-    func map(_ resourceFiles: [PBXBuildFile], projectProvider: ProjectProviding) throws -> [CoreDataModel] {
-        try resourceFiles.compactMap { try mapCoreDataModel($0, projectProvider: projectProvider) }
+    func map(_ resourceFiles: [PBXBuildFile], xcodeProj: XcodeProj) throws -> [CoreDataModel] {
+        try resourceFiles.compactMap { try mapCoreDataModel($0, xcodeProj: xcodeProj) }
     }
 
-    private func mapCoreDataModel(_ buildFile: PBXBuildFile, projectProvider: ProjectProviding) throws -> CoreDataModel? {
+    private func mapCoreDataModel(_ buildFile: PBXBuildFile, xcodeProj: XcodeProj) throws -> CoreDataModel? {
         guard let versionGroup = buildFile.file as? XCVersionGroup,
               versionGroup.path?.hasSuffix(FileExtension.coreData.rawValue) == true,
-              let modelPathString = try versionGroup.fullPath(sourceRoot: projectProvider.sourcePathString)
+              let modelPathString = try versionGroup.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
         else {
             return nil
         }

@@ -18,18 +18,20 @@ struct PBXProjectMapper {
     /// - Parameter projectProvider: Supplies access to `.xcodeproj` data and related directories.
     /// - Returns: A fully constructed `Project` model.
     /// - Throws: If reading or transforming project data fails.
-    func map(projectProvider: ProjectProviding) throws -> Project {
+    func map(xcodeProj: XcodeProj) throws -> Project {
         let settingsMapper = XCConfigurationMapper()
-        let pbxProject = try projectProvider.xcodeProj.mainPBXProject()
+        let pbxProject = try xcodeProj.mainPBXProject()
+        let xcodeProjPath = try xcodeProj.pathOrThrow
+        let sourceDirectory = xcodeProjPath.parentDirectory
 
         let settings = try settingsMapper.map(
-            projectProvider: projectProvider,
+            xcodeProj: xcodeProj,
             configurationList: pbxProject.buildConfigurationList
         )
 
         let targetMapper = PBXTargetMapper()
         let targets = try pbxProject.targets.compactMap {
-            try targetMapper.map(pbxTarget: $0, projectProvider: projectProvider)
+            try targetMapper.map(pbxTarget: $0, xcodeProj: xcodeProj)
         }.sorted()
 
         let packageMapper = XCPackageMapper()
@@ -37,17 +39,17 @@ struct PBXProjectMapper {
             try packageMapper.map(package: $0)
         }
         let localPackages = try pbxProject.localPackages.compactMap {
-            try packageMapper.map(package: $0, sourceDirectory: projectProvider.sourceDirectory)
+            try packageMapper.map(package: $0, sourceDirectory: sourceDirectory)
         }
 
         let filesGroup = ProjectGroup.group(name: pbxProject.mainGroup?.name ?? "Project")
 
         let schemeMapper = XCSchemeMapper()
-        let graphType: GraphType = .project(projectProvider.sourceDirectory)
-        let userSchemes = try projectProvider.xcodeProj.userData.flatMap(\.schemes).map {
+        let graphType: XcodeMapperGraphType = .project(xcodeProj)
+        let userSchemes = try xcodeProj.userData.flatMap(\.schemes).map {
             try schemeMapper.map($0, shared: false, graphType: graphType)
         }
-        let sharedSchemes = try projectProvider.xcodeProj.sharedData?.schemes.map {
+        let sharedSchemes = try xcodeProj.sharedData?.schemes.map {
             try schemeMapper.map($0, shared: true, graphType: graphType)
         } ?? []
         let schemes = userSchemes + sharedSchemes
@@ -55,9 +57,9 @@ struct PBXProjectMapper {
         let defaultKnownRegions = pbxProject.knownRegions.isEmpty ? nil : pbxProject.knownRegions
 
         return Project(
-            path: projectProvider.sourceDirectory,
-            sourceRootPath: projectProvider.sourceDirectory,
-            xcodeProjPath: projectProvider.sourceDirectory,
+            path: sourceDirectory,
+            sourceRootPath: sourceDirectory,
+            xcodeProjPath: xcodeProjPath,
             name: pbxProject.name,
             organizationName: pbxProject.attribute(for: .organization),
             classPrefix: pbxProject.attribute(for: .classPrefix),

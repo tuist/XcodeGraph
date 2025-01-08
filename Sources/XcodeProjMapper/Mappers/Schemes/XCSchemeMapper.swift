@@ -18,7 +18,7 @@ protocol SchemeMapping {
     func map(
         _ xcscheme: XCScheme,
         shared: Bool,
-        graphType: GraphType
+        graphType: XcodeMapperGraphType
     ) throws -> Scheme
 }
 
@@ -30,7 +30,7 @@ struct XCSchemeMapper: SchemeMapping {
     func map(
         _ xcscheme: XCScheme,
         shared: Bool,
-        graphType: GraphType
+        graphType: XcodeMapperGraphType
     ) throws -> Scheme {
         Scheme(
             name: xcscheme.name,
@@ -47,7 +47,7 @@ struct XCSchemeMapper: SchemeMapping {
 
     // MARK: - Internal/Private Mappings
 
-    func mapBuildAction(action: XCScheme.BuildAction?, graphType: GraphType) throws -> BuildAction? {
+    func mapBuildAction(action: XCScheme.BuildAction?, graphType: XcodeMapperGraphType) throws -> BuildAction? {
         guard let action else { return nil }
 
         let targets = try action.buildActionEntries.compactMap { entry in
@@ -63,7 +63,7 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapTestAction(action: XCScheme.TestAction?, graphType: GraphType) throws -> TestAction? {
+    func mapTestAction(action: XCScheme.TestAction?, graphType: XcodeMapperGraphType) throws -> TestAction? {
         guard let action else { return nil }
 
         let testTargets = try action.testables.compactMap { testable in
@@ -96,7 +96,7 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapRunAction(action: XCScheme.LaunchAction?, graphType: GraphType) throws -> RunAction? {
+    func mapRunAction(action: XCScheme.LaunchAction?, graphType: XcodeMapperGraphType) throws -> RunAction? {
         guard let action else { return nil }
 
         let executable: TargetReference? = try {
@@ -135,7 +135,7 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapProfileAction(action: XCScheme.ProfileAction?, graphType: GraphType) throws -> ProfileAction? {
+    func mapProfileAction(action: XCScheme.ProfileAction?, graphType: XcodeMapperGraphType) throws -> ProfileAction? {
         guard let action else { return nil }
 
         let executable: TargetReference? = try {
@@ -160,19 +160,19 @@ struct XCSchemeMapper: SchemeMapping {
 
     private func mapTargetReference(
         buildableReference: XCScheme.BuildableReference,
-        graphType: GraphType
+        graphType: XcodeMapperGraphType
     ) throws -> TargetReference {
         let targetName = buildableReference.blueprintName
         let container = buildableReference.referencedContainer
 
         let projectPath: AbsolutePath
         switch graphType {
-        case let .workspace(workspaceProvider):
+        case let .workspace(xcworkspace):
             let containerRelativePath = container.replacingOccurrences(of: "container:", with: "")
             let relativePath = try RelativePath(validating: containerRelativePath)
-            projectPath = workspaceProvider.workspaceDirectory.appending(relativePath)
-        case let .project(path):
-            projectPath = path
+            projectPath = try xcworkspace.pathOrThrow.parentDirectory.appending(relativePath)
+        case let .project(xcodeProj):
+            projectPath = try xcodeProj.pathOrThrow
         }
 
         return TargetReference(projectPath: projectPath, name: targetName)

@@ -15,7 +15,7 @@ protocol PBXScriptsBuildPhaseMapping {
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
         buildPhases: [PBXBuildPhase],
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> [TargetScript]
 
     /// Maps raw script build phases into `RawScriptBuildPhase` models.
@@ -29,10 +29,10 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
         buildPhases: [PBXBuildPhase],
-        projectProvider: ProjectProviding
+        xcodeProj _: XcodeProj
     ) throws -> [TargetScript] {
         try scriptPhases.compactMap {
-            try mapScriptPhase($0, buildPhases: buildPhases, projectProvider: projectProvider)
+            try mapScriptPhase($0, buildPhases: buildPhases)
         }
     }
 
@@ -44,8 +44,7 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
 
     private func mapScriptPhase(
         _ scriptPhase: PBXShellScriptBuildPhase,
-        buildPhases: [PBXBuildPhase],
-        projectProvider _: ProjectProviding
+        buildPhases: [PBXBuildPhase]
     ) throws -> TargetScript? {
         guard let shellScript = scriptPhase.shellScript else { return nil }
 

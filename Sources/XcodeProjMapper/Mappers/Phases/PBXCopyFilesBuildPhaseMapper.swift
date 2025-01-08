@@ -4,22 +4,22 @@ import XcodeGraph
 import XcodeProj
 
 protocol PBXCopyFilesBuildPhaseMapping {
-    func map(_ copyFilesPhases: [PBXCopyFilesBuildPhase], projectProvider: ProjectProviding) throws -> [CopyFilesAction]
+    func map(_ copyFilesPhases: [PBXCopyFilesBuildPhase], xcodeProj: XcodeProj) throws -> [CopyFilesAction]
 }
 
 struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
-    func map(_ copyFilesPhases: [PBXCopyFilesBuildPhase], projectProvider: ProjectProviding) throws -> [CopyFilesAction] {
-        try copyFilesPhases.compactMap { try mapCopyFilesPhase($0, projectProvider: projectProvider) }
+    func map(_ copyFilesPhases: [PBXCopyFilesBuildPhase], xcodeProj: XcodeProj) throws -> [CopyFilesAction] {
+        try copyFilesPhases.compactMap { try mapCopyFilesPhase($0, xcodeProj: xcodeProj) }
             .sorted { $0.name < $1.name }
     }
 
     private func mapCopyFilesPhase(
         _ phase: PBXCopyFilesBuildPhase,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> CopyFilesAction? {
         let files = try phase.files?.compactMap { buildFile -> CopyFileElement? in
             guard let fileRef = buildFile.file,
-                  let pathString = try fileRef.fullPath(sourceRoot: projectProvider.sourcePathString)
+                  let pathString = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
             else { return nil }
 
             let absolutePath = try AbsolutePath(validating: pathString)

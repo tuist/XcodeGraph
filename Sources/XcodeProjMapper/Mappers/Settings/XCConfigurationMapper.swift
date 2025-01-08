@@ -19,7 +19,7 @@ protocol SettingsMapping: Sendable {
     /// - Returns: A `Settings` model derived from the configuration list, or default settings if none are found.
     /// - Throws: If any build settings cannot be properly mapped into a `Settings` model.
     func map(
-        projectProvider: ProjectProviding,
+        xcodeProj: XcodeProj,
         configurationList: XCConfigurationList?
     ) throws -> Settings
 }
@@ -37,11 +37,8 @@ protocol SettingsMapping: Sendable {
 /// let settings = try mapper.map(projectProvider: provider, configurationList: configurationList)
 /// ```
 final class XCConfigurationMapper: SettingsMapping {
-    /// Creates a new `SettingsMapper` instance.
-    init() {}
-
     func map(
-        projectProvider: ProjectProviding,
+        xcodeProj: XcodeProj,
         configurationList: XCConfigurationList?
     ) throws -> Settings {
         guard let configurationList else {
@@ -56,7 +53,7 @@ final class XCConfigurationMapper: SettingsMapping {
             var xcconfigAbsolutePath: AbsolutePath?
             if let baseConfigRef = buildConfig.baseConfiguration,
                let xcconfigPath = try baseConfigRef.fullPath(
-                   sourceRoot: projectProvider.sourceDirectory.pathString
+                   sourceRoot: try xcodeProj.pathOrThrow.parentDirectory.pathString
                )
             {
                 xcconfigAbsolutePath = try AbsolutePath(validating: xcconfigPath)

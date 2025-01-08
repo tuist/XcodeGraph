@@ -4,23 +4,23 @@ import XcodeGraph
 import XcodeProj
 
 protocol PBXSourcesBuildPhaseMapping {
-    func map(_ sourcesBuildPhase: PBXSourcesBuildPhase, projectProvider: ProjectProviding) throws -> [SourceFile]
+    func map(_ sourcesBuildPhase: PBXSourcesBuildPhase, xcodeProj: XcodeProj) throws -> [SourceFile]
 }
 
 struct PBXSourcesBuildPhaseMapper: PBXSourcesBuildPhaseMapping {
-    func map(_ sourcesBuildPhase: PBXSourcesBuildPhase, projectProvider: ProjectProviding) throws -> [SourceFile] {
+    func map(_ sourcesBuildPhase: PBXSourcesBuildPhase, xcodeProj: XcodeProj) throws -> [SourceFile] {
         guard let files = sourcesBuildPhase.files, !files.isEmpty else {
             return []
         }
 
         return try files.compactMap { buildFile in
-            try mapSourceFile(buildFile, projectProvider: projectProvider)
+            try mapSourceFile(buildFile, xcodeProj: xcodeProj)
         }.sorted { $0.path < $1.path }
     }
 
-    private func mapSourceFile(_ buildFile: PBXBuildFile, projectProvider: ProjectProviding) throws -> SourceFile? {
+    private func mapSourceFile(_ buildFile: PBXBuildFile, xcodeProj: XcodeProj) throws -> SourceFile? {
         guard let fileRef = buildFile.file,
-              let pathString = try fileRef.fullPath(sourceRoot: projectProvider.sourcePathString)
+              let pathString = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
         else { return nil }
 
         let path = try AbsolutePath(validating: pathString)

@@ -17,7 +17,7 @@ protocol WorkspaceMapping {
     ///
     /// - Returns: A fully constructed `Workspace` representing the workspace’s structure.
     /// - Throws: If reading projects or schemes fails.
-    func map(workspaceProvider: WorkspaceProviding) throws -> Workspace
+    func map(xcworkspace: XCWorkspace) throws -> Workspace
 }
 
 /// A mapper that converts an `.xcworkspace` into a `Workspace` model.
@@ -27,16 +27,16 @@ protocol WorkspaceMapping {
 /// - Maps shared schemes, and
 /// - Produces a `Workspace` model suitable for analysis or code generation.
 struct XCWorkspaceMapper: WorkspaceMapping {
-    func map(workspaceProvider: WorkspaceProviding) throws -> Workspace {
-        let xcworkspace = workspaceProvider.xcworkspace
-        let xcWorkspacePath = workspaceProvider.xcWorkspacePath
-        let srcPath = workspaceProvider.workspaceDirectory
+    func map(xcworkspace: XCWorkspace) throws -> Workspace {
+        let xcWorkspacePath = try xcworkspace.pathOrThrow
+        let srcPath = try xcworkspace.pathOrThrow.parentDirectory
         let projectPaths = try extractProjectPaths(
             from: xcworkspace.data.children,
-            srcPath: srcPath, workspaceProvider: workspaceProvider
+            srcPath: srcPath,
+            xcworkspace: xcworkspace
         )
         let workspaceName = xcWorkspacePath.basenameWithoutExt
-        let schemes = try mapSchemes(from: xcWorkspacePath, workspaceProvider: workspaceProvider)
+        let schemes = try mapSchemes(from: xcworkspace)
 
         let generationOptions = Workspace.GenerationOptions(
             enableAutomaticXcodeSchemes: nil,
@@ -68,7 +68,7 @@ struct XCWorkspaceMapper: WorkspaceMapping {
     private func extractProjectPaths(
         from elements: [XCWorkspaceDataElement],
         srcPath: AbsolutePath,
-        workspaceProvider: WorkspaceProviding
+        xcworkspace: XCWorkspace
     ) throws -> [AbsolutePath] {
         var paths = [AbsolutePath]()
 
@@ -84,7 +84,7 @@ struct XCWorkspaceMapper: WorkspaceMapping {
                 let groupPaths = try extractProjectPaths(
                     from: group.children,
                     srcPath: nestedSrcPath,
-                    workspaceProvider: workspaceProvider
+                    xcworkspace: xcworkspace
                 )
                 paths.append(contentsOf: groupPaths)
             }
@@ -101,17 +101,17 @@ struct XCWorkspaceMapper: WorkspaceMapping {
     /// - Parameter srcPath: The workspace's root path.
     /// - Returns: An array of `Scheme` instances for shared schemes in the workspace.
     private func mapSchemes(
-        from srcPath: AbsolutePath,
-        workspaceProvider: WorkspaceProviding
+        from xcworkspace: XCWorkspace
     ) throws -> [Scheme] {
         var schemes = [Scheme]()
+        let srcPath = try xcworkspace.pathOrThrow.parentDirectory
         let sharedDataPath = Path(srcPath.pathString) + "xcshareddata/xcschemes"
 
         if sharedDataPath.exists {
             let schemePaths = try sharedDataPath.children().filter { $0.extension == "xcscheme" }
 
             // Construct graphType for schemes
-            let graphType = GraphType.workspace(workspaceProvider)
+            let graphType: XcodeMapperGraphType = .workspace(xcworkspace)
             let schemeMapper = XCSchemeMapper()
             for schemePath in schemePaths {
                 let xcscheme = try XCScheme(path: schemePath)

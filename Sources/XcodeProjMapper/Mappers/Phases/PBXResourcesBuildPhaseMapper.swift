@@ -4,42 +4,42 @@ import XcodeGraph
 import XcodeProj
 
 protocol PBXResourcesBuildPhaseMapping {
-    func map(_ resourcesBuildPhase: PBXResourcesBuildPhase, projectProvider: ProjectProviding) throws -> [ResourceFileElement]
+    func map(_ resourcesBuildPhase: PBXResourcesBuildPhase, xcodeProj: XcodeProj) throws -> [ResourceFileElement]
 }
 
 struct PBXResourcesBuildPhaseMapper: PBXResourcesBuildPhaseMapping {
     func map(
         _ resourcesBuildPhase: PBXResourcesBuildPhase,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> [ResourceFileElement] {
         let files = resourcesBuildPhase.files ?? []
 
         return try files.flatMap { buildFile in
-            try mapResourceElement(buildFile, projectProvider: projectProvider)
+            try mapResourceElement(buildFile, xcodeProj: xcodeProj)
         }
         .sorted { $0.path < $1.path }
     }
 
     private func mapResourceElement(
         _ buildFile: PBXBuildFile,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> [ResourceFileElement] {
         let file = try buildFile.file
             .throwing(PBXResourcesMappingError.missingFileReference)
 
         if let variantGroup = file as? PBXVariantGroup {
-            return try mapVariantGroup(variantGroup, projectProvider: projectProvider)
+            return try mapVariantGroup(variantGroup, xcodeProj: xcodeProj)
         } else {
-            return try mapResourceElement(file, projectProvider: projectProvider)
+            return try mapResourceElement(file, xcodeProj: xcodeProj)
         }
     }
 
     private func mapResourceElement(
         _ fileElement: PBXFileElement,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> [ResourceFileElement] {
         let pathString = try fileElement.fullPath(
-            sourceRoot: projectProvider.sourcePathString
+            sourceRoot: xcodeProj.srcPathStringOrThrow
         ).throwing(PBXResourcesMappingError.missingFullPath(fileElement.name ?? "Unknown"))
 
         return [.file(path: try AbsolutePath(validating: pathString))]
@@ -47,10 +47,10 @@ struct PBXResourcesBuildPhaseMapper: PBXResourcesBuildPhaseMapping {
 
     private func mapVariantGroup(
         _ variantGroup: PBXVariantGroup,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> [ResourceFileElement] {
         try variantGroup.children.flatMap { child in
-            try mapResourceElement(child, projectProvider: projectProvider)
+            try mapResourceElement(child, xcodeProj: xcodeProj)
         }
     }
 }

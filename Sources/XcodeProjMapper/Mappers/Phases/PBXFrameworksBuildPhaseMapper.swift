@@ -6,7 +6,7 @@ import XcodeProj
 protocol PBXFrameworksBuildPhaseMapping {
     func map(
         _ frameworksBuildPhase: PBXFrameworksBuildPhase,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> [TargetDependency]
 }
 
@@ -17,17 +17,17 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
         self.pathMapper = pathMapper
     }
 
-    func map(_ frameworksBuildPhase: PBXFrameworksBuildPhase, projectProvider: ProjectProviding) throws -> [TargetDependency] {
+    func map(_ frameworksBuildPhase: PBXFrameworksBuildPhase, xcodeProj: XcodeProj) throws -> [TargetDependency] {
         let files = frameworksBuildPhase.files ?? []
-        return try files.map { try mapFrameworkDependency($0, projectProvider: projectProvider) }
+        return try files.map { try mapFrameworkDependency($0, xcodeProj: xcodeProj) }
     }
 
     private func mapFrameworkDependency(
         _ buildFile: PBXBuildFile,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> TargetDependency {
         let fileRef = try buildFile.file.throwing(PBXFrameworksBuildPhaseMappingError.missingFileReference)
-        let filePath = try fileRef.fullPath(sourceRoot: projectProvider.sourceDirectory.pathString)
+        let filePath = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
             .throwing(PBXFrameworksBuildPhaseMappingError.missingFilePath(name: fileRef.name))
 
         let path = try AbsolutePath(validating: filePath)

@@ -15,7 +15,7 @@ protocol DependencyMapping {
     ///   - projectProvider: Provides access to the project's `.xcodeproj` and source directory.
     /// - Returns: A `TargetDependency` model if the dependency can be resolved; otherwise, `nil`.
     /// - Throws: If the dependency references invalid paths or targets that cannot be resolved.
-    func map(_ dependency: PBXTargetDependency, projectProvider: ProjectProviding) throws -> TargetDependency
+    func map(_ dependency: PBXTargetDependency, xcodeProj: XcodeProj) throws -> TargetDependency
 }
 
 /// A unified mapper that handles all types of `PBXTargetDependency` instances.
@@ -31,7 +31,7 @@ struct PBXTargetDependencyMapper: DependencyMapping {
         self.pathMapper = pathMapper
     }
 
-    func map(_ dependency: PBXTargetDependency, projectProvider: ProjectProviding) throws -> TargetDependency {
+    func map(_ dependency: PBXTargetDependency, xcodeProj: XcodeProj) throws -> TargetDependency {
         let condition = dependency.platformCondition()
 
         // 1. Direct target dependency
@@ -52,10 +52,10 @@ struct PBXTargetDependencyMapper: DependencyMapping {
         if let targetProxy = dependency.targetProxy {
             switch targetProxy.proxyType {
             case .nativeTarget:
-                return try mapNativeTargetProxy(targetProxy, condition: condition, projectProvider: projectProvider)
+                return try mapNativeTargetProxy(targetProxy, condition: condition, xcodeProj: xcodeProj)
             case .reference:
-                return try mapReferenceProxy(targetProxy, condition: condition, projectProvider: projectProvider)
-            default:
+                return try mapReferenceProxy(targetProxy, condition: condition, xcodeProj: xcodeProj)
+            case .other, .none:
                 throw TargetDependencyMappingError.unsupportedProxyType(dependency.name)
             }
         }
@@ -70,7 +70,7 @@ struct PBXTargetDependencyMapper: DependencyMapping {
     private func mapNativeTargetProxy(
         _ targetProxy: PBXContainerItemProxy,
         condition: PlatformCondition?,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> TargetDependency {
         let remoteInfo = try targetProxy.remoteInfo.throwing(
             TargetDependencyMappingError.missingRemoteInfoInNativeProxy
@@ -83,8 +83,8 @@ struct PBXTargetDependencyMapper: DependencyMapping {
         case let .fileReference(fileReference):
             let projectRelativePath = try fileReference.path
                 .throwing(TargetDependencyMappingError.missingFileReference(fileReference.name ?? ""))
-            let fullPath = projectProvider.sourceDirectory.pathString + projectRelativePath
-            let path = try AbsolutePath(validating: fullPath)
+
+            let path = try xcodeProj.srcPathOrThrow.appending(component: projectRelativePath)
             // Reference to a target in another project.
             return .project(target: remoteInfo, path: path, status: .required, condition: condition)
         case let .unknownObject(object):
@@ -95,7 +95,7 @@ struct PBXTargetDependencyMapper: DependencyMapping {
     private func mapReferenceProxy(
         _ targetProxy: PBXContainerItemProxy,
         condition: PlatformCondition?,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> TargetDependency {
         let remoteGlobalID = try targetProxy.remoteGlobalID.throwing(
             TargetDependencyMappingError.missingRemoteGlobalIDInReferenceProxy
@@ -107,16 +107,15 @@ struct PBXTargetDependencyMapper: DependencyMapping {
                 return try mapFileDependency(
                     pathString: fileReference.path,
                     condition: condition,
-                    projectProvider: projectProvider
+                    xcodeProj: xcodeProj
                 )
             } else if let referenceProxy = object as? PBXReferenceProxy {
                 return try mapFileDependency(
                     pathString: referenceProxy.path,
                     condition: condition,
-                    projectProvider: projectProvider
+                    xcodeProj: xcodeProj
                 )
             }
-            // If object is another PBX object we don't handle, throw instead of returning nil.
             throw TargetDependencyMappingError.unknownObject("\(object)")
 
         case .string:
@@ -137,13 +136,12 @@ struct PBXTargetDependencyMapper: DependencyMapping {
     private func mapFileDependency(
         pathString: String?,
         condition: PlatformCondition?,
-        projectProvider: ProjectProviding
+        xcodeProj: XcodeProj
     ) throws -> TargetDependency {
         let pathString = try pathString.throwing(
             TargetDependencyMappingError.missingFileReference("Path string is nil in file dependency.")
         )
-        let validatedPath = projectProvider.sourceDirectory.appending(try RelativePath(validating: pathString))
-        let path = try AbsolutePath(validating: validatedPath.pathString)
+        let path = try xcodeProj.srcPathOrThrow.appending(try RelativePath(validating: pathString))
         return try pathMapper.map(path: path, condition: condition)
     }
 }
