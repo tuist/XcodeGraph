@@ -90,7 +90,8 @@ struct PBXTargetMapper: TargetMapping {
     func map(pbxTarget: PBXTarget, projectProvider: ProjectProviding) throws -> Target {
         let platform = try pbxTarget.platform()
         let deploymentTargets = try pbxTarget.deploymentTargets()
-        let product = pbxTarget.productType()
+        let productType = pbxTarget.productType?.mapProductType()
+        let product = try productType.throwing(PlatformInferenceError.noPlatformInferred(pbxTarget.name))
 
         let settings = try settingsMapper.map(
             projectProvider: projectProvider,

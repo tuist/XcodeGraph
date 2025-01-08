@@ -23,12 +23,8 @@ protocol BuildRuleMapping {
 /// If the compiler spec or file type is unknown, the build rule is ignored (returning `nil`).
 struct PBXBuildRuleMapper: BuildRuleMapping {
     func map(_ buildRule: PBXBuildRule) throws -> BuildRule? {
-        guard let compilerSpec = mapCompilerSpec(buildRule.compilerSpec),
-              let fileType = mapFileType(buildRule.fileType)
-        else {
-            // Unknown compiler spec or file type encountered. Skipping this build rule.
-            return nil
-        }
+        let compilerSpec = try mapCompilerSpec(buildRule.compilerSpec)
+        let fileType = try mapFileType(buildRule.fileType)
 
         return BuildRule(
             compilerSpec: compilerSpec,
@@ -45,11 +41,39 @@ struct PBXBuildRuleMapper: BuildRuleMapping {
 
     // MARK: - Private Helpers
 
-    private func mapCompilerSpec(_ compilerSpec: String) -> BuildRule.CompilerSpec? {
-        BuildRule.CompilerSpec(rawValue: compilerSpec)
+    private func mapCompilerSpec(_ compilerSpec: String) throws -> BuildRule.CompilerSpec {
+        try BuildRule.CompilerSpec(rawValue: compilerSpec)
+            .throwing(PBXBuildRuleMappingError.unknownCompilerSpec(compilerSpec))
     }
 
-    private func mapFileType(_ fileType: String) -> BuildRule.FileType? {
-        BuildRule.FileType(rawValue: fileType)
+    private func mapFileType(_ fileType: String) throws -> BuildRule.FileType {
+        try BuildRule.FileType(rawValue: fileType)
+            .throwing(PBXBuildRuleMappingError.unknownFileType(fileType))
+    }
+}
+
+enum PBXBuildRuleMappingError: Error, LocalizedError {
+    case unknownFileType(String)
+    case unknownCompilerSpec(String)
+
+    var errorDescription: String? {
+        switch self {
+        case let .unknownFileType(fileType):
+            return "Unknown file type: \(fileType)"
+        case let .unknownCompilerSpec(compilerSpec):
+            return "Unknown compiler spec: \(compilerSpec)"
+        }
+    }
+}
+
+extension Optional {
+    /// Unwraps the optional value or throws the provided error if `nil`.
+    ///
+    /// - Parameter error: An autoclosure that generates the error to throw if the optional is `nil`.
+    /// - Returns: The unwrapped value of the optional.
+    /// - Throws: The provided error if the optional is `nil`.
+    func throwing(_ error: @autoclosure () -> Error) throws -> Wrapped {
+        guard let value = self else { throw error() }
+        return value
     }
 }

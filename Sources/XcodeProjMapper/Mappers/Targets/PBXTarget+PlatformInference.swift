@@ -3,14 +3,18 @@ import Path
 import XcodeGraph
 import XcodeProj
 
-extension PBXTarget {
-    /// Maps the `PBXTarget.productType` to a domain `Product` model.
-    ///
-    /// If the product type is not explicitly handled, defaults to `.app`.
-    func productType() -> Product {
-        return productType?.mapProductType() ?? .app
-    }
+enum PlatformInferenceError: LocalizedError, Equatable {
+    case noPlatformInferred(String)
 
+    var errorDescription: String? {
+        switch self {
+        case let .noPlatformInferred(name):
+            return "No platform could be inferred from target '\(name)'."
+        }
+    }
+}
+
+extension PBXTarget {
     /// Determines the set of `Destinations` supported by this target.
     ///
     /// Attempts to identify platforms from:
@@ -65,8 +69,8 @@ extension PBXTarget {
 
         guard result.isEmpty else { return result }
 
-        // Fallback if no platform detected.
-        let product = productType?.mapProductType() ?? .app
+        let productType = productType?.mapProductType()
+        let product = try productType.throwing(PlatformInferenceError.noPlatformInferred(name))
 
         switch product {
         case .app, .stickerPackExtension, .appClip, .appExtension:

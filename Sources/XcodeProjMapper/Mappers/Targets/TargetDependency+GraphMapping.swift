@@ -3,21 +3,6 @@ import Path
 import XcodeGraph
 import XcodeProj
 
-/// Errors that may occur when mapping `TargetDependency` instances into `GraphDependency` models.
-enum TargetDependencyMappingError: LocalizedError, Equatable {
-    case targetNotFound(targetName: String, path: AbsolutePath)
-    case unknownDependencyType(name: String)
-
-    var errorDescription: String? {
-        switch self {
-        case let .targetNotFound(targetName, path):
-            return "The target '\(targetName)' could not be found in the project at: \(path.pathString)."
-        case let .unknownDependencyType(name):
-            return "An unknown dependency type '\(name)' was encountered."
-        }
-    }
-}
-
 extension TargetDependency {
     /// Maps this `TargetDependency` to a `GraphDependency` by resolving paths, product types,
     /// and linking details. Project-based dependencies are resolved using the provided `allTargetsMap`.

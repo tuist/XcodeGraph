@@ -56,6 +56,6 @@ extension PBXTarget {
                 tags.formUnion(extractedTags)
             }
         }
-        return TargetMetadata(tags: tags)
+        return .metadata(tags: tags)
     }
 }
