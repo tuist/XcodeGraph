@@ -20,15 +20,15 @@ struct PBXCoreDataModelsBuildPhaseMapper: PBXCoreDataModelsBuildPhaseMapping {
             return nil
         }
 
-        let absModelPath = try AbsolutePath(validating: modelPathString)
+        let modelPath = try AbsolutePath(validating: modelPathString)
         let versions = versionGroup.children.compactMap(\.path)
         let validatedVersions = try versions.map {
-            try AbsolutePath(validating: $0, relativeTo: absModelPath)
+            try AbsolutePath(validating: $0, relativeTo: modelPath)
         }
         let currentVersion = versionGroup.currentVersion?.path ?? validatedVersions.first?.pathString ?? ""
 
         return CoreDataModel(
-            path: absModelPath,
+            path: modelPath,
             versions: validatedVersions,
             currentVersion: currentVersion
         )

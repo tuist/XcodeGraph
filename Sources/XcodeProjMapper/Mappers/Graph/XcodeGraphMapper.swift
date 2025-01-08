@@ -22,7 +22,7 @@ public protocol XcodeGraphMapping {
     /// - Parameter pathString: A file path that might point to a `.xcworkspace`, `.xcodeproj`, or a directory.
     /// - Returns: A `Graph` representing the parsed Xcode workspace or project.
     /// - Throws: If the path is invalid or if no recognizable project/workspace is found.
-    func map(at pathString: String) throws -> Graph
+    func map(at pathString: String) async throws -> Graph
 }
 
 // -----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
 
     /// Maps the given file system path to a `Graph`, auto-detecting `.xcworkspace` or `.xcodeproj`
     /// and then enumerating all discovered projects & targets to build a final `Graph`.
-    public func map(at pathString: String) throws -> Graph {
+    public func map(at pathString: String) async throws -> Graph {
         // 1. Verify path exists
         guard fileManager.fileExists(atPath: pathString) else {
             throw XcodeGraphMapperError.pathNotFound(pathString)
@@ -105,7 +105,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         let graphType = try determineGraphType(at: path)
 
         // 3. Build & return the final Graph
-        return try buildGraph(from: graphType)
+        return try await buildGraph(from: graphType)
     }
 
     // MARK: - Private Helpers
@@ -154,7 +154,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     /// If it's a workspace, we gather all `.xcodeproj` references. If it's a single project,
     /// we treat it like a workspace with a single project. Then we load each project,
     /// map packages & targets, and build dependency edges. This merges logic from your old `GraphMapper`.
-    private func buildGraph(from graphType: XcodeMapperGraphType) throws -> Graph {
+    private func buildGraph(from graphType: XcodeMapperGraphType) async throws -> Graph {
         // A place to store discovered: path -> Project, packages, dependencies, etc.
         var projects: [AbsolutePath: Project] = [:]
         var packages: [AbsolutePath: [String: Package]] = [:]
@@ -172,7 +172,10 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
             graphName = workspacePath.basenameWithoutExt
 
             // Gather all .xcodeproj references in the workspace
-            let projectRefs = try extractProjectPaths(from: xcworkspace.data.children, srcPath: workspacePath.parentDirectory)
+            let projectRefs = try await extractProjectPaths(
+                from: xcworkspace.data.children,
+                srcPath: workspacePath.parentDirectory
+            )
             projectPaths = projectRefs.isEmpty ? [] : projectRefs
 
         case let .project(xcodeProj):
@@ -263,19 +266,19 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     private func extractProjectPaths(
         from elements: [XCWorkspaceDataElement],
         srcPath: AbsolutePath
-    ) throws -> [AbsolutePath] {
+    ) async throws -> [AbsolutePath] {
         var paths = [AbsolutePath]()
 
         for element in elements {
             switch element {
             case let .file(ref):
-                let refPath = try ref.path(srcPath: srcPath)
+                let refPath = try await ref.path(srcPath: srcPath)
                 if refPath.extension == "xcodeproj" {
                     paths.append(refPath)
                 }
             case let .group(group):
                 // For nested groups, keep recursing
-                let nestedRefs = try extractProjectPaths(
+                let nestedRefs = try await extractProjectPaths(
                     from: group.children,
                     srcPath: srcPath
                 )

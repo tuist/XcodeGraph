@@ -6,7 +6,10 @@ extension XCWorkspaceDataFileRef {
     ///
     /// - Parameter srcPath: The workspace source root path.
     /// - Returns: The resolved `AbsolutePath` of this file reference.
-    func path(srcPath: AbsolutePath) throws -> AbsolutePath {
+    func path(
+        srcPath: AbsolutePath,
+        developerDirectoryProvider: DeveloperDirectoryProviding = DeveloperDirectoryProvider()
+    ) async throws -> AbsolutePath {
         switch location {
         case let .absolute(path):
             return try AbsolutePath(validating: path)
@@ -16,7 +19,7 @@ extension XCWorkspaceDataFileRef {
         case let .developer(subPath):
             return try AbsolutePath(
                 validating: subPath,
-                relativeTo: try AbsolutePath(validating: "/Applications/Xcode.app/Contents/Developer")
+                relativeTo: try await developerDirectoryProvider.developerDirectory()
             )
         case let .group(subPath):
             // Group paths are relative to the workspace file itself

@@ -17,7 +17,7 @@ protocol WorkspaceMapping {
     ///
     /// - Returns: A fully constructed `Workspace` representing the workspace’s structure.
     /// - Throws: If reading projects or schemes fails.
-    func map(xcworkspace: XCWorkspace) throws -> Workspace
+    func map(xcworkspace: XCWorkspace) async throws -> Workspace
 }
 
 /// A mapper that converts an `.xcworkspace` into a `Workspace` model.
@@ -27,10 +27,10 @@ protocol WorkspaceMapping {
 /// - Maps shared schemes, and
 /// - Produces a `Workspace` model suitable for analysis or code generation.
 struct XCWorkspaceMapper: WorkspaceMapping {
-    func map(xcworkspace: XCWorkspace) throws -> Workspace {
+    func map(xcworkspace: XCWorkspace) async throws -> Workspace {
         let xcWorkspacePath = try xcworkspace.pathOrThrow
         let srcPath = try xcworkspace.pathOrThrow.parentDirectory
-        let projectPaths = try extractProjectPaths(
+        let projectPaths = try await extractProjectPaths(
             from: xcworkspace.data.children,
             srcPath: srcPath,
             xcworkspace: xcworkspace
@@ -69,19 +69,19 @@ struct XCWorkspaceMapper: WorkspaceMapping {
         from elements: [XCWorkspaceDataElement],
         srcPath: AbsolutePath,
         xcworkspace: XCWorkspace
-    ) throws -> [AbsolutePath] {
+    ) async throws -> [AbsolutePath] {
         var paths = [AbsolutePath]()
 
         for element in elements {
             switch element {
             case let .file(ref):
-                let refPath = try ref.path(srcPath: srcPath)
+                let refPath = try await ref.path(srcPath: srcPath)
                 if refPath.fileExtension == .xcodeproj {
                     paths.append(refPath)
                 }
             case let .group(group):
                 let nestedSrcPath = srcPath.appending(component: group.location.path)
-                let groupPaths = try extractProjectPaths(
+                let groupPaths = try await extractProjectPaths(
                     from: group.children,
                     srcPath: nestedSrcPath,
                     xcworkspace: xcworkspace
