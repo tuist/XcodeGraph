@@ -22,6 +22,34 @@ env:
   TUIST_CONFIG_TOKEN: ${{ secrets.TUIST_CONFIG_CLOUD_TOKEN }}
 
 jobs:
+  spm_test:
+    name: SPM Test
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-15
+        swift-version:
+          - "5.9"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Swift
+        if: matrix.os == 'ubuntu-22.04'
+        uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: ${{ matrix.swift-version }}
+      # DEBUG mode
+      - name: Build with debug mode.
+        id: debug_build
+        run: swift build --configuration debug
+        continue-on-error: true
+      - name: Retry build with debug mode if necessary
+        if: steps.debug_build.outcome == 'failure'
+        run: |
+          swift build --configuration debug
+      - name: Test
+        run: swift test
   spm_build:
     name: SPM Build
     strategy:
@@ -57,6 +85,22 @@ jobs:
         if: steps.release_build.outcome == 'failure'
         run: |
           swift build --configuration release
+  tuist_test:
+    name: Tuist Test
+    strategy:
+      matrix:
+        os:
+          - macos-15
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          version: 2024.11.8
+      - name: Install dependencies
+        run: tuist install
+      - name: Test
+        run: tuist test
   tuist_build:
     name: Tuist Build
     strategy:

@@ -194,6 +194,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_multi_configs/App/Sources/AppDelegate.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
@@ -269,6 +270,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_multi_configs/App/Tests/AppDelegateTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -382,6 +384,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_multi_configs/Framework1/Sources/Framework1File.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "Framework1Tests"
                       ▿ value: Target
@@ -457,6 +460,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_multi_configs/Framework1/Tests/Framework1FileTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -573,6 +577,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_multi_configs/Framework2/Sources/Framework2File.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "Framework2Tests"
                       ▿ value: Target
@@ -651,6 +656,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_multi_configs/Framework2/Tests/Framework2FileTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings

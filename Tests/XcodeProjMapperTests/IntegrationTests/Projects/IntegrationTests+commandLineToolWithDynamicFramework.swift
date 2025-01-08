@@ -164,6 +164,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/command_line_tool_with_dynamic_framework/CommandLineTool/main.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "DynamicFramework"
                       ▿ value: Target
@@ -225,6 +226,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/command_line_tool_with_dynamic_framework/DynamicFramework/DynamicFramework.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings

@@ -305,6 +305,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "AppIntentExtension"
                       ▿ value: Target
@@ -432,6 +433,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_extensions/AppIntentExtension/Sources/AppIntentExtensionExtension.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "AppWithMessagesExtension"
                       ▿ value: Target
@@ -574,6 +576,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_extensions/Sources/Documentation.docc
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "Bundle"
                       ▿ value: Target
@@ -697,6 +700,7 @@ extension IntegrationTests {
                         - scripts: 0 elements
                         - settings: Optional<Settings>.none
                         - sources: 0 elements
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "MessageExtension"
                       ▿ value: Target
@@ -834,6 +838,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_extensions/MessageExtension/Sources/MessagesViewController.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "NotificationServiceExtension"
                       ▿ value: Target
@@ -958,6 +963,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_extensions/NotificationServiceExtension/NotificationService.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "StaticFramework"
                       ▿ value: Target
@@ -1082,6 +1088,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_extensions/StaticFramework/Sources/StaticFramework.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "StickersPackExtension"
                       ▿ value: Target
@@ -1205,6 +1212,7 @@ extension IntegrationTests {
                         - scripts: 0 elements
                         - settings: Optional<Settings>.none
                         - sources: 0 elements
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "WidgetExtension"
                       ▿ value: Target
@@ -1352,6 +1360,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_extensions/WidgetExtension/Sources/Widget.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings

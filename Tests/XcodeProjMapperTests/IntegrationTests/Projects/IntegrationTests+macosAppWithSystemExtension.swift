@@ -170,6 +170,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/macos_app_with_system_extension/MainApp/Sources/main.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "SystemExtension"
                       ▿ value: Target
@@ -231,6 +232,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/macos_app_with_system_extension/SystemExtension/Sources/main.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings

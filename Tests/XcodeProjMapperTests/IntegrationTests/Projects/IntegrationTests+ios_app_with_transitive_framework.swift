@@ -272,6 +272,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/App/Sources/AppDelegate.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
@@ -344,6 +345,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/App/Tests/AppDelegateTests.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "AppUITests"
                       ▿ value: Target
@@ -416,6 +418,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/App/UITests/AppUITest.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -528,6 +531,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Sources/Framework1File.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "Framework1-macOS"
                       ▿ value: Target
@@ -597,6 +601,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Sources/Framework1File.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "Framework1Tests-iOS"
                       ▿ value: Target
@@ -669,6 +674,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Framework1FileTests.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "Framework1Tests-macOS"
                       ▿ value: Target
@@ -741,6 +747,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/Framework1/Tests/Framework1FileTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -850,6 +857,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Sources/Framework1File.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "StaticFramework1Tests"
                       ▿ value: Target
@@ -921,6 +929,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_transitive_framework/StaticFramework1/Tests/Framework1FileTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings

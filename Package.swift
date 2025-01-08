@@ -19,17 +19,16 @@ let targets: [Target] = [
             .product(name: "Path", package: "Path"),
             .product(name: "XcodeProj", package: "XcodeProj"),
         ],
-        path: "Sources/XcodeProjMapper",
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
     .testTarget(
         name: "XcodeGraphTests",
-        dependencies: [
-            "XcodeGraph",
-        ],
-        path: "Tests/XcodeGraphTests"
+        dependencies: [.target(name: "XcodeGraph")],
+        swiftSettings: [
+            .enableExperimentalFeature("StrictConcurrency"),
+        ]
     ),
     .testTarget(
         name: "XcodeProjMapperTests",
@@ -37,9 +36,11 @@ let targets: [Target] = [
             "XcodeProjMapper",
             .product(name: "InlineSnapshotTesting", package: "swift-snapshot-testing"),
         ],
-        path: "Tests/XcodeProjMapperTests",
         resources: [
             .copy("Resources"),
+        ],
+        swiftSettings: [
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
 ]

@@ -208,6 +208,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_static_libraries/Modules/A/Sources/A.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "ATests"
                       ▿ value: Target
@@ -274,6 +275,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_static_libraries/Modules/A/Tests/ATests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -378,6 +380,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Sources/B.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "BTests"
                       ▿ value: Target
@@ -444,6 +447,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_static_libraries/Modules/B/Tests/BTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -554,6 +558,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_static_libraries/Sources/AppDelegate.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
@@ -623,6 +628,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_static_libraries/Tests/AppTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings

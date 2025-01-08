@@ -50,6 +50,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public let mergeable: Bool
     public let onDemandResourcesTags: OnDemandResourcesTags?
     public let metadata: TargetMetadata
+    public let type: TargetType
 
     // MARK: - Init
 
@@ -81,7 +82,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         mergedBinaryType: MergedBinaryType = .disabled,
         mergeable: Bool = false,
         onDemandResourcesTags: OnDemandResourcesTags? = nil,
-        metadata: TargetMetadata = .init(tags: [])
+        metadata: TargetMetadata = .metadata(tags: []),
+        type: TargetType = .local
     ) {
         self.name = name
         self.product = product
@@ -111,6 +113,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         self.mergeable = mergeable
         self.onDemandResourcesTags = onDemandResourcesTags
         self.metadata = metadata
+        self.type = type
     }
 
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
@@ -312,7 +315,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
             lhs.dependencies == rhs.dependencies &&
             lhs.mergedBinaryType == rhs.mergedBinaryType &&
             lhs.mergeable == rhs.mergeable &&
-            lhs.environmentVariables == rhs.environmentVariables
+            lhs.environmentVariables == rhs.environmentVariables &&
+            lhs.type == rhs.type
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -322,6 +326,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         hasher.combine(bundleId)
         hasher.combine(productName)
         hasher.combine(environmentVariables)
+        hasher.combine(type)
     }
 
     /// Returns a new copy of the target with the given InfoPlist set.

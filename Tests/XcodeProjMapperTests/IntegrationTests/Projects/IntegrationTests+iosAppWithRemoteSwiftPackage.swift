@@ -180,6 +180,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_remote_swift_package/Sources/AppDelegate.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "AppTests"
                       ▿ value: Target
@@ -246,6 +247,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_app_with_remote_swift_package/Tests/AppTests.swift
+                        - type: TargetType.local
                   ▿ packages: 1 element
                     ▿ Package
                       ▿ remote: (2 elements)

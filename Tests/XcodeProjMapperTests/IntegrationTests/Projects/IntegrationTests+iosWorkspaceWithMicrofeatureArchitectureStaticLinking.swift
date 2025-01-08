@@ -224,6 +224,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Sources/CoreClass.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "CoreTests"
                       ▿ value: Target
@@ -290,6 +291,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/CoreFramework/Tests/CoreClassTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -399,6 +401,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Sources/DataClass.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "DataTests"
                       ▿ value: Target
@@ -465,6 +468,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/DataFramework/Tests/FrameworkATests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -574,6 +578,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Sources/FrameworkA.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "FrameworkATests"
                       ▿ value: Target
@@ -640,6 +645,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureAFramework/Tests/FrameworkATests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -755,6 +761,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Sources/FeatureBContract.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "FeatureContractsTests"
                       ▿ value: Target
@@ -824,6 +831,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/FeatureContracts/Tests/FrameworkAContractTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -933,6 +941,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Sources/UIComponentA.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "UIComponentsTests"
                       ▿ value: Target
@@ -999,6 +1008,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/Frameworks/UIComponentsFramework/Tests/UIComponentATests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
@@ -1103,6 +1113,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Sources/AppDelegate.swift
+                        - type: TargetType.local
                     ▿ (2 elements)
                       - key: "StaticAppTests"
                       ▿ value: Target
@@ -1169,6 +1180,7 @@ extension IntegrationTests {
                             - compilerFlags: Optional<String>.none
                             - contentHash: Optional<String>.none
                             - path: /Fixtures/ios_workspace_with_microfeature_architecture_static_linking/StaticApp/Tests/AppTests.swift
+                        - type: TargetType.local
                   - packages: 0 elements
                   - schemes: 0 elements
                   ▿ settings: Settings
