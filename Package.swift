@@ -58,7 +58,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
-        .package(url: "https://github.com/tuist/XcodeProj", from: "8.25.0"),
+        .package(url: "https://github.com/tuist/XcodeProj", from: "8.26.0"),
         .package(
             url: "https://github.com/pointfreeco/swift-snapshot-testing",
             from: "1.17.0"
