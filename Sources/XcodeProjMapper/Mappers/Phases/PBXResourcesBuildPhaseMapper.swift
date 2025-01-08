@@ -8,23 +8,25 @@ protocol PBXResourcesBuildPhaseMapping {
 }
 
 struct PBXResourcesBuildPhaseMapper: PBXResourcesBuildPhaseMapping {
-    func map(_ resourcesBuildPhase: PBXResourcesBuildPhase, projectProvider: ProjectProviding) throws -> [ResourceFileElement] {
-        guard let files = resourcesBuildPhase.files, !files.isEmpty else {
-            return []
-        }
+    func map(
+        _ resourcesBuildPhase: PBXResourcesBuildPhase,
+        projectProvider: ProjectProviding
+    ) throws -> [ResourceFileElement] {
+        let files = resourcesBuildPhase.files ?? []
 
-        var resources = [ResourceFileElement]()
-        for buildFile in files {
-            resources.append(contentsOf: try mapResourceElement(buildFile, projectProvider: projectProvider))
+        return try files.flatMap { buildFile in
+            try mapResourceElement(buildFile, projectProvider: projectProvider)
         }
-        return resources.sorted { $0.path < $1.path }
+        .sorted { $0.path < $1.path }
     }
 
     private func mapResourceElement(
         _ buildFile: PBXBuildFile,
         projectProvider: ProjectProviding
     ) throws -> [ResourceFileElement] {
-        guard let file = buildFile.file else { return [] }
+        let file = try buildFile.file
+            .throwing(PBXResourcesMappingError.missingFileReference)
+
         if let variantGroup = file as? PBXVariantGroup {
             return try mapVariantGroup(variantGroup, projectProvider: projectProvider)
         } else {
@@ -36,22 +38,34 @@ struct PBXResourcesBuildPhaseMapper: PBXResourcesBuildPhaseMapping {
         _ fileElement: PBXFileElement,
         projectProvider: ProjectProviding
     ) throws -> [ResourceFileElement] {
-        if let pathString = try fileElement.fullPath(sourceRoot: projectProvider.sourcePathString) {
-            let absPath = try AbsolutePath(validating: pathString)
-            return [.file(path: absPath)]
-        }
-        return []
+        let pathString = try fileElement.fullPath(
+            sourceRoot: projectProvider.sourcePathString
+        ).throwing(PBXResourcesMappingError.missingFullPath(fileElement.name ?? "Unknown"))
+
+        return [.file(path: try AbsolutePath(validating: pathString))]
     }
 
     private func mapVariantGroup(
         _ variantGroup: PBXVariantGroup,
         projectProvider: ProjectProviding
     ) throws -> [ResourceFileElement] {
-        var elements = [ResourceFileElement]()
-        for child in variantGroup.children {
-            let childFiles = try mapResourceElement(child, projectProvider: projectProvider)
-            elements.append(contentsOf: childFiles)
+        try variantGroup.children.flatMap { child in
+            try mapResourceElement(child, projectProvider: projectProvider)
         }
-        return elements
+    }
+}
+
+/// Example error types for resource mapping
+enum PBXResourcesMappingError: LocalizedError {
+    case missingFileReference
+    case missingFullPath(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .missingFileReference:
+            return "Missing file reference for resource"
+        case let .missingFullPath(desc):
+            return "No valid path for resource file element: \(desc)"
+        }
     }
 }

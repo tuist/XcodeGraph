@@ -25,6 +25,12 @@ protocol DependencyMapping {
 /// or file-based dependencies (frameworks, libraries, etc.). If a dependency cannot be resolved
 /// to a known domain model, it returns `nil`.
 struct PBXTargetDependencyMapper: DependencyMapping {
+    private let pathMapper: PathDependencyMapping
+
+    init(pathMapper: PathDependencyMapping = PathDependencyMapper()) {
+        self.pathMapper = pathMapper
+    }
+
     func map(_ dependency: PBXTargetDependency, projectProvider: ProjectProviding) throws -> TargetDependency {
         let condition = dependency.platformCondition()
 
@@ -78,9 +84,9 @@ struct PBXTargetDependencyMapper: DependencyMapping {
             let projectRelativePath = try fileReference.path
                 .throwing(TargetDependencyMappingError.missingFileReference(fileReference.name ?? ""))
             let fullPath = projectProvider.sourceDirectory.pathString + projectRelativePath
-            let absPath = try AbsolutePath(validating: fullPath)
+            let path = try AbsolutePath(validating: fullPath)
             // Reference to a target in another project.
-            return .project(target: remoteInfo, path: absPath, status: .required, condition: condition)
+            return .project(target: remoteInfo, path: path, status: .required, condition: condition)
         case let .unknownObject(object):
             throw TargetDependencyMappingError.unknownObject(object.debugDescription)
         }
@@ -137,11 +143,8 @@ struct PBXTargetDependencyMapper: DependencyMapping {
             TargetDependencyMappingError.missingFileReference("Path string is nil in file dependency.")
         )
         let validatedPath = projectProvider.sourceDirectory.appending(try RelativePath(validating: pathString))
-        let absPath = try AbsolutePath(validating: validatedPath.pathString)
-        return try absPath.mapByExtension(condition: condition)
-            .throwing(TargetDependencyMappingError.unknownDependencyType(
-                name: "Unrecognized file-based dependency at path: \(absPath.pathString)"
-            ))
+        let path = try AbsolutePath(validating: validatedPath.pathString)
+        return try pathMapper.map(path: path, condition: condition)
     }
 }
 
@@ -159,22 +162,16 @@ enum TargetDependencyMappingError: LocalizedError, Equatable {
         switch self {
         case let .targetNotFound(targetName, path):
             return "The target '\(targetName)' could not be found in the project at: \(path.pathString)."
-
         case let .unknownDependencyType(name):
             return "An unknown dependency type '\(name)' was encountered."
-
         case let .missingFileReference(description):
             return "File reference path is missing in target dependency: \(description)."
-
         case let .unknownObject(description):
             return "Encountered an unknown PBXObject in target dependency: \(description)."
-
         case .missingRemoteInfoInNativeProxy:
             return "A native target proxy is missing `remoteInfo` in target dependency."
-
         case .missingRemoteGlobalIDInReferenceProxy:
             return "A reference proxy is missing `remoteGlobalID` in target dependency."
-
         case let .unsupportedProxyType(name):
             return "Encountered an unsupported PBXProxyType in dependenncy: \(name ?? "Unknown")."
         }

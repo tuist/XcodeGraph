@@ -23,13 +23,13 @@ struct PBXSourcesBuildPhaseMapper: PBXSourcesBuildPhaseMapping {
               let pathString = try fileRef.fullPath(sourceRoot: projectProvider.sourcePathString)
         else { return nil }
 
-        let absPath = try AbsolutePath(validating: pathString)
+        let path = try AbsolutePath(validating: pathString)
         let settings = buildFile.settings ?? [:]
         let compilerFlags: String? = settings.string(for: .compilerFlags)
         let attributes: [String]? = settings.stringArray(for: .attributes)
 
         return SourceFile(
-            path: absPath,
+            path: path,
             compilerFlags: compilerFlags,
             codeGen: mapCodeGenAttribute(attributes)
         )

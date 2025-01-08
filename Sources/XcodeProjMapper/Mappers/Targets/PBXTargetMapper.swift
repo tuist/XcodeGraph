@@ -183,10 +183,10 @@ struct PBXTargetMapper: TargetMapping {
         )
     }
 
-    // MARK: - Helpers
+    // MARK: - Private
 
     /// Identifies files not included in any build phase, returning them as `FileElement` models.
-    func mapAdditionalFiles(from pbxTarget: PBXTarget, projectProvider: ProjectProviding) throws -> [FileElement] {
+    private func mapAdditionalFiles(from pbxTarget: PBXTarget, projectProvider: ProjectProviding) throws -> [FileElement] {
         guard let pbxProject = projectProvider.xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
@@ -200,7 +200,7 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts the main files group for the target.
-    func extractFilesGroup(from target: PBXTarget, projectProvider: ProjectProviding) throws -> ProjectGroup {
+    private func extractFilesGroup(from target: PBXTarget, projectProvider: ProjectProviding) throws -> ProjectGroup {
         guard let pbxProject = projectProvider.xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
@@ -210,7 +210,7 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts and parses the project's Info.plist as a dictionary, or returns an empty dictionary if none is found.
-    func extractInfoPlist(from target: PBXTarget, projectProvider: ProjectProviding) throws -> InfoPlist {
+    private func extractInfoPlist(from target: PBXTarget, projectProvider: ProjectProviding) throws -> InfoPlist {
         if let plistPath = try target.infoPlistPath() {
             let path = projectProvider.sourceDirectory.appending(try RelativePath(validating: plistPath))
             let plistDictionary = try readPlistAsDictionary(at: path)
@@ -235,8 +235,8 @@ struct PBXTargetMapper: TargetMapping {
             if let file = child as? PBXFileReference,
                let pathString = try file.fullPath(sourceRoot: projectProvider.sourcePathString)
             {
-                let absPath = try AbsolutePath(validating: pathString)
-                files.insert(absPath)
+                let path = try AbsolutePath(validating: pathString)
+                files.insert(path)
             } else if let subgroup = child as? PBXGroup {
                 files.formUnion(try collectAllFiles(from: subgroup, projectProvider: projectProvider))
             }
