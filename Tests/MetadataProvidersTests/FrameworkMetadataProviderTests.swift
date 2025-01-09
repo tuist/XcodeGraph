@@ -1,10 +1,10 @@
-//import Path
-//import XcodeGraph
-//import MetadataProviders
-//import Testing
+// import Path
+// import XcodeGraph
+// import MetadataProviders
+// import Testing
 //
-//@Suite
-//struct FrameworkMetadataProviderTests {
+// @Suite
+// struct FrameworkMetadataProviderTests {
 //    var subject: FrameworkMetadataProvider
 //
 //    init() {
@@ -36,4 +36,4 @@
 //            "Loaded metadata does not match expected metadata"
 //        )
 //    }
-//}
+// }

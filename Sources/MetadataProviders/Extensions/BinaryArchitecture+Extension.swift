@@ -1,10 +1,9 @@
-import Darwin   
-import MachO
+import Darwin
 import Foundation
+import MachO
 import XcodeGraph
 
 extension BinaryArchitecture {
-
     /// An array of `(cpu_type_t, cpu_subtype_t)` pairs representing this architecture.
     private var pairs: [(cpu_type_t, cpu_subtype_t)] {
         switch self {

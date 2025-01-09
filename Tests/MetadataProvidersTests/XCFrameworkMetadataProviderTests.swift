@@ -1,11 +1,11 @@
-//import Path
-//import ServiceContextModule
-//@testable import MetadataProviders
-//import XcodeGraph
-//import Testing
+// import Path
+// import ServiceContextModule
+// @testable import MetadataProviders
+// import XcodeGraph
+// import Testing
 //
-//@Suite
-//struct XCFrameworkMetadataProviderTests {
+// @Suite
+// struct XCFrameworkMetadataProviderTests {
 //    private var subject: XCFrameworkMetadataProvider
 //
 //    init() {
@@ -231,4 +231,4 @@
 //        // Then
 //        #expect(metadata.infoPlist.libraries.count == 2, "Libraries count mismatch")
 //    }
-//}
+// }

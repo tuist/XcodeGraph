@@ -1,9 +1,9 @@
+import AEXML
 import Path
 import Testing
 import XcodeGraph
 @testable import XcodeProj
 @testable import XcodeProjMapper
-import AEXML
 
 @Suite
 struct XCSchemeMapperTests {

@@ -54,7 +54,7 @@ let targets: [Target] = [
     .testTarget(
         name: "XcodeProjMapperTests",
         dependencies: [
-            "XcodeProjMapper"
+            "XcodeProjMapper",
         ],
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),
@@ -79,7 +79,7 @@ let package = Package(
         .package(url: "https://github.com/tuist/Command.git", from: "0.11.0"),
         .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.6.17")),
         .package(url: "https://github.com/apple/swift-service-context", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.11"))
+        .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.11")),
     ],
     targets: targets
 )

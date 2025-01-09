@@ -1,10 +1,10 @@
-//import Path
-//import XcodeGraph
-//@testable import MetadataProviders
-//import Testing
+// import Path
+// import XcodeGraph
+// @testable import MetadataProviders
+// import Testing
 //
-//@Suite
-//struct LibraryMetadataProviderTests {
+// @Suite
+// struct LibraryMetadataProviderTests {
 //    var subject: LibraryMetadataProvider
 //
 //    /// Initializes the test suite, setting up the required `LibraryMetadataProvider` instance.
@@ -36,4 +36,4 @@
 //            "Loaded metadata does not match expected metadata"
 //        )
 //    }
-//}
+// }

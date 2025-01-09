@@ -1,11 +1,11 @@
-//import Foundation
-//import Path
-//@testable import MetadataProviders
-//import XcodeGraph
-//import Testing
+// import Foundation
+// import Path
+// @testable import MetadataProviders
+// import XcodeGraph
+// import Testing
 //
-//@Suite
-//struct PrecompiledMetadataProviderTests {
+// @Suite
+// struct PrecompiledMetadataProviderTests {
 //    var subject: PrecompiledMetadataProvider
 //
 //    /// Initializes the test suite, setting up the required `PrecompiledMetadataProvider` instance.
@@ -93,4 +93,4 @@
 //        #expect(linking == BinaryLinking.static, "Linking does not match expected value")
 //        #expect(uuids == Set(), "UUIDs do not match expected value")
 //    }
-//}
+// }

@@ -1,13 +1,13 @@
-//import Foundation
-//import Path
-//import Testing
-//import XcodeGraph
-//import XcodeProj
+// import Foundation
+// import Path
+// import Testing
+// import XcodeGraph
+// import XcodeProj
 //
-//@testable import XcodeProjMapper
+// @testable import XcodeProjMapper
 //
-//@Suite
-//struct ProjectParserTests {
+// @Suite
+// struct ProjectParserTests {
 //    let parser: ProjectParser
 //
 //    init() {
@@ -104,4 +104,4 @@
 //        // Assert
 //        #expect(type == ProjectType.xcodeProject(mockDirectory.appending(component: "MyProject.xcodeproj")))
 //    }
-//}
+// }

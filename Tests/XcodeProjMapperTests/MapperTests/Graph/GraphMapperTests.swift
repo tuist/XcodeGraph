@@ -44,7 +44,6 @@ struct XcodeGraphMapperTests {
 
         let graph = try await mapper.buildGraph(from: .project(mockProvider.xcodeProj))
 
-
         // Validate the graph
         #expect(graph.name == "Workspace")
         #expect(graph.projects.count == 1)
@@ -126,7 +125,6 @@ struct XcodeGraphMapperTests {
         let mapper = XcodeGraphMapper()
 
         let graph = try await mapper.buildGraph(from: .workspace(xcworkspace))
-
 
         // Validate the graph
         #expect(graph.workspace.name == "Workspace")

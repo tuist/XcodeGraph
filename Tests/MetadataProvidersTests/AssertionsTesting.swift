@@ -3,7 +3,7 @@ import Path
 import ServiceContextModule
 import Testing
 
-struct AssertionsTesting {
+enum AssertionsTesting {
     // MARK: - Fixtures
 
     /// Resolves a fixture path relative to the project's root.
@@ -15,7 +15,6 @@ struct AssertionsTesting {
         .appending(path)
     }
 }
-
 
 extension AbsolutePath: Swift.ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
