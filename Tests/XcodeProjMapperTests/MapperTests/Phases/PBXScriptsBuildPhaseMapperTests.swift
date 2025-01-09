@@ -26,7 +26,7 @@ struct PBXScriptsBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXScriptsBuildPhaseMapper()
-        let scripts = try mapper.map([scriptPhase], buildPhases: [scriptPhase], projectProvider: provider)
+        let scripts = try mapper.map([scriptPhase], buildPhases: [scriptPhase], xcodeProj: provider.xcodeProj)
 
         #expect(scripts.count == 1)
         let script = try #require(scripts.first)
@@ -55,7 +55,7 @@ struct PBXScriptsBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXScriptsBuildPhaseMapper()
-        let rawPhases = try mapper.map([scriptPhase], buildPhases: [scriptPhase], projectProvider: provider)
+        let rawPhases = try mapper.map([scriptPhase], buildPhases: [scriptPhase], xcodeProj: provider.xcodeProj)
 
         #expect(rawPhases.count == 1)
         let rawPhase = try #require(rawPhases.first)

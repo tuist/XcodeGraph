@@ -40,7 +40,7 @@ struct PBXSourcesBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXSourcesBuildPhaseMapper()
-        let sources = try mapper.map(sourcesPhase, projectProvider: mockProvider)
+        let sources = try mapper.map(sourcesPhase, xcodeProj: mockProvider.xcodeProj)
 
         #expect(sources.count == 1)
         let sourceFile = try #require(sources.first)
@@ -62,7 +62,7 @@ struct PBXSourcesBuildPhaseMapperTests {
         try mockProvider.addTargets([target])
 
         let mapper = PBXSourcesBuildPhaseMapper()
-        let sources = try mapper.map(sourcesPhase, projectProvider: mockProvider)
+        let sources = try mapper.map(sourcesPhase, xcodeProj: mockProvider.xcodeProj)
         #expect(sources.isEmpty == true) // Gracefully handled empty result.
     }
 
@@ -86,7 +86,7 @@ struct PBXSourcesBuildPhaseMapperTests {
             .add(to: pbxProj.rootObject)
 
         let mapper = PBXSourcesBuildPhaseMapper()
-        let sources = try mapper.map(sourcesPhase, projectProvider: mockProvider)
+        let sources = try mapper.map(sourcesPhase, xcodeProj: mockProvider.xcodeProj)
         #expect(sources.isEmpty == true)
     }
 
@@ -111,7 +111,7 @@ struct PBXSourcesBuildPhaseMapperTests {
         try PBXNativeTarget.test(buildPhases: [sourcesPhase]).add(to: pbxProj).add(to: pbxProj.rootObject)
 
         let mapper = PBXSourcesBuildPhaseMapper()
-        let sources = try mapper.map(sourcesPhase, projectProvider: provider)
+        let sources = try mapper.map(sourcesPhase, xcodeProj: provider.xcodeProj)
 
         #expect(sources.count == 1)
         let sourceFile = try #require(sources.first)

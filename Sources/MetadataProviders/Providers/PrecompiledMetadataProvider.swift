@@ -2,10 +2,6 @@ import Foundation
 import MachO
 import Path
 import XcodeGraph
-// Import or reference your custom files, e.g.:
-// import BinaryArchitecture
-// import MachOByteSwapExtensions
-// import FileHandle_ReadHelpers
 
 // MARK: - Errors
 

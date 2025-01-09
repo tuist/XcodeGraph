@@ -11,7 +11,7 @@ struct XCConfigurationMapperTests {
     @Test("Returns default settings when configuration list is nil")
     func testNilConfigurationListReturnsDefault() throws {
         let mockProvider = MockProjectProvider()
-        let settings = try mapper.map(projectProvider: mockProvider, configurationList: nil)
+        let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: nil)
         #expect(settings == Settings.default)
     }
 
@@ -25,7 +25,7 @@ struct XCConfigurationMapperTests {
         ).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList, pbxProj: pbxProj)
 
-        let settings = try mapper.map(projectProvider: mockProvider, configurationList: configList)
+        let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
         #expect(settings.configurations.count == 1)
 
         let configKey = settings.configurations.keys.first
@@ -47,7 +47,7 @@ struct XCConfigurationMapperTests {
         let configList = XCConfigurationList.test(buildConfigurations: configs).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList, pbxProj: pbxProj)
 
-        let settings = try mapper.map(projectProvider: mockProvider, configurationList: configList)
+        let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
         #expect(settings.configurations.count == 2)
 
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
@@ -72,7 +72,7 @@ struct XCConfigurationMapperTests {
         let configList = XCConfigurationList.test(buildConfigurations: [config]).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList)
 
-        let settings = try mapper.map(projectProvider: mockProvider, configurationList: configList)
+        let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
         let debugConfig = try #require(settings.configurations[debugKey])
 
@@ -101,7 +101,7 @@ struct XCConfigurationMapperTests {
             sourceDirectory: "/Users/test/project",
             configurationList: configList
         )
-        let settings = try mapper.map(projectProvider: mockProvider, configurationList: configList)
+        let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
 
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
         let debugConfig = try #require(settings.configurations[debugKey])
@@ -119,7 +119,7 @@ struct XCConfigurationMapperTests {
         let configList = XCConfigurationList.test(buildConfigurations: [config]).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList, pbxProj: pbxProj)
 
-        let settings = try mapper.map(projectProvider: mockProvider, configurationList: configList)
+        let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
 
         #expect(settings.configurations.count == 1)
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })

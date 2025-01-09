@@ -11,7 +11,7 @@ struct PBXProjectMapperTests {
         let mockProvider = MockProjectProvider()
         let mapper = PBXProjectMapper()
 
-        let project = try mapper.map(projectProvider: mockProvider)
+        let project = try mapper.map(xcodeProj: mockProvider.xcodeProj)
 
         #expect(project.name == "TestProject")
         #expect(project.path == mockProvider.sourceDirectory)
@@ -36,7 +36,7 @@ struct PBXProjectMapperTests {
         ]
         mockProvider.pbxProj.projects.first?.attributes = customAttributes
 
-        let project = try mapper.map(projectProvider: mockProvider)
+        let project = try mapper.map(xcodeProj: mockProvider.xcodeProj)
 
         #expect(project.name == "CustomProject")
         #expect(project.organizationName == "Example Org")
@@ -55,7 +55,7 @@ struct PBXProjectMapperTests {
         try mockProvider.pbxProject().remotePackages.append(package)
         let mapper = PBXProjectMapper()
 
-        let project = try mapper.map(projectProvider: mockProvider)
+        let project = try mapper.map(xcodeProj: mockProvider.xcodeProj)
 
         #expect(project.packages.count == 1)
         guard case let .remote(url, requirement) = project.packages[0] else {
@@ -72,7 +72,7 @@ struct PBXProjectMapperTests {
         try mockProvider.pbxProject().knownRegions = ["en", "es", "fr"]
         let mapper = PBXProjectMapper()
 
-        let project = try mapper.map(projectProvider: mockProvider)
+        let project = try mapper.map(xcodeProj: mockProvider.xcodeProj)
 
         #expect(project.defaultKnownRegions?.count == 3)
         #expect(project.defaultKnownRegions?.contains("en") == true)
@@ -86,7 +86,7 @@ struct PBXProjectMapperTests {
         try mockProvider.pbxProject().developmentRegion = "fr"
         let mapper = PBXProjectMapper()
 
-        let project = try mapper.map(projectProvider: mockProvider)
+        let project = try mapper.map(xcodeProj: mockProvider.xcodeProj)
         #expect(project.developmentRegion == "fr")
     }
 
@@ -95,7 +95,7 @@ struct PBXProjectMapperTests {
         let mockProvider = MockProjectProvider()
         let mapper = PBXProjectMapper()
 
-        let project = try mapper.map(projectProvider: mockProvider)
+        let project = try mapper.map(xcodeProj: mockProvider.xcodeProj)
         let synthesizers = project.resourceSynthesizers
 
         // Check for strings synthesizer
@@ -125,7 +125,7 @@ struct PBXProjectMapperTests {
         mockProvider.xcodeProj.sharedData = XCSharedData(schemes: [scheme])
         let mapper = PBXProjectMapper()
 
-        let project = try mapper.map(projectProvider: mockProvider)
+        let project = try mapper.map(xcodeProj: mockProvider.xcodeProj)
 
         #expect(project.schemes.count == 1)
         #expect(project.schemes[0].name == "TestScheme")

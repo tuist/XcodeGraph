@@ -56,7 +56,7 @@ struct PBXHeadersBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXHeadersBuildPhaseMapper()
-        let headers = try mapper.map(headersPhase, projectProvider: provider)
+        let headers = try mapper.map(headersPhase, xcodeProj: provider.xcodeProj)
         try #require(headers != nil)
 
         #expect(headers?.public.map(\.basename).contains("PublicHeader.h") == true)

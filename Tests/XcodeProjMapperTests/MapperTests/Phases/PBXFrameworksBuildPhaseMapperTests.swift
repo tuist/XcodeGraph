@@ -30,7 +30,7 @@ struct PBXFrameworksBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXFrameworksBuildPhaseMapper()
-        let frameworks = try mapper.map(frameworksPhase, projectProvider: mockProvider)
+        let frameworks = try mapper.map(frameworksPhase, xcodeProj: mockProvider.xcodeProj)
 
         #expect(frameworks.count == 1)
         let dependency = try #require(frameworks.first)

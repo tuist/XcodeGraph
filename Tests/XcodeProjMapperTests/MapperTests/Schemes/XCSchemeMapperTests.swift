@@ -3,18 +3,19 @@ import Testing
 import XcodeGraph
 @testable import XcodeProj
 @testable import XcodeProjMapper
+import AEXML
 
 @Suite
 struct XCSchemeMapperTests {
     let mockProvider: MockProjectProvider
     let mapper: XCSchemeMapper
-    let graphType: GraphType
+    let graphType: XcodeMapperGraphType
 
     init() throws {
         let mockProvider = MockProjectProvider()
         self.mockProvider = mockProvider
         mapper = XCSchemeMapper()
-        graphType = .project(mockProvider.sourceDirectory)
+        graphType = .project(mockProvider.xcodeProj)
     }
 
     @Test("Maps shared project schemes correctly")
@@ -114,9 +115,9 @@ struct XCSchemeMapperTests {
         let runnable = XCScheme.BuildableProductRunnable(buildableReference: targetRef)
         let envVar = XCScheme.EnvironmentVariable(variable: "RUN_ENV", value: "run_value", enabled: true)
         let launchArg = XCScheme.CommandLineArguments.CommandLineArgument(name: "run_arg", enabled: true)
-
+        let element = runnable.xmlElement()
         let launchAction = XCScheme.LaunchAction(
-            pathRunnable: try XCScheme.PathRunnable(element: runnable.xmlElement()),
+            runnable: try .init(element: element),
             buildConfiguration: "Debug",
             selectedDebuggerIdentifier: "",
             commandlineArguments: XCScheme.CommandLineArguments(arguments: [launchArg]),

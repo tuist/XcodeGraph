@@ -5,9 +5,9 @@ import XcodeProj
 @testable import XcodeProjMapper
 
 @Suite
-struct GraphMapperTests {
+struct XcodeGraphMapperTests {
     @Test("Maps a single project into a workspace graph")
-    func testSingleProjectGraph() throws {
+    func testSingleProjectGraph() async throws {
         let pbxProj = PBXProj()
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)
         let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProj)
@@ -39,15 +39,11 @@ struct GraphMapperTests {
 
         // Create a GraphType for a single project
         let projectPath = try AbsolutePath(validating: mockProvider.sourceDirectory.pathString)
-        let graphType = GraphType.project(projectPath)
 
-        // Mapper returns the mock provider for the given path
-        let mapper = GraphMapper(graphType: graphType) { path in
-            #expect(path == projectPath)
-            return mockProvider
-        }
+        let mapper = XcodeGraphMapper()
 
-        let graph = try mapper.map()
+        let graph = try await mapper.buildGraph(from: .project(mockProvider.xcodeProj))
+
 
         // Validate the graph
         #expect(graph.name == "Workspace")
@@ -63,7 +59,7 @@ struct GraphMapperTests {
     }
 
     @Test("Maps a workspace with multiple projects into a single graph")
-    func testWorkspaceGraphMultipleProjects() throws {
+    func testWorkspaceGraphMultipleProjects() async throws {
         let pbxProjA = PBXProj()
         let pbxProjB = PBXProj()
 
@@ -127,22 +123,10 @@ struct GraphMapperTests {
             ])
         )
 
-        let provider = MockWorkspaceProvider(xcWorkspacePath: workspacePath, xcworkspace: xcworkspace)
-        let graphType = GraphType.workspace(provider)
+        let mapper = XcodeGraphMapper()
 
-        // Mapper picks the correct provider based on path
-        let mapper = GraphMapper(graphType: graphType) { path in
-            if path == projectAPath {
-                return mockProviderA
-            } else if path == projectBPath {
-                return mockProviderB
-            } else {
-                Issue.record("Unexpected project path requested: \(path)")
-                return MockProjectProvider()
-            }
-        }
+        let graph = try await mapper.buildGraph(from: .workspace(xcworkspace))
 
-        let graph = try mapper.map()
 
         // Validate the graph
         #expect(graph.workspace.name == "Workspace")
@@ -162,7 +146,7 @@ struct GraphMapperTests {
     }
 
     @Test("Maps a project graph with dependencies between targets")
-    func testGraphWithDependencies() throws {
+    func testGraphWithDependencies() async throws {
         let pbxProj = PBXProj()
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)
         let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProj)
@@ -209,14 +193,10 @@ struct GraphMapperTests {
         appTarget.dependencies.append(dep)
 
         let projectPath = try AbsolutePath(validating: mockProvider.xcodeProjPath.pathString)
-        let graphType = GraphType.project(projectPath)
 
-        let mapper = GraphMapper(graphType: graphType) { path in
-            #expect(path == projectPath)
-            return mockProvider
-        }
+        let mapper = XcodeGraphMapper()
 
-        let graph = try mapper.map()
+        let graph = try await mapper.buildGraph(from: .project(mockProvider.xcodeProj))
 
         // Verify dependencies are mapped
         let sourceDep = GraphDependency.target(name: "App", path: mockProvider.sourceDirectory)

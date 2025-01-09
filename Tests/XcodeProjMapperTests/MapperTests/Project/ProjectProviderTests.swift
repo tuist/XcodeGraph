@@ -25,12 +25,7 @@ struct ProjectProviderTests {
             pbxproj: proj
         )
 
-        let provider = ProjectProvider(
-            xcodeProjPath: try AbsolutePath(validating: "/tmp/TestProject.xcodeproj"),
-            xcodeProj: xcodeProj
-        )
-
-        let project = try provider.xcodeProj.mainPBXProject()
+        let project = try xcodeProj.mainPBXProject()
         #expect(project.name == "TestProject")
     }
 
@@ -43,13 +38,8 @@ struct ProjectProviderTests {
             pbxproj: proj
         )
 
-        let provider = ProjectProvider(
-            xcodeProjPath: try AbsolutePath(validating: "/tmp/EmptyProject.xcodeproj"),
-            xcodeProj: xcodeProj
-        )
-
         #expect {
-            _ = try provider.xcodeProj.mainPBXProject()
+            _ = try xcodeProj.mainPBXProject()
         } throws: { error in
             return error.localizedDescription == "No `PBXProject` was found in the `.xcodeproj`"
         }
@@ -73,11 +63,7 @@ struct ProjectProviderTests {
             pbxproj: proj
         )
 
-        let provider = ProjectProvider(
-            xcodeProjPath: try AbsolutePath(validating: "/tmp/Projects/TestProject.xcodeproj"),
-            xcodeProj: xcodeProj
-        )
-
-        #expect(provider.sourceDirectory.pathString == "/tmp/Projects")
+        let sourceDirectory = try xcodeProj.srcPathStringOrThrow
+        #expect(sourceDirectory == "/tmp/Projects")
     }
 }

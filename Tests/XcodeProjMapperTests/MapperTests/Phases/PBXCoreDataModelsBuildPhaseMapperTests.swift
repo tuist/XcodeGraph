@@ -43,7 +43,7 @@ struct PBXCoreDataModelsBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXCoreDataModelsBuildPhaseMapper()
-        let models = try mapper.map([buildFile], projectProvider: provider)
+        let models = try mapper.map([buildFile], xcodeProj: provider.xcodeProj)
 
         #expect(models.count == 1)
         let model = try #require(models.first)

@@ -154,7 +154,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     /// If it's a workspace, we gather all `.xcodeproj` references. If it's a single project,
     /// we treat it like a workspace with a single project. Then we load each project,
     /// map packages & targets, and build dependency edges. This merges logic from your old `GraphMapper`.
-    private func buildGraph(from graphType: XcodeMapperGraphType) async throws -> Graph {
+    func buildGraph(from graphType: XcodeMapperGraphType) async throws -> Graph {
         // A place to store discovered: path -> Project, packages, dependencies, etc.
         var projects: [AbsolutePath: Project] = [:]
         var packages: [AbsolutePath: [String: Package]] = [:]

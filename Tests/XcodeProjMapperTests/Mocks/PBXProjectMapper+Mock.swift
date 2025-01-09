@@ -14,22 +14,22 @@ extension PBXProjectMapper {
         try provider.addTargets(targets)
 
         let mapper = PBXProjectMapper()
-        return try mapper.map(projectProvider: provider)
+        return try mapper.map(xcodeProj: provider.xcodeProj)
     }
 
     /// Creates a mapped graph from multiple project providers, useful for testing multi-project scenarios.
-    func createMappedGraph(
-        graphType: GraphType,
-        projectProviders: [AbsolutePath: MockProjectProvider]
-    ) throws -> XcodeGraph.Graph {
-        let mapper = GraphMapper(graphType: graphType) { path in
-            guard let provider = projectProviders[path] else {
-                Issue.record("Unexpected project path requested: \(path)")
-                throw XcodeProjMapper.XcodeProjError.noProjectsFound
-            }
-            return provider
-        }
-
-        return try mapper.map()
-    }
+//    func createMappedGraph(
+//        graphType: XcodeMapperGraphType,
+//        projectProviders: [AbsolutePath: MockProjectProvider]
+//    ) throws -> XcodeGraph.Graph {
+//        let mapper = XcodeGraphMapper() { path in
+//            guard let provider = projectProviders[path] else {
+//                Issue.record("Unexpected project path requested: \(path)")
+//                throw XcodeProjMapper.XcodeProjError.noProjectsFound
+//            }
+//            return provider
+//        }
+//
+//        return try mapper.map()
+//    }
 }

@@ -7,7 +7,7 @@ import XcodeProj
 @testable import XcodeProjMapper
 
 /// A mock project provider that sets up a minimal, in-memory Xcode project for testing.
-struct MockProjectProvider: ProjectProviding {
+struct MockProjectProvider {
     var sourceDirectory: AbsolutePath
     var xcodeProjPath: AbsolutePath
     var xcodeProj: XcodeProj

@@ -37,7 +37,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped == .target(name: "DirectTarget", status: .required, condition: nil))
     }
 
@@ -56,7 +56,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped == .package(product: "MyPackageProduct", type: .runtime, condition: nil))
     }
 
@@ -83,7 +83,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped == .target(name: "NativeTarget", status: .required, condition: nil))
     }
 
@@ -112,7 +112,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         let result = try #require(mapped)
         let expectedPath = try AbsolutePath(validating: mockProvider.sourceDirectory.pathString + "OtherProject.xcodeproj")
         #expect(result == .project(target: "OtherTarget", path: expectedPath, status: .required, condition: nil))
@@ -155,7 +155,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         let result = try #require(mapped)
 
         let expectedPath = mockProvider.sourceDirectory.appending(component: "libTest.dylib")
@@ -210,7 +210,7 @@ struct DependencyMapperTests {
             productType: .application
         ).add(to: pbxProj).add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         let result = try #require(mapped)
         let expectedPath = mockProvider.sourceDirectory.appending(component: "MyLib.framework")
         #expect(result == .framework(path: expectedPath, status: .required, condition: nil))
@@ -238,7 +238,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         let result = try #require(mapped)
         #expect(result == .target(name: "ConditionalTarget", status: .required, condition: .when([.ios, .macos])))
     }
@@ -258,7 +258,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped == nil)
     }
 
@@ -284,7 +284,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped == .target(name: "SinglePlatform", status: .required, condition: .when([.tvos])))
     }
 
@@ -310,7 +310,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let mapped = try mapper.map(dep, projectProvider: mockProvider)
+        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped == .target(name: "UnknownPlatform", status: .required, condition: nil))
     }
 }

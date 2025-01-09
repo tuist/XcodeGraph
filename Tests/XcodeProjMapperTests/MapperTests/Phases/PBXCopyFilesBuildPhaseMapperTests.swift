@@ -39,7 +39,7 @@ struct PBXCopyFilesBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXCopyFilesBuildPhaseMapper()
-        let copyActions = try mapper.map([copyFilesPhase], projectProvider: provider)
+        let copyActions = try mapper.map([copyFilesPhase], xcodeProj: provider.xcodeProj)
 
         #expect(copyActions.count == 1)
         let action = try #require(copyActions.first)

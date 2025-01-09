@@ -186,7 +186,7 @@ struct PBXTargetMapper: TargetMapping {
     // MARK: - Private
 
     /// Identifies files not included in any build phase, returning them as `FileElement` models.
-    private func mapAdditionalFiles(from pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> [FileElement] {
+    func mapAdditionalFiles(from pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> [FileElement] {
         guard let pbxProject = xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
@@ -200,7 +200,7 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts the main files group for the target.
-    private func extractFilesGroup(from target: PBXTarget, xcodeProj: XcodeProj) throws -> ProjectGroup {
+    func extractFilesGroup(from target: PBXTarget, xcodeProj: XcodeProj) throws -> ProjectGroup {
         guard let pbxProject = xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
@@ -210,7 +210,7 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts and parses the project's Info.plist as a dictionary, or returns an empty dictionary if none is found.
-    private func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) throws -> InfoPlist {
+    func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) throws -> InfoPlist {
         if let plistPath = try target.infoPlistPath() {
             let path = try xcodeProj.srcPathOrThrow.appending(try RelativePath(validating: plistPath))
             let plistDictionary = try readPlistAsDictionary(at: path)

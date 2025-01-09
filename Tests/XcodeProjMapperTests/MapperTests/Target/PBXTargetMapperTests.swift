@@ -22,7 +22,7 @@ struct PBXTargetMapperTests {
             buildSettings: ["PRODUCT_BUNDLE_IDENTIFIER": "com.example.app"]
         )
 
-        let mapped = try mapper.map(pbxTarget: target, projectProvider: mockProvider)
+        let mapped = try mapper.map(pbxTarget: target, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped.name == "App")
         #expect(mapped.product == .app)
         #expect(mapped.productName == "App")
@@ -38,7 +38,7 @@ struct PBXTargetMapperTests {
         )
 
         #expect(throws: TargetMappingError.missingBundleIdentifier(targetName: "App")) {
-            _ = try mapper.map(pbxTarget: target, projectProvider: mockProvider)
+            _ = try mapper.map(pbxTarget: target, xcodeProj: mockProvider.xcodeProj)
         }
     }
 
@@ -53,7 +53,7 @@ struct PBXTargetMapperTests {
             ]
         )
 
-        let mapped = try mapper.map(pbxTarget: target, projectProvider: mockProvider)
+        let mapped = try mapper.map(pbxTarget: target, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped.environmentVariables["TEST_VAR"]?.value == "test_value")
         #expect(mapped.environmentVariables["TEST_VAR"]?.isEnabled == true)
     }
@@ -69,7 +69,7 @@ struct PBXTargetMapperTests {
             ]
         )
 
-        let mapped = try mapper.map(pbxTarget: target, projectProvider: mockProvider)
+        let mapped = try mapper.map(pbxTarget: target, xcodeProj: mockProvider.xcodeProj)
         let expected = [
             LaunchArgument(name: "-debug", isEnabled: true),
             LaunchArgument(name: "--verbose", isEnabled: true),
@@ -95,7 +95,7 @@ struct PBXTargetMapperTests {
             buildSettings: ["PRODUCT_BUNDLE_IDENTIFIER": "com.example.app"]
         )
 
-        let mapped = try mapper.map(pbxTarget: target, projectProvider: mockProvider)
+        let mapped = try mapper.map(pbxTarget: target, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped.sources.count == 1)
         #expect(mapped.sources[0].path.basename == "ViewController.swift")
     }
@@ -111,7 +111,7 @@ struct PBXTargetMapperTests {
             ]
         )
 
-        let mapped = try mapper.map(pbxTarget: target, projectProvider: mockProvider)
+        let mapped = try mapper.map(pbxTarget: target, xcodeProj: mockProvider.xcodeProj)
         #expect(mapped.metadata.tags == Set(["tag1", "tag2", "tag3"]))
     }
 
@@ -169,7 +169,7 @@ struct PBXTargetMapperTests {
             productType: .application
         )
 
-        let mapped = try mapper.map(pbxTarget: target, projectProvider: provider)
+        let mapped = try mapper.map(pbxTarget: target, xcodeProj: provider.xcodeProj)
         #expect(mapped.entitlements == .file(path: entitlementsPath))
     }
 
@@ -182,11 +182,11 @@ struct PBXTargetMapperTests {
         mockProvider.xcodeProj = XcodeProj(workspace: XCWorkspace(), pbxproj: PBXProj())
 
         #expect(throws: TargetMappingError.noProjectsFound(path: mockProvider.xcodeProjPath.pathString)) {
-            _ = try mapper.mapAdditionalFiles(from: target, projectProvider: mockProvider)
+            _ = try mapper.mapAdditionalFiles(from: target, xcodeProj: mockProvider.xcodeProj)
         }
 
         #expect {
-            _ = try mapper.mapAdditionalFiles(from: target, projectProvider: mockProvider)
+            _ = try mapper.mapAdditionalFiles(from: target, xcodeProj: mockProvider.xcodeProj)
         } throws: { error in
             return error.localizedDescription == "No project was found at: /tmp/TestProject.xcodproj."
         }
@@ -205,11 +205,11 @@ struct PBXTargetMapperTests {
         mockProvider.xcodeProj = XcodeProj(workspace: XCWorkspace(), pbxproj: PBXProj())
 
         #expect(throws: TargetMappingError.missingFilesGroup(targetName: "App")) {
-            _ = try mapper.extractFilesGroup(from: target, projectProvider: mockProvider)
+            _ = try mapper.extractFilesGroup(from: target, xcodeProj: mockProvider.xcodeProj)
         }
 
         #expect {
-            _ = try mapper.extractFilesGroup(from: target, projectProvider: mockProvider)
+            _ = try mapper.extractFilesGroup(from: target, xcodeProj: mockProvider.xcodeProj)
         } throws: { error in
             return error.localizedDescription == "The files group is missing for the target 'App'."
         }
@@ -246,7 +246,7 @@ struct PBXTargetMapperTests {
 
         let mapper = PBXTargetMapper()
 
-        let infoPlist = try mapper.extractInfoPlist(from: target, projectProvider: mockProvider)
+        let infoPlist = try mapper.extractInfoPlist(from: target, xcodeProj: mockProvider.xcodeProj)
 
         #expect({
             switch infoPlist {
@@ -286,7 +286,7 @@ struct PBXTargetMapperTests {
         let mapper = PBXTargetMapper()
 
         #expect {
-            _ = try mapper.extractInfoPlist(from: target, projectProvider: mockProvider)
+            _ = try mapper.extractInfoPlist(from: target, xcodeProj: mockProvider.xcodeProj)
         } throws: { error in
             return error
                 .localizedDescription == "Failed to read a valid plist dictionary from file at: \(invalidPlistPath.pathString)."

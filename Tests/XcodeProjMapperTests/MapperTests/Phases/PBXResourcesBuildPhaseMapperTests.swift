@@ -31,7 +31,7 @@ struct PBXResourcesBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXResourcesBuildPhaseMapper()
-        let resources = try mapper.map(resourcesPhase, projectProvider: mockProvider)
+        let resources = try mapper.map(resourcesPhase, xcodeProj: mockProvider.xcodeProj)
 
         #expect(resources.count == 1)
         let resource = try #require(resources.first)
@@ -70,7 +70,7 @@ struct PBXResourcesBuildPhaseMapperTests {
             .add(to: pbxProj.rootObject)
 
         let mapper = PBXResourcesBuildPhaseMapper()
-        let resources = try mapper.map(resourcesPhase, projectProvider: provider)
+        let resources = try mapper.map(resourcesPhase, xcodeProj: provider.xcodeProj)
 
         #expect(resources.count == 2)
         #expect(resources.first?.path.basename == "Localizable.strings")

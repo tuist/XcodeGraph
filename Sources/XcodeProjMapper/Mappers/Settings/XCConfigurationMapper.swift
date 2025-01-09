@@ -34,7 +34,7 @@ protocol SettingsMapping: Sendable {
 /// Typical usage:
 /// ```swift
 /// let mapper = SettingsMapper()
-/// let settings = try mapper.map(projectProvider: provider, configurationList: configurationList)
+/// let settings = try mapper.map(xcodeProj: provider.xcodeProj, configurationList: configurationList)
 /// ```
 final class XCConfigurationMapper: SettingsMapping {
     func map(
