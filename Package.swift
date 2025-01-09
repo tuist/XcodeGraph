@@ -24,6 +24,13 @@ let targets: [Target] = [
             .define("MOCKING", .when(configuration: .debug)),
         ]
     ),
+    .testTarget(
+        name: "MetadataProvidersTests",
+        dependencies: [.target(name: "MetadataProviders")],
+        swiftSettings: [
+            .enableExperimentalFeature("StrictConcurrency"),
+        ]
+    ),
     .target(
         name: "XcodeProjMapper",
         dependencies: [

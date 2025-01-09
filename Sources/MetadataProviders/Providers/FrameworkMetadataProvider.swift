@@ -88,9 +88,10 @@ public final class FrameworkMetadataProvider: PrecompiledMetadataProvider, Frame
     public func bcsymbolmapPaths(frameworkPath: AbsolutePath) async throws -> [AbsolutePath] {
         let binaryPath = binaryPath(frameworkPath: frameworkPath)
         let uuids = try uuids(binaryPath: binaryPath)
+        let fileSystem = fileSystem
         return try await uuids
             .map { frameworkPath.parentDirectory.appending(component: "\($0).bcsymbolmap") }
-            .concurrentFilter { try await self.fileSystem.exists($0) }
+            .concurrentFilter { try await fileSystem.exists($0) }
             .sorted()
     }
 
