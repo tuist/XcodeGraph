@@ -1,8 +1,8 @@
 import Foundation
 import Path
 
-public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Codable {
-    public struct XCFramework: Hashable, CustomStringConvertible, Comparable, Codable {
+public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Codable, Sendable {
+    public struct XCFramework: Hashable, CustomStringConvertible, Comparable, Codable, Sendable {
         public let path: AbsolutePath
         public let infoPlist: XCFrameworkInfoPlist
         public let linking: BinaryLinking
@@ -39,7 +39,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         }
     }
 
-    public enum PackageProductType: String, Hashable, CustomStringConvertible, Comparable, Codable {
+    public enum PackageProductType: String, Hashable, CustomStringConvertible, Comparable, Codable, Sendable {
         public var description: String {
             rawValue
         }

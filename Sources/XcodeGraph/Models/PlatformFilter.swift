@@ -3,7 +3,7 @@ import Foundation
 /// Convenience typealias to be used to ensure unique filters are applied
 public typealias PlatformFilters = Set<PlatformFilter>
 
-extension PlatformFilters: Comparable {
+extension PlatformFilters: @retroactive Comparable {
     public static func < (lhs: Set<Element>, rhs: Set<Element>) -> Bool {
         lhs.map(\.xcodeprojValue).sorted().joined() < rhs.map(\.xcodeprojValue).sorted().joined()
     }
