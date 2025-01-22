@@ -5,14 +5,14 @@ import XcodeGraph
 
 // MARK: - Provider Errors
 
-enum LibraryMetadataProviderError: FatalError, Equatable {
+enum LibraryMetadataProviderError: LocalizedError, Equatable {
     case libraryNotFound(AbsolutePath)
     case publicHeadersNotFound(libraryPath: AbsolutePath, headersPath: AbsolutePath)
     case swiftModuleMapNotFound(libraryPath: AbsolutePath, moduleMapPath: AbsolutePath)
 
     // MARK: - FatalError
 
-    var description: String {
+    var errorDescription: String? {
         switch self {
         case let .libraryNotFound(path):
             return "Couldn't find library at \(path.pathString)"
@@ -20,13 +20,6 @@ enum LibraryMetadataProviderError: FatalError, Equatable {
             return "Couldn't find the public headers at \(headersPath.pathString) for library \(libraryPath.pathString)"
         case let .swiftModuleMapNotFound(libraryPath: libraryPath, moduleMapPath: moduleMapPath):
             return "Couldn't find the public headers at \(moduleMapPath.pathString) for library \(libraryPath.pathString)"
-        }
-    }
-
-    var type: ErrorType {
-        switch self {
-        case .libraryNotFound, .publicHeadersNotFound, .swiftModuleMapNotFound:
-            return .abort
         }
     }
 }

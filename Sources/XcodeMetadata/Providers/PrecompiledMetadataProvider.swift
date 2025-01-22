@@ -5,23 +5,19 @@ import XcodeGraph
 
 // MARK: - Errors
 
-enum PrecompiledMetadataProviderError: FatalError, Equatable {
+enum PrecompiledMetadataProviderError: LocalizedError, Equatable {
     case architecturesNotFound(AbsolutePath)
     case metadataNotFound(AbsolutePath)
 
     // MARK: - FatalError
 
-    var description: String {
+    var errorDescription: String? {
         switch self {
         case let .architecturesNotFound(path):
             return "Couldn't find architectures for binary at path \(path.pathString)"
         case let .metadataNotFound(path):
             return "Couldn't find metadata for binary at path \(path.pathString)"
         }
-    }
-
-    var type: ErrorType {
-        .abort
     }
 }
 

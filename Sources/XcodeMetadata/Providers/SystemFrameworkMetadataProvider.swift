@@ -4,21 +4,14 @@ import XcodeGraph
 
 // MARK: - Provider Errors
 
-public enum SystemFrameworkMetadataProviderError: FatalError, Equatable {
+public enum SystemFrameworkMetadataProviderError: LocalizedError, Equatable {
     case unsupportedSDK(name: String)
 
-    public var description: String {
+    public var errorDescription: String? {
         switch self {
         case let .unsupportedSDK(sdk):
             let supportedTypes = SDKType.supportedTypesDescription
             return "The SDK type of \(sdk) is not currently supported - only \(supportedTypes) are supported."
-        }
-    }
-
-    public var type: ErrorType {
-        switch self {
-        case .unsupportedSDK:
-            return .abort
         }
     }
 }

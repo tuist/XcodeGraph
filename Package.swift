@@ -13,7 +13,7 @@ let targets: [Target] = [
         ]
     ),
     .target(
-        name: "MetadataProviders",
+        name: "XcodeMetadata",
         dependencies: [
             .product(name: "ServiceContextModule", package: "swift-service-context"),
             .product(name: "FileSystem", package: "FileSystem"),
@@ -25,8 +25,8 @@ let targets: [Target] = [
         ]
     ),
     .testTarget(
-        name: "MetadataProvidersTests",
-        dependencies: ["MetadataProviders", "XcodeGraph"],
+        name: "XcodeMetadataTests",
+        dependencies: ["XcodeMetadata", "XcodeGraph"],
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),
         ]
@@ -35,7 +35,7 @@ let targets: [Target] = [
         name: "XcodeProjMapper",
         dependencies: [
             "XcodeGraph",
-            "MetadataProviders",
+            "XcodeMetadata",
             .product(name: "Command", package: "Command"),
             .product(name: "Path", package: "Path"),
             .product(name: "XcodeProj", package: "XcodeProj"),

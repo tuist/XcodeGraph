@@ -5,22 +5,15 @@ import XcodeGraph
 
 // MARK: - Provider Errors
 
-enum FrameworkMetadataProviderError: FatalError, Equatable {
+enum FrameworkMetadataProviderError: Error, Equatable, LocalizedError {
     case frameworkNotFound(AbsolutePath)
 
     // MARK: - FatalError
 
-    var description: String {
+    var errorDescription: String? {
         switch self {
         case let .frameworkNotFound(path):
             return "Couldn't find framework at \(path.pathString)"
-        }
-    }
-
-    var type: ErrorType {
-        switch self {
-        case .frameworkNotFound:
-            return .abort
         }
     }
 }

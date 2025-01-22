@@ -7,7 +7,7 @@ import XcodeGraph
 
 // MARK: - Provider Errors
 
-enum XCFrameworkMetadataProviderError: FatalError, Equatable {
+enum XCFrameworkMetadataProviderError: LocalizedError, Equatable {
     case xcframeworkNotFound(AbsolutePath)
     case missingRequiredFile(AbsolutePath)
     case supportedArchitectureReferencesNotFound(AbsolutePath)
@@ -15,7 +15,7 @@ enum XCFrameworkMetadataProviderError: FatalError, Equatable {
 
     // MARK: - FatalError
 
-    var description: String {
+    var errorDescription: String? {
         switch self {
         case let .xcframeworkNotFound(path):
             return "Couldn't find xcframework at \(path.pathString)"
@@ -28,14 +28,6 @@ enum XCFrameworkMetadataProviderError: FatalError, Equatable {
         case let .fileTypeNotRecognised(file, frameworkName):
             return
                 "The extension of the file `\(file)`, which was found while parsing the xcframework `\(frameworkName)`, is not supported."
-        }
-    }
-
-    var type: ErrorType {
-        switch self {
-        case .xcframeworkNotFound, .missingRequiredFile, .supportedArchitectureReferencesNotFound,
-             .fileTypeNotRecognised:
-            return .abort
         }
     }
 }

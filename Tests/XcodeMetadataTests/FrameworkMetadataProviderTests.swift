@@ -1,6 +1,6 @@
  import Path
  import XcodeGraph
- import MetadataProviders
+ import XcodeMetadata
  import Testing
 
  @Suite

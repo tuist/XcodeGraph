@@ -1,6 +1,6 @@
  import Foundation
  import Path
- @testable import MetadataProviders
+ @testable import XcodeMetadata
  import XcodeGraph
  import Testing
 

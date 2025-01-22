@@ -1,5 +1,5 @@
  import XcodeGraph
- @testable import MetadataProviders
+ @testable import XcodeMetadata
  import Testing
 
  @Suite
