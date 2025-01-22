@@ -9,9 +9,11 @@ enum AssertionsTesting {
     /// Resolves a fixture path relative to the project's root.
     static func fixturePath(path: RelativePath) -> AbsolutePath {
         try! AbsolutePath(
-            validating: ProcessInfo.processInfo.environment["TUIST_CONFIG_SRCROOT"]!
+            validating: #filePath
         )
-        .appending(components: "Tests", "Fixtures")
+        .parentDirectory
+        .parentDirectory
+        .appending(components: "Fixtures")
         .appending(path)
     }
 }
