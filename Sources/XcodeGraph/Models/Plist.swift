@@ -4,7 +4,7 @@ import Path
 // MARK: - Plist
 
 public enum Plist: Sendable {
-    case infoPlist(InfoPlist)
+    case infoPlist(infoPlist)
     case entitlements(Entitlements)
 
     public indirect enum Value: Equatable, Codable, Sendable {
@@ -92,26 +92,31 @@ extension Dictionary where Value == Plist.Value {
 
 // MARK: - InfoPlist
 
+public struct infoPlist: Equatable, Codable, Sendable {
+    let infoPlist: InfoPlist
+    let configuration: BuildConfiguration?
+}
+
 public enum InfoPlist: Equatable, Codable, Sendable {
     // Path to a user defined info.plist file (already exists on disk).
-    case file(path: AbsolutePath)
+    case file(path: AbsolutePath, configuration: BuildConfiguration? = nil)
 
     // Path to a generated info.plist file (may not exist on disk at the time of project generation).
     // Data of the generated file
-    case generatedFile(path: AbsolutePath, data: Data)
+    case generatedFile(path: AbsolutePath, data: Data, configuration: BuildConfiguration? = nil)
 
     // User defined dictionary of keys/values for an info.plist file.
-    case dictionary([String: Plist.Value])
+    case dictionary([String: Plist.Value], configuration: BuildConfiguration? = nil)
 
     // User defined dictionary of keys/values for an info.plist file extending the default set of keys/values
     // for the target type.
-    case extendingDefault(with: [String: Plist.Value])
+    case extendingDefault(with: [String: Plist.Value], configuration: BuildConfiguration? = nil)
 
     // MARK: - Public
 
     public var path: AbsolutePath? {
         switch self {
-        case let .file(path), let .generatedFile(path: path, data: _):
+        case let .file(path, _), let .generatedFile(path: path, data: _, configuration: _):
             return path
         default:
             return nil

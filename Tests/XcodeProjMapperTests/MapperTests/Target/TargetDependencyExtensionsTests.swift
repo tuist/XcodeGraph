@@ -8,7 +8,7 @@ import XcodeProj
 struct TargetDependencyExtensionsTests {
     let sourceDirectory = try! AbsolutePath(validating: "/tmp/TestProject")
 
-    // A dummy global target map for .project dependencies
+    // A dummy target map for .project dependencies
     let allTargetsMap: [String: Target] = [
         "MyProjectTarget": Target.test(name: "MyProjectTarget", product: .framework),
         "MyProjectDynamicLibrary": Target.test(name: "MyProjectDynamicLibrary", product: .dynamicLibrary),

@@ -7,8 +7,7 @@ extension XcodeProj {
             buildConfigurations: [.testDebug(), .testRelease()]
         ),
         mainGroup: PBXGroup,
-        targets: [PBXTarget] = [PBXNativeTarget.test()],
-        schemes _: [XCScheme] = []
+        targets: [PBXTarget] = [PBXNativeTarget.test()]
     ) -> XcodeProj {
         let pbxProj = PBXProj()
         let pbxProject = PBXProject.test(

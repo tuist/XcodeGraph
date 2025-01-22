@@ -6,12 +6,10 @@ extension XCConfigurationList {
         defaultConfigurationName: String = "Release",
         defaultConfigurationIsVisible: Bool = false
     ) -> XCConfigurationList {
-        let configList = XCConfigurationList(
+        XCConfigurationList(
             buildConfigurations: buildConfigurations,
             defaultConfigurationName: defaultConfigurationName,
             defaultConfigurationIsVisible: defaultConfigurationIsVisible
         )
-
-        return configList
     }
 }

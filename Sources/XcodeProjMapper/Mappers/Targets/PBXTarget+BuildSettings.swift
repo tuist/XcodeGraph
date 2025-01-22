@@ -18,15 +18,15 @@ extension PBXTarget {
     /// Retrieves the path to the Info.plist file from the target's build settings.
     ///
     /// - Returns: The `INFOPLIST_FILE` value if present, otherwise `nil`.
-    func infoPlistPath() throws -> String? {
-        buildConfigurationList?.stringSetting(for: .infoPlistFile)
+    func infoPlistPath() -> [XCBuildConfiguration: String] {
+        buildConfigurationList?.stringSettings(for: .infoPlistFile) ?? [:]
     }
 
     /// Retrieves the path to the entitlements file from the target's build settings.
     ///
     /// - Returns: The `CODE_SIGN_ENTITLEMENTS` value if present, otherwise `nil`.
-    func entitlementsPath() throws -> String? {
-        buildConfigurationList?.stringSetting(for: .codeSignEntitlements)
+    func entitlementsPath() -> [XCBuildConfiguration: String] {
+        buildConfigurationList?.stringSettings(for: .codeSignEntitlements) ?? [:]
     }
 
     /// Retrieves deployment target versions for various platforms supported by this target.
@@ -39,7 +39,7 @@ extension PBXTarget {
     /// - `VISIONOS_DEPLOYMENT_TARGET`
     ///
     /// - Returns: A `DeploymentTargets` instance containing any discovered versions.
-    func deploymentTargets() throws -> DeploymentTargets {
+    func deploymentTargets() -> DeploymentTargets {
         guard let configList = buildConfigurationList else {
             return DeploymentTargets(iOS: nil, macOS: nil, watchOS: nil, tvOS: nil, visionOS: nil)
         }

@@ -14,8 +14,7 @@ protocol PBXScriptsBuildPhaseMapping {
     /// - Throws: If script file references or paths cannot be resolved.
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
-        buildPhases: [PBXBuildPhase],
-        xcodeProj: XcodeProj
+        buildPhases: [PBXBuildPhase]
     ) throws -> [TargetScript]
 
     /// Maps raw script build phases into `RawScriptBuildPhase` models.
@@ -28,8 +27,7 @@ protocol PBXScriptsBuildPhaseMapping {
 struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
-        buildPhases: [PBXBuildPhase],
-        xcodeProj _: XcodeProj
+        buildPhases: [PBXBuildPhase]
     ) throws -> [TargetScript] {
         try scriptPhases.compactMap {
             try mapScriptPhase($0, buildPhases: buildPhases)

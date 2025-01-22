@@ -103,23 +103,19 @@ struct XCWorkspaceMapper: WorkspaceMapping {
     private func mapSchemes(
         from xcworkspace: XCWorkspace
     ) throws -> [Scheme] {
-        var schemes = [Scheme]()
         let srcPath = xcworkspace.workspacePath.parentDirectory
         let sharedDataPath = Path(srcPath.pathString) + "xcshareddata/xcschemes"
+        guard sharedDataPath.exists else { return [] }
+        let schemePaths = try sharedDataPath.children().filter { $0.extension == "xcscheme" }
 
-        if sharedDataPath.exists {
-            let schemePaths = try sharedDataPath.children().filter { $0.extension == "xcscheme" }
+        let schemeMapper = XCSchemeMapper()
 
-            // Construct graphType for schemes
-            let graphType: XcodeMapperGraphType = .workspace(xcworkspace)
-            let schemeMapper = XCSchemeMapper()
-            for schemePath in schemePaths {
-                let xcscheme = try XCScheme(path: schemePath)
-                let scheme = try schemeMapper.map(xcscheme, shared: true, graphType: graphType)
-                schemes.append(scheme)
-            }
+        return try schemePaths.map { schemePath in
+            try schemeMapper.map(
+                try XCScheme(path: schemePath),
+                shared: true,
+                graphType: .workspace(xcworkspace)
+            )
         }
-
-        return schemes
     }
 }

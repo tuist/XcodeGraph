@@ -27,7 +27,8 @@ extension PBXTarget {
     /// - Returns: A `Destinations` set representing all supported destinations.
     /// - Throws: If retrieving deployment targets fails.
     func platform() throws -> Destinations {
-        if let sdkName = buildConfigurationList?.stringSetting(for: .sdkroot),
+        if let sdkNames = buildConfigurationList?.stringSettings(for: .sdkroot),
+           let sdkName = sdkNames.values.first,
            let root = Platform(sdkroot: sdkName)
         {
             return root.destinations
@@ -48,7 +49,7 @@ extension PBXTarget {
     /// - Returns: A `Destinations` set representing all inferred destinations.
     /// - Throws: If retrieving deployment targets fails.
     private func inferPlatformFromTarget() throws -> Destinations {
-        let deploymentTargets = try deploymentTargets()
+        let deploymentTargets = deploymentTargets()
         var result = Destinations()
 
         if deploymentTargets.iOS != nil {

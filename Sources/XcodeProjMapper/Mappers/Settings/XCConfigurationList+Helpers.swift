@@ -1,18 +1,21 @@
 import XcodeProj
+import XcodeGraph
 
 extension XCConfigurationList {
     /// Retrieves a build setting value from the first configuration in which it is found.
     ///
     /// - Parameter key: The `BuildSettingKey` to look up.
     /// - Returns: The value as a `String` if found, otherwise `nil`.
-    func stringSetting(for key: BuildSettingKey) -> String? {
+    func stringSettings(for key: BuildSettingKey) -> [XCBuildConfiguration: String] {
+        var results = [XCBuildConfiguration: String]()
         for config in buildConfigurations {
             if let value = config.buildSettings.string(for: key) {
-                return value
+                results[config] = value
             }
         }
-        return nil
+        return results
     }
+
 
     /// Retrieves all deployment target values from all configurations and aggregates them.
     ///

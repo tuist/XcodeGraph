@@ -9,9 +9,7 @@ protocol PBXSourcesBuildPhaseMapping {
 
 struct PBXSourcesBuildPhaseMapper: PBXSourcesBuildPhaseMapping {
     func map(_ sourcesBuildPhase: PBXSourcesBuildPhase, xcodeProj: XcodeProj) throws -> [SourceFile] {
-        guard let files = sourcesBuildPhase.files, !files.isEmpty else {
-            return []
-        }
+        let files = sourcesBuildPhase.files ?? []
 
         return try files.compactMap { buildFile in
             try mapSourceFile(buildFile, xcodeProj: xcodeProj)

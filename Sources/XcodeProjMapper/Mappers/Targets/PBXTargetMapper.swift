@@ -89,7 +89,7 @@ struct PBXTargetMapper: TargetMapping {
 
     func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> Target {
         let platform = try pbxTarget.platform()
-        let deploymentTargets = try pbxTarget.deploymentTargets()
+        let deploymentTargets = pbxTarget.deploymentTargets()
         let productType = pbxTarget.productType?.mapProductType()
         let product = try productType.throwing(PlatformInferenceError.noPlatformInferred(pbxTarget.name))
 
@@ -113,8 +113,7 @@ struct PBXTargetMapper: TargetMapping {
         let runScriptPhases = pbxTarget.runScriptBuildPhases()
         let scripts = try scriptsMapper.map(
             runScriptPhases,
-            buildPhases: pbxTarget.buildPhases,
-            xcodeProj: xcodeProj
+            buildPhases: pbxTarget.buildPhases
         )
         let rawScriptBuildPhases = scriptsMapper.mapRawScriptBuildPhases(runScriptPhases)
 
@@ -211,20 +210,22 @@ struct PBXTargetMapper: TargetMapping {
 
     /// Extracts and parses the project's Info.plist as a dictionary, or returns an empty dictionary if none is found.
     func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) throws -> InfoPlist {
-        if let plistPath = try target.infoPlistPath() {
-            let path = xcodeProj.srcPath.appending(try RelativePath(validating: plistPath))
-            let plistDictionary = try readPlistAsDictionary(at: path)
-            return .dictionary(plistDictionary)
-        }
+        // TODO: - WIP
+//        if let plistPath = target.infoPlistPath() {
+//            let path = xcodeProj.srcPath.appending(try RelativePath(validating: plistPath))
+//            let plistDictionary = try readPlistAsDictionary(at: path)
+//            return .dictionary(plistDictionary)
+//        }
         return .dictionary([:])
     }
 
     /// Extracts the target's entitlements file, if present.
     func extractEntitlements(from target: PBXTarget, xcodeProj: XcodeProj) throws -> Entitlements? {
-        if let entitlementsPath = try target.entitlementsPath() {
-            let path = xcodeProj.srcPath.appending(try RelativePath(validating: entitlementsPath))
-            return Entitlements.file(path: path)
-        }
+        // TODO: - WIP
+//        if let entitlementsPath = target.entitlementsPath() {
+//            let path = xcodeProj.srcPath.appending(try RelativePath(validating: entitlementsPath))
+//            return Entitlements.file(path: path)
+//        }
         return nil
     }
 

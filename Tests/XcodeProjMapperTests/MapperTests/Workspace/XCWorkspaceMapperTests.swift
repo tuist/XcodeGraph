@@ -175,7 +175,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Resolves other path in XCWorkspaceDataFileRef")
-    func testMap_OtherPath() async throws {
+    func testMap_otherPath() async throws {
         let workspacePath = try AbsolutePath(validating: "/tmp/OtherWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
             .file(XCWorkspaceDataFileRef(location: .other("customscheme", "Path/ProjectH.xcodeproj"))),

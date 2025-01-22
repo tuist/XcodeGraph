@@ -3,7 +3,8 @@ import ProjectDescription
 
 public enum Module: String, CaseIterable {
     case xcodeGraph = "XcodeGraph"
-    case XcodeProjMapper
+    case xcodeProjMapper = "XcodeProjMapper"
+    case xcodeMetadata = "XcodeMetadata"
 
     public var isRunnable: Bool {
         switch self {
@@ -79,16 +80,14 @@ public enum Module: String, CaseIterable {
 
     public var unitTestsTargetName: String? {
         switch self {
-        case .xcodeGraph, .XcodeProjMapper:
+        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
             return "\(rawValue)Tests"
-        case .testSupport:
-            return nil
         }
     }
 
     public var integrationTestsTargetName: String? {
         switch self {
-        case .xcodeGraph, .XcodeProjMapper, .testSupport:
+        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
             return nil
         }
     }
@@ -126,15 +125,19 @@ public enum Module: String, CaseIterable {
                 .external(name: "AnyCodable"),
                 .external(name: "Path"),
             ]
-        case .XcodeProjMapper:
+        case .xcodeProjMapper:
             [
                 .target(name: Module.xcodeGraph.rawValue),
+                .target(name: Module.xcodeMetadata.rawValue),
+                .external(name: "Command")
                 .external(name: "Path"),
                 .external(name: "XcodeProj"),
             ]
-        case .testSupport:
+        case .xcodeMetadata:
             [
-                .target(name: Module.XcodeProjMapper.rawValue),
+                .external(name: "FileSystem"),
+                .external(name: "Mockable"),
+                .external(name: "ServiceContextModule"),
             ]
         }
         return dependencies
@@ -142,12 +145,8 @@ public enum Module: String, CaseIterable {
 
     public var unitTestDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .testSupport:
+        case .xcodeGraph, .xcodeMetadata, .xcconfig:
             [
-            ]
-        case .XcodeProjMapper:
-            [
-                .target(name: Module.testSupport.rawValue),
             ]
         }
         dependencies = dependencies + [.target(name: targetName)]
@@ -156,7 +155,7 @@ public enum Module: String, CaseIterable {
 
     public var testingDependencies: [TargetDependency] {
         let dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .XcodeProjMapper, .testSupport:
+        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
             [
             ]
         }
@@ -165,7 +164,7 @@ public enum Module: String, CaseIterable {
 
     public var integrationTestsDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .XcodeProjMapper, .testSupport:
+        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
             []
         }
         dependencies.append(.target(name: targetName))
@@ -185,9 +184,7 @@ public enum Module: String, CaseIterable {
             rootFolder = "Sources"
         }
         let resources: ResourceFileElements = switch self {
-        case .xcodeGraph, .XcodeProjMapper:
-            []
-        case .testSupport:
+        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
             []
         }
         var debugSettings: ProjectDescription.SettingsDictionary = ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"]
