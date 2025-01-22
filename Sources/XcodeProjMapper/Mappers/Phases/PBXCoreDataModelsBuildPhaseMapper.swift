@@ -15,7 +15,7 @@ struct PBXCoreDataModelsBuildPhaseMapper: PBXCoreDataModelsBuildPhaseMapping {
     private func mapCoreDataModel(_ buildFile: PBXBuildFile, xcodeProj: XcodeProj) throws -> CoreDataModel? {
         guard let versionGroup = buildFile.file as? XCVersionGroup,
               versionGroup.path?.hasSuffix(FileExtension.coreData.rawValue) == true,
-              let modelPathString = try versionGroup.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
+              let modelPathString = try versionGroup.fullPath(sourceRoot: xcodeProj.srcPathString)
         else {
             return nil
         }

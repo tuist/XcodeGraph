@@ -39,7 +39,7 @@ struct PBXResourcesBuildPhaseMapper: PBXResourcesBuildPhaseMapping {
         xcodeProj: XcodeProj
     ) throws -> [ResourceFileElement] {
         let pathString = try fileElement.fullPath(
-            sourceRoot: xcodeProj.srcPathStringOrThrow
+            sourceRoot: xcodeProj.srcPathString
         ).throwing(PBXResourcesMappingError.missingFullPath(fileElement.name ?? "Unknown"))
 
         return [.file(path: try AbsolutePath(validating: pathString))]

@@ -84,7 +84,7 @@ struct PBXTargetDependencyMapper: DependencyMapping {
             let projectRelativePath = try fileReference.path
                 .throwing(TargetDependencyMappingError.missingFileReference(fileReference.name ?? ""))
 
-            let path = try xcodeProj.srcPathOrThrow.appending(component: projectRelativePath)
+            let path = xcodeProj.srcPath.appending(component: projectRelativePath)
             // Reference to a target in another project.
             return .project(target: remoteInfo, path: path, status: .required, condition: condition)
         case let .unknownObject(object):
@@ -141,7 +141,7 @@ struct PBXTargetDependencyMapper: DependencyMapping {
         let pathString = try pathString.throwing(
             TargetDependencyMappingError.missingFileReference("Path string is nil in file dependency.")
         )
-        let path = try xcodeProj.srcPathOrThrow.appending(try RelativePath(validating: pathString))
+        let path = xcodeProj.srcPath.appending(try RelativePath(validating: pathString))
         return try pathMapper.map(path: path, condition: condition)
     }
 }

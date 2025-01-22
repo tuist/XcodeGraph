@@ -19,7 +19,7 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
     ) throws -> CopyFilesAction? {
         let files = try phase.files?.compactMap { buildFile -> CopyFileElement? in
             guard let fileRef = buildFile.file,
-                  let pathString = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
+                  let pathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
             else { return nil }
 
             let absolutePath = try AbsolutePath(validating: pathString)

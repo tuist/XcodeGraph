@@ -32,7 +32,7 @@ struct PBXHeadersBuildPhaseMapper: PBXHeadersBuildPhaseMapping {
 
     private func mapHeaderFile(_ buildFile: PBXBuildFile, xcodeProj: XcodeProj) throws -> HeaderInfo? {
         guard let pbxElement = buildFile.file,
-              let pathString = try pbxElement.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
+              let pathString = try pbxElement.fullPath(sourceRoot: xcodeProj.srcPathString)
         else { return nil }
 
         let attributes = buildFile.settings?.stringArray(for: .attributes)

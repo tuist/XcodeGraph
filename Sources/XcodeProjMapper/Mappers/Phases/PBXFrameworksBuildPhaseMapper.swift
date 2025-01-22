@@ -27,7 +27,7 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
         xcodeProj: XcodeProj
     ) throws -> TargetDependency {
         let fileRef = try buildFile.file.throwing(PBXFrameworksBuildPhaseMappingError.missingFileReference)
-        let filePath = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
+        let filePath = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
             .throwing(PBXFrameworksBuildPhaseMappingError.missingFilePath(name: fileRef.name))
 
         let path = try AbsolutePath(validating: filePath)

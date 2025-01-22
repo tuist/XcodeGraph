@@ -170,9 +170,9 @@ struct XCSchemeMapper: SchemeMapping {
         case let .workspace(xcworkspace):
             let containerRelativePath = container.replacingOccurrences(of: "container:", with: "")
             let relativePath = try RelativePath(validating: containerRelativePath)
-            projectPath = try xcworkspace.pathOrThrow.parentDirectory.appending(relativePath)
+            projectPath = xcworkspace.workspacePath.parentDirectory.appending(relativePath)
         case let .project(xcodeProj):
-            projectPath = try xcodeProj.pathOrThrow
+            projectPath = xcodeProj.projectPath
         }
 
         return TargetReference(projectPath: projectPath, name: targetName)

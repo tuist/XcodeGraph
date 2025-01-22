@@ -3,6 +3,7 @@ import Path
 import PathKit
 import XcodeGraph
 import XcodeProj
+import FileSystem
 
 // -----------------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ public protocol XcodeGraphMapping {
     /// - Parameter pathString: A file path that might point to a `.xcworkspace`, `.xcodeproj`, or a directory.
     /// - Returns: A `Graph` representing the parsed Xcode workspace or project.
     /// - Throws: If the path is invalid or if no recognizable project/workspace is found.
-    func map(at pathString: String) async throws -> Graph
+    func map(at pathString: AbsolutePath) async throws -> Graph
 }
 
 // -----------------------------------------------------------------------------
@@ -56,7 +57,7 @@ public enum XcodeGraphMapperError: LocalizedError {
 ///
 /// Unlike your old code, we no longer rely on `WorkspaceProvider` or `ProjectProvider`.
 /// Instead, we directly store loaded `XcodeProj` / `XCWorkspace`.
-public enum XcodeMapperGraphType {
+enum XcodeMapperGraphType {
     case workspace(XCWorkspace)
     case project(XcodeProj)
 }
@@ -82,27 +83,26 @@ public enum XcodeMapperGraphType {
 /// let graph = try mapper.map(at: "/path/to/MyApp")
 /// ```
 public struct XcodeGraphMapper: XcodeGraphMapping {
-    private let fileManager: FileManager
+    private let fileSystem: FileSystem
 
     // MARK: - Initialization
 
-    public init(fileManager: FileManager = .default) {
-        self.fileManager = fileManager
+    public init(fileSystem: FileSystem = .init()) {
+        self.fileSystem = fileSystem
     }
 
     // MARK: - Public API
 
     /// Maps the given file system path to a `Graph`, auto-detecting `.xcworkspace` or `.xcodeproj`
     /// and then enumerating all discovered projects & targets to build a final `Graph`.
-    public func map(at pathString: String) async throws -> Graph {
+    public func map(at path: AbsolutePath) async throws -> Graph {
         // 1. Verify path exists
-        guard fileManager.fileExists(atPath: pathString) else {
-            throw XcodeGraphMapperError.pathNotFound(pathString)
+        guard try await fileSystem.exists(path) else {
+            throw XcodeGraphMapperError.pathNotFound(path.pathString)
         }
 
         // 2. Determine the GraphType (workspace or project) from the path
-        let path = try AbsolutePath(validating: pathString)
-        let graphType = try determineGraphType(at: path)
+        let graphType = try await determineGraphType(at: path)
 
         // 3. Build & return the final Graph
         return try await buildGraph(from: graphType)
@@ -114,7 +114,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     /// - A direct `.xcworkspace`,
     /// - A direct `.xcodeproj`,
     /// - Or a directory containing one.
-    private func determineGraphType(at path: AbsolutePath) throws -> XcodeMapperGraphType {
+    private func determineGraphType(at path: AbsolutePath) async throws -> XcodeMapperGraphType {
         // If the path has a file extension
         if let ext = path.extension?.lowercased() {
             switch ext {
@@ -130,18 +130,19 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         }
 
         // Otherwise, see if it's a directory containing .xcworkspace or .xcodeproj
-        let contents = try fileManager.contentsOfDirectory(atPath: path.pathString)
-
+        let contents = try fileSystem.glob(directory: path, include: ["**/*.xcworkspace", "**/*.xcodeproj"])
         // 1) Look for .xcworkspace
-        if let workspaceName = contents.first(where: { $0.lowercased().hasSuffix(".xcworkspace") }) {
-            let workspacePath = path.appending(component: workspaceName)
+        if let workspacePath = try await contents.first(where: {
+            $0.extension?.lowercased() == ".xcworkspace"
+        }) {
             let xcworkspace = try XCWorkspace(path: Path(workspacePath.pathString))
             return .workspace(xcworkspace)
         }
 
         // 2) Look for .xcodeproj
-        if let projectName = contents.first(where: { $0.lowercased().hasSuffix(".xcodeproj") }) {
-            let projectPath = path.appending(component: projectName)
+        if let projectPath = try await contents.first(where: {
+            $0.extension?.lowercased() == ".xcodeproj"
+        }) {
             let xcodeProj = try XcodeProj(pathString: projectPath.pathString)
             return .project(xcodeProj)
         }
@@ -168,7 +169,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
 
         switch graphType {
         case let .workspace(xcworkspace):
-            workspacePath = try xcworkspace.pathOrThrow
+            workspacePath = xcworkspace.workspacePath
             graphName = workspacePath.basenameWithoutExt
 
             // Gather all .xcodeproj references in the workspace
@@ -179,7 +180,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
             projectPaths = projectRefs.isEmpty ? [] : projectRefs
 
         case let .project(xcodeProj):
-            let projPath = try xcodeProj.pathOrThrow
+            let projPath = xcodeProj.projectPath
             workspacePath = projPath.parentDirectory
             graphName = "Workspace"
             // For a single .xcodeproj, treat it like a workspace with a single project

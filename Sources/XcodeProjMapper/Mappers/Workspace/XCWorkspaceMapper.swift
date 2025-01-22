@@ -28,8 +28,8 @@ protocol WorkspaceMapping {
 /// - Produces a `Workspace` model suitable for analysis or code generation.
 struct XCWorkspaceMapper: WorkspaceMapping {
     func map(xcworkspace: XCWorkspace) async throws -> Workspace {
-        let xcWorkspacePath = try xcworkspace.pathOrThrow
-        let srcPath = try xcworkspace.pathOrThrow.parentDirectory
+        let xcWorkspacePath = xcworkspace.workspacePath
+        let srcPath = xcWorkspacePath.parentDirectory
         let projectPaths = try await extractProjectPaths(
             from: xcworkspace.data.children,
             srcPath: srcPath,
@@ -104,7 +104,7 @@ struct XCWorkspaceMapper: WorkspaceMapping {
         from xcworkspace: XCWorkspace
     ) throws -> [Scheme] {
         var schemes = [Scheme]()
-        let srcPath = try xcworkspace.pathOrThrow.parentDirectory
+        let srcPath = xcworkspace.workspacePath.parentDirectory
         let sharedDataPath = Path(srcPath.pathString) + "xcshareddata/xcschemes"
 
         if sharedDataPath.exists {

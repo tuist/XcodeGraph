@@ -21,7 +21,7 @@ struct PBXProjectMapper {
     func map(xcodeProj: XcodeProj) throws -> Project {
         let settingsMapper = XCConfigurationMapper()
         let pbxProject = try xcodeProj.mainPBXProject()
-        let xcodeProjPath = try xcodeProj.pathOrThrow
+        let xcodeProjPath = xcodeProj.projectPath
         let sourceDirectory = xcodeProjPath.parentDirectory
 
         let settings = try settingsMapper.map(

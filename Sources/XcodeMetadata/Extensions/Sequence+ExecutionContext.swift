@@ -16,7 +16,7 @@ extension Sequence where Element: Sendable {
     ///   the transformed values will match the original sequence,
     ///   except for the values that were transformed into `nil`.
     /// - throws: Rethrows any error thrown by the passed closure.
-    public func serialCompactMap<T: Sendable>(
+    func serialCompactMap<T: Sendable>(
         _ transform: (Element) async throws -> T?
     ) async rethrows -> [T] {
         var values = [T]()
@@ -37,7 +37,7 @@ extension Sequence where Element: Sendable {
     /// - Parameters:
     ///   - context: The execution context to perform the `perform` operation with
     ///   - perform: The perform closure to call on each element in the array
-    public func concurrentFilter(_ filter: @Sendable @escaping (Element) async throws -> Bool) async rethrows -> [Element] {
+    func concurrentFilter(_ filter: @Sendable @escaping (Element) async throws -> Bool) async rethrows -> [Element] {
         return try await concurrentCompactMap {
             try await filter($0) ? $0 : nil
         }
@@ -47,7 +47,7 @@ extension Sequence where Element: Sendable {
     ///
     /// - Parameters:
     ///   - transform: The transformation closure to apply to the array
-    public func concurrentCompactMap<B: Sendable>(_ transform: @Sendable @escaping (Element) async throws -> B?) async rethrows
+    func concurrentCompactMap<B: Sendable>(_ transform: @Sendable @escaping (Element) async throws -> B?) async rethrows
         -> [B]
     {
         let tasks = map { element in

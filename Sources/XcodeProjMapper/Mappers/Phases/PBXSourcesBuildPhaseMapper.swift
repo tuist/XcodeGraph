@@ -20,7 +20,7 @@ struct PBXSourcesBuildPhaseMapper: PBXSourcesBuildPhaseMapping {
 
     private func mapSourceFile(_ buildFile: PBXBuildFile, xcodeProj: XcodeProj) throws -> SourceFile? {
         guard let fileRef = buildFile.file,
-              let pathString = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
+              let pathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
         else { return nil }
 
         let path = try AbsolutePath(validating: pathString)

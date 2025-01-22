@@ -190,7 +190,7 @@ struct PBXTargetMapper: TargetMapping {
         guard let pbxProject = xcodeProj.pbxproj.projects.first,
               let mainGroup = pbxProject.mainGroup
         else {
-            throw TargetMappingError.noProjectsFound(path: try xcodeProj.pathOrThrow.pathString)
+            throw TargetMappingError.noProjectsFound(path: xcodeProj.projectPath.pathString)
         }
 
         let allFiles = try collectAllFiles(from: mainGroup, xcodeProj: xcodeProj)
@@ -212,7 +212,7 @@ struct PBXTargetMapper: TargetMapping {
     /// Extracts and parses the project's Info.plist as a dictionary, or returns an empty dictionary if none is found.
     func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) throws -> InfoPlist {
         if let plistPath = try target.infoPlistPath() {
-            let path = try xcodeProj.srcPathOrThrow.appending(try RelativePath(validating: plistPath))
+            let path = xcodeProj.srcPath.appending(try RelativePath(validating: plistPath))
             let plistDictionary = try readPlistAsDictionary(at: path)
             return .dictionary(plistDictionary)
         }
@@ -222,7 +222,7 @@ struct PBXTargetMapper: TargetMapping {
     /// Extracts the target's entitlements file, if present.
     func extractEntitlements(from target: PBXTarget, xcodeProj: XcodeProj) throws -> Entitlements? {
         if let entitlementsPath = try target.entitlementsPath() {
-            let path = try xcodeProj.srcPathOrThrow.appending(try RelativePath(validating: entitlementsPath))
+            let path = xcodeProj.srcPath.appending(try RelativePath(validating: entitlementsPath))
             return Entitlements.file(path: path)
         }
         return nil
@@ -233,7 +233,7 @@ struct PBXTargetMapper: TargetMapping {
         var files = Set<AbsolutePath>()
         for child in group.children {
             if let file = child as? PBXFileReference,
-               let pathString = try file.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
+               let pathString = try file.fullPath(sourceRoot: xcodeProj.srcPathString)
             {
                 let path = try AbsolutePath(validating: pathString)
                 files.insert(path)
@@ -253,7 +253,7 @@ struct PBXTargetMapper: TargetMapping {
             .flatMap { $0 }
             .compactMap { buildFile -> AbsolutePath? in
                 guard let fileRef = buildFile.file,
-                      let filePath = try fileRef.fullPath(sourceRoot: try xcodeProj.srcPathStringOrThrow)
+                      let filePath = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
                 else { return nil }
                 return try AbsolutePath(validating: filePath)
             }

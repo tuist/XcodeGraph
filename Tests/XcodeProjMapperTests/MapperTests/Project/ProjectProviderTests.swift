@@ -63,7 +63,7 @@ struct ProjectProviderTests {
             pbxproj: proj
         )
 
-        let sourceDirectory = try xcodeProj.srcPathStringOrThrow
+        let sourceDirectory = xcodeProj.srcPathString
         #expect(sourceDirectory == "/tmp/Projects")
     }
 }

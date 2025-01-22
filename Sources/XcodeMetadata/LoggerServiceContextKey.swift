@@ -6,7 +6,7 @@ private enum LoggerServiceContextKey: ServiceContextKey {
 }
 
 extension ServiceContext {
-    public var logger: Logger? {
+    var logger: Logger? {
         get {
             self[LoggerServiceContextKey.self]
         } set {
