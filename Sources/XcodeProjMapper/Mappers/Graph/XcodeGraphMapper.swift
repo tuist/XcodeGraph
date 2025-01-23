@@ -35,9 +35,12 @@ enum XcodeMapperGraphType {
     case project(XcodeProj)
 }
 
-/// A unified mapper that:
-/// 1. Detects `.xcworkspace` vs. `.xcodeproj` vs. a directory.
-/// 2. Builds a `Graph` by enumerating projects, targets, and dependencies.
+/// A unified entry point that locates `.xcworkspace` or `.xcodeproj` files—even within directories—and
+/// constructs a comprehensive `Graph` of projects, targets, and dependencies.
+///
+/// Specifically, this mapper:
+/// 1. Detects whether the input path is a single project, a workspace, or a directory.
+/// 2. Enumerates all discovered targets and dependencies to assemble the final `Graph`.
 ///
 /// This replaces old parsers/providers with a single approach. For example:
 /// ```swift
