@@ -1,23 +1,24 @@
 import Path
 import XcodeGraph
 import XcodeProj
+import Foundation
+import FileSystem
 
 extension XcodeProj {
     static func test(
-        sourceDirectory: String = "/tmp",
         projectName: String = "TestProject",
         configurationList: XCConfigurationList = XCConfigurationList.test(
             buildConfigurations: [.testDebug(), .testRelease()]
         ),
         targets: [PBXTarget] = [],
         pbxProj: PBXProj = PBXProj()
-    ) -> XcodeProj {
+    ) async throws -> XcodeProj {
         pbxProj.add(object: configurationList)
         for config in configurationList.buildConfigurations {
             pbxProj.add(object: config)
         }
 
-        let sourceDirectory = try! AbsolutePath(validating: sourceDirectory)
+        let sourceDirectory = try await FileSystem().makeTemporaryDirectory(prefix: "test")
 
         // Minimal project setup:
         let mainGroup = PBXGroup.test(

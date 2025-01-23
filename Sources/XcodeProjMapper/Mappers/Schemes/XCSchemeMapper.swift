@@ -13,6 +13,7 @@ protocol SchemeMapping {
     /// - Parameters:
     ///   - xcscheme: The `XCScheme` to map.
     ///   - shared: Indicates whether the scheme is shared.
+    ///   - graphType: Specifies if we’re dealing with a workspace or project for path resolution.
     /// - Returns: A `Scheme` model corresponding to the given `XCScheme`.
     /// - Throws: If any of the scheme's actions (build, test, run, etc.) cannot be resolved.
     func map(
@@ -24,9 +25,12 @@ protocol SchemeMapping {
 
 /// A mapper responsible for converting an `XCScheme` object into a `Scheme` model.
 ///
-/// `SchemeMapper` resolves references to targets, variables, and all scheme actions.
-/// The resulting `Scheme` models enable analysis, code generation, or integration with tooling.
+/// `XCSchemeMapper` resolves references to targets, environment variables, and all scheme actions.
+/// The resulting `Scheme` models enable analysis, code generation, or integration with custom tooling.
 struct XCSchemeMapper: SchemeMapping {
+
+    // MARK: - Public API
+
     func map(
         _ xcscheme: XCScheme,
         shared: Bool,
@@ -45,13 +49,17 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    // MARK: - Internal/Private Mappings
+    // MARK: - Action Mappings
 
-    func mapBuildAction(action: XCScheme.BuildAction?, graphType: XcodeMapperGraphType) throws -> BuildAction? {
+    /// Maps the optional build action into a domain `BuildAction`, or returns `nil` if not present.
+    private func mapBuildAction(
+        action: XCScheme.BuildAction?,
+        graphType: XcodeMapperGraphType
+    ) throws -> BuildAction? {
         guard let action else { return nil }
 
-        let targets = try action.buildActionEntries.compactMap { entry in
-            try mapTargetReference(buildableReference: entry.buildableReference, graphType: graphType)
+        let targets = try action.buildActionEntries.compactMap {
+            try mapTargetReference(buildableReference: $0.buildableReference, graphType: graphType)
         }
 
         return BuildAction(
@@ -63,15 +71,19 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapTestAction(action: XCScheme.TestAction?, graphType: XcodeMapperGraphType) throws -> TestAction? {
+    /// Maps the optional test action into a domain `TestAction`, or returns `nil` if not present.
+    private func mapTestAction(
+        action: XCScheme.TestAction?,
+        graphType: XcodeMapperGraphType
+    ) throws -> TestAction? {
         guard let action else { return nil }
 
         let testTargets = try action.testables.compactMap { testable in
-            let targetReference = try mapTargetReference(
+            let targetRef = try mapTargetReference(
                 buildableReference: testable.buildableReference,
                 graphType: graphType
             )
-            return TestableTarget(target: targetReference, skipped: testable.skipped)
+            return TestableTarget(target: targetRef, skipped: testable.skipped)
         }
 
         let arguments = mapArguments(
@@ -96,7 +108,11 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapRunAction(action: XCScheme.LaunchAction?, graphType: XcodeMapperGraphType) throws -> RunAction? {
+    /// Maps the optional run (launch) action into a domain `RunAction`, or returns `nil` if not present.
+    private func mapRunAction(
+        action: XCScheme.LaunchAction?,
+        graphType: XcodeMapperGraphType
+    ) throws -> RunAction? {
         guard let action else { return nil }
 
         let executable: TargetReference? = try {
@@ -111,6 +127,7 @@ struct XCSchemeMapper: SchemeMapping {
             commandlineArguments: action.commandlineArguments
         )
         let diagnosticsOptions = SchemeDiagnosticsOptions(action: action)
+        // If no debugger is explicitly chosen, Xcode uses the default lldb (true).
         let attachDebugger = action.selectedDebuggerIdentifier.isEmpty
 
         return RunAction(
@@ -127,7 +144,10 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapArchiveAction(action: XCScheme.ArchiveAction?) throws -> ArchiveAction? {
+    /// Maps the optional archive action into a domain `ArchiveAction`, or returns `nil` if not present.
+    private func mapArchiveAction(
+        action: XCScheme.ArchiveAction?
+    ) throws -> ArchiveAction? {
         guard let action else { return nil }
         return ArchiveAction(
             configurationName: action.buildConfiguration,
@@ -135,7 +155,11 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapProfileAction(action: XCScheme.ProfileAction?, graphType: XcodeMapperGraphType) throws -> ProfileAction? {
+    /// Maps the optional profile action into a domain `ProfileAction`, or returns `nil` if not present.
+    func mapProfileAction(
+        action: XCScheme.ProfileAction?,
+        graphType: XcodeMapperGraphType
+    ) throws -> ProfileAction? {
         guard let action else { return nil }
 
         let executable: TargetReference? = try {
@@ -151,13 +175,17 @@ struct XCSchemeMapper: SchemeMapping {
         )
     }
 
-    func mapAnalyzeAction(action: XCScheme.AnalyzeAction?) throws -> AnalyzeAction? {
+    /// Maps the optional analyze action into a domain `AnalyzeAction`, or returns `nil` if not present.
+    private func mapAnalyzeAction(
+        action: XCScheme.AnalyzeAction?
+    ) throws -> AnalyzeAction? {
         guard let action else { return nil }
         return AnalyzeAction(configurationName: action.buildConfiguration)
     }
 
-    // MARK: - Private Helpers
+    // MARK: - Helper Methods
 
+    /// Converts a buildable reference within a scheme to a `TargetReference`.
     private func mapTargetReference(
         buildableReference: XCScheme.BuildableReference,
         graphType: XcodeMapperGraphType
@@ -168,9 +196,10 @@ struct XCSchemeMapper: SchemeMapping {
         let projectPath: AbsolutePath
         switch graphType {
         case let .workspace(xcworkspace):
-            let containerRelativePath = container.replacingOccurrences(of: "container:", with: "")
-            let relativePath = try RelativePath(validating: containerRelativePath)
-            projectPath = xcworkspace.workspacePath.parentDirectory.appending(relativePath)
+            // Container is relative to the workspace’s parent directory
+            let relativeContainerPath = container.replacingOccurrences(of: "container:", with: "")
+            let relPath = try RelativePath(validating: relativeContainerPath)
+            projectPath = xcworkspace.workspacePath.parentDirectory.appending(relPath)
         case let .project(xcodeProj):
             projectPath = xcodeProj.projectPath
         }
@@ -178,18 +207,19 @@ struct XCSchemeMapper: SchemeMapping {
         return TargetReference(projectPath: projectPath, name: targetName)
     }
 
+    /// Converts environment variables and command-line arguments into a unified `Arguments` model.
     private func mapArguments(
         environmentVariables: [XCScheme.EnvironmentVariable]?,
         commandlineArguments: XCScheme.CommandLineArguments?
     ) -> Arguments {
-        let envVariables = environmentVariables?.reduce(into: [String: EnvironmentVariable]()) { dict, variable in
+        let envVars = environmentVariables?.reduce(into: [String: EnvironmentVariable]()) { dict, variable in
             dict[variable.variable] = EnvironmentVariable(value: variable.value, isEnabled: variable.enabled)
         } ?? [:]
 
-        let launchArguments = commandlineArguments?.arguments.map {
+        let launchArgs = commandlineArguments?.arguments.map {
             LaunchArgument(name: $0.name, isEnabled: $0.enabled)
         } ?? []
 
-        return Arguments(environmentVariables: envVariables, launchArguments: launchArguments)
+        return Arguments(environmentVariables: envVars, launchArguments: launchArgs)
     }
 }

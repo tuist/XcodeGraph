@@ -7,7 +7,7 @@ import XcodeProj
 @Suite
 struct BuildSettingsTests {
     @Test("Extracts a string value from build settings")
-    func testStringExtraction() throws {
+    func testStringExtraction() async throws {
         // Given
         let settings: [String: Any] = ["COMPILER_FLAGS": "-ObjC"]
 
@@ -35,7 +35,7 @@ struct BuildSettingsTests {
     }
 
     @Test("Extracts a string array from build settings")
-    func testStringArrayExtraction() throws {
+    func testStringArrayExtraction() async throws {
         // Given
         let settings: [String: Any] = ["LAUNCH_ARGUMENTS": ["-enableFeature", "-verbose"]]
 
@@ -49,7 +49,7 @@ struct BuildSettingsTests {
     }
 
     @Test("Extracts a dictionary of strings (e.g., environment variables) from build settings")
-    func testStringDictExtraction() throws {
+    func testStringDictExtraction() async throws {
         // Given
         let settings: [String: Any] = ["ENVIRONMENT_VARIABLES": ["KEY": "VALUE"]]
 
@@ -73,7 +73,7 @@ struct BuildSettingsTests {
     }
 
     @Test("Coerces any array elements to strings, discarding non-string values")
-    func testCoerceAnyArrayToStringArray() throws {
+    func testCoerceAnyArrayToStringArray() async throws {
         // Given
         let settings: [String: Any] = ["LAUNCH_ARGUMENTS": ["-flag", 42, true]]
 

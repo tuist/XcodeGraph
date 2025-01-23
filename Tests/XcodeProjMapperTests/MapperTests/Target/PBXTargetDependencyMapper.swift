@@ -6,16 +6,16 @@ import XcodeProj
 
 @Suite
 struct DependencyMapperTests {
-    let xcodeProj = XcodeProj.test()
-    let mapper: DependencyMapping
+    let mapper: PBXTargetDependencyMapping
 
     init() {
         mapper = PBXTargetDependencyMapper()
     }
 
     @Test("Maps direct target dependencies correctly")
-    func testDirectTargetMapping() throws {
+    func testDirectTargetMapping() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "DirectTarget",
@@ -45,8 +45,9 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps package product dependencies to runtime package targets")
-    func testPackageProductMapping() throws {
+    func testPackageProductMapping() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
         let productRef = XCSwiftPackageProductDependency(productName: "MyPackageProduct")
         let dep = PBXTargetDependency(name: nil, product: productRef).add(to: pbxProj)
@@ -67,8 +68,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps native target proxies referencing targets in the same project")
-    func testProxyNativeTarget() throws {
+    func testProxyNativeTarget() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         let project = try #require(pbxProj.rootObject)
         let proxy = PBXContainerItemProxy(
@@ -97,8 +100,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps proxy dependencies referencing other projects via file references")
-    func testProxyProjectReference() throws {
+    func testProxyProjectReference() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         let fileRef = try PBXFileReference.test(path: "TestProject.xcodeproj")
             .add(to: pbxProj)
@@ -131,8 +136,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps reference proxies to libraries when file type is a dylib")
-    func testProxyReferenceProxyLibrary() throws {
+    func testProxyReferenceProxyLibrary() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         let referenceProxy = try PBXReferenceProxy(
             fileType: "compiled.mach-o.dylib",
@@ -173,7 +180,7 @@ struct DependencyMapperTests {
         // Then
         let result = try #require(mapped)
         let expectedPath = xcodeProj.srcPath.appending(component: "libTest.dylib")
-        let publicHeaders = try AbsolutePath(validating: "/tmp")
+        let publicHeaders = xcodeProj.srcPath
         #expect(
             result == .library(
                 path: expectedPath,
@@ -185,8 +192,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps frameworks when encountered as proxy references")
-    func testProxyReferenceFileFramework() throws {
+    func testProxyReferenceFileFramework() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         let fileRef = try PBXFileReference.test(path: "MyLib.framework")
             .add(to: pbxProj)
@@ -227,8 +236,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps dependencies with platform filters to conditions")
-    func testPlatformConditions() throws {
+    func testPlatformConditions() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "ConditionalTarget",
@@ -257,8 +268,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Ignores dependencies that cannot be matched to targets, products, or proxies")
-    func testNoMatches() throws {
+    func testNoMatches() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         // A dependency with no target, no product, no proxy.
         let dep = PBXTargetDependency.test(name: nil).add(to: pbxProj)
@@ -278,8 +291,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps single-platform filter dependencies correctly")
-    func testSinglePlatformFilter() throws {
+    func testSinglePlatformFilter() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "SinglePlatform",
@@ -307,8 +322,10 @@ struct DependencyMapperTests {
     }
 
     @Test("Ignores invalid platform filters, mapping dependency without conditions")
-    func testInvalidPlatformFilter() throws {
+    func testInvalidPlatformFilter() async throws {
         // Given
+        let xcodeProj = try await XcodeProj.test()
+
         let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "UnknownPlatform",

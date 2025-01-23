@@ -7,7 +7,7 @@ import XCTest
 final class TestableTargetTests: XCTestCase {
     func test_codable_with_deprecated_parallelizable() {
         // Given
-        let subject = TestableTarget(
+        let subject = TestableTarget.test(
             target: .init(
                 projectPath: try! AbsolutePath(validating: "/path/to/project"),
                 name: "name"

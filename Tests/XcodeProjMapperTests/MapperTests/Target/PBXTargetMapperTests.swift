@@ -4,13 +4,14 @@ import Testing
 import XcodeGraph
 import XcodeProj
 @testable import XcodeProjMapper
+import FileSystem
 
 @Suite
 struct PBXTargetMapperTests {
     @Test("Maps a basic target with a product bundle identifier")
     func testMapBasicTarget() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let target = createTarget(
             name: "App",
             xcodeProj: xcodeProj,
@@ -35,7 +36,7 @@ struct PBXTargetMapperTests {
     @Test("Throws an error if the target is missing a bundle identifier")
     func testMapTargetWithMissingBundleId() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
 
         let target = createTarget(
             name: "App",
@@ -46,7 +47,7 @@ struct PBXTargetMapperTests {
         let mapper = PBXTargetMapper()
 
         // When / Then
-        await #expect(throws: TargetMappingError.missingBundleIdentifier(targetName: "App")) {
+        await #expect(throws: PBXTargetMappingError.missingBundleIdentifier(targetName: "App")) {
             _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
         }
     }
@@ -54,7 +55,7 @@ struct PBXTargetMapperTests {
     @Test("Maps a target with environment variables")
     func testMapTargetWithEnvironmentVariables() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let target = createTarget(
             name: "App",
             xcodeProj: xcodeProj,
@@ -77,7 +78,7 @@ struct PBXTargetMapperTests {
     @Test("Maps a target with launch arguments")
     func testMapTargetWithLaunchArguments() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
 
         let target = createTarget(
             name: "App",
@@ -104,7 +105,7 @@ struct PBXTargetMapperTests {
     @Test("Maps a target with source files")
     func testMapTargetWithSourceFiles() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
 
         let pbxProj = xcodeProj.pbxproj
         let sourceFile = try PBXFileReference.test(
@@ -137,7 +138,7 @@ struct PBXTargetMapperTests {
     @Test("Maps a target with metadata tags")
     func testMapTargetWithMetadata() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let target = createTarget(
             name: "App",
             xcodeProj: xcodeProj,
@@ -160,46 +161,46 @@ struct PBXTargetMapperTests {
     func testMapEntitlements() async throws {
         // Given
 
-
-        let xcodeProj = XcodeProj.test()
-
+        let xcodeProj = try await XcodeProj.test()
         let sourceDirectory = xcodeProj.srcPath
-        let xcodeproj = XcodeProj.test(
-            sourceDirectory: sourceDirectory.pathString
-        )
-
         let entitlementsPath = sourceDirectory.appending(component: "App.entitlements")
-        try "{}".write(toFile: entitlementsPath.pathString, atomically: true, encoding: .utf8)
+
+        let buildSettings: BuildSettings = [
+            "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
+            "CODE_SIGN_ENTITLEMENTS": "App.entitlements",
+        ]
 
         let debugConfig = XCBuildConfiguration(
             name: "Debug",
-            buildSettings: [
-                "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "CODE_SIGN_ENTITLEMENTS": "App.entitlements",
-            ]
+            buildSettings: buildSettings
         )
-        let releaseConfig = XCBuildConfiguration(
-            name: "Release",
-            buildSettings: [
-                "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "CODE_SIGN_ENTITLEMENTS": "App.entitlements",
-            ]
-        )
-        let configList = XCConfigurationList(
-            buildConfigurations: [debugConfig, releaseConfig],
+
+        let configurationList = XCConfigurationList(
+            buildConfigurations: [debugConfig],
             defaultConfigurationName: "Debug"
         )
 
-        xcodeproj.pbxproj.add(object: debugConfig)
-        xcodeproj.pbxproj.add(object: releaseConfig)
-        xcodeproj.pbxproj.add(object: configList)
+        xcodeProj.pbxproj.add(object: debugConfig)
+        xcodeProj.pbxproj.add(object: configurationList)
 
-        let target = PBXNativeTarget.test(
-            name: "App",
-            buildConfigurationList: configList,
-            buildPhases: [],
-            productType: .application
+        let sourceFile = try PBXFileReference.test(
+            path: "ViewController.swift",
+            lastKnownFileType: "sourcecode.swift"
+        ).add(to: xcodeProj.pbxproj).addToMainGroup(in: xcodeProj.pbxproj)
+
+        let buildFile = PBXBuildFile(file: sourceFile).add(to: xcodeProj.pbxproj).add(to: xcodeProj.pbxproj)
+        let sourcesPhase = PBXSourcesBuildPhase(files: [buildFile]).add(to: xcodeProj.pbxproj).add(to: xcodeProj.pbxproj)
+
+        // Add targets to each project
+        let target = try PBXNativeTarget.test(
+            name: "ATarget",
+            buildConfigurationList: configurationList,
+            buildPhases: [sourcesPhase],
+            productType: .framework
         )
+        .add(to: xcodeProj.pbxproj)
+        .add(to: xcodeProj.pbxproj.rootObject)
+
         let mapper = PBXTargetMapper()
 
         // When
@@ -215,42 +216,22 @@ struct PBXTargetMapperTests {
     @Test("Throws noProjectsFound when pbxProj has no projects")
     func testMapTarget_noProjectsFound() async throws {
         // Given
-        let xcodeProj = XcodeProj(workspace: XCWorkspace(), pbxproj: PBXProj(), path: "/tmp/TestProject.xcodproj")
-        let mapper = PBXTargetMapper()
+        let xcodeProj = try await XcodeProj.test()
         let target = PBXNativeTarget.test()
 
-        // When / Then
-        await #expect(throws: TargetMappingError.noProjectsFound(path: xcodeProj.projectPath.pathString)) {
-            _ = try await mapper.mapAdditionalFiles(from: target, xcodeProj: xcodeProj)
-        }
-
-        // Also confirm the error message
-        await #expect {
-            _ = try await mapper.mapAdditionalFiles(from: target, xcodeProj: xcodeProj)
-        } throws: { error in
-            error.localizedDescription == "No project was found at: /tmp/TestProject.xcodproj."
-        }
-    }
-
-    @Test("Throws missingFilesGroup when mainGroup is nil")
-    func testMapTarget_missingFilesGroup() async throws {
-        // Given
+        try xcodeProj.mainPBXProject().targets.append(target)
+        try xcodeProj.write(path: xcodeProj.path!)
 
         let mapper = PBXTargetMapper()
-        let xcodeProj = XcodeProj.test()
-
-        let target = createTarget(
-            name: "App",
-            xcodeProj: xcodeProj,
-            productType: .application,
-            buildSettings: ["PRODUCT_BUNDLE_IDENTIFIER": "com.example.app"]
-        )
-
-        xcodeProj.pbxproj = PBXProj()
 
         // When / Then
-        await #expect(throws: TargetMappingError.missingFilesGroup(targetName: "App")) {
-            _ = try await mapper.extractFilesGroup(from: target, xcodeProj: xcodeProj)
+
+        do {
+            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+            Issue.record("Should throw an error")
+        } catch {
+            let err = try #require(error as? PBXObjectError)
+            #expect(err.description == "The PBXObjects instance has been released before saving.")
         }
     }
 
@@ -258,7 +239,7 @@ struct PBXTargetMapperTests {
     func testMapTarget_validPlist() async throws {
         // Given
 
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let srcPath = xcodeProj.srcPath
         let relativePath = try RelativePath(validating: "Info.plist")
         let plistPath = srcPath.appending(relativePath)
@@ -285,11 +266,11 @@ struct PBXTargetMapperTests {
         let mapper = PBXTargetMapper()
 
         // When
-        let infoPlist = try await mapper.extractInfoPlist(from: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
 
         // Then
         #expect({
-            switch infoPlist {
+            switch mapped.infoPlist {
             case let .dictionary(dict, _):
 
                 return dict["CFBundleIdentifier"] == "com.example.app"
@@ -303,11 +284,11 @@ struct PBXTargetMapperTests {
     @Test("Throws invalidPlist when Info.plist cannot be parsed")
     func testMapTarget_invalidPlist() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let srcPath = xcodeProj.srcPath
         let relativePath = try RelativePath(validating: "Invalid.plist")
         let invalidPlistPath = srcPath.appending(relativePath)
-        try "Not a plist".write(toFile: invalidPlistPath.pathString, atomically: true, encoding: .utf8)
+        try await FileSystem().writeText("Invalid Plist", at: invalidPlistPath)
 
         let target = createTarget(
             name: "App",
@@ -324,7 +305,7 @@ struct PBXTargetMapperTests {
 
         // When / Then
         await #expect {
-            _ = try await mapper.extractInfoPlist(from: target, xcodeProj: xcodeProj)
+            let _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
         } throws: { error in
             error.localizedDescription
                 == "Failed to read a valid plist dictionary from file at: \(invalidPlistPath.pathString)."

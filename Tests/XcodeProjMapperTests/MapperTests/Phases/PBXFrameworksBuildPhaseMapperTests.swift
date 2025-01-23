@@ -6,9 +6,9 @@ import XcodeProj
 @Suite
 struct PBXFrameworksBuildPhaseMapperTests {
     @Test("Maps frameworks from frameworks phase")
-    func testMapFrameworks() throws {
+    func testMapFrameworks() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
 
         let frameworkRef = try PBXFileReference(

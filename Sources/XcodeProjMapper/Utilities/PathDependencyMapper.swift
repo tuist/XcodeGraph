@@ -2,17 +2,23 @@ import Foundation
 import Path
 import XcodeGraph
 
+/// A protocol defining how to map a file path into a `TargetDependency` based on its extension.
 protocol PathDependencyMapping {
+    /// Maps the given path to a `TargetDependency`.
+    ///
+    /// - Parameters:
+    ///   - path: The file path to map.
+    ///   - condition: An optional platform condition (e.g., iOS only).
+    /// - Returns: The corresponding `TargetDependency`, if the path extension is recognized.
+    /// - Throws: `PathDependencyError.invalidExtension` if the file extension is not supported.
     func map(path: AbsolutePath, condition: PlatformCondition?) throws -> TargetDependency
 }
 
+/// A mapper that converts file paths (like `.framework`, `.xcframework`, or libraries) to `TargetDependency` models.
 struct PathDependencyMapper: PathDependencyMapping {
-    /// Maps a path by its extension to a `TargetDependency` if applicable.
-    ///
-    /// - Parameter condition: Optional platform condition.
-    /// - Returns: A `TargetDependency` if the extension matches known dependency types.
     func map(path: AbsolutePath, condition: PlatformCondition?) throws -> TargetDependency {
         let status: LinkingStatus = .required
+
         switch path.fileExtension {
         case .framework:
             return .framework(path: path, status: status, condition: condition)
@@ -21,7 +27,7 @@ struct PathDependencyMapper: PathDependencyMapping {
         case .dynamicLibrary, .textBasedDynamicLibrary, .staticLibrary:
             return .library(
                 path: path,
-                publicHeaders: path.parentDirectory,
+                publicHeaders: path.parentDirectory, // heuristics; can be overridden if needed
                 swiftModuleMap: nil,
                 condition: condition
             )
@@ -31,13 +37,14 @@ struct PathDependencyMapper: PathDependencyMapping {
     }
 }
 
+/// Errors that may occur when mapping paths to `TargetDependency`.
 enum PathDependencyError: Error, LocalizedError {
     case invalidExtension(path: String)
 
     var errorDescription: String? {
         switch self {
         case let .invalidExtension(path):
-            return "Encountered an invalid file extension for path. \(path)"
+            return "Encountered an invalid or unsupported file extension: \(path)"
         }
     }
 }
@@ -55,9 +62,10 @@ enum FileExtension: String {
     case playground
 }
 
+/// A convenience extension to retrieve a file's `FileExtension` from `AbsolutePath`.
 extension AbsolutePath {
     var fileExtension: FileExtension? {
-        guard let ext = self.extension?.lowercased() else { return nil }
+        guard let ext = `extension`?.lowercased() else { return nil }
         return FileExtension(rawValue: ext)
     }
 }

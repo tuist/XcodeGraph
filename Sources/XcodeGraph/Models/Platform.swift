@@ -7,7 +7,7 @@ public struct UnsupportedPlatformError: Error, CustomStringConvertible, Equatabl
     }
 }
 
-public enum Platform: String, CaseIterable, Codable, Comparable {
+public enum Platform: String, CaseIterable, Codable, Comparable, Sendable {
     case iOS = "ios"
     case macOS = "macos"
     case tvOS = "tvos"

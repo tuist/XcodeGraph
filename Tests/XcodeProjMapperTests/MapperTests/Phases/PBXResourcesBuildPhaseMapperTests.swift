@@ -6,9 +6,9 @@ import XcodeProj
 @Suite
 struct PBXResourcesBuildPhaseMapperTests {
     @Test("Maps resources (like xcassets) from resources phase")
-    func testMapResources() throws {
+    func testMapResources() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
 
         let assetRef = try PBXFileReference(
@@ -48,9 +48,9 @@ struct PBXResourcesBuildPhaseMapperTests {
     }
 
     @Test("Maps localized variant groups from resources")
-    func testMapVariantGroup() throws {
+    func testMapVariantGroup() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
 
         let fileRef1 = PBXFileReference.test(

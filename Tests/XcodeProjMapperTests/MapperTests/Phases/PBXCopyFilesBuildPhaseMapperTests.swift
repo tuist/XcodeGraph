@@ -6,9 +6,9 @@ import XcodeProj
 @Suite
 struct PBXCopyFilesBuildPhaseMapperTests {
     @Test("Maps copy files actions, verifying code-sign-on-copy attributes")
-    func testMapCopyFiles() throws {
+    func testMapCopyFiles() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
 
         let fileRef = try PBXFileReference.test(

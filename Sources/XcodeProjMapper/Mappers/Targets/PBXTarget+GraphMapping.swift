@@ -9,7 +9,7 @@ extension PBXTarget {
         if let bundleId = debugBuildSettings.string(for: .productBundleIdentifier) {
             return bundleId
         }
-        throw TargetMappingError.missingBundleIdentifier(targetName: name)
+        throw PBXTargetMappingError.missingBundleIdentifier(targetName: name)
     }
 
     /// Returns an array of all `PBXCopyFilesBuildPhase` instances for this target.

@@ -9,9 +9,9 @@ struct XCConfigurationMapperTests {
     let mapper = XCConfigurationMapper()
 
     @Test("Returns default settings when configuration list is nil")
-    func testNilConfigurationListReturnsDefault() throws {
+    func testNilConfigurationListReturnsDefault() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
 
         // When
         let settings = try mapper.map(xcodeProj: xcodeProj, configurationList: nil)
@@ -21,7 +21,7 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Maps a single build configuration correctly")
-    func testSingleConfigurationMapping() throws {
+    func testSingleConfigurationMapping() async throws {
         // Given
         let pbxProj = PBXProj()
         let config: XCBuildConfiguration = .testDebug().add(to: pbxProj)
@@ -29,7 +29,7 @@ struct XCConfigurationMapperTests {
             buildConfigurations: [config],
             defaultConfigurationName: "Debug"
         ).add(to: pbxProj)
-        let xcodeProj = XcodeProj.test(configurationList: configList, pbxProj: pbxProj)
+        let xcodeProj = try await XcodeProj.test(configurationList: configList, pbxProj: pbxProj)
 
         // When
         let settings = try mapper.map(xcodeProj: xcodeProj, configurationList: configList)
@@ -47,14 +47,14 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Maps multiple build configurations correctly")
-    func testMultipleConfigurations() throws {
+    func testMultipleConfigurations() async throws {
         // Given
         let pbxProj = PBXProj()
         let debugConfiguration: XCBuildConfiguration = .testDebug().add(to: pbxProj)
         let releaseConfiguration: XCBuildConfiguration = .testRelease().add(to: pbxProj)
         let configs = [debugConfiguration, releaseConfiguration]
         let configList = XCConfigurationList.test(buildConfigurations: configs).add(to: pbxProj)
-        let xcodeProj = XcodeProj.test(configurationList: configList, pbxProj: pbxProj)
+        let xcodeProj = try await XcodeProj.test(configurationList: configList, pbxProj: pbxProj)
 
         // When
         let settings = try mapper.map(xcodeProj: xcodeProj, configurationList: configList)
@@ -76,14 +76,14 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Coerces non-string values to strings in build settings")
-    func testCoercionOfNonStringValues() throws {
+    func testCoercionOfNonStringValues() async throws {
         // Given
         let pbxProj = PBXProj()
         let config: XCBuildConfiguration = .testDebug(
             buildSettings: ["SOME_NUMBER": 42, "A_BOOL": true]
         ).add(to: pbxProj)
         let configList = XCConfigurationList.test(buildConfigurations: [config]).add(to: pbxProj)
-        let xcodeProj = XcodeProj.test(configurationList: configList)
+        let xcodeProj = try await XcodeProj.test(configurationList: configList)
 
         // When
         let settings = try mapper.map(xcodeProj: xcodeProj, configurationList: configList)
@@ -96,9 +96,9 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Resolves XCConfig file paths correctly")
-    func testXCConfigPathResolution() throws {
+    func testXCConfigPathResolution() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
         let baseConfigRef = try PBXFileReference.test(
             sourceTree: .sourceRoot,
@@ -124,19 +124,19 @@ struct XCConfigurationMapperTests {
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
         let debugConfig = try #require(settings.configurations[debugKey])
 
-        let expectedPath = "/tmp/Config.xcconfig"
+        let expectedPath = "\(xcodeProj.srcPathString)/Config.xcconfig"
         #expect(debugConfig?.xcconfig?.pathString == expectedPath)
     }
 
     @Test("Maps array values correctly in build settings")
-    func testArrayValueMapping() throws {
+    func testArrayValueMapping() async throws {
         // Given
         let pbxProj = PBXProj()
         let config: XCBuildConfiguration = .testDebug(
             buildSettings: ["SOME_ARRAY": ["val1", "val2"]]
         ).add(to: pbxProj)
         let configList = XCConfigurationList.test(buildConfigurations: [config]).add(to: pbxProj)
-        let xcodeProj = XcodeProj.test(configurationList: configList, pbxProj: pbxProj)
+        let xcodeProj = try await XcodeProj.test(configurationList: configList, pbxProj: pbxProj)
 
         // When
         let settings = try mapper.map(xcodeProj: xcodeProj, configurationList: configList)

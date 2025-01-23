@@ -5,18 +5,28 @@ import XcodeGraph
 import XcodeMetadata
 @preconcurrency import XcodeProj
 
-/// A mapper that transforms a `.xcodeproj` (provided via `ProjectProviding`) into a `Project` domain model.
+/// A protocol for mapping an Xcode project (`.xcodeproj`) into a `Project` domain model.
+protocol PBXProjectMapping {
+    /// Maps the given `XcodeProj` into a `Project` model.
+    ///
+    /// - Parameter xcodeProj: The Xcode project to be transformed.
+    /// - Returns: A fully constructed `Project` model.
+    /// - Throws: If reading or transforming project data fails.
+    func map(xcodeProj: XcodeProj) async throws -> Project
+}
+
+/// A mapper that transforms a `.xcodeproj` into a `Project` domain model.
 ///
 /// This process involves:
 /// - Mapping project-level settings.
-/// - Converting PBXTargets into `Target` models.
+/// - Converting `PBXTarget`s into `Target` models.
 /// - Resolving both remote and local Swift packages.
 /// - Identifying and integrating user and shared schemes.
 /// - Providing resource synthesizers for code generation.
-struct PBXProjectMapper {
+struct PBXProjectMapper: PBXProjectMapping {
     /// Maps the given Xcode project into a `Project` model.
     ///
-    /// - Parameter projectProvider: Supplies access to `.xcodeproj` data and related directories.
+    /// - Parameter xcodeProj: The Xcode project reference containing `.pbxproj` data.
     /// - Returns: A fully constructed `Project` model.
     /// - Throws: If reading or transforming project data fails.
     func map(xcodeProj: XcodeProj) async throws -> Project {
@@ -25,16 +35,20 @@ struct PBXProjectMapper {
         let xcodeProjPath = xcodeProj.projectPath
         let sourceDirectory = xcodeProjPath.parentDirectory
 
+        // Map the project-wide build settings
         let settings = try settingsMapper.map(
             xcodeProj: xcodeProj,
             configurationList: pbxProject.buildConfigurationList
         )
 
+        // Map PBXTargets to domain Targets
         let targetMapper = PBXTargetMapper()
         let targets = try await pbxProject.targets.serialCompactMap {
             try await targetMapper.map(pbxTarget: $0, xcodeProj: xcodeProj)
-        }.sorted()
+        }
+        .sorted()
 
+        // Map remote and local packages
         let packageMapper = XCPackageMapper()
         let remotePackages = try pbxProject.remotePackages.compactMap {
             try packageMapper.map(package: $0)
@@ -43,8 +57,10 @@ struct PBXProjectMapper {
             try packageMapper.map(package: $0, sourceDirectory: sourceDirectory)
         }
 
+        // Create a files group for the main group
         let filesGroup = ProjectGroup.group(name: pbxProject.mainGroup?.name ?? "Project")
 
+        // Map user and shared schemes
         let schemeMapper = XCSchemeMapper()
         let graphType: XcodeMapperGraphType = .project(xcodeProj)
         let userSchemes = try xcodeProj.userData.flatMap(\.schemes).map {
@@ -54,9 +70,12 @@ struct PBXProjectMapper {
             try schemeMapper.map($0, shared: true, graphType: graphType)
         } ?? []
         let schemes = userSchemes + sharedSchemes
+
+        // Other project-level metadata
         let lastUpgradeCheck = pbxProject.attribute(for: .lastUpgradeCheck).flatMap { Version(string: $0) }
         let defaultKnownRegions = pbxProject.knownRegions.isEmpty ? nil : pbxProject.knownRegions
 
+        // Construct the final `Project`
         return Project(
             path: sourceDirectory,
             sourceRootPath: sourceDirectory,
@@ -105,12 +124,13 @@ struct PBXProjectMapper {
     }
 }
 
+// MARK: - ResourceSynthesizer.Parser Helpers
+
 extension ResourceSynthesizer.Parser {
+    /// Defines resource extensions and default templates for each parser type.
     fileprivate func resourceTypes() -> (exts: [String], template: String) {
         switch self {
-        case .strings:
-            return (["strings", "stringsdict"], "Strings")
-        case .stringsCatalog:
+        case .strings, .stringsCatalog:
             return (["strings", "stringsdict"], "Strings")
         case .assets:
             return (["xcassets"], "Assets")

@@ -3,17 +3,17 @@ import Path
 import XcodeGraph
 import XcodeProj
 
-/// A protocol that defines how to map a single `PBXTargetDependency` into a `TargetDependency` model.
+/// A protocol defining how to map a single `PBXTargetDependency` into a `TargetDependency` model.
 ///
-/// Implementations of this protocol handle all known dependency types—direct targets, package products,
-/// proxy references (which may point to other targets or projects), and file-based dependencies.
-protocol DependencyMapping {
+/// Conforming types handle all known dependency types—direct targets, package products,
+/// proxy references (which may point to other targets or external projects), and file-based dependencies.
+protocol PBXTargetDependencyMapping {
     /// Maps a single `PBXTargetDependency` into a `TargetDependency` model.
     ///
     /// - Parameters:
     ///   - dependency: The `PBXTargetDependency` to map.
-    ///   - projectProvider: Provides access to the project's `.xcodeproj` and source directory.
-    /// - Returns: A `TargetDependency` model if the dependency can be resolved; otherwise, `nil`.
+    ///   - xcodeProj: Provides the `.xcodeproj` data and source directory paths.
+    /// - Returns: A `TargetDependency` if the dependency can be resolved.
     /// - Throws: If the dependency references invalid paths or targets that cannot be resolved.
     func map(_ dependency: PBXTargetDependency, xcodeProj: XcodeProj) throws -> TargetDependency
 }
@@ -23,8 +23,8 @@ protocol DependencyMapping {
 /// `PBXTargetDependencyMapper` checks if the dependency references a direct target, a package product,
 /// or a proxy. For proxy dependencies, it may resolve references to another target, a project,
 /// or file-based dependencies (frameworks, libraries, etc.). If a dependency cannot be resolved
-/// to a known domain model, it returns `nil`.
-struct PBXTargetDependencyMapper: DependencyMapping {
+/// to a known domain model, it throws an error.
+struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
     private let pathMapper: PathDependencyMapping
 
     init(pathMapper: PathDependencyMapping = PathDependencyMapper()) {
@@ -60,6 +60,7 @@ struct PBXTargetDependencyMapper: DependencyMapping {
             }
         }
 
+        // If none of the above matched, it's an unknown dependency type.
         throw TargetDependencyMappingError.unknownDependencyType(
             name: dependency.name ?? "Unknown dependency name"
         )
@@ -103,15 +104,16 @@ struct PBXTargetDependencyMapper: DependencyMapping {
 
         switch remoteGlobalID {
         case let .object(object):
-            if let fileReference = object as? PBXFileReference {
+            // File-based dependency
+            if let fileRef = object as? PBXFileReference {
                 return try mapFileDependency(
-                    pathString: fileReference.path,
+                    pathString: fileRef.path,
                     condition: condition,
                     xcodeProj: xcodeProj
                 )
-            } else if let referenceProxy = object as? PBXReferenceProxy {
+            } else if let refProxy = object as? PBXReferenceProxy {
                 return try mapFileDependency(
-                    pathString: referenceProxy.path,
+                    pathString: refProxy.path,
                     condition: condition,
                     xcodeProj: xcodeProj
                 )
@@ -119,7 +121,7 @@ struct PBXTargetDependencyMapper: DependencyMapping {
             throw TargetDependencyMappingError.unknownObject("\(object)")
 
         case .string:
-            // If remoteGlobalID is just a string, we can’t resolve a file-based dependency or target from it.
+            // If remoteGlobalID is just a string, we can’t map a file or target from it.
             throw TargetDependencyMappingError.unknownDependencyType(
                 name: "remoteGlobalID is a string, cannot map a known target or file reference."
             )
@@ -127,12 +129,12 @@ struct PBXTargetDependencyMapper: DependencyMapping {
     }
 
     /// Maps file-based dependencies (e.g., frameworks, libraries) into `TargetDependency` models.
-    ///
     /// - Parameters:
-    ///   - pathString: The path string for the file-based dependency.
+    ///   - pathString: The path string for the file-based dependency (relative or absolute).
     ///   - condition: An optional platform condition.
-    ///   - projectProvider: Provides directory structure for resolving relative paths.
-    /// - Returns: A `TargetDependency` if the file’s extension matches a known dependency type, or `nil` if not.
+    ///   - xcodeProj: The Xcode project reference for resolving the directory structure.
+    /// - Returns: A `TargetDependency` reflecting the file’s extension (framework, library, etc.).
+    /// - Throws: If the path is missing or invalid.
     private func mapFileDependency(
         pathString: String?,
         condition: PlatformCondition?,
@@ -146,7 +148,9 @@ struct PBXTargetDependencyMapper: DependencyMapping {
     }
 }
 
-/// Errors that may occur when mapping `TargetDependency` instances into `GraphDependency` models.
+// MARK: - Errors
+
+/// Errors that may occur when mapping `PBXTargetDependency` instances.
 enum TargetDependencyMappingError: LocalizedError, Equatable {
     case targetNotFound(targetName: String, path: AbsolutePath)
     case unknownDependencyType(name: String)
@@ -171,7 +175,7 @@ enum TargetDependencyMappingError: LocalizedError, Equatable {
         case .missingRemoteGlobalIDInReferenceProxy:
             return "A reference proxy is missing `remoteGlobalID` in target dependency."
         case let .unsupportedProxyType(name):
-            return "Encountered an unsupported PBXProxyType in dependenncy: \(name ?? "Unknown")."
+            return "Encountered an unsupported PBXProxyType in dependency: \(name ?? "Unknown")."
         }
     }
 }

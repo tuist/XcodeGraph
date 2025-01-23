@@ -6,9 +6,9 @@ import XcodeProj
 @Suite
 struct PBXSourcesBuildPhaseMapperTests {
     @Test("Maps Swift source files with compiler flags from sources phase")
-    func testMapSources() throws {
+    func testMapSources() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
 
         // Create a file reference for a Swift source and add it to the main group.
@@ -53,9 +53,9 @@ struct PBXSourcesBuildPhaseMapperTests {
     }
 
     @Test("Handles source files without file references gracefully")
-    func testMapSourceFile_missingFileRef() throws {
+    func testMapSourceFile_missingFileRef() async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
 
         // A build file with no file reference.
@@ -75,11 +75,10 @@ struct PBXSourcesBuildPhaseMapperTests {
     }
 
     @Test("Gracefully handles non-existent file paths for source files")
-    func testMapSourceFile_unresolvableFullPath() throws {
+    func testMapSourceFile_unresolvableFullPath() async throws {
         // Given
         // Use a provider with an invalid source directory to simulate missing files.
-        let xcodeProj = XcodeProj.test(
-            sourceDirectory: "/invalid/Path",
+        let xcodeProj = try await XcodeProj.test(
             projectName: "TestProject"
         )
         let pbxProj = xcodeProj.pbxproj
@@ -108,9 +107,9 @@ struct PBXSourcesBuildPhaseMapperTests {
         "Correctly identifies code generation attributes for source files",
         arguments: [FileCodeGen.public, .private, .project, .disabled]
     )
-    func testCodeGenAttributes(_ fileCodeGen: FileCodeGen) throws {
+    func testCodeGenAttributes(_ fileCodeGen: FileCodeGen) async throws {
         // Given
-        let xcodeProj = XcodeProj.test()
+        let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
 
         let fileRef = try PBXFileReference.test(name: "File.swift", path: "File.swift")

@@ -16,10 +16,8 @@ struct XcodeGraphMapperTests {
         let configurationList: XCConfigurationList = .test(buildConfigurations: [debug, releaseConfig])
             .add(to: pbxProj)
 
-        let tempDirectory = FileManager.default.temporaryDirectory
 
-        let xcodeProj = XcodeProj.test(
-            sourceDirectory: tempDirectory.path,
+        let xcodeProj = try await XcodeProj.test(
             projectName: "SingleProject",
             configurationList: configurationList,
             pbxProj: pbxProj
@@ -66,7 +64,6 @@ struct XcodeGraphMapperTests {
         // Given
         let pbxProjA = PBXProj()
         let pbxProjB = PBXProj()
-        let sourceDirectory = FileManager.default.temporaryDirectory.path
 
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProjA).add(to: pbxProjB)
         let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProjA).add(to: pbxProjB)
@@ -76,15 +73,13 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProjA)
         .add(to: pbxProjB)
 
-        let projectA = XcodeProj.test(
-            sourceDirectory: sourceDirectory,
+        let projectA = try await XcodeProj.test(
             projectName: "ProjectA",
             configurationList: configurationList,
             pbxProj: pbxProjA
         )
 
-        let projectB = XcodeProj.test(
-            sourceDirectory: sourceDirectory,
+        let projectB = try await XcodeProj.test(
             projectName: "ProjectB",
             configurationList: configurationList,
             pbxProj: pbxProjB
@@ -127,7 +122,7 @@ struct XcodeGraphMapperTests {
                     .file(.init(location: .absolute(projectBPath))),
                 ]
             ),
-            path: .init(sourceDirectory.appending("/Workspace.xcworkspace"))
+            path: .init(projectAPath.appending("/Workspace.xcworkspace"))
         )
 
         try projectA.write(path: projectA.path!)
@@ -165,10 +160,7 @@ struct XcodeGraphMapperTests {
         )
         .add(to: pbxProj)
 
-        let sourceDirectory = FileManager.default.temporaryDirectory.path
-
-        let xcodeProj = XcodeProj.test(
-            sourceDirectory: sourceDirectory,
+        let xcodeProj = try await XcodeProj.test(
             projectName: "ProjectWithDeps",
             configurationList: configurationList,
             pbxProj: pbxProj

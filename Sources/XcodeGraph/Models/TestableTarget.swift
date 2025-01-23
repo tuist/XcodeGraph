@@ -76,7 +76,7 @@ public struct TestableTarget: Equatable, Hashable, Codable, Sendable {
             TestableTarget(
                 target: target,
                 skipped: skipped,
-                parallelizable: parallelizable,
+                parallelization: parallelizable ? .all : .none,
                 randomExecutionOrdering: randomExecutionOrdering,
                 simulatedLocation: simulatedLocation
             )
