@@ -192,7 +192,10 @@ struct PBXTargetMapperTests {
         let mapped = try await mapper.map(pbxTarget: target, xcodeProj: provider.xcodeProj)
 
         // Then
-        #expect(mapped.entitlements == .file(path: entitlementsPath, configuration: BuildConfiguration(name: "Debug", variant: .debug)))
+        #expect(mapped.entitlements == .file(
+            path: entitlementsPath,
+            configuration: BuildConfiguration(name: "Debug", variant: .debug)
+        ))
     }
 
     @Test("Throws noProjectsFound when pbxProj has no projects")
@@ -305,7 +308,6 @@ struct PBXTargetMapperTests {
         try mockProvider.xcodeProj.write(path: mockProvider.xcodeProj.path!)
 
         let mapper = PBXTargetMapper()
-
 
         // When / Then
         await #expect {

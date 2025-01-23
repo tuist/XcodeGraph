@@ -1,13 +1,15 @@
-//import Foundation
-//import Path
-//import PathKit
-//import XcodeGraph
-//import XcodeProj
-//import FileSystem
+import FileSystem
+
+// import Foundation
+// import Path
+// import PathKit
+// import XcodeGraph
+// import XcodeProj
+// import FileSystem
 //
 //// -----------------------------------------------------------------------------
 //
-//// MARK: - Protocol
+// MARK: - Protocol
 //
 //// -----------------------------------------------------------------------------
 //
@@ -17,23 +19,23 @@
 ///// - Checking if the path is valid.
 ///// - Determining if it’s a `.xcworkspace`, `.xcodeproj`, or a directory containing one.
 ///// - Building the final `Graph` by enumerating projects, targets, and dependencies.
-//public protocol XcodeGraphMapping {
+// public protocol XcodeGraphMapping {
 //    /// Maps the given file system path to a `Graph`.
 //    ///
 //    /// - Parameter pathString: A file path that might point to a `.xcworkspace`, `.xcodeproj`, or a directory.
 //    /// - Returns: A `Graph` representing the parsed Xcode workspace or project.
 //    /// - Throws: If the path is invalid or if no recognizable project/workspace is found.
 //    func map(at pathString: AbsolutePath) async throws -> Graph
-//}
+// }
 //
 //// -----------------------------------------------------------------------------
 //
-//// MARK: - Error Types
+// MARK: - Error Types
 //
 //// -----------------------------------------------------------------------------
 //
 ///// An error type for `XcodeGraphMapper` when the path is invalid or no projects are found.
-//public enum XcodeGraphMapperError: LocalizedError {
+// public enum XcodeGraphMapperError: LocalizedError {
 //    case pathNotFound(String)
 //    case noProjectsFound(String)
 //
@@ -45,11 +47,11 @@
 //            return "No `.xcworkspace` or `.xcodeproj` was found at: \(path)"
 //        }
 //    }
-//}
+// }
 //
 //// -----------------------------------------------------------------------------
 //
-//// MARK: - GraphType
+// MARK: - GraphType
 //
 //// -----------------------------------------------------------------------------
 //
@@ -57,14 +59,14 @@
 /////
 ///// Unlike your old code, we no longer rely on `WorkspaceProvider` or `ProjectProvider`.
 ///// Instead, we directly store loaded `XcodeProj` / `XCWorkspace`.
-//enum XcodeMapperGraphType {
+// enum XcodeMapperGraphType {
 //    case workspace(XCWorkspace)
 //    case project(XcodeProj)
-//}
+// }
 //
 //// -----------------------------------------------------------------------------
 //
-//// MARK: - Implementation
+// MARK: - Implementation
 //
 //// -----------------------------------------------------------------------------
 //
@@ -82,7 +84,7 @@
 ///// let mapper: XcodeGraphMapping = XcodeGraphMapper()
 ///// let graph = try mapper.map(at: "/path/to/MyApp")
 ///// ```
-//public struct XcodeGraphMapper: XcodeGraphMapping {
+// public struct XcodeGraphMapper: XcodeGraphMapping {
 //    private let fileSystem: FileSystem
 //
 //    // MARK: - Initialization
@@ -289,16 +291,17 @@
 //
 //        return paths
 //    }
-//}
+// }
 import Foundation
 import Path
 import PathKit
 import XcodeGraph
 import XcodeProj
-import FileSystem
 
 // -----------------------------------------------------------------------------
+
 // MARK: - Protocol
+
 // -----------------------------------------------------------------------------
 
 /// A protocol defining how to map a given file path to a `Graph`.
@@ -307,7 +310,9 @@ public protocol XcodeGraphMapping {
 }
 
 // -----------------------------------------------------------------------------
+
 // MARK: - Error Types
+
 // -----------------------------------------------------------------------------
 
 /// An error type for `XcodeGraphMapper` when the path is invalid or no projects are found.
@@ -326,7 +331,9 @@ public enum XcodeGraphMapperError: LocalizedError {
 }
 
 // -----------------------------------------------------------------------------
+
 // MARK: - GraphType
+
 // -----------------------------------------------------------------------------
 
 /// Specifies whether we're mapping a single `.xcodeproj` or an `.xcworkspace`.
@@ -336,7 +343,9 @@ enum XcodeMapperGraphType {
 }
 
 // -----------------------------------------------------------------------------
+
 // MARK: - Implementation
+
 // -----------------------------------------------------------------------------
 
 /// A mapper for creating a `Graph` from Xcode projects or workspaces.
@@ -345,7 +354,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
 
     // MARK: - Initialization
 
-    public init(fileSystem: FileSysteming = FileSystem.init()) {
+    public init(fileSystem: FileSysteming = FileSystem()) {
         self.fileSystem = fileSystem
     }
 
@@ -419,7 +428,10 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     private func identifyProjectPaths(from graphType: XcodeMapperGraphType) async throws -> [AbsolutePath] {
         switch graphType {
         case let .workspace(xcworkspace):
-            return try await extractProjectPaths(from: xcworkspace.data.children, srcPath: xcworkspace.workspacePath.parentDirectory)
+            return try await extractProjectPaths(
+                from: xcworkspace.data.children,
+                srcPath: xcworkspace.workspacePath.parentDirectory
+            )
         case let .project(xcodeProj):
             return [xcodeProj.projectPath]
         }
@@ -497,7 +509,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         )) { partial, entry in
             let (path, project) = entry
 
-            try project.targets.forEach { (name, target) in
+            try project.targets.forEach { name, target in
                 let sourceDependency = GraphDependency.target(name: name, path: path)
 
                 // Convert target dependencies into edges
@@ -514,14 +526,14 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
                 }
 
                 // Update the conditions dictionary
-                edgesAndDependencies.forEach { (edge, condition, _) in
+                for (edge, condition, _) in edgesAndDependencies {
                     if let condition {
                         partial.conditions[edge] = condition
                     }
                 }
 
                 // Update the dependencies dictionary
-                let targetDependencies = edgesAndDependencies.map { $0.2 }
+                let targetDependencies = edgesAndDependencies.map(\.2)
                 if !targetDependencies.isEmpty {
                     partial.dependencies[sourceDependency] = Set(targetDependencies)
                 }

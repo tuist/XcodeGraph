@@ -2,8 +2,8 @@ import Foundation
 import Path
 import PathKit
 import XcodeGraph
-@preconcurrency import XcodeProj
 import XcodeMetadata
+@preconcurrency import XcodeProj
 
 /// A mapper that transforms a `.xcodeproj` (provided via `ProjectProviding`) into a `Project` domain model.
 ///

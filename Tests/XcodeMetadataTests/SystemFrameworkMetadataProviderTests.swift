@@ -1,9 +1,9 @@
- import XcodeGraph
- @testable import XcodeMetadata
- import Testing
+import Testing
+import XcodeGraph
+@testable import XcodeMetadata
 
- @Suite
- struct SystemFrameworkMetadataProviderTests {
+@Suite
+struct SystemFrameworkMetadataProviderTests {
     var subject: SystemFrameworkMetadataProvider
 
     /// Initializes the test suite, setting up the required `SystemFrameworkMetadataProvider` instance.
@@ -105,4 +105,4 @@
             "Metadata does not match expected value"
         )
     }
- }
+}

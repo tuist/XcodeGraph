@@ -1,17 +1,17 @@
- import Path
- import XcodeGraph
- @testable import XcodeMetadata
- import Testing
+import Path
+import Testing
+import XcodeGraph
+@testable import XcodeMetadata
 
- @Suite
- struct LibraryMetadataProviderTests {
+@Suite
+struct LibraryMetadataProviderTests {
     var subject: LibraryMetadataProvider
 
     /// Initializes the test suite, setting up the required `LibraryMetadataProvider` instance.
     init() {
         subject = LibraryMetadataProvider()
     }
-     
+
     @Test
     func loadMetadata() async throws {
         // Given
@@ -36,4 +36,4 @@
             "Loaded metadata does not match expected metadata"
         )
     }
- }
+}

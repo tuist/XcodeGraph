@@ -103,7 +103,7 @@ struct XCConfigurationMapperTests {
             sourceTree: .sourceRoot,
             path: "Config.xcconfig"
         ).add(to: pbxProj)
-        .addToMainGroup(in: pbxProj)
+            .addToMainGroup(in: pbxProj)
 
         let buildConfig = XCBuildConfiguration.testDebug(
             buildSettings: ["PRODUCT_BUNDLE_IDENTIFIER": "com.example"]

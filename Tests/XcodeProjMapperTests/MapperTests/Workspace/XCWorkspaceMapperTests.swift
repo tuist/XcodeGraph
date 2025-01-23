@@ -8,7 +8,6 @@ import XcodeProj
 
 @Suite
 struct XCWorkspaceMapperTests {
-
     @Test("Maps workspace without any projects or schemes")
     func testMap_NoProjectsOrSchemes() async throws {
         // Given
@@ -32,15 +31,15 @@ struct XCWorkspaceMapperTests {
         let workspaceDir = workspacePath.parentDirectory
         let xcworkspace: XCWorkspace = .test(
             withElements: [
-            .test(relativePath: "ProjectA.xcodeproj"),
-            .group(XCWorkspaceDataGroup(
-                location: .group("NestedGroup"),
-                name: "NestedGroup",
-                children: [
-                    .test(relativePath: "ProjectB.xcodeproj"),
-                    .test(relativePath: "Notes.txt"),
-                ]
-            )),
+                .test(relativePath: "ProjectA.xcodeproj"),
+                .group(XCWorkspaceDataGroup(
+                    location: .group("NestedGroup"),
+                    name: "NestedGroup",
+                    children: [
+                        .test(relativePath: "ProjectB.xcodeproj"),
+                        .test(relativePath: "Notes.txt"),
+                    ]
+                )),
             ], path: workspacePath.pathString
         )
         let mapper = XCWorkspaceMapper()

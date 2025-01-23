@@ -1,5 +1,5 @@
-import XcodeProj
 import XcodeGraph
+import XcodeProj
 
 extension XCConfigurationList {
     /// Retrieves a build setting value from the first configuration in which it is found.
@@ -18,7 +18,6 @@ extension XCConfigurationList {
         }
         return results
     }
-
 
     /// Retrieves all deployment target values from all configurations and aggregates them.
     ///

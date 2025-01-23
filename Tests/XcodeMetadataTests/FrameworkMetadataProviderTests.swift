@@ -1,10 +1,10 @@
- import Path
- import XcodeGraph
- import XcodeMetadata
- import Testing
+import Path
+import Testing
+import XcodeGraph
+import XcodeMetadata
 
- @Suite
- struct FrameworkMetadataProviderTests {
+@Suite
+struct FrameworkMetadataProviderTests {
     var subject: FrameworkMetadataProvider
 
     init() {
@@ -18,7 +18,7 @@
 
         // When
         let metadata = try await subject.loadMetadata(at: frameworkPath, status: .required)
-        
+
         // Then
         let expectedBinaryPath = frameworkPath.appending(component: frameworkPath.basenameWithoutExt)
         let expectedDsymPath = frameworkPath.parentDirectory.appending(component: "xpm.framework.dSYM")
@@ -36,4 +36,4 @@
             "Loaded metadata does not match expected metadata"
         )
     }
- }
+}

@@ -6,7 +6,6 @@ import XcodeProj
 
 @Suite
 struct PBXProjectMapperTests {
-
     @Test("Maps a basic project with default attributes")
     func testMapBasicProject() async throws {
         // Given

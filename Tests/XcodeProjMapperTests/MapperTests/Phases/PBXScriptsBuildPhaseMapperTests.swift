@@ -5,7 +5,6 @@ import XcodeProj
 
 @Suite
 struct PBXScriptsBuildPhaseMapperTests {
-
     @Test("Maps embedded run scripts with specified input/output paths")
     func testMapScripts() throws {
         // Given

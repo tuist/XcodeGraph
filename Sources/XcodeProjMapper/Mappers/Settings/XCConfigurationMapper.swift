@@ -53,7 +53,7 @@ final class XCConfigurationMapper: SettingsMapping {
             var xcconfigAbsolutePath: AbsolutePath?
             if let baseConfigRef = buildConfig.baseConfiguration,
                let xcconfigPath = try baseConfigRef.fullPath(
-                    sourceRoot: xcodeProj.srcPathString
+                   sourceRoot: xcodeProj.srcPathString
                )
             {
                 xcconfigAbsolutePath = try AbsolutePath(validating: xcconfigPath)

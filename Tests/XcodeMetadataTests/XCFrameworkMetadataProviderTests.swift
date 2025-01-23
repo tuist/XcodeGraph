@@ -1,11 +1,11 @@
- import Path
- import ServiceContextModule
- @testable import XcodeMetadata
- import XcodeGraph
- import Testing
+import Path
+import ServiceContextModule
+import Testing
+import XcodeGraph
+@testable import XcodeMetadata
 
- @Suite
- struct XCFrameworkMetadataProviderTests {
+@Suite
+struct XCFrameworkMetadataProviderTests {
     private var subject: XCFrameworkMetadataProvider
 
     init() {
@@ -44,8 +44,8 @@
             ],
             "Libraries do not match expected value"
         )
-        infoPlist.libraries.forEach {
-            #expect($0.binaryName == "MyFramework", "Binary name does not match")
+        for library in infoPlist.libraries {
+            #expect(library.binaryName == "MyFramework", "Binary name does not match")
         }
     }
 
@@ -82,8 +82,8 @@
             ],
             "Libraries do not match expected value"
         )
-        infoPlist.libraries.forEach {
-            #expect($0.binaryName == "libMyStaticLibrary", "Binary name does not match")
+        for library in infoPlist.libraries {
+            #expect(library.binaryName == "libMyStaticLibrary", "Binary name does not match")
         }
     }
 
@@ -233,7 +233,6 @@
                 ]
             )
         )
-
     }
 
     @Test
@@ -249,4 +248,4 @@
         // Then
         #expect(metadata.infoPlist.libraries.count == 2, "Libraries count mismatch")
     }
- }
+}

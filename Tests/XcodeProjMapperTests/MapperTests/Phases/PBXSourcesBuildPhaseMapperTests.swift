@@ -5,7 +5,6 @@ import XcodeProj
 
 @Suite
 struct PBXSourcesBuildPhaseMapperTests {
-
     @Test("Maps Swift source files with compiler flags from sources phase")
     func testMapSources() throws {
         // Given

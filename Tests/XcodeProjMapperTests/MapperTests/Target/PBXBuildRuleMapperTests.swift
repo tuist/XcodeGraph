@@ -143,6 +143,5 @@ struct PBXBuildRuleMapperTests {
         #expect(throws: PBXBuildRuleMappingError.unknownFileType("sourcecode.unknown")) {
             try mapper.map(invalidRuleUnknownFileType)
         }
-
     }
 }

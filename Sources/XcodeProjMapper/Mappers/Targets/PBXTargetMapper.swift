@@ -1,8 +1,8 @@
+import FileSystem
 import Foundation
 import Path
 import XcodeGraph
 import XcodeProj
-import FileSystem
 
 /// Errors that may occur while mapping a `PBXTarget` into a `Target`.
 enum TargetMappingError: LocalizedError, Equatable {
@@ -267,6 +267,7 @@ struct PBXTargetMapper: TargetMapping {
         } ?? []
         return sources.filter { $0.path.fileExtension == .playground }.map(\.path)
     }
+
     /// Reads and parses a plist file into a `[String: Plist.Value]` dictionary.
     private func readPlistAsDictionary(
         at path: AbsolutePath,
@@ -283,7 +284,6 @@ struct PBXTargetMapper: TargetMapping {
         ) as? [String: Any] else {
             throw TargetMappingError.invalidPlist(path: path.pathString)
         }
-
 
         return try plist.reduce(into: [String: Plist.Value]()) { result, item in
             result[item.key] = try convertToPlistValue(item.value)

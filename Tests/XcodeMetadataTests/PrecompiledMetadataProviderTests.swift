@@ -1,11 +1,11 @@
- import Foundation
- import Path
- @testable import XcodeMetadata
- import XcodeGraph
- import Testing
+import Foundation
+import Path
+import Testing
+import XcodeGraph
+@testable import XcodeMetadata
 
- @Suite
- struct PrecompiledMetadataProviderTests {
+@Suite
+struct PrecompiledMetadataProviderTests {
     var subject: PrecompiledMetadataProvider
 
     /// Initializes the test suite, setting up the required `PrecompiledMetadataProvider` instance.
@@ -59,7 +59,7 @@
                 validating: "MyFramework.xcframework/ios-x86_64-simulator/MyFramework.framework/MyFramework"
             )
         )
-        
+
         // When
         let architectures = try subject.architectures(binaryPath: binaryPath)
         let linking = try subject.linking(binaryPath: binaryPath)
@@ -93,4 +93,4 @@
         #expect(linking == BinaryLinking.static, "Linking does not match expected value")
         #expect(uuids == Set(), "UUIDs do not match expected value")
     }
- }
+}

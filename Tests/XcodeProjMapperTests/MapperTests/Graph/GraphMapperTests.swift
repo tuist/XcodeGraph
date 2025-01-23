@@ -1,10 +1,9 @@
-import Path
 import Foundation
+import Path
 import Testing
 import XcodeGraph
 import XcodeProj
 @testable import XcodeProjMapper
-
 
 @Suite
 struct XcodeGraphMapperTests {
@@ -120,7 +119,6 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProjB)
         .add(to: pbxProjB.rootObject)
 
-
         let projectAPath = try #require(projectA.path?.string)
         let projectBPath = try #require(projectB.path?.string)
 
@@ -129,7 +127,7 @@ struct XcodeGraphMapperTests {
                 children: [
                     .file(.init(location: .absolute(projectAPath))),
                     .file(.init(location: .absolute(projectBPath))),
-            ]
+                ]
             ),
             path: .init(sourceDirectory.appending("/Workspace.xcworkspace"))
         )
@@ -211,7 +209,7 @@ struct XcodeGraphMapperTests {
             name: "AFramework",
             target: frameworkTarget
         )
-            .add(to: pbxProj)
+        .add(to: pbxProj)
         appTarget.dependencies.append(dep)
         try mockProvider.xcodeProj.write(path: mockProvider.xcodeProj.path!)
         let mapper = XcodeGraphMapper()

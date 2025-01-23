@@ -5,7 +5,6 @@ import XcodeProj
 
 @Suite
 struct PBXResourcesBuildPhaseMapperTests {
-
     @Test("Maps resources (like xcassets) from resources phase")
     func testMapResources() throws {
         // Given

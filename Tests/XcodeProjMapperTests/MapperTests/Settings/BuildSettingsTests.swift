@@ -6,7 +6,6 @@ import XcodeProj
 
 @Suite
 struct BuildSettingsTests {
-
     @Test("Extracts a string value from build settings")
     func testStringExtraction() throws {
         // Given
