@@ -64,7 +64,6 @@ struct XCSchemeMapperTests {
         )
         let xcscheme = XCScheme.test(name: "UserScheme", buildAction: buildAction)
 
-
         // When
         let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.buildAction
@@ -110,7 +109,6 @@ struct XCSchemeMapperTests {
         )
         let xcscheme = XCScheme.test(name: "UserScheme", testAction: testAction)
 
-
         // When
         let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.testAction
@@ -149,7 +147,6 @@ struct XCSchemeMapperTests {
         )
 
         let xcscheme = XCScheme.test(name: "UserScheme", launchAction: launchAction)
-
 
         // When
         let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
@@ -250,7 +247,6 @@ struct XCSchemeMapperTests {
         // When
         let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = try #require(mapped.buildAction)
-
 
         // Then
         #expect(mappedAction.targets.count == 1)

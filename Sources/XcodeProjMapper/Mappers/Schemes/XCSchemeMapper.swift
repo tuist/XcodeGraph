@@ -28,7 +28,6 @@ protocol SchemeMapping {
 /// `XCSchemeMapper` resolves references to targets, environment variables, and all scheme actions.
 /// The resulting `Scheme` models enable analysis, code generation, or integration with custom tooling.
 struct XCSchemeMapper: SchemeMapping {
-
     // MARK: - Public API
 
     func map(

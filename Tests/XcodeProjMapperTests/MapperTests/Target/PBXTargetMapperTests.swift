@@ -1,10 +1,10 @@
+import FileSystem
 import Foundation
 import Path
 import Testing
 import XcodeGraph
 import XcodeProj
 @testable import XcodeProjMapper
-import FileSystem
 
 @Suite
 struct PBXTargetMapperTests {
@@ -305,7 +305,7 @@ struct PBXTargetMapperTests {
 
         // When / Then
         await #expect {
-            let _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
         } throws: { error in
             error.localizedDescription
                 == "Failed to read a valid plist dictionary from file at: \(invalidPlistPath.pathString)."

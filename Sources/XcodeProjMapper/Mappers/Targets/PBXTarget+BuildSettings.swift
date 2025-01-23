@@ -35,7 +35,6 @@ extension PBXTarget {
         guard let defaultName = buildConfigurationList?.defaultConfigurationName else { return nil }
         let variant = configurationMatcher.variant(for: defaultName)
         return BuildConfiguration(name: defaultName, variant: variant)
-
     }
 
     /// Retrieves deployment target versions for various platforms supported by this target.

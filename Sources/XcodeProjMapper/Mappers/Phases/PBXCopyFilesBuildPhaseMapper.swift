@@ -16,7 +16,6 @@ protocol PBXCopyFilesBuildPhaseMapping {
 
 /// A mapper that converts `PBXCopyFilesBuildPhase` objects into `CopyFilesAction` domain models.
 struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
-
     /// Maps the provided copy files phases to sorted `CopyFilesAction` models.
     func map(_ copyFilesPhases: [PBXCopyFilesBuildPhase], xcodeProj: XcodeProj) throws -> [CopyFilesAction] {
         try copyFilesPhases
@@ -38,9 +37,8 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
     ) throws -> CopyFilesAction? {
         let files = try (phase.files ?? [])
             .compactMap { buildFile -> CopyFileElement? in
-                guard
-                    let fileRef = buildFile.file,
-                    let pathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
+                guard let fileRef = buildFile.file,
+                      let pathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
                 else {
                     return nil
                 }
@@ -66,17 +64,17 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
         _ subfolderSpec: PBXCopyFilesBuildPhase.SubFolder?
     ) -> CopyFilesAction.Destination {
         switch subfolderSpec {
-        case .absolutePath:       return .absolutePath
-        case .productsDirectory:  return .productsDirectory
-        case .wrapper:            return .wrapper
-        case .executables:        return .executables
-        case .resources:          return .resources
-        case .javaResources:      return .javaResources
-        case .frameworks:         return .frameworks
-        case .sharedFrameworks:   return .sharedFrameworks
-        case .sharedSupport:      return .sharedSupport
-        case .plugins:            return .plugins
-        default:                  return .productsDirectory
+        case .absolutePath: return .absolutePath
+        case .productsDirectory: return .productsDirectory
+        case .wrapper: return .wrapper
+        case .executables: return .executables
+        case .resources: return .resources
+        case .javaResources: return .javaResources
+        case .frameworks: return .frameworks
+        case .sharedFrameworks: return .sharedFrameworks
+        case .sharedSupport: return .sharedSupport
+        case .plugins: return .plugins
+        default: return .productsDirectory
         }
     }
 }

@@ -1,8 +1,8 @@
+import FileSystem
+import Foundation
 import Path
 import XcodeGraph
 import XcodeProj
-import Foundation
-import FileSystem
 
 extension XcodeProj {
     static func test(

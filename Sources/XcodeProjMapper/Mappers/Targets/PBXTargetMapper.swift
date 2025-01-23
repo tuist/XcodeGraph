@@ -237,10 +237,8 @@ struct PBXTargetMapper: PBXTargetMapping {
         guard let configuration = target.defaultBuildConfiguration() ?? entitlementsMap.keys.first else { return nil }
         guard let entitlementsPath = entitlementsMap[configuration] else { return nil }
 
-
         let path = xcodeProj.srcPath.appending(try RelativePath(validating: entitlementsPath))
         return Entitlements.file(path: path, configuration: configuration)
-
     }
 
     /// Recursively collects all files from a given `PBXGroup`.

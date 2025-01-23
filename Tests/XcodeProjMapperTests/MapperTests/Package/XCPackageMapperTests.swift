@@ -173,9 +173,8 @@ struct XCPackageMapperTests {
     }
 }
 
-
-private extension Package {
-    var requirement: Requirement? {
+extension Package {
+    fileprivate var requirement: Requirement? {
         switch self {
         case let .remote(_, requirement):
             return requirement

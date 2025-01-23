@@ -54,7 +54,7 @@ struct XCPackageMapper: PackageMapping {
     // MARK: - Private Helpers
 
     /// Determines the version requirement for a remote Swift package.
-     private func mapRequirement(package: XCRemoteSwiftPackageReference) -> Requirement {
+    private func mapRequirement(package: XCRemoteSwiftPackageReference) -> Requirement {
         guard let versionRequirement = package.versionRequirement else {
             // Default to an all-zero version if none is specified
             return .upToNextMajor("0.0.0")

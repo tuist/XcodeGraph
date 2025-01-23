@@ -16,7 +16,6 @@ protocol PBXHeadersBuildPhaseMapping {
 
 /// Maps a `PBXHeadersBuildPhase` to a `Headers` domain model.
 struct PBXHeadersBuildPhaseMapper: PBXHeadersBuildPhaseMapping {
-
     func map(_ headersBuildPhase: PBXHeadersBuildPhase, xcodeProj: XcodeProj) throws -> Headers? {
         // Gather all valid HeaderInfo objects
         let headerInfos = try (headersBuildPhase.files ?? []).compactMap {
@@ -48,9 +47,8 @@ struct PBXHeadersBuildPhaseMapper: PBXHeadersBuildPhaseMapping {
 
     /// Converts a single `PBXBuildFile` into a `HeaderInfo` if it's a valid header reference.
     private func mapHeaderFile(_ buildFile: PBXBuildFile, xcodeProj: XcodeProj) throws -> HeaderInfo? {
-        guard
-            let pbxElement = buildFile.file,
-            let pathString = try pbxElement.fullPath(sourceRoot: xcodeProj.srcPathString)
+        guard let pbxElement = buildFile.file,
+              let pathString = try pbxElement.fullPath(sourceRoot: xcodeProj.srcPathString)
         else {
             return nil
         }

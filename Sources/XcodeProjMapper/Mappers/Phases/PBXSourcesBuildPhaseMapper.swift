@@ -33,9 +33,8 @@ struct PBXSourcesBuildPhaseMapper: PBXSourcesBuildPhaseMapping {
         _ buildFile: PBXBuildFile,
         xcodeProj: XcodeProj
     ) throws -> SourceFile? {
-        guard
-            let fileRef = buildFile.file,
-            let pathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
+        guard let fileRef = buildFile.file,
+              let pathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
         else {
             return nil
         }

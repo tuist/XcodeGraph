@@ -16,7 +16,6 @@ struct XcodeGraphMapperTests {
         let configurationList: XCConfigurationList = .test(buildConfigurations: [debug, releaseConfig])
             .add(to: pbxProj)
 
-
         let xcodeProj = try await XcodeProj.test(
             projectName: "SingleProject",
             configurationList: configurationList,

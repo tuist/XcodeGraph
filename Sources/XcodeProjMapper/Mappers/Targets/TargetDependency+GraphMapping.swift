@@ -125,7 +125,7 @@ extension TargetDependency {
     /// - Returns: A `GraphDependency` representing the resolved dependency.
     /// - Throws: `TargetDependencyMappingError.targetNotFound` if `targetName` isn't in `allTargetsMap`,
     ///           `TargetDependencyMappingError.unknownDependencyType` if the product type can't be mapped.
-    fileprivate func mapProjectGraphDependency(
+    private func mapProjectGraphDependency(
         projectPath: AbsolutePath,
         targetName: String,
         status: LinkingStatus,
@@ -182,7 +182,7 @@ extension TargetDependency {
 /// - Parameter developerDirectoryProvider: Provides the current Xcode Developer directory (via `xcode-select -p`).
 /// - Returns: The absolute path to `XCTest.framework`.
 /// - Throws: If the developer directory cannot be retrieved or validated.
-fileprivate func xctestFrameworkPath(
+private func xctestFrameworkPath(
     developerDirectoryProvider: DeveloperDirectoryProviding = DeveloperDirectoryProvider()
 ) async throws -> AbsolutePath {
     let devDir = try await developerDirectoryProvider.developerDirectory()

@@ -26,7 +26,6 @@ protocol PBXScriptsBuildPhaseMapping {
 
 /// Maps `PBXShellScriptBuildPhase` instances into `TargetScript` and `RawScriptBuildPhase` models.
 struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
-
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
         buildPhases: [PBXBuildPhase]
