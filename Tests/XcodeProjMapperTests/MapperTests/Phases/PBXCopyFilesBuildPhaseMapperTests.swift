@@ -7,6 +7,7 @@ import XcodeProj
 struct PBXCopyFilesBuildPhaseMapperTests {
     @Test("Maps copy files actions, verifying code-sign-on-copy attributes")
     func testMapCopyFiles() throws {
+        // Given
         let provider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = provider.xcodeProj.pbxproj
 
@@ -28,7 +29,8 @@ struct PBXCopyFilesBuildPhaseMapperTests {
             dstSubfolderSpec: .frameworks,
             name: "Embed Libraries",
             files: [buildFile]
-        ).add(to: pbxProj)
+        )
+        .add(to: pbxProj)
 
         try PBXNativeTarget.test(
             name: "App",
@@ -39,14 +41,19 @@ struct PBXCopyFilesBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXCopyFilesBuildPhaseMapper()
+
+        // When
         let copyActions = try mapper.map([copyFilesPhase], xcodeProj: provider.xcodeProj)
 
+        // Then
         #expect(copyActions.count == 1)
+
         let action = try #require(copyActions.first)
         #expect(action.name == "Embed Libraries")
         #expect(action.destination == .frameworks)
         #expect(action.subpath == "Libraries")
         #expect(action.files.count == 1)
+
         let fileAction = try #require(action.files.first)
         #expect(fileAction.codeSignOnCopy == true)
         #expect(fileAction.path.basename == "MyLibrary.dylib")

@@ -6,11 +6,14 @@ extension XCConfigurationList {
     ///
     /// - Parameter key: The `BuildSettingKey` to look up.
     /// - Returns: The value as a `String` if found, otherwise `nil`.
-    func stringSettings(for key: BuildSettingKey) -> [XCBuildConfiguration: String] {
-        var results = [XCBuildConfiguration: String]()
+    func stringSettings(for key: BuildSettingKey) -> [BuildConfiguration: String] {
+        let configurationMatcher = ConfigurationMatcher()
+        var results = [BuildConfiguration: String]()
         for config in buildConfigurations {
             if let value = config.buildSettings.string(for: key) {
-                results[config] = value
+                let variant = configurationMatcher.variant(for: config.name)
+                let buildConfig = BuildConfiguration(name: config.name, variant: variant)
+                results[buildConfig] = value
             }
         }
         return results

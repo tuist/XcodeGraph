@@ -2,6 +2,7 @@ import Foundation
 import Path
 import XcodeGraph
 import XcodeProj
+import FileSystem
 
 /// Errors that may occur while mapping a `PBXTarget` into a `Target`.
 enum TargetMappingError: LocalizedError, Equatable {
@@ -44,7 +45,7 @@ protocol TargetMapping {
     /// - Returns: A fully mapped `Target` model.
     /// - Throws: `TargetMappingError` if required data (like a bundle identifier) is missing,
     ///           or if necessary files/groups cannot be found.
-    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> Target
+    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) async throws -> Target
 }
 
 /// A mapper that converts a `PBXTarget` into a domain `Target` model.
@@ -87,7 +88,7 @@ struct PBXTargetMapper: TargetMapping {
         self.buildRuleMapper = buildRuleMapper
     }
 
-    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) throws -> Target {
+    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) async throws -> Target {
         let platform = try pbxTarget.platform()
         let deploymentTargets = pbxTarget.deploymentTargets()
         let productType = pbxTarget.productType?.mapProductType()
@@ -157,7 +158,7 @@ struct PBXTargetMapper: TargetMapping {
             productName: pbxTarget.productName ?? pbxTarget.name,
             bundleId: try pbxTarget.bundleIdentifier(),
             deploymentTargets: deploymentTargets,
-            infoPlist: try extractInfoPlist(from: pbxTarget, xcodeProj: xcodeProj),
+            infoPlist: try await extractInfoPlist(from: pbxTarget, xcodeProj: xcodeProj),
             entitlements: try extractEntitlements(from: pbxTarget, xcodeProj: xcodeProj),
             settings: settings,
             sources: sources,
@@ -209,23 +210,21 @@ struct PBXTargetMapper: TargetMapping {
     }
 
     /// Extracts and parses the project's Info.plist as a dictionary, or returns an empty dictionary if none is found.
-    func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) throws -> InfoPlist {
-        // TODO: - WIP
-//        if let plistPath = target.infoPlistPath() {
-//            let path = xcodeProj.srcPath.appending(try RelativePath(validating: plistPath))
-//            let plistDictionary = try readPlistAsDictionary(at: path)
-//            return .dictionary(plistDictionary)
-//        }
+    func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) async throws -> InfoPlist {
+        if let (config, plistPath) = target.infoPlistPath().first {
+            let path = xcodeProj.srcPath.appending(try RelativePath(validating: plistPath))
+            let plistDictionary = try await readPlistAsDictionary(at: path)
+            return .dictionary(plistDictionary, configuration: config)
+        }
         return .dictionary([:])
     }
 
     /// Extracts the target's entitlements file, if present.
     func extractEntitlements(from target: PBXTarget, xcodeProj: XcodeProj) throws -> Entitlements? {
-        // TODO: - WIP
-//        if let entitlementsPath = target.entitlementsPath() {
-//            let path = xcodeProj.srcPath.appending(try RelativePath(validating: entitlementsPath))
-//            return Entitlements.file(path: path)
-//        }
+        if let (config, entitlementsPath) = target.entitlementsPath().first {
+            let path = xcodeProj.srcPath.appending(try RelativePath(validating: entitlementsPath))
+            return Entitlements.file(path: path, configuration: config)
+        }
         return nil
     }
 
@@ -268,12 +267,15 @@ struct PBXTargetMapper: TargetMapping {
         } ?? []
         return sources.filter { $0.path.fileExtension == .playground }.map(\.path)
     }
-
     /// Reads and parses a plist file into a `[String: Plist.Value]` dictionary.
-    private func readPlistAsDictionary(at path: AbsolutePath) throws -> [String: Plist.Value] {
-        let fileURL = URL(fileURLWithPath: path.pathString)
-        let data = try Data(contentsOf: fileURL)
+    private func readPlistAsDictionary(
+        at path: AbsolutePath,
+        fileSystem: FileSysteming = FileSystem()
+    ) async throws -> [String: Plist.Value] {
         var format = PropertyListSerialization.PropertyListFormat.xml
+
+        let data = try await fileSystem.readFile(at: path)
+
         guard let plist = try? PropertyListSerialization.propertyList(
             from: data,
             options: .mutableContainersAndLeaves,
@@ -281,6 +283,7 @@ struct PBXTargetMapper: TargetMapping {
         ) as? [String: Any] else {
             throw TargetMappingError.invalidPlist(path: path.pathString)
         }
+
 
         return try plist.reduce(into: [String: Plist.Value]()) { result, item in
             result[item.key] = try convertToPlistValue(item.value)
@@ -312,3 +315,19 @@ struct PBXTargetMapper: TargetMapping {
         }
     }
 }
+
+//         try await fileSystem.readPlistFile(at: path)
+//        let fileURL = URL(fileURLWithPath: path.pathString)
+//        let data = try Data(contentsOf: fileURL)
+//        var format = PropertyListSerialization.PropertyListFormat.xml
+//        guard let plist = try? PropertyListSerialization.propertyList(
+//            from: data,
+//            options: .mutableContainersAndLeaves,
+//            format: &format
+//        ) as? [String: Any] else {
+//            throw TargetMappingError.invalidPlist(path: path.pathString)
+//        }
+//
+//        return try plist.reduce(into: [String: Plist.Value]()) { result, item in
+//            result[item.key] = try convertToPlistValue(item.value)
+//        }

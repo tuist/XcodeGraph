@@ -9,6 +9,7 @@ struct PBXBuildRuleMapperTests {
 
     @Test("Maps build rules with known compiler spec and file type successfully")
     func testMapBuildRulesWithKnownCompilerSpecAndFileType() throws {
+        // Given
         let projectProvider = MockProjectProvider()
         let pbxProj = projectProvider.pbxProj
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
@@ -30,9 +31,11 @@ struct PBXBuildRuleMapperTests {
             .add(to: pbxProj)
             .add(to: pbxProj.rootObject)
 
+        // When
         let optionalRule = try mapper.map(buildRule)
-        let rule = try #require(optionalRule)
 
+        // Then
+        let rule = try #require(optionalRule)
         #expect(rule.compilerSpec.rawValue == knownCompilerSpec)
         #expect(rule.fileType.rawValue == knownFileType)
         #expect(rule.filePatterns == "*.c")
@@ -46,6 +49,7 @@ struct PBXBuildRuleMapperTests {
 
     @Test("Skips build rules when compiler spec is unknown")
     func testMapBuildRulesWithUnknownCompilerSpec() throws {
+        // Given
         let projectProvider = MockProjectProvider()
         let pbxProj = projectProvider.pbxProj
         let unknownCompilerSpec = "com.apple.compilers.unknown"
@@ -60,12 +64,15 @@ struct PBXBuildRuleMapperTests {
             .add(to: pbxProj)
             .add(to: pbxProj.rootObject)
 
-        let rule = try mapper.map(buildRule)
-        #expect(rule == nil) // Unknown compiler spec -> rule skipped
+        // When / Then
+        #expect(throws: PBXBuildRuleMappingError.unknownCompilerSpec("com.apple.compilers.unknown")) {
+            try mapper.map(buildRule)
+        }
     }
 
     @Test("Skips build rules when file type is unknown")
     func testMapBuildRulesWithUnknownFileType() throws {
+        // Given
         let projectProvider = MockProjectProvider()
         let pbxProj = projectProvider.pbxProj
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
@@ -80,12 +87,15 @@ struct PBXBuildRuleMapperTests {
             .add(to: pbxProj)
             .add(to: pbxProj.rootObject)
 
-        let rule = try mapper.map(buildRule)
-        #expect(rule == nil) // Unknown file type -> rule skipped
+        // When / Then
+        #expect(throws: PBXBuildRuleMappingError.unknownFileType("sourcecode.unknown")) {
+            try mapper.map(buildRule)
+        }
     }
 
     @Test("Individually handles valid and invalid rules, returning nil for invalid ones")
     func testMapIndividualValidAndInvalidRules() throws {
+        // Given
         let projectProvider = MockProjectProvider()
         let pbxProj = projectProvider.pbxProj
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
@@ -117,14 +127,22 @@ struct PBXBuildRuleMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        // Since the mapper maps one rule at a time now, we test them individually.
+        // When / Then
+        // Valid rule
         let validResult = try mapper.map(validRule)
         #expect(validResult?.name == "Valid Rule")
 
-        let invalidCompilerResult = try mapper.map(invalidRuleUnknownCompiler)
-        #expect(invalidCompilerResult == nil)
+        // When / Then
+        // Invalid (unknown compiler)
+        #expect(throws: PBXBuildRuleMappingError.unknownCompilerSpec("com.apple.compilers.unknown")) {
+            try mapper.map(invalidRuleUnknownCompiler)
+        }
 
-        let invalidFileTypeResult = try mapper.map(invalidRuleUnknownFileType)
-        #expect(invalidFileTypeResult == nil)
+        // When / Then
+        // Invalid (unknown file type)
+        #expect(throws: PBXBuildRuleMappingError.unknownFileType("sourcecode.unknown")) {
+            try mapper.map(invalidRuleUnknownFileType)
+        }
+
     }
 }

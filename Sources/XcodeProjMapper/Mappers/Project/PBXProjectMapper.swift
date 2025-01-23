@@ -2,7 +2,8 @@ import Foundation
 import Path
 import PathKit
 import XcodeGraph
-import XcodeProj
+@preconcurrency import XcodeProj
+import XcodeMetadata
 
 /// A mapper that transforms a `.xcodeproj` (provided via `ProjectProviding`) into a `Project` domain model.
 ///
@@ -18,7 +19,7 @@ struct PBXProjectMapper {
     /// - Parameter projectProvider: Supplies access to `.xcodeproj` data and related directories.
     /// - Returns: A fully constructed `Project` model.
     /// - Throws: If reading or transforming project data fails.
-    func map(xcodeProj: XcodeProj) throws -> Project {
+    func map(xcodeProj: XcodeProj) async throws -> Project {
         let settingsMapper = XCConfigurationMapper()
         let pbxProject = try xcodeProj.mainPBXProject()
         let xcodeProjPath = xcodeProj.projectPath
@@ -30,8 +31,8 @@ struct PBXProjectMapper {
         )
 
         let targetMapper = PBXTargetMapper()
-        let targets = try pbxProject.targets.compactMap {
-            try targetMapper.map(pbxTarget: $0, xcodeProj: xcodeProj)
+        let targets = try await pbxProject.targets.serialCompactMap {
+            try await targetMapper.map(pbxTarget: $0, xcodeProj: xcodeProj)
         }.sorted()
 
         let packageMapper = XCPackageMapper()

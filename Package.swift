@@ -55,6 +55,7 @@ let targets: [Target] = [
         name: "XcodeProjMapperTests",
         dependencies: [
             "XcodeProjMapper",
+            .product(name: "FileSystem", package: "FileSystem"),
         ],
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),

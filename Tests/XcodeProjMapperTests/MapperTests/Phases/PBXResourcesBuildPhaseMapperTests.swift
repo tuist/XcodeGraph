@@ -5,8 +5,10 @@ import XcodeProj
 
 @Suite
 struct PBXResourcesBuildPhaseMapperTests {
+
     @Test("Maps resources (like xcassets) from resources phase")
     func testMapResources() throws {
+        // Given
         let mockProvider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = mockProvider.xcodeProj.pbxproj
 
@@ -31,8 +33,11 @@ struct PBXResourcesBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXResourcesBuildPhaseMapper()
+
+        // When
         let resources = try mapper.map(resourcesPhase, xcodeProj: mockProvider.xcodeProj)
 
+        // Then
         #expect(resources.count == 1)
         let resource = try #require(resources.first)
         switch resource {
@@ -45,6 +50,7 @@ struct PBXResourcesBuildPhaseMapperTests {
 
     @Test("Maps localized variant groups from resources")
     func testMapVariantGroup() throws {
+        // Given
         let provider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = provider.xcodeProj.pbxproj
 
@@ -59,8 +65,9 @@ struct PBXResourcesBuildPhaseMapperTests {
 
         let variantGroup = try PBXVariantGroup.mockVariant(
             children: [fileRef1, fileRef2]
-        ).add(to: pbxProj)
-            .addToMainGroup(in: pbxProj)
+        )
+        .add(to: pbxProj)
+        .addToMainGroup(in: pbxProj)
 
         let buildFile = PBXBuildFile(file: variantGroup).add(to: pbxProj)
         let resourcesPhase = PBXResourcesBuildPhase(files: [buildFile]).add(to: pbxProj)
@@ -70,8 +77,11 @@ struct PBXResourcesBuildPhaseMapperTests {
             .add(to: pbxProj.rootObject)
 
         let mapper = PBXResourcesBuildPhaseMapper()
+
+        // When
         let resources = try mapper.map(resourcesPhase, xcodeProj: provider.xcodeProj)
 
+        // Then
         #expect(resources.count == 2)
         #expect(resources.first?.path.basename == "Localizable.strings")
     }

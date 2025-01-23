@@ -54,6 +54,8 @@ struct XCPackageMapper: PackageMapping {
         return .local(path: path)
     }
 
+    // MARK - Helpers
+
     /// Determines the version requirement for a remote Swift package.
     ///
     /// Converts the `XCRemoteSwiftPackageReference`'s version requirement into a `Package.Requirement`.

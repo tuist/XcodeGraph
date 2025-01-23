@@ -1,19 +1,26 @@
 import Path
+import Foundation
 import Testing
 import XcodeGraph
 import XcodeProj
 @testable import XcodeProjMapper
 
+
 @Suite
 struct XcodeGraphMapperTests {
     @Test("Maps a single project into a workspace graph")
     func testSingleProjectGraph() async throws {
+        // Given
         let pbxProj = PBXProj()
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)
         let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProj)
-        let configurationList: XCConfigurationList = .test(buildConfigurations: [debug, releaseConfig]).add(to: pbxProj)
+        let configurationList: XCConfigurationList = .test(buildConfigurations: [debug, releaseConfig])
+            .add(to: pbxProj)
+
+        let tempDirectory = FileManager.default.temporaryDirectory
+
         let mockProvider = MockProjectProvider(
-            sourceDirectory: "/tmp/SingleProject",
+            sourceDirectory: tempDirectory.path,
             projectName: "SingleProject",
             configurationList: configurationList,
             pbxProj: pbxProj
@@ -37,20 +44,18 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        // Create a GraphType for a single project
-        let projectPath = try AbsolutePath(validating: mockProvider.sourceDirectory.pathString)
-
+        let projectPath = mockProvider.xcodeProj.projectPath
+        try mockProvider.xcodeProj.write(path: mockProvider.xcodeProj.path!)
         let mapper = XcodeGraphMapper()
-
+        // When
         let graph = try await mapper.buildGraph(from: .project(mockProvider.xcodeProj))
 
-        // Validate the graph
+        // Then
         #expect(graph.name == "Workspace")
         #expect(graph.projects.count == 1)
         #expect(graph.packages.isEmpty == true)
         #expect(graph.dependencies.isEmpty == true)
         #expect(graph.dependencyConditions.isEmpty == true)
-
         // Workspace should wrap the single project
         #expect(graph.workspace.projects.count == 1)
         #expect(graph.workspace.projects.first == projectPath)
@@ -59,37 +64,42 @@ struct XcodeGraphMapperTests {
 
     @Test("Maps a workspace with multiple projects into a single graph")
     func testWorkspaceGraphMultipleProjects() async throws {
+        // Given
         let pbxProjA = PBXProj()
         let pbxProjB = PBXProj()
+        let sourceDirectory = FileManager.default.temporaryDirectory.path
 
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProjA).add(to: pbxProjB)
         let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProjA).add(to: pbxProjB)
-        let configurationList: XCConfigurationList = .test(buildConfigurations: [debug, releaseConfig]).add(to: pbxProjA)
-            .add(to: pbxProjB)
-
-        // Setup two mock projects
+        let configurationList: XCConfigurationList = .test(
+            buildConfigurations: [debug, releaseConfig]
+        )
+        .add(to: pbxProjA)
+        .add(to: pbxProjB)
 
         let mockProviderA = MockProjectProvider(
-            sourceDirectory: "/tmp/Workspace/ProjectA",
+            sourceDirectory: sourceDirectory,
             projectName: "ProjectA",
             configurationList: configurationList,
             pbxProj: pbxProjA
         )
+        let projectA = mockProviderA.xcodeProj
 
         let mockProviderB = MockProjectProvider(
-            sourceDirectory: "/tmp/Workspace/ProjectB",
+            sourceDirectory: sourceDirectory,
             projectName: "ProjectB",
             configurationList: configurationList,
             pbxProj: pbxProjB
         )
+        let projectB = mockProviderB.xcodeProj
 
         let sourceFile = try PBXFileReference.test(
             path: "ViewController.swift",
             lastKnownFileType: "sourcecode.swift"
         ).add(to: pbxProjA).addToMainGroup(in: pbxProjA)
 
-        let buildFile = PBXBuildFile(file: sourceFile).add(to: pbxProjB)
-        let sourcesPhase = PBXSourcesBuildPhase(files: [buildFile]).add(to: pbxProjB)
+        let buildFile = PBXBuildFile(file: sourceFile).add(to: pbxProjB).add(to: pbxProjA)
+        let sourcesPhase = PBXSourcesBuildPhase(files: [buildFile]).add(to: pbxProjB).add(to: pbxProjA)
 
         // Add targets to each project
         try PBXNativeTarget.test(
@@ -110,32 +120,37 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProjB)
         .add(to: pbxProjB.rootObject)
 
-        // Set up a workspace referencing the two projects
-        let workspacePath = try AbsolutePath(validating: "/tmp/Workspace")
-        let projectAPath = try AbsolutePath(validating: "/tmp/Workspace/ProjectA.xcodeproj")
-        let projectBPath = try AbsolutePath(validating: "/tmp/Workspace/ProjectB.xcodeproj")
+
+        let projectAPath = try #require(projectA.path?.string)
+        let projectBPath = try #require(projectB.path?.string)
 
         let xcworkspace = XCWorkspace(
-            data: XCWorkspaceData(children: [
-                .file(.init(location: .absolute(projectAPath.pathString))),
-                .file(.init(location: .absolute(projectBPath.pathString))),
-            ])
+            data: XCWorkspaceData(
+                children: [
+                    .file(.init(location: .absolute(projectAPath))),
+                    .file(.init(location: .absolute(projectBPath))),
+            ]
+            ),
+            path: .init(sourceDirectory.appending("/Workspace.xcworkspace"))
         )
 
+        try projectA.write(path: projectA.path!)
+        try projectB.write(path: projectB.path!)
         let mapper = XcodeGraphMapper()
 
+        // When
         let graph = try await mapper.buildGraph(from: .workspace(xcworkspace))
-
-        // Validate the graph
+        print(projectA.path!)
+        // Then
         #expect(graph.workspace.name == "Workspace")
-        #expect(graph.workspace.projects.contains(projectAPath) == true)
-        #expect(graph.workspace.projects.contains(projectBPath) == true)
+        #expect(graph.workspace.projects.contains(projectA.projectPath) == true)
+        #expect(graph.workspace.projects.contains(projectB.projectPath) == true)
         #expect(graph.projects.count == 2)
 
-        let projectA = try #require(graph.projects[projectAPath])
-        let projectB = try #require(graph.projects[projectBPath])
-        #expect(projectA.targets["ATarget"] != nil)
-        #expect(projectB.targets["BTarget"] != nil)
+        let mappedProjectA = try #require(graph.projects[projectA.projectPath])
+        let mappedProjectB = try #require(graph.projects[projectB.projectPath])
+        #expect(mappedProjectA.targets["ATarget"] != nil)
+        #expect(mappedProjectB.targets["BTarget"] != nil)
 
         // No packages or dependencies
         #expect(graph.packages.isEmpty == true)
@@ -145,13 +160,19 @@ struct XcodeGraphMapperTests {
 
     @Test("Maps a project graph with dependencies between targets")
     func testGraphWithDependencies() async throws {
+        // Given
         let pbxProj = PBXProj()
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)
         let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProj)
-        let configurationList: XCConfigurationList = .test(buildConfigurations: [debug, releaseConfig]).add(to: pbxProj)
-        // Setup a single project with two targets: App depends on AFramework
+        let configurationList: XCConfigurationList = .test(
+            buildConfigurations: [debug, releaseConfig]
+        )
+        .add(to: pbxProj)
+
+        let sourceDirectory = FileManager.default.temporaryDirectory.path
+
         let mockProvider = MockProjectProvider(
-            sourceDirectory: "/tmp/ProjectWithDeps",
+            sourceDirectory: sourceDirectory,
             projectName: "ProjectWithDeps",
             configurationList: configurationList,
             pbxProj: pbxProj
@@ -160,12 +181,13 @@ struct XcodeGraphMapperTests {
         let sourceFile = try PBXFileReference.test(
             path: "ViewController.swift",
             lastKnownFileType: "sourcecode.swift"
-        ).add(to: pbxProj).addToMainGroup(in: pbxProj)
+        )
+        .add(to: pbxProj)
+        .addToMainGroup(in: pbxProj)
 
         let buildFile = PBXBuildFile(file: sourceFile).add(to: pbxProj)
         let sourcesPhase = PBXSourcesBuildPhase(files: [buildFile]).add(to: pbxProj)
 
-        // Add a single target to the project
         let appTarget = try PBXNativeTarget.test(
             name: "App",
             buildConfigurationList: configurationList,
@@ -176,29 +198,32 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProj.rootObject)
 
         // App -> AFramework dependency
-        let target = try PBXNativeTarget.test(
+        let frameworkTarget = try PBXNativeTarget.test(
             name: "AFramework",
             buildConfigurationList: configurationList,
             buildPhases: [sourcesPhase],
             productType: .framework
-        ).add(to: pbxProj).add(to: pbxProj.rootObject)
+        )
+        .add(to: pbxProj)
+        .add(to: pbxProj.rootObject)
 
         let dep = PBXTargetDependency(
             name: "AFramework",
-            target: target
+            target: frameworkTarget
         )
-
+            .add(to: pbxProj)
         appTarget.dependencies.append(dep)
-
-        let projectPath = try AbsolutePath(validating: mockProvider.xcodeProjPath.pathString)
-
+        try mockProvider.xcodeProj.write(path: mockProvider.xcodeProj.path!)
         let mapper = XcodeGraphMapper()
 
+        // When
         let graph = try await mapper.buildGraph(from: .project(mockProvider.xcodeProj))
 
+        // Then
         // Verify dependencies are mapped
-        let sourceDep = GraphDependency.target(name: "App", path: mockProvider.sourceDirectory)
-        let targetDep = GraphDependency.target(name: "AFramework", path: mockProvider.sourceDirectory)
-        #expect(graph.dependencies == [sourceDep: [targetDep]])
+        let targetDep = GraphDependency.target(name: "AFramework", path: mockProvider.xcodeProj.srcPath)
+        let expectedDependency = try #require(graph.dependencies.first?.value)
+
+        #expect(expectedDependency == [targetDep])
     }
 }

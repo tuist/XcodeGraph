@@ -136,23 +136,23 @@ extension InfoPlist: ExpressibleByStringLiteral {
 
 public enum Entitlements: Equatable, Codable, Sendable {
     // Path to a user defined .entitlements file (already exists on disk).
-    case file(path: AbsolutePath)
+    case file(path: AbsolutePath, configuration: BuildConfiguration? = nil)
 
     // Path to a generated .entitlements file (may not exist on disk at the time of project generation).
     // Data of the generated file
-    case generatedFile(path: AbsolutePath, data: Data)
+    case generatedFile(path: AbsolutePath, data: Data, configuration: BuildConfiguration? = nil)
 
     // User defined dictionary of keys/values for an .entitlements file.
-    case dictionary([String: Plist.Value])
+    case dictionary([String: Plist.Value], configuration: BuildConfiguration? = nil)
 
     // A user defined xcconfig variable map to .entitlements file
-    case variable(String)
+    case variable(String, configuration: BuildConfiguration? = nil)
 
     // MARK: - Public
 
     public var path: AbsolutePath? {
         switch self {
-        case let .file(path), let .generatedFile(path: path, data: _):
+        case let .file(path, _), let .generatedFile(path: path, data: _, _):
             return path
         default:
             return nil

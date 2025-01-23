@@ -18,7 +18,7 @@ extension XcodeProj {
         )
         pbxProj.rootObject = pbxProject
 
-        let workspace = XCWorkspace.test(files: ["App/\(projectName).xcodeproj"])
+        let workspace = XCWorkspace.test(files: ["App/\(projectName).xcodeproj"], path: "App/\(projectName).xcworkspace")
         return XcodeProj(workspace: workspace, pbxproj: pbxProj)
     }
 }

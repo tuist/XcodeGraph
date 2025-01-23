@@ -16,7 +16,7 @@ extension Sequence where Element: Sendable {
     ///   the transformed values will match the original sequence,
     ///   except for the values that were transformed into `nil`.
     /// - throws: Rethrows any error thrown by the passed closure.
-    func serialCompactMap<T: Sendable>(
+    package func serialCompactMap<T: Sendable>(
         _ transform: (Element) async throws -> T?
     ) async rethrows -> [T] {
         var values = [T]()

@@ -7,6 +7,7 @@ import XcodeProj
 struct PBXHeadersBuildPhaseMapperTests {
     @Test("Maps public, private, and project headers from headers phase")
     func testMapHeaders() throws {
+        // Given
         let provider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = provider.xcodeProj.pbxproj
 
@@ -45,7 +46,8 @@ struct PBXHeadersBuildPhaseMapperTests {
 
         let headersPhase = PBXHeadersBuildPhase(
             files: [publicBuildFile, privateBuildFile, projectBuildFile]
-        ).add(to: pbxProj)
+        )
+        .add(to: pbxProj)
 
         try PBXNativeTarget(
             name: "App",
@@ -56,9 +58,12 @@ struct PBXHeadersBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXHeadersBuildPhaseMapper()
-        let headers = try mapper.map(headersPhase, xcodeProj: provider.xcodeProj)
-        try #require(headers != nil)
 
+        // When
+        let headers = try mapper.map(headersPhase, xcodeProj: provider.xcodeProj)
+
+        // Then
+        try #require(headers != nil)
         #expect(headers?.public.map(\.basename).contains("PublicHeader.h") == true)
         #expect(headers?.private.map(\.basename).contains("PrivateHeader.h") == true)
         #expect(headers?.project.map(\.basename).contains("ProjectHeader.h") == true)

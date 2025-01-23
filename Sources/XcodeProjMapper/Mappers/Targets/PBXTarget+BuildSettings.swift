@@ -18,14 +18,14 @@ extension PBXTarget {
     /// Retrieves the path to the Info.plist file from the target's build settings.
     ///
     /// - Returns: The `INFOPLIST_FILE` value if present, otherwise `nil`.
-    func infoPlistPath() -> [XCBuildConfiguration: String] {
+    func infoPlistPath() -> [BuildConfiguration: String] {
         buildConfigurationList?.stringSettings(for: .infoPlistFile) ?? [:]
     }
 
     /// Retrieves the path to the entitlements file from the target's build settings.
     ///
     /// - Returns: The `CODE_SIGN_ENTITLEMENTS` value if present, otherwise `nil`.
-    func entitlementsPath() -> [XCBuildConfiguration: String] {
+    func entitlementsPath() -> [BuildConfiguration: String] {
         buildConfigurationList?.stringSettings(for: .codeSignEntitlements) ?? [:]
     }
 

@@ -10,13 +10,19 @@ struct XCConfigurationMapperTests {
 
     @Test("Returns default settings when configuration list is nil")
     func testNilConfigurationListReturnsDefault() throws {
+        // Given
         let mockProvider = MockProjectProvider()
+
+        // When
         let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: nil)
+
+        // Then
         #expect(settings == Settings.default)
     }
 
     @Test("Maps a single build configuration correctly")
     func testSingleConfigurationMapping() throws {
+        // Given
         let pbxProj = PBXProj()
         let config: XCBuildConfiguration = .testDebug().add(to: pbxProj)
         let configList = XCConfigurationList.test(
@@ -25,7 +31,10 @@ struct XCConfigurationMapperTests {
         ).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList, pbxProj: pbxProj)
 
+        // When
         let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
+
+        // Then
         #expect(settings.configurations.count == 1)
 
         let configKey = settings.configurations.keys.first
@@ -39,15 +48,18 @@ struct XCConfigurationMapperTests {
 
     @Test("Maps multiple build configurations correctly")
     func testMultipleConfigurations() throws {
+        // Given
         let pbxProj = PBXProj()
-
         let debugConfiguration: XCBuildConfiguration = .testDebug().add(to: pbxProj)
         let releaseConfiguration: XCBuildConfiguration = .testRelease().add(to: pbxProj)
         let configs = [debugConfiguration, releaseConfiguration]
         let configList = XCConfigurationList.test(buildConfigurations: configs).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList, pbxProj: pbxProj)
 
+        // When
         let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
+
+        // Then
         #expect(settings.configurations.count == 2)
 
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
@@ -65,14 +77,18 @@ struct XCConfigurationMapperTests {
 
     @Test("Coerces non-string values to strings in build settings")
     func testCoercionOfNonStringValues() throws {
+        // Given
         let pbxProj = PBXProj()
-
-        let config: XCBuildConfiguration = .testDebug(buildSettings: ["SOME_NUMBER": 42, "A_BOOL": true]).add(to: pbxProj)
-
+        let config: XCBuildConfiguration = .testDebug(
+            buildSettings: ["SOME_NUMBER": 42, "A_BOOL": true]
+        ).add(to: pbxProj)
         let configList = XCConfigurationList.test(buildConfigurations: [config]).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList)
 
+        // When
         let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
+
+        // Then
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
         let debugConfig = try #require(settings.configurations[debugKey])
 
@@ -81,10 +97,13 @@ struct XCConfigurationMapperTests {
 
     @Test("Resolves XCConfig file paths correctly")
     func testXCConfigPathResolution() throws {
+        // Given
         let pbxProj = MockProjectProvider().pbxProj
         let baseConfigRef = try PBXFileReference.test(
-            sourceTree: .sourceRoot, path: "Config.xcconfig"
-        ).add(to: pbxProj).addToMainGroup(in: pbxProj)
+            sourceTree: .sourceRoot,
+            path: "Config.xcconfig"
+        ).add(to: pbxProj)
+        .addToMainGroup(in: pbxProj)
 
         let buildConfig = XCBuildConfiguration.testDebug(
             buildSettings: ["PRODUCT_BUNDLE_IDENTIFIER": "com.example"]
@@ -98,30 +117,36 @@ struct XCConfigurationMapperTests {
         )
 
         let mockProvider = MockProjectProvider(
-            sourceDirectory: "/Users/test/project",
             configurationList: configList
         )
+
+        // When
         let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
 
+        // Then
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
         let debugConfig = try #require(settings.configurations[debugKey])
 
-        let expectedPath = "/Users/test/project/Config.xcconfig"
+        let expectedPath = "/tmp/Config.xcconfig"
         #expect(debugConfig?.xcconfig?.pathString == expectedPath)
     }
 
     @Test("Maps array values correctly in build settings")
     func testArrayValueMapping() throws {
+        // Given
         let pbxProj = PBXProj()
-
-        let config: XCBuildConfiguration = .testDebug(buildSettings: ["SOME_ARRAY": ["val1", "val2"]]).add(to: pbxProj)
-
+        let config: XCBuildConfiguration = .testDebug(
+            buildSettings: ["SOME_ARRAY": ["val1", "val2"]]
+        ).add(to: pbxProj)
         let configList = XCConfigurationList.test(buildConfigurations: [config]).add(to: pbxProj)
         let mockProvider = MockProjectProvider(configurationList: configList, pbxProj: pbxProj)
 
+        // When
         let settings = try mapper.map(xcodeProj: mockProvider.xcodeProj, configurationList: configList)
 
+        // Then
         #expect(settings.configurations.count == 1)
+
         let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
         let debugConfig = try #require(settings.configurations[debugKey])
 

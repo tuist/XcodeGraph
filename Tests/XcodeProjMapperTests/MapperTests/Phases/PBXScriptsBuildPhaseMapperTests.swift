@@ -5,8 +5,10 @@ import XcodeProj
 
 @Suite
 struct PBXScriptsBuildPhaseMapperTests {
+
     @Test("Maps embedded run scripts with specified input/output paths")
     func testMapScripts() throws {
+        // Given
         let provider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = provider.xcodeProj.pbxproj
 
@@ -15,7 +17,8 @@ struct PBXScriptsBuildPhaseMapperTests {
             shellScript: "echo Hello",
             inputPaths: ["$(SRCROOT)/input.txt"],
             outputPaths: ["$(DERIVED_FILE_DIR)/output.txt"]
-        ).add(to: pbxProj)
+        )
+        .add(to: pbxProj)
 
         try PBXNativeTarget.test(
             name: "App",
@@ -26,8 +29,11 @@ struct PBXScriptsBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXScriptsBuildPhaseMapper()
-        let scripts = try mapper.map([scriptPhase], buildPhases: [scriptPhase], xcodeProj: provider.xcodeProj)
 
+        // When
+        let scripts = try mapper.map([scriptPhase], buildPhases: [scriptPhase])
+
+        // Then
         #expect(scripts.count == 1)
         let script = try #require(scripts.first)
         #expect(script.name == "Run Script")
@@ -38,6 +44,7 @@ struct PBXScriptsBuildPhaseMapperTests {
 
     @Test("Maps raw script build phases not covered by other categories")
     func testMapRawScriptBuildPhases() throws {
+        // Given
         let provider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = provider.xcodeProj.pbxproj
 
@@ -55,8 +62,11 @@ struct PBXScriptsBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXScriptsBuildPhaseMapper()
-        let rawPhases = try mapper.map([scriptPhase], buildPhases: [scriptPhase], xcodeProj: provider.xcodeProj)
 
+        // When
+        let rawPhases = try mapper.map([scriptPhase], buildPhases: [scriptPhase])
+
+        // Then
         #expect(rawPhases.count == 1)
         let rawPhase = try #require(rawPhases.first)
         #expect(rawPhase.name == "Test Script")

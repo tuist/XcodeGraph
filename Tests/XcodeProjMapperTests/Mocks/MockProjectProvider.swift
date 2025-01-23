@@ -56,7 +56,7 @@ struct MockProjectProvider {
         pbxProj.add(object: pbxProject)
         pbxProj.rootObject = pbxProject
 
-        xcodeProj = XcodeProj(workspace: XCWorkspace(), pbxproj: pbxProj)
+        xcodeProj = XcodeProj(workspace: XCWorkspace(), pbxproj: pbxProj, path: .init("\(sourceDirectory)/\(projectName).xcodeproj"))
     }
 
     func pbxProject() throws -> PBXProject {
@@ -80,5 +80,3 @@ struct MockProjectProvider {
         project.targets.append(contentsOf: targets)
     }
 }
-
-// MARK: - Extending PBXProjectMapper for Testing Utilities

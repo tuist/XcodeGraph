@@ -27,6 +27,12 @@ protocol WorkspaceMapping {
 /// - Maps shared schemes, and
 /// - Produces a `Workspace` model suitable for analysis or code generation.
 struct XCWorkspaceMapper: WorkspaceMapping {
+    private let schemeMapper: SchemeMapping
+
+    init(schemeMapper: SchemeMapping = XCSchemeMapper()) {
+        self.schemeMapper = schemeMapper
+    }
+
     func map(xcworkspace: XCWorkspace) async throws -> Workspace {
         let xcWorkspacePath = xcworkspace.workspacePath
         let srcPath = xcWorkspacePath.parentDirectory
@@ -107,8 +113,6 @@ struct XCWorkspaceMapper: WorkspaceMapping {
         let sharedDataPath = Path(srcPath.pathString) + "xcshareddata/xcschemes"
         guard sharedDataPath.exists else { return [] }
         let schemePaths = try sharedDataPath.children().filter { $0.extension == "xcscheme" }
-
-        let schemeMapper = XCSchemeMapper()
 
         return try schemePaths.map { schemePath in
             try schemeMapper.map(

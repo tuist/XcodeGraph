@@ -7,6 +7,7 @@ import XcodeProj
 struct PBXFrameworksBuildPhaseMapperTests {
     @Test("Maps frameworks from frameworks phase")
     func testMapFrameworks() throws {
+        // Given
         let mockProvider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = mockProvider.xcodeProj.pbxproj
 
@@ -30,8 +31,11 @@ struct PBXFrameworksBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXFrameworksBuildPhaseMapper()
+
+        // When
         let frameworks = try mapper.map(frameworksPhase, xcodeProj: mockProvider.xcodeProj)
 
+        // Then
         #expect(frameworks.count == 1)
         let dependency = try #require(frameworks.first)
         #expect(dependency.name == "MyFramework")

@@ -5,8 +5,10 @@ import XcodeProj
 
 @Suite
 struct PBXSourcesBuildPhaseMapperTests {
+
     @Test("Maps Swift source files with compiler flags from sources phase")
     func testMapSources() throws {
+        // Given
         let mockProvider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = mockProvider.xcodeProj.pbxproj
 
@@ -40,8 +42,11 @@ struct PBXSourcesBuildPhaseMapperTests {
         .add(to: pbxProj.rootObject)
 
         let mapper = PBXSourcesBuildPhaseMapper()
+
+        // When
         let sources = try mapper.map(sourcesPhase, xcodeProj: mockProvider.xcodeProj)
 
+        // Then
         #expect(sources.count == 1)
         let sourceFile = try #require(sources.first)
         #expect(sourceFile.path.basename == "main.swift")
@@ -50,6 +55,7 @@ struct PBXSourcesBuildPhaseMapperTests {
 
     @Test("Handles source files without file references gracefully")
     func testMapSourceFile_missingFileRef() throws {
+        // Given
         let mockProvider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = mockProvider.xcodeProj.pbxproj
 
@@ -62,12 +68,17 @@ struct PBXSourcesBuildPhaseMapperTests {
         try mockProvider.addTargets([target])
 
         let mapper = PBXSourcesBuildPhaseMapper()
+
+        // When
         let sources = try mapper.map(sourcesPhase, xcodeProj: mockProvider.xcodeProj)
+
+        // Then
         #expect(sources.isEmpty == true) // Gracefully handled empty result.
     }
 
     @Test("Gracefully handles non-existent file paths for source files")
     func testMapSourceFile_unresolvableFullPath() throws {
+        // Given
         // Use a provider with an invalid source directory to simulate missing files.
         let mockProvider = MockProjectProvider(
             sourceDirectory: "/invalid/Path",
@@ -81,12 +92,17 @@ struct PBXSourcesBuildPhaseMapperTests {
         )
         let buildFile = PBXBuildFile(file: fileRef).add(to: pbxProj)
         let sourcesPhase = PBXSourcesBuildPhase(files: [buildFile]).add(to: pbxProj)
+
         try PBXNativeTarget.test(buildPhases: [sourcesPhase])
             .add(to: pbxProj)
             .add(to: pbxProj.rootObject)
 
         let mapper = PBXSourcesBuildPhaseMapper()
+
+        // When
         let sources = try mapper.map(sourcesPhase, xcodeProj: mockProvider.xcodeProj)
+
+        // Then
         #expect(sources.isEmpty == true)
     }
 
@@ -95,6 +111,7 @@ struct PBXSourcesBuildPhaseMapperTests {
         arguments: [FileCodeGen.public, .private, .project, .disabled]
     )
     func testCodeGenAttributes(_ fileCodeGen: FileCodeGen) throws {
+        // Given
         let provider: MockProjectProvider = .makeBasicProjectProvider()
         let pbxProj = provider.xcodeProj.pbxproj
 
@@ -108,11 +125,16 @@ struct PBXSourcesBuildPhaseMapperTests {
         ).add(to: pbxProj)
 
         let sourcesPhase = PBXSourcesBuildPhase(files: [buildFile]).add(to: pbxProj)
-        try PBXNativeTarget.test(buildPhases: [sourcesPhase]).add(to: pbxProj).add(to: pbxProj.rootObject)
+        try PBXNativeTarget.test(buildPhases: [sourcesPhase])
+            .add(to: pbxProj)
+            .add(to: pbxProj.rootObject)
 
         let mapper = PBXSourcesBuildPhaseMapper()
+
+        // When
         let sources = try mapper.map(sourcesPhase, xcodeProj: provider.xcodeProj)
 
+        // Then
         #expect(sources.count == 1)
         let sourceFile = try #require(sources.first)
         #expect(sourceFile.codeGen == fileCodeGen)

@@ -9,27 +9,11 @@ extension PBXProjectMapper {
     func createMappedProject(
         projectName: String = "TestProject",
         targets: [PBXNativeTarget] = []
-    ) throws -> Project {
+    ) async throws -> Project {
         let provider = MockProjectProvider.makeBasicProjectProvider(projectName: projectName)
         try provider.addTargets(targets)
 
         let mapper = PBXProjectMapper()
-        return try mapper.map(xcodeProj: provider.xcodeProj)
+        return try await mapper.map(xcodeProj: provider.xcodeProj)
     }
-
-    /// Creates a mapped graph from multiple project providers, useful for testing multi-project scenarios.
-//    func createMappedGraph(
-//        graphType: XcodeMapperGraphType,
-//        projectProviders: [AbsolutePath: MockProjectProvider]
-//    ) throws -> XcodeGraph.Graph {
-//        let mapper = XcodeGraphMapper() { path in
-//            guard let provider = projectProviders[path] else {
-//                Issue.record("Unexpected project path requested: \(path)")
-//                throw XcodeProjMapper.XcodeProjError.noProjectsFound
-//            }
-//            return provider
-//        }
-//
-//        return try mapper.map()
-//    }
 }

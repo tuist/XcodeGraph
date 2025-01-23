@@ -52,7 +52,7 @@ struct PBXBuildRuleMapper: BuildRuleMapping {
     }
 }
 
-enum PBXBuildRuleMappingError: Error, LocalizedError {
+enum PBXBuildRuleMappingError: Error, LocalizedError, Equatable {
     case unknownFileType(String)
     case unknownCompilerSpec(String)
 
