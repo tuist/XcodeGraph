@@ -3,6 +3,8 @@ import MachO
 import Path
 import XcodeGraph
 
+private let CPU_SUBTYPE_MASK = Int32(bitPattern: 0xFF00_0000)
+
 // MARK: - Errors
 
 enum PrecompiledMetadataProviderError: LocalizedError, Equatable {
@@ -109,10 +111,12 @@ public class PrecompiledMetadataProvider: PrecompiledMetadataProviding {
             if let metadata = maybeMetadata {
                 return metadata
             } else {
+                let maskedSubtype = fatArch.cpusubtype & ~CPU_SUBTYPE_MASK // 0x00000002
+
                 // If we cannot parse Mach-O, fallback to static if cputype is known
                 guard let arch = readBinaryArchitecture(
                     cputype: fatArch.cputype,
-                    cpusubtype: fatArch.cpusubtype
+                    cpusubtype: maskedSubtype
                 ) else {
                     throw PrecompiledMetadataProviderError.architecturesNotFound(binaryPath)
                 }

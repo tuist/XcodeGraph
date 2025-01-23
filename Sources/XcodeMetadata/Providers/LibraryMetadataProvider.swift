@@ -41,7 +41,7 @@ public protocol LibraryMetadataProviding: PrecompiledMetadataProviding {
 public final class LibraryMetadataProvider: PrecompiledMetadataProvider, LibraryMetadataProviding {
     private let fileSystem: FileSysteming
 
-    init(
+    public init(
         fileSystem: FileSysteming = FileSystem()
     ) {
         self.fileSystem = fileSystem

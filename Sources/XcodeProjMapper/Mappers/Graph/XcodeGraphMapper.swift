@@ -110,7 +110,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         let workspace = assembleWorkspace(graphType: graphType, projectPaths: projectPaths)
         let projects = try await loadProjects(projectPaths)
         let packages = extractPackages(from: projects)
-        let (dependencies, dependencyConditions) = try resolveDependencies(for: projects)
+        let (dependencies, dependencyConditions) = try await resolveDependencies(for: projects)
 
         return assembleFinalGraph(
             workspace: workspace,
@@ -181,7 +181,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
 
     private func resolveDependencies(
         for projects: [AbsolutePath: Project]
-    ) throws -> (
+    ) async throws -> (
         [GraphDependency: Set<GraphDependency>],
         [GraphEdge: PlatformCondition]
     ) {
@@ -189,54 +189,47 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
             projects.values.flatMap(\.targets),
             uniquingKeysWith: { existing, _ in existing }
         )
-        return try buildDependencies(for: projects, using: allTargetsMap)
+        return try await buildDependencies(for: projects, using: allTargetsMap)
     }
 
     private func buildDependencies(
         for projects: [AbsolutePath: Project],
         using allTargetsMap: [String: Target]
-    ) throws -> (
+    ) async throws -> (
         [GraphDependency: Set<GraphDependency>],
         [GraphEdge: PlatformCondition]
     ) {
-        let result = try projects.reduce(into: (
-            dependencies: [GraphDependency: Set<GraphDependency>](),
-            conditions: [GraphEdge: PlatformCondition]()
-        )) { partial, entry in
-            let (path, project) = entry
+        var dependencies: [GraphDependency: Set<GraphDependency>] = [:]
+        var dependencyConditions: [GraphEdge: PlatformCondition] = [:]
 
-            try project.targets.forEach { name, target in
-                let sourceDependency = GraphDependency.target(name: name, path: path)
-
-                // Convert target dependencies into edges
-                let edgesAndDependencies = try target.dependencies.compactMap { targetDep -> (
+        for (path, project) in projects {
+            for (name, target) in project.targets {
+                let sourceDependency = GraphDependency.target(name: name, path: path.parentDirectory)
+                let edgesAndDependencies = try await target.dependencies.serialCompactMap { targetDep -> (
                     GraphEdge,
                     PlatformCondition?,
                     GraphDependency
                 ) in
-                    let graphDep = try targetDep.graphDependency(
+                    let graphDep = try await targetDep.graphDependency(
                         sourceDirectory: path.parentDirectory,
                         allTargetsMap: allTargetsMap
                     )
                     return (GraphEdge(from: sourceDependency, to: graphDep), targetDep.condition, graphDep)
                 }
 
-                // Update the conditions dictionary
                 for (edge, condition, _) in edgesAndDependencies {
                     if let condition {
-                        partial.conditions[edge] = condition
+                        dependencyConditions[edge] = condition
                     }
                 }
 
-                // Update the dependencies dictionary
                 let targetDependencies = edgesAndDependencies.map(\.2)
                 if !targetDependencies.isEmpty {
-                    partial.dependencies[sourceDependency] = Set(targetDependencies)
+                    dependencies[sourceDependency] = Set(targetDependencies)
                 }
             }
         }
-
-        return (result.dependencies, result.conditions)
+        return (dependencies, dependencyConditions)
     }
 
     private func assembleFinalGraph(

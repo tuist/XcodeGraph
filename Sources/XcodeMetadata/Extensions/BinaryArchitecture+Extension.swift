@@ -63,7 +63,9 @@ extension BinaryArchitecture {
     public init?(cputype: cpu_type_t, subtype: cpu_subtype_t) {
         let key = CPUIdentifier(cputype: cputype, cpusubtype: subtype)
         let fallbackKey = CPUIdentifier(cputype: cputype, cpusubtype: CPU_SUBTYPE_ANY)
-        guard let architecture = Self.architectureMap[key] ?? Self.architectureMap[fallbackKey] else { return nil }
+        guard let architecture = Self.architectureMap[key] ?? Self.architectureMap[fallbackKey] else {
+            return nil
+        }
         self = architecture
     }
 }

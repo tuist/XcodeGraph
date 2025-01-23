@@ -1,16 +1,16 @@
-import XcodeProj
-import XcodeGraph
 import Path
+import XcodeGraph
+import XcodeProj
 
 extension XcodeProj {
     static func test(
         sourceDirectory: String = "/tmp",
         projectName: String = "TestProject",
-    configurationList: XCConfigurationList = XCConfigurationList.test(
-        buildConfigurations: [.testDebug(), .testRelease()]
-    ),
+        configurationList: XCConfigurationList = XCConfigurationList.test(
+            buildConfigurations: [.testDebug(), .testRelease()]
+        ),
         targets: [PBXTarget] = [],
-    pbxProj: PBXProj = PBXProj()
+        pbxProj: PBXProj = PBXProj()
     ) -> XcodeProj {
         pbxProj.add(object: configurationList)
         for config in configurationList.buildConfigurations {
@@ -54,5 +54,4 @@ extension XcodeProj {
             path: .init("\(sourceDirectory)/\(projectName).xcodeproj")
         )
     }
-
 }

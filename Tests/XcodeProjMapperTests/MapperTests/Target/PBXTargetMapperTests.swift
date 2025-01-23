@@ -240,7 +240,7 @@ struct PBXTargetMapperTests {
     @Test("Throws missingFilesGroup when mainGroup is nil")
     func testMapTarget_missingFilesGroup() async throws {
         // Given
-        
+
         let mapper = PBXTargetMapper()
         let xcodeProj = XcodeProj.test()
 

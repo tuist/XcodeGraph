@@ -61,7 +61,7 @@ struct PBXSourcesBuildPhaseMapperTests {
         // A build file with no file reference.
         let buildFile = PBXBuildFile()
         let sourcesPhase = PBXSourcesBuildPhase(files: [buildFile]).add(to: pbxProj)
-        let _ = try PBXNativeTarget.test(buildPhases: [sourcesPhase])
+        _ = try PBXNativeTarget.test(buildPhases: [sourcesPhase])
             .add(to: pbxProj)
             .add(to: pbxProj.rootObject)
 

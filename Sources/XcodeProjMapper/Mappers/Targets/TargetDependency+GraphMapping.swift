@@ -1,6 +1,7 @@
 import Foundation
 import Path
 import XcodeGraph
+import XcodeMetadata
 import XcodeProj
 
 extension TargetDependency {
@@ -14,8 +15,11 @@ extension TargetDependency {
     /// - Throws: `TargetDependencyMappingError` if a referenced target is not found or the dependency type is unknown.
     func graphDependency(
         sourceDirectory: AbsolutePath,
-        allTargetsMap: [String: Target]
-    ) throws -> GraphDependency {
+        allTargetsMap: [String: Target],
+        xcframeworkMetadataProvider: XCFrameworkMetadataProviding = XCFrameworkMetadataProvider(),
+        libraryMetadataProvider: LibraryMetadataProviding = LibraryMetadataProvider(),
+        frameworkMetadataProvider: FrameworkMetadataProviding = FrameworkMetadataProvider()
+    ) async throws -> GraphDependency {
         switch self {
         case let .target(name, status, _):
             return .target(name: name, path: sourceDirectory, status: status)
@@ -29,47 +33,44 @@ extension TargetDependency {
             )
 
         case let .framework(path, status, _):
-            // TODO: - Retrieve architectures, bcsymbolmapPaths from metadata providers if needed.
+            let metadata = try await frameworkMetadataProvider.loadMetadata(at: path, status: status)
             return .framework(
                 path: path,
-                binaryPath: path.appending(component: "\(name)"),
-                dsymPath: nil,
-                bcsymbolmapPaths: [],
-                linking: .dynamic,
-                architectures: [],
+                binaryPath: metadata.binaryPath,
+                dsymPath: metadata.dsymPath,
+                bcsymbolmapPaths: metadata.bcsymbolmapPaths,
+                linking: metadata.linking,
+                architectures: metadata.architectures,
                 status: status
             )
 
         case let .xcframework(path, status, _):
-            // TODO: - Retrieve architectures, bcsymbolmapPaths, infoPlist from metadata providers.
-            let infoPlist = XCFrameworkInfoPlist(libraries: [])
+            let metadata = try await xcframeworkMetadataProvider.loadMetadata(at: path, status: status)
             return .xcframework(
                 GraphDependency.XCFramework(
                     path: path,
-                    infoPlist: infoPlist,
-                    linking: .dynamic,
-                    mergeable: false,
+                    infoPlist: metadata.infoPlist,
+                    linking: metadata.linking,
+                    mergeable: metadata.mergeable,
                     status: status,
-                    macroPath: nil,
-                    swiftModules: [],
-                    moduleMaps: []
+                    macroPath: metadata.macroPath,
+                    swiftModules: metadata.swiftModules,
+                    moduleMaps: metadata.moduleMaps
                 )
             )
 
         case let .library(path, publicHeaders, swiftModuleMap, _):
-            let linking: BinaryLinking = {
-                switch path.fileExtension {
-                case .staticLibrary: return .static
-                case .dynamicLibrary, .textBasedDynamicLibrary: return .dynamic
-                default: return .dynamic
-                }
-            }()
-            // Future: Retrieve architectures from metadata providers.
+            let metadata = try await libraryMetadataProvider.loadMetadata(
+                at: path,
+                publicHeaders: publicHeaders,
+                swiftModuleMap: swiftModuleMap
+            )
+
             return .library(
                 path: path,
                 publicHeaders: publicHeaders,
-                linking: linking,
-                architectures: [],
+                linking: metadata.linking,
+                architectures: metadata.architectures,
                 swiftModuleMap: swiftModuleMap
             )
 
@@ -89,19 +90,16 @@ extension TargetDependency {
             )
 
         case .xctest:
-            // TODO: - Retrieve infoPlist from metadata providers.
-            let infoPlist = XCFrameworkInfoPlist(libraries: [])
-            return .xcframework(
-                GraphDependency.XCFramework(
-                    path: sourceDirectory,
-                    infoPlist: infoPlist,
-                    linking: .dynamic,
-                    mergeable: false,
-                    status: .required,
-                    macroPath: nil,
-                    swiftModules: [],
-                    moduleMaps: []
-                )
+            let path = try await xctestFrameworkPath()
+            let metadata = try await frameworkMetadataProvider.loadMetadata(at: path, status: .required)
+            return .framework(
+                path: path,
+                binaryPath: metadata.binaryPath,
+                dsymPath: metadata.dsymPath,
+                bcsymbolmapPaths: metadata.bcsymbolmapPaths,
+                linking: metadata.linking,
+                architectures: metadata.architectures,
+                status: .required
             )
         }
     }
@@ -167,6 +165,14 @@ extension TargetDependency {
 
         return dependency
     }
+}
+
+private func xctestFrameworkPath(
+    developerDirectoryProvider: DeveloperDirectoryProviding =
+        DeveloperDirectoryProvider()
+) async throws -> AbsolutePath {
+    let path = try await developerDirectoryProvider.developerDirectory()
+    return path.parentDirectory.appending(components: ["SharedFrameworks", "XCTest.framework"])
 }
 
 extension TargetDependency.PackageType {
