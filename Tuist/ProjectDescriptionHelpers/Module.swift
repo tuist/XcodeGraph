@@ -129,8 +129,8 @@ public enum Module: String, CaseIterable {
             [
                 .target(name: Module.xcodeGraph.rawValue),
                 .target(name: Module.xcodeMetadata.rawValue),
-                .external(name: "Command")
-                    .external(name: "Path"),
+                .external(name: "Path"),
+                .external(name: "Command"),
                 .external(name: "XcodeProj"),
             ]
         case .xcodeMetadata:
@@ -145,7 +145,7 @@ public enum Module: String, CaseIterable {
 
     public var unitTestDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .xcodeMetadata, .xcconfig:
+        case .xcodeGraph, .xcodeMetadata, .xcodeProjMapper:
             [
             ]
         }
