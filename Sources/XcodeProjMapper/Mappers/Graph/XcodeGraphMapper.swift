@@ -7,6 +7,10 @@ import XcodeProj
 
 /// A protocol defining how to map a given file path to a `Graph`.
 public protocol XcodeGraphMapping {
+    /// Builds a `Graph` from the specified path.
+    /// - Parameter pathString: The absolute path to a `.xcworkspace`, `.xcodeproj`, or directory containing them.
+    /// - Returns: A `Graph` representing the projects, targets, and dependencies found at `pathString`.
+    /// - Throws: If the path doesn't exist or no projects are found.
     func map(at pathString: AbsolutePath) async throws -> Graph
 }
 
@@ -25,26 +29,21 @@ public enum XcodeGraphMapperError: LocalizedError {
     }
 }
 
-/// Specifies whether we're mapping a single `.xcodeproj` or an `.xcworkspace`.
+/// Specifies whether we’re mapping a single `.xcodeproj` or an `.xcworkspace`.
 enum XcodeMapperGraphType {
     case workspace(XCWorkspace)
     case project(XcodeProj)
 }
 
-///// A unified mapper that:
-///// 1. Detects `.xcworkspace` vs. `.xcodeproj` vs. directory
-///// 2. Builds a `Graph` by enumerating projects, targets, and dependencies.
-/////
-///// This replaces both:
-///// - The old "GraphMapper" that enumerated projects
-///// - The "ProjectParser" that detected the path type
-///// - "ProjectProvider" / "WorkspaceProvider"
-/////
-///// Example usage:
-///// ```swift
-///// let mapper: XcodeGraphMapping = XcodeGraphMapper()
-///// let graph = try mapper.map(at: "/path/to/MyApp")
-///// ```
+/// A unified mapper that:
+/// 1. Detects `.xcworkspace` vs. `.xcodeproj` vs. a directory.
+/// 2. Builds a `Graph` by enumerating projects, targets, and dependencies.
+///
+/// This replaces old parsers/providers with a single approach. For example:
+/// ```swift
+/// let mapper: XcodeGraphMapping = XcodeGraphMapper()
+/// let graph = try await mapper.map(at: "/path/to/MyApp")
+/// ```
 public struct XcodeGraphMapper: XcodeGraphMapping {
     private let fileSystem: FileSysteming
 
@@ -65,17 +64,21 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         return try await buildGraph(from: graphType)
     }
 
-    // MARK: - Private Helpers
+    // MARK: - Determine Graph Type
 
     private func determineGraphType(at path: AbsolutePath) async throws -> XcodeMapperGraphType {
+        // Try a direct match for .xcworkspace / .xcodeproj
         if let directType = try detectDirectGraphType(at: path) {
             return directType
         }
+        // Otherwise look inside the directory
         return try await detectGraphTypeInDirectory(at: path)
     }
 
     private func detectDirectGraphType(at path: AbsolutePath) throws -> XcodeMapperGraphType? {
-        guard let ext = path.extension?.lowercased() else { return nil }
+        guard let ext = path.extension?.lowercased() else {
+            return nil
+        }
 
         switch ext {
         case "xcworkspace":
@@ -90,7 +93,8 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     }
 
     private func detectGraphTypeInDirectory(at path: AbsolutePath) async throws -> XcodeMapperGraphType {
-        let contents = try fileSystem.glob(directory: path, include: ["**/*.xcworkspace", "**/*.xcodeproj"])
+        let patterns = ["**/*.xcworkspace", "**/*.xcodeproj"]
+        let contents = try fileSystem.glob(directory: path, include: patterns)
 
         if let workspacePath = try await contents.first(where: { $0.extension?.lowercased() == "xcworkspace" }) {
             let xcworkspace = try XCWorkspace(path: Path(workspacePath.pathString))
@@ -104,6 +108,8 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
 
         throw XcodeGraphMapperError.noProjectsFound(path.pathString)
     }
+
+    // MARK: - Build Graph
 
     func buildGraph(from graphType: XcodeMapperGraphType) async throws -> Graph {
         let projectPaths = try await identifyProjectPaths(from: graphType)
@@ -133,7 +139,10 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         }
     }
 
-    private func assembleWorkspace(graphType: XcodeMapperGraphType, projectPaths: [AbsolutePath]) -> Workspace {
+    private func assembleWorkspace(
+        graphType: XcodeMapperGraphType,
+        projectPaths: [AbsolutePath]
+    ) -> Workspace {
         let workspacePath: AbsolutePath
         let name: String
 
@@ -155,7 +164,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     }
 
     private func loadProjects(_ projectPaths: [AbsolutePath]) async throws -> [AbsolutePath: Project] {
-        var projects: [AbsolutePath: Project] = [:]
+        var projects = [AbsolutePath: Project]()
 
         for path in projectPaths {
             let xcodeProj = try XcodeProj(pathString: path.pathString)
@@ -167,24 +176,20 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         return projects
     }
 
-    private func extractPackages(from projects: [AbsolutePath: Project]) -> [AbsolutePath: [String: Package]] {
-        var packages: [AbsolutePath: [String: Package]] = [:]
-
-        for (path, project) in projects {
-            if !project.packages.isEmpty {
-                packages[path] = Dictionary(uniqueKeysWithValues: project.packages.map { ($0.url, $0) })
-            }
+    private func extractPackages(
+        from projects: [AbsolutePath: Project]
+    ) -> [AbsolutePath: [String: Package]] {
+        projects.compactMapValues { project in
+            guard !project.packages.isEmpty else { return nil }
+            return Dictionary(
+                uniqueKeysWithValues: project.packages.map { ($0.url, $0) }
+            )
         }
-
-        return packages
     }
 
     private func resolveDependencies(
         for projects: [AbsolutePath: Project]
-    ) async throws -> (
-        [GraphDependency: Set<GraphDependency>],
-        [GraphEdge: PlatformCondition]
-    ) {
+    ) async throws -> ([GraphDependency: Set<GraphDependency>], [GraphEdge: PlatformCondition]) {
         let allTargetsMap = Dictionary(
             projects.values.flatMap(\.targets),
             uniquingKeysWith: { existing, _ in existing }
@@ -195,37 +200,35 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     private func buildDependencies(
         for projects: [AbsolutePath: Project],
         using allTargetsMap: [String: Target]
-    ) async throws -> (
-        [GraphDependency: Set<GraphDependency>],
-        [GraphEdge: PlatformCondition]
-    ) {
-        var dependencies: [GraphDependency: Set<GraphDependency>] = [:]
-        var dependencyConditions: [GraphEdge: PlatformCondition] = [:]
+    ) async throws -> ([GraphDependency: Set<GraphDependency>], [GraphEdge: PlatformCondition]) {
+        var dependencies = [GraphDependency: Set<GraphDependency>]()
+        var dependencyConditions = [GraphEdge: PlatformCondition]()
 
         for (path, project) in projects {
             for (name, target) in project.targets {
                 let sourceDependency = GraphDependency.target(name: name, path: path.parentDirectory)
-                let edgesAndDependencies = try await target.dependencies.serialCompactMap { targetDep -> (
-                    GraphEdge,
-                    PlatformCondition?,
-                    GraphDependency
-                ) in
-                    let graphDep = try await targetDep.graphDependency(
+
+                // Build edges for each target dependency
+                let edgesAndDeps = try await target.dependencies.serialCompactMap {
+                    (dep: TargetDependency) async throws -> (GraphEdge, PlatformCondition?, GraphDependency) in
+                    let graphDep = try await dep.graphDependency(
                         sourceDirectory: path.parentDirectory,
                         allTargetsMap: allTargetsMap
                     )
-                    return (GraphEdge(from: sourceDependency, to: graphDep), targetDep.condition, graphDep)
+                    return (GraphEdge(from: sourceDependency, to: graphDep), dep.condition, graphDep)
                 }
 
-                for (edge, condition, _) in edgesAndDependencies {
+                // Update conditions dictionary
+                for (edge, condition, _) in edgesAndDeps {
                     if let condition {
                         dependencyConditions[edge] = condition
                     }
                 }
 
-                let targetDependencies = edgesAndDependencies.map(\.2)
-                if !targetDependencies.isEmpty {
-                    dependencies[sourceDependency] = Set(targetDependencies)
+                // Update dependencies dictionary
+                let targetDeps = edgesAndDeps.map(\.2)
+                if !targetDeps.isEmpty {
+                    dependencies[sourceDependency] = Set(targetDeps)
                 }
             }
         }
@@ -249,6 +252,8 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
             dependencyConditions: dependencyConditions
         )
     }
+
+    // MARK: - Project Path Extraction
 
     private func extractProjectPaths(
         from elements: [XCWorkspaceDataElement],

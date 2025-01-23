@@ -35,15 +35,12 @@ protocol PackageMapping {
 }
 
 /// A mapper that converts remote and local Swift package references into `Package` domain models.
-///
-/// `PackageMapper` translates `XCRemoteSwiftPackageReference` and `XCLocalSwiftPackageReference` instances
-/// into `Package` models by extracting repository URLs, version requirements, and resolving local paths.
 struct XCPackageMapper: PackageMapping {
     func map(package: XCRemoteSwiftPackageReference) throws -> Package {
         guard let repositoryURL = package.repositoryURL else {
-            throw PackageMappingError.missingRepositoryURL(packageName: package.name ?? "Unknown Package")
+            let name = package.name ?? "Unknown Package"
+            throw PackageMappingError.missingRepositoryURL(packageName: name)
         }
-
         let requirement = mapRequirement(package: package)
         return .remote(url: repositoryURL, requirement: requirement)
     }
@@ -54,16 +51,12 @@ struct XCPackageMapper: PackageMapping {
         return .local(path: path)
     }
 
-    // MARK: - Helpers
+    // MARK: - Private Helpers
 
     /// Determines the version requirement for a remote Swift package.
-    ///
-    /// Converts the `XCRemoteSwiftPackageReference`'s version requirement into a `Package.Requirement`.
-    ///
-    /// - Parameter package: The remote package reference containing the version requirement.
-    /// - Returns: A `Package.Requirement` reflecting the specified versioning scheme.
-    func mapRequirement(package: XCRemoteSwiftPackageReference) -> Requirement {
+     private func mapRequirement(package: XCRemoteSwiftPackageReference) -> Requirement {
         guard let versionRequirement = package.versionRequirement else {
+            // Default to an all-zero version if none is specified
             return .upToNextMajor("0.0.0")
         }
 

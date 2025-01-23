@@ -3,28 +3,30 @@ import Path
 import XcodeGraph
 import XcodeProj
 
+/// A protocol for mapping PBXShellScriptBuildPhases into domain models.
 protocol PBXScriptsBuildPhaseMapping {
     /// Maps the given script phases into `TargetScript` models.
     ///
     /// - Parameters:
-    ///   - scriptPhases: The array of `PBXShellScriptBuildPhase` to map.
-    ///   - buildPhases: The complete array of the target’s `PBXBuildPhase`s, used to determine script order.
-    ///   - projectProvider: Provides access to the project's directory structure.
+    ///   - scriptPhases: The shell script build phases to convert.
+    ///   - buildPhases: The full list of a target's `PBXBuildPhase`s, used to determine script order.
     /// - Returns: An array of `TargetScript` models representing each shell script build phase.
-    /// - Throws: If script file references or paths cannot be resolved.
+    /// - Throws: If any file paths cannot be validated.
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
         buildPhases: [PBXBuildPhase]
     ) throws -> [TargetScript]
 
-    /// Maps raw script build phases into `RawScriptBuildPhase` models.
+    /// Maps shell script build phases into a simpler, “raw” representation (`RawScriptBuildPhase`).
     ///
-    /// - Parameter scriptPhases: The array of `PBXShellScriptBuildPhase` to map.
-    /// - Returns: An array of `RawScriptBuildPhase` instances.
+    /// - Parameter scriptPhases: The shell script build phases to map.
+    /// - Returns: A list of `RawScriptBuildPhase` models for each script.
     func mapRawScriptBuildPhases(_ scriptPhases: [PBXShellScriptBuildPhase]) -> [RawScriptBuildPhase]
 }
 
+/// Maps `PBXShellScriptBuildPhase` instances into `TargetScript` and `RawScriptBuildPhase` models.
 struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
+
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
         buildPhases: [PBXBuildPhase]
@@ -40,17 +42,27 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
 
     // MARK: - Private Helpers
 
+    /// Converts a single `PBXShellScriptBuildPhase` to a `TargetScript`, if valid.
     private func mapScriptPhase(
         _ scriptPhase: PBXShellScriptBuildPhase,
         buildPhases: [PBXBuildPhase]
     ) throws -> TargetScript? {
-        guard let shellScript = scriptPhase.shellScript else { return nil }
+        guard let shellScript = scriptPhase.shellScript else {
+            return nil
+        }
 
-        let inputFileListPaths = try scriptPhase.inputFileListPaths?.compactMap { try AbsolutePath(validating: $0) } ?? []
+        let inputFileListPaths = try scriptPhase.inputFileListPaths?.compactMap {
+            try AbsolutePath(validating: $0)
+        } ?? []
 
-        let outputFileListPaths = try scriptPhase.outputFileListPaths?.compactMap { try AbsolutePath(validating: $0) } ?? []
+        let outputFileListPaths = try scriptPhase.outputFileListPaths?.compactMap {
+            try AbsolutePath(validating: $0)
+        } ?? []
 
-        let dependencyFile = try scriptPhase.dependencyFile.map { try AbsolutePath(validating: $0) }
+        let dependencyFile = try scriptPhase.dependencyFile.map {
+            try AbsolutePath(validating: $0)
+        }
+
         return TargetScript(
             name: scriptPhase.name ?? BuildPhaseConstants.defaultScriptName,
             order: determineScriptOrder(buildPhases: buildPhases, scriptPhase: scriptPhase),
@@ -67,7 +79,10 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
         )
     }
 
-    private func mapShellScriptBuildPhase(_ buildPhase: PBXShellScriptBuildPhase) -> RawScriptBuildPhase {
+    /// Converts a single `PBXShellScriptBuildPhase` into a simpler `RawScriptBuildPhase`.
+    private func mapShellScriptBuildPhase(
+        _ buildPhase: PBXShellScriptBuildPhase
+    ) -> RawScriptBuildPhase {
         let name = buildPhase.name() ?? BuildPhaseConstants.unnamedScriptPhase
         let shellPath = buildPhase.shellPath ?? BuildPhaseConstants.defaultShellPath
         let script = buildPhase.shellScript ?? ""
@@ -82,16 +97,21 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
         )
     }
 
+    /// Determines the order of the script relative to other build phases (pre or post sources).
     private func determineScriptOrder(
         buildPhases: [PBXBuildPhase],
         scriptPhase: PBXShellScriptBuildPhase
     ) -> TargetScript.Order {
-        guard let scriptPhaseIndex = buildPhases.firstIndex(of: scriptPhase) else { return .pre }
-
-        if let sourcesPhaseIndex = buildPhases.firstIndex(where: { $0.buildPhase == .sources }) {
-            return scriptPhaseIndex > sourcesPhaseIndex ? .post : .pre
+        guard let scriptIndex = buildPhases.firstIndex(of: scriptPhase) else {
+            return .pre
         }
 
-        return scriptPhaseIndex == 0 ? .pre : .post
+        // If we have a Sources phase, check whether this script is above or below it.
+        if let sourcesIndex = buildPhases.firstIndex(where: { $0.buildPhase == .sources }) {
+            return scriptIndex > sourcesIndex ? .post : .pre
+        }
+
+        // Fallback: if it's at index 0, consider it pre; otherwise post.
+        return scriptIndex == 0 ? .pre : .post
     }
 }

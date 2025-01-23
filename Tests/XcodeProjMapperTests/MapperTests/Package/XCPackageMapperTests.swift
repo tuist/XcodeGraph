@@ -43,11 +43,10 @@ struct XCPackageMapperTests {
             versionRequirement: .upToNextMajorVersion("1.0.0")
         )
 
-        // When
-        let requirement = mapper.mapRequirement(package: package)
+        let mapped = try mapper.map(package: package)
 
         // Then
-        #expect(requirement == .upToNextMajor("1.0.0"))
+        #expect(mapped.requirement == .upToNextMajor("1.0.0"))
     }
 
     @Test("Maps an up-to-next-minor version requirement correctly")
@@ -59,10 +58,10 @@ struct XCPackageMapperTests {
         )
 
         // When
-        let requirement = mapper.mapRequirement(package: package)
+        let mapped = try mapper.map(package: package)
 
         // Then
-        #expect(requirement == .upToNextMinor("1.2.0"))
+        #expect(mapped.requirement == .upToNextMinor("1.2.0"))
     }
 
     @Test("Maps an exact version requirement correctly")
@@ -74,10 +73,10 @@ struct XCPackageMapperTests {
         )
 
         // When
-        let requirement = mapper.mapRequirement(package: package)
+        let mapped = try mapper.map(package: package)
 
         // Then
-        #expect(requirement == .exact("1.2.3"))
+        #expect(mapped.requirement == .exact("1.2.3"))
     }
 
     @Test("Maps a range version requirement correctly")
@@ -89,10 +88,10 @@ struct XCPackageMapperTests {
         )
 
         // When
-        let requirement = mapper.mapRequirement(package: package)
+        let mapped = try mapper.map(package: package)
 
         // Then
-        #expect(requirement == .range(from: "1.0.0", to: "2.0.0"))
+        #expect(mapped.requirement == .range(from: "1.0.0", to: "2.0.0"))
     }
 
     @Test("Maps a branch-based version requirement correctly")
@@ -104,10 +103,10 @@ struct XCPackageMapperTests {
         )
 
         // When
-        let requirement = mapper.mapRequirement(package: package)
+        let mapped = try mapper.map(package: package)
 
         // Then
-        #expect(requirement == .branch("main"))
+        #expect(mapped.requirement == .branch("main"))
     }
 
     @Test("Maps a revision-based version requirement correctly")
@@ -119,10 +118,10 @@ struct XCPackageMapperTests {
         )
 
         // When
-        let requirement = mapper.mapRequirement(package: package)
+        let mapped = try mapper.map(package: package)
 
         // Then
-        #expect(requirement == .revision("abc123"))
+        #expect(mapped.requirement == .revision("abc123"))
     }
 
     @Test("Maps a missing version requirement to up-to-next-major(0.0.0)")
@@ -134,10 +133,10 @@ struct XCPackageMapperTests {
         )
 
         // When
-        let requirement = mapper.mapRequirement(package: package)
+        let mapped = try mapper.map(package: package)
 
         // Then
-        #expect(requirement == .upToNextMajor("0.0.0"))
+        #expect(mapped.requirement == .upToNextMajor("0.0.0"))
     }
 
     @Test("Maps a local package reference correctly")
@@ -171,6 +170,18 @@ struct XCPackageMapperTests {
             // Because 'repositoryURL' was set to nil,
             // we verify that the correct error message appears.
             return error.localizedDescription == "The repository URL is missing for the package: Unknown Package."
+        }
+    }
+}
+
+
+private extension Package {
+    var requirement: Requirement? {
+        switch self {
+        case let .remote(_, requirement):
+            return requirement
+        case .local:
+            return nil
         }
     }
 }

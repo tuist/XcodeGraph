@@ -160,15 +160,10 @@ struct PBXTargetMapperTests {
     func testMapEntitlements() async throws {
         // Given
 
-        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
-        let xcodeProj = XcodeProj.test(sourceDirectory: tempDir.path)
 
-        defer {
-            try? FileManager.default.removeItem(at: tempDir)
-        }
+        let xcodeProj = XcodeProj.test()
 
-        let sourceDirectory = try AbsolutePath(validating: tempDir.path)
+        let sourceDirectory = xcodeProj.srcPath
         let xcodeproj = XcodeProj.test(
             sourceDirectory: sourceDirectory.pathString
         )
