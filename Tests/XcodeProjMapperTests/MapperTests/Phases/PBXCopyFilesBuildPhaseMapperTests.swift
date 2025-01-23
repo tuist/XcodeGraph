@@ -8,8 +8,8 @@ struct PBXCopyFilesBuildPhaseMapperTests {
     @Test("Maps copy files actions, verifying code-sign-on-copy attributes")
     func testMapCopyFiles() throws {
         // Given
-        let provider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = provider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let fileRef = try PBXFileReference.test(
             sourceTree: .group,
@@ -43,7 +43,7 @@ struct PBXCopyFilesBuildPhaseMapperTests {
         let mapper = PBXCopyFilesBuildPhaseMapper()
 
         // When
-        let copyActions = try mapper.map([copyFilesPhase], xcodeProj: provider.xcodeProj)
+        let copyActions = try mapper.map([copyFilesPhase], xcodeProj: xcodeProj)
 
         // Then
         #expect(copyActions.count == 1)

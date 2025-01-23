@@ -7,11 +7,10 @@ import XcodeProj
 @Suite
 struct XCPackageMapperTests {
     let mapper: XCPackageMapper
-    let projectProvider: MockProjectProvider
+    let xcodeProj: XcodeProj
 
     init() {
-        let provider = MockProjectProvider()
-        projectProvider = provider
+        xcodeProj = .test()
         mapper = XCPackageMapper()
     }
 
@@ -147,10 +146,10 @@ struct XCPackageMapperTests {
         let localPackage = XCLocalSwiftPackageReference(relativePath: "Packages/Example")
 
         // When
-        let result = try mapper.map(package: localPackage, sourceDirectory: projectProvider.sourceDirectory)
+        let result = try mapper.map(package: localPackage, sourceDirectory: xcodeProj.srcPath)
 
         // Then
-        let expectedPath = projectProvider.sourceDirectory.appending(
+        let expectedPath = xcodeProj.srcPath.appending(
             try RelativePath(validating: "Packages/Example")
         )
         #expect(result == .local(path: expectedPath))

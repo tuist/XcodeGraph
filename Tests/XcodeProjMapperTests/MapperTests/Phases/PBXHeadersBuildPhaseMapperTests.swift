@@ -8,8 +8,8 @@ struct PBXHeadersBuildPhaseMapperTests {
     @Test("Maps public, private, and project headers from headers phase")
     func testMapHeaders() throws {
         // Given
-        let provider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = provider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let publicHeaderRef = try PBXFileReference.test(
             name: "PublicHeader.h",
@@ -60,7 +60,7 @@ struct PBXHeadersBuildPhaseMapperTests {
         let mapper = PBXHeadersBuildPhaseMapper()
 
         // When
-        let headers = try mapper.map(headersPhase, xcodeProj: provider.xcodeProj)
+        let headers = try mapper.map(headersPhase, xcodeProj: xcodeProj)
 
         // Then
         try #require(headers != nil)

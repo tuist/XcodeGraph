@@ -7,15 +7,14 @@ import XcodeGraph
 
 @Suite
 struct XCSchemeMapperTests {
-    let mockProvider: MockProjectProvider
+    let xcodeProj: XcodeProj
     let mapper: XCSchemeMapper
     let graphType: XcodeMapperGraphType
 
     init() throws {
-        let mockProvider = MockProjectProvider()
-        self.mockProvider = mockProvider
+        xcodeProj = XcodeProj.test()
         mapper = XCSchemeMapper()
-        graphType = .project(mockProvider.xcodeProj)
+        graphType = .project(xcodeProj)
     }
 
     @Test("Maps shared project schemes correctly")
@@ -237,7 +236,7 @@ struct XCSchemeMapperTests {
         // Then
         #expect(mappedBuildAction.targets.count == 1)
         #expect(mappedBuildAction.targets[0].name == "App")
-        #expect(mappedBuildAction.targets[0].projectPath == mockProvider.xcodeProj.projectPath)
+        #expect(mappedBuildAction.targets[0].projectPath == xcodeProj.projectPath)
     }
 
     @Test("Handles schemes without any actions gracefully")

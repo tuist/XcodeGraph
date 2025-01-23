@@ -8,8 +8,8 @@ struct PBXCoreDataModelsBuildPhaseMapperTests {
     @Test("Maps CoreData models from version groups within resources phase")
     func testMapCoreDataModels() throws {
         // Given
-        let provider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = provider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let versionChildRef = try PBXFileReference.test(
             name: "Model.xcdatamodel",
@@ -45,7 +45,7 @@ struct PBXCoreDataModelsBuildPhaseMapperTests {
         let mapper = PBXCoreDataModelsBuildPhaseMapper()
 
         // When
-        let models = try mapper.map([buildFile], xcodeProj: provider.xcodeProj)
+        let models = try mapper.map([buildFile], xcodeProj: xcodeProj)
 
         // Then
         #expect(models.count == 1)

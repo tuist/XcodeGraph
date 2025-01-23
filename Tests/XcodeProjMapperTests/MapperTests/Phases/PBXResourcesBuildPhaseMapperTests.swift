@@ -8,8 +8,8 @@ struct PBXResourcesBuildPhaseMapperTests {
     @Test("Maps resources (like xcassets) from resources phase")
     func testMapResources() throws {
         // Given
-        let mockProvider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let assetRef = try PBXFileReference(
             sourceTree: .group,
@@ -34,7 +34,7 @@ struct PBXResourcesBuildPhaseMapperTests {
         let mapper = PBXResourcesBuildPhaseMapper()
 
         // When
-        let resources = try mapper.map(resourcesPhase, xcodeProj: mockProvider.xcodeProj)
+        let resources = try mapper.map(resourcesPhase, xcodeProj: xcodeProj)
 
         // Then
         #expect(resources.count == 1)
@@ -50,8 +50,8 @@ struct PBXResourcesBuildPhaseMapperTests {
     @Test("Maps localized variant groups from resources")
     func testMapVariantGroup() throws {
         // Given
-        let provider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = provider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let fileRef1 = PBXFileReference.test(
             name: "Localizable.strings",
@@ -78,7 +78,7 @@ struct PBXResourcesBuildPhaseMapperTests {
         let mapper = PBXResourcesBuildPhaseMapper()
 
         // When
-        let resources = try mapper.map(resourcesPhase, xcodeProj: provider.xcodeProj)
+        let resources = try mapper.map(resourcesPhase, xcodeProj: xcodeProj)
 
         // Then
         #expect(resources.count == 2)

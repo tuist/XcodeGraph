@@ -18,7 +18,7 @@ struct XcodeGraphMapperTests {
 
         let tempDirectory = FileManager.default.temporaryDirectory
 
-        let mockProvider = MockProjectProvider(
+        let xcodeProj = XcodeProj.test(
             sourceDirectory: tempDirectory.path,
             projectName: "SingleProject",
             configurationList: configurationList,
@@ -43,11 +43,11 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        let projectPath = mockProvider.xcodeProj.projectPath
-        try mockProvider.xcodeProj.write(path: mockProvider.xcodeProj.path!)
+        let projectPath = xcodeProj.projectPath
+        try xcodeProj.write(path: xcodeProj.path!)
         let mapper = XcodeGraphMapper()
         // When
-        let graph = try await mapper.buildGraph(from: .project(mockProvider.xcodeProj))
+        let graph = try await mapper.buildGraph(from: .project(xcodeProj))
 
         // Then
         #expect(graph.name == "Workspace")
@@ -76,21 +76,19 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProjA)
         .add(to: pbxProjB)
 
-        let mockProviderA = MockProjectProvider(
+        let projectA = XcodeProj.test(
             sourceDirectory: sourceDirectory,
             projectName: "ProjectA",
             configurationList: configurationList,
             pbxProj: pbxProjA
         )
-        let projectA = mockProviderA.xcodeProj
 
-        let mockProviderB = MockProjectProvider(
+        let projectB = XcodeProj.test(
             sourceDirectory: sourceDirectory,
             projectName: "ProjectB",
             configurationList: configurationList,
             pbxProj: pbxProjB
         )
-        let projectB = mockProviderB.xcodeProj
 
         let sourceFile = try PBXFileReference.test(
             path: "ViewController.swift",
@@ -169,7 +167,7 @@ struct XcodeGraphMapperTests {
 
         let sourceDirectory = FileManager.default.temporaryDirectory.path
 
-        let mockProvider = MockProjectProvider(
+        let xcodeProj = XcodeProj.test(
             sourceDirectory: sourceDirectory,
             projectName: "ProjectWithDeps",
             configurationList: configurationList,
@@ -211,15 +209,15 @@ struct XcodeGraphMapperTests {
         )
         .add(to: pbxProj)
         appTarget.dependencies.append(dep)
-        try mockProvider.xcodeProj.write(path: mockProvider.xcodeProj.path!)
+        try xcodeProj.write(path: xcodeProj.path!)
         let mapper = XcodeGraphMapper()
 
         // When
-        let graph = try await mapper.buildGraph(from: .project(mockProvider.xcodeProj))
+        let graph = try await mapper.buildGraph(from: .project(xcodeProj))
 
         // Then
         // Verify dependencies are mapped
-        let targetDep = GraphDependency.target(name: "AFramework", path: mockProvider.xcodeProj.srcPath)
+        let targetDep = GraphDependency.target(name: "AFramework", path: xcodeProj.srcPath)
         let expectedDependency = try #require(graph.dependencies.first?.value)
 
         #expect(expectedDependency == [targetDep])

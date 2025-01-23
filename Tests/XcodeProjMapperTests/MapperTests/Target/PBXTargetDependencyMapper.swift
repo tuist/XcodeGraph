@@ -6,7 +6,7 @@ import XcodeProj
 
 @Suite
 struct DependencyMapperTests {
-    let mockProvider = MockProjectProvider()
+    let xcodeProj = XcodeProj.test()
     let mapper: DependencyMapping
 
     init() {
@@ -16,7 +16,7 @@ struct DependencyMapperTests {
     @Test("Maps direct target dependencies correctly")
     func testDirectTargetMapping() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "DirectTarget",
             productType: .application
@@ -38,7 +38,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         #expect(mapped == .target(name: "DirectTarget", status: .required, condition: nil))
@@ -47,7 +47,7 @@ struct DependencyMapperTests {
     @Test("Maps package product dependencies to runtime package targets")
     func testPackageProductMapping() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let productRef = XCSwiftPackageProductDependency(productName: "MyPackageProduct")
         let dep = PBXTargetDependency(name: nil, product: productRef).add(to: pbxProj)
 
@@ -60,7 +60,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         #expect(mapped == .package(product: "MyPackageProduct", type: .runtime, condition: nil))
@@ -69,7 +69,7 @@ struct DependencyMapperTests {
     @Test("Maps native target proxies referencing targets in the same project")
     func testProxyNativeTarget() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let project = try #require(pbxProj.rootObject)
         let proxy = PBXContainerItemProxy(
             containerPortal: .project(project),
@@ -90,7 +90,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         #expect(mapped == .target(name: "NativeTarget", status: .required, condition: nil))
@@ -99,7 +99,7 @@ struct DependencyMapperTests {
     @Test("Maps proxy dependencies referencing other projects via file references")
     func testProxyProjectReference() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let fileRef = try PBXFileReference.test(path: "TestProject.xcodeproj")
             .add(to: pbxProj)
             .addToMainGroup(in: pbxProj)
@@ -122,18 +122,18 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         let result = try #require(mapped)
-        let expectedPath = mockProvider.xcodeProj.projectPath
+        let expectedPath = xcodeProj.projectPath
         #expect(result == .project(target: "OtherTarget", path: expectedPath, status: .required, condition: nil))
     }
 
     @Test("Maps reference proxies to libraries when file type is a dylib")
     func testProxyReferenceProxyLibrary() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let referenceProxy = try PBXReferenceProxy(
             fileType: "compiled.mach-o.dylib",
             path: "libTest.dylib",
@@ -168,11 +168,11 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         let result = try #require(mapped)
-        let expectedPath = mockProvider.xcodeProj.srcPath.appending(component: "libTest.dylib")
+        let expectedPath = xcodeProj.srcPath.appending(component: "libTest.dylib")
         let publicHeaders = try AbsolutePath(validating: "/tmp")
         #expect(
             result == .library(
@@ -187,7 +187,7 @@ struct DependencyMapperTests {
     @Test("Maps frameworks when encountered as proxy references")
     func testProxyReferenceFileFramework() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let fileRef = try PBXFileReference.test(path: "MyLib.framework")
             .add(to: pbxProj)
             .addToMainGroup(in: pbxProj)
@@ -218,18 +218,18 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         let result = try #require(mapped)
-        let expectedPath = mockProvider.xcodeProj.srcPath.appending(component: "MyLib.framework")
+        let expectedPath = xcodeProj.srcPath.appending(component: "MyLib.framework")
         #expect(result == .framework(path: expectedPath, status: .required, condition: nil))
     }
 
     @Test("Maps dependencies with platform filters to conditions")
     func testPlatformConditions() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "ConditionalTarget",
             productType: .application
@@ -249,7 +249,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         let result = try #require(mapped)
@@ -259,7 +259,7 @@ struct DependencyMapperTests {
     @Test("Ignores dependencies that cannot be matched to targets, products, or proxies")
     func testNoMatches() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         // A dependency with no target, no product, no proxy.
         let dep = PBXTargetDependency.test(name: nil).add(to: pbxProj)
 
@@ -273,14 +273,14 @@ struct DependencyMapperTests {
 
         // When
         #expect(throws: TargetDependencyMappingError.unknownDependencyType(name: "Unknown dependency name")) {
-            try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+            try mapper.map(dep, xcodeProj: xcodeProj)
         }
     }
 
     @Test("Maps single-platform filter dependencies correctly")
     func testSinglePlatformFilter() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "SinglePlatform",
             productType: .application
@@ -300,7 +300,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         #expect(mapped == .target(name: "SinglePlatform", status: .required, condition: .when([.tvos])))
@@ -309,7 +309,7 @@ struct DependencyMapperTests {
     @Test("Ignores invalid platform filters, mapping dependency without conditions")
     func testInvalidPlatformFilter() throws {
         // Given
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let pbxProj = xcodeProj.pbxproj
         let target = try PBXNativeTarget.test(
             name: "UnknownPlatform",
             productType: .framework
@@ -329,7 +329,7 @@ struct DependencyMapperTests {
         .add(to: pbxProj.rootObject)
 
         // When
-        let mapped = try mapper.map(dep, xcodeProj: mockProvider.xcodeProj)
+        let mapped = try mapper.map(dep, xcodeProj: xcodeProj)
 
         // Then
         #expect(mapped == .target(name: "UnknownPlatform", status: .required, condition: nil))

@@ -8,8 +8,8 @@ struct PBXScriptsBuildPhaseMapperTests {
     @Test("Maps embedded run scripts with specified input/output paths")
     func testMapScripts() throws {
         // Given
-        let provider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = provider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let scriptPhase = PBXShellScriptBuildPhase.test(
             name: "Run Script",
@@ -44,8 +44,8 @@ struct PBXScriptsBuildPhaseMapperTests {
     @Test("Maps raw script build phases not covered by other categories")
     func testMapRawScriptBuildPhases() throws {
         // Given
-        let provider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = provider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let scriptPhase = PBXShellScriptBuildPhase.test(
             name: "Test Script"

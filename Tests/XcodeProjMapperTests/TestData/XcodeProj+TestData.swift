@@ -1,24 +1,58 @@
 import XcodeProj
+import XcodeGraph
+import Path
 
 extension XcodeProj {
     static func test(
-        projectName: String = "MainApp",
-        configurationList: XCConfigurationList = XCConfigurationList.test(
-            buildConfigurations: [.testDebug(), .testRelease()]
-        ),
-        mainGroup: PBXGroup,
-        targets: [PBXTarget] = [PBXNativeTarget.test()]
+        sourceDirectory: String = "/tmp",
+        projectName: String = "TestProject",
+    configurationList: XCConfigurationList = XCConfigurationList.test(
+        buildConfigurations: [.testDebug(), .testRelease()]
+    ),
+        targets: [PBXTarget] = [],
+    pbxProj: PBXProj = PBXProj()
     ) -> XcodeProj {
-        let pbxProj = PBXProj()
+        pbxProj.add(object: configurationList)
+        for config in configurationList.buildConfigurations {
+            pbxProj.add(object: config)
+        }
+
+        let sourceDirectory = try! AbsolutePath(validating: sourceDirectory)
+
+        // Minimal project setup:
+        let mainGroup = PBXGroup.test(
+            children: [],
+            sourceTree: .group,
+            name: "MainGroup",
+            path: "/tmp/TestProject"
+        ).add(to: pbxProj)
+
+        let projectRef = PBXFileReference
+            .test(name: "App", path: "App.xcodeproj")
+            .add(to: pbxProj)
+        mainGroup.children.append(projectRef)
+
+        let projects = [
+            ["B900DB68213936CC004AEC3E": projectRef],
+        ]
+
         let pbxProject = PBXProject.test(
             name: projectName,
             buildConfigurationList: configurationList,
             mainGroup: mainGroup,
+            projects: projects,
             targets: targets
-        )
+        ).add(to: pbxProj)
+
+        pbxProject.mainGroup = mainGroup
+        pbxProj.add(object: pbxProject)
         pbxProj.rootObject = pbxProject
 
-        let workspace = XCWorkspace.test(files: ["App/\(projectName).xcodeproj"], path: "App/\(projectName).xcworkspace")
-        return XcodeProj(workspace: workspace, pbxproj: pbxProj)
+        return XcodeProj(
+            workspace: XCWorkspace(),
+            pbxproj: pbxProj,
+            path: .init("\(sourceDirectory)/\(projectName).xcodeproj")
+        )
     }
+
 }

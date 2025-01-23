@@ -8,8 +8,8 @@ struct PBXFrameworksBuildPhaseMapperTests {
     @Test("Maps frameworks from frameworks phase")
     func testMapFrameworks() throws {
         // Given
-        let mockProvider: MockProjectProvider = .makeBasicProjectProvider()
-        let pbxProj = mockProvider.xcodeProj.pbxproj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
 
         let frameworkRef = try PBXFileReference(
             sourceTree: .group,
@@ -33,7 +33,7 @@ struct PBXFrameworksBuildPhaseMapperTests {
         let mapper = PBXFrameworksBuildPhaseMapper()
 
         // When
-        let frameworks = try mapper.map(frameworksPhase, xcodeProj: mockProvider.xcodeProj)
+        let frameworks = try mapper.map(frameworksPhase, xcodeProj: xcodeProj)
 
         // Then
         #expect(frameworks.count == 1)

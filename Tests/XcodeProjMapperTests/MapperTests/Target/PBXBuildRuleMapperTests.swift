@@ -10,8 +10,8 @@ struct PBXBuildRuleMapperTests {
     @Test("Maps build rules with known compiler spec and file type successfully")
     func testMapBuildRulesWithKnownCompilerSpecAndFileType() throws {
         // Given
-        let projectProvider = MockProjectProvider()
-        let pbxProj = projectProvider.pbxProj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
         let knownFileType = BuildRule.FileType.cSource.rawValue
 
@@ -50,8 +50,8 @@ struct PBXBuildRuleMapperTests {
     @Test("Skips build rules when compiler spec is unknown")
     func testMapBuildRulesWithUnknownCompilerSpec() throws {
         // Given
-        let projectProvider = MockProjectProvider()
-        let pbxProj = projectProvider.pbxProj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
         let unknownCompilerSpec = "com.apple.compilers.unknown"
         let knownFileType = "sourcecode.c.c"
 
@@ -73,8 +73,8 @@ struct PBXBuildRuleMapperTests {
     @Test("Skips build rules when file type is unknown")
     func testMapBuildRulesWithUnknownFileType() throws {
         // Given
-        let projectProvider = MockProjectProvider()
-        let pbxProj = projectProvider.pbxProj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
         let unknownFileType = "sourcecode.unknown"
 
@@ -96,8 +96,8 @@ struct PBXBuildRuleMapperTests {
     @Test("Individually handles valid and invalid rules, returning nil for invalid ones")
     func testMapIndividualValidAndInvalidRules() throws {
         // Given
-        let projectProvider = MockProjectProvider()
-        let pbxProj = projectProvider.pbxProj
+        let xcodeProj = XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
         let knownCompilerSpec = BuildRule.CompilerSpec.appleClang.rawValue
         let knownFileType = BuildRule.FileType.cSource.rawValue
         let unknownCompilerSpec = "com.apple.compilers.unknown"
