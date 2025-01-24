@@ -8,10 +8,10 @@ import XcodeProj
 /// A protocol defining how to map a given file path to a `Graph`.
 public protocol XcodeGraphMapping {
     /// Builds a `Graph` from the specified path.
-    /// - Parameter pathString: The absolute path to a `.xcworkspace`, `.xcodeproj`, or directory containing them.
+    /// - Parameter path: The absolute path to a `.xcworkspace`, `.xcodeproj`, or directory containing them.
     /// - Returns: A `Graph` representing the projects, targets, and dependencies found at `pathString`.
     /// - Throws: If the path doesn't exist or no projects are found.
-    func map(at pathString: AbsolutePath) async throws -> Graph
+    func map(at path: AbsolutePath) async throws -> Graph
 }
 
 /// An error type for `XcodeGraphMapper` when the path is invalid or no projects are found.

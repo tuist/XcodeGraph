@@ -4,7 +4,7 @@ import Path
 // MARK: - Plist
 
 public enum Plist: Sendable {
-    case infoPlist(infoPlist)
+    case infoPlist(InfoPlist)
     case entitlements(Entitlements)
 
     public indirect enum Value: Equatable, Codable, Sendable {
@@ -91,11 +91,6 @@ extension Dictionary where Value == Plist.Value {
 }
 
 // MARK: - InfoPlist
-
-public struct infoPlist: Equatable, Codable, Sendable {
-    let infoPlist: InfoPlist
-    let configuration: BuildConfiguration?
-}
 
 public enum InfoPlist: Equatable, Codable, Sendable {
     // Path to a user defined info.plist file (already exists on disk).
