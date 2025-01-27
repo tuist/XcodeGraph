@@ -48,6 +48,7 @@ protocol PBXTargetMapping {
     func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) async throws -> Target
 }
 
+// swiftlint:disable function_body_length
 /// A mapper that converts a `PBXTarget` into a domain `Target` model.
 ///
 /// `PBXTargetMapper` orchestrates various specialized mappers (e.g., sources, resources, headers)
@@ -331,3 +332,5 @@ struct PBXTargetMapper: PBXTargetMapping {
         }
     }
 }
+
+// swiftlint:enable function_body_length

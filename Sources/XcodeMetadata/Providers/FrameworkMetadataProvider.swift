@@ -5,7 +5,7 @@ import XcodeGraph
 
 // MARK: - Provider Errors
 
-enum FrameworkMetadataProviderError: Error, Equatable, LocalizedError {
+enum FrameworkMetadataProviderError: LocalizedError, Equatable {
     case frameworkNotFound(AbsolutePath)
 
     // MARK: - FatalError

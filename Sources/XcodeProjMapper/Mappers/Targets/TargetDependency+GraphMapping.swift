@@ -4,6 +4,7 @@ import XcodeGraph
 import XcodeMetadata
 import XcodeProj
 
+// swiftlint:disable function_body_length
 extension TargetDependency {
     /// Maps this `TargetDependency` to a `GraphDependency` by resolving paths, product types,
     /// and linking details. Project-based dependencies are resolved using `allTargetsMap`.
@@ -268,3 +269,5 @@ extension PBXProductType {
         }
     }
 }
+
+// swiftlint:enable function_body_length

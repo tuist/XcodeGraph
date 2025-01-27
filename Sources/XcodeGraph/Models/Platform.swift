@@ -1,9 +1,13 @@
 import Foundation
 
-public struct UnsupportedPlatformError: Error, CustomStringConvertible, Equatable {
+public struct UnsupportedPlatformError: LocalizedError, CustomStringConvertible, Equatable {
     let input: String
     public var description: String {
         "Specified platform \(input) does not map to any of these supported platforms: \(Platform.allCases.map(\.caseValue).joined(separator: ", ")) "
+    }
+
+    public var errorDescription: String? {
+        description
     }
 }
 

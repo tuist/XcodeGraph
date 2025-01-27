@@ -5,6 +5,8 @@ import XcodeGraph
 import XcodeMetadata
 @preconcurrency import XcodeProj
 
+// swiftlint:disable function_body_length
+
 /// A protocol for mapping an Xcode project (`.xcodeproj`) into a `Project` domain model.
 protocol PBXProjectMapping {
     /// Maps the given `XcodeProj` into a `Project` model.
@@ -151,3 +153,5 @@ extension ResourceSynthesizer.Parser {
         }
     }
 }
+
+// swiftlint:enable function_body_length

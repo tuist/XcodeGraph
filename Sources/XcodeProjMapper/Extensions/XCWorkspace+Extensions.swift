@@ -2,6 +2,7 @@ import Foundation
 import Path
 import XcodeProj
 
+// swiftlint:disable force_try
 extension XCWorkspace {
     /// A computed property that either returns the workspace’s `path`
     public var workspacePath: AbsolutePath {
@@ -23,3 +24,5 @@ extension XcodeProj {
         srcPath.pathString
     }
 }
+
+// swiftlint:enable force_try

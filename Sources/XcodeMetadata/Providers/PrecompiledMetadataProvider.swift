@@ -3,6 +3,7 @@ import MachO
 import Path
 import XcodeGraph
 
+// swiftlint:disable identifier_name
 private let CPU_SUBTYPE_MASK = Int32(bitPattern: 0xFF00_0000)
 
 // MARK: - Errors
@@ -232,3 +233,5 @@ public class PrecompiledMetadataProvider: PrecompiledMetadataProviding {
         [MH_CIGAM, MH_CIGAM_64, FAT_CIGAM].contains(magic)
     }
 }
+
+// swiftlint:enable identifier_name

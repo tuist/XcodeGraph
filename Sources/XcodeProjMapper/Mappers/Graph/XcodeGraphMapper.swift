@@ -212,8 +212,11 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
                 let sourceDependency = GraphDependency.target(name: name, path: path.parentDirectory)
 
                 // Build edges for each target dependency
-                let edgesAndDeps = try await target.dependencies.serialCompactMap {
-                    (dep: TargetDependency) async throws -> (GraphEdge, PlatformCondition?, GraphDependency) in
+                let edgesAndDeps = try await target.dependencies.serialCompactMap { (dep: TargetDependency) async throws -> (
+                    GraphEdge,
+                    PlatformCondition?,
+                    GraphDependency
+                ) in
                     let graphDep = try await dep.graphDependency(
                         sourceDirectory: path.parentDirectory,
                         allTargetsMap: allTargetsMap,

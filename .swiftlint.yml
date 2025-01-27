@@ -8,6 +8,7 @@ disabled_rules:
   - function_parameter_count
   - opening_brace
   - line_length
+  - large_tuple
 identifier_name:
   min_length:
     error: 1
