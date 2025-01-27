@@ -11,17 +11,23 @@ extension TargetDependency {
     /// - Parameters:
     ///   - sourceDirectory: The root directory for resolving relative paths.
     ///   - allTargetsMap: A map of target names to `Target` models for resolving project-based dependencies.
+    ///   - target: The target of this dependency.
     ///   - xcframeworkMetadataProvider: Provides metadata (linking, architectures, etc.) for `.xcframework` dependencies.
     ///   - libraryMetadataProvider: Provides metadata for libraries.
     ///   - frameworkMetadataProvider: Provides metadata for frameworks.
+    ///   - systemFrameworkMetadataProvider: Provides metadata for system frameworks.
+    ///   - developerDirectoryProvider: Provides xcode developer directory.
     /// - Returns: A corresponding `GraphDependency` model for this dependency.
     /// - Throws: `TargetDependencyMappingError` if a referenced target is not found or if the dependency type is unknown.
-    public func graphDependency(
+    func graphDependency(
         sourceDirectory: AbsolutePath,
         allTargetsMap: [String: Target],
+        target: Target,
         xcframeworkMetadataProvider: XCFrameworkMetadataProviding = XCFrameworkMetadataProvider(),
         libraryMetadataProvider: LibraryMetadataProviding = LibraryMetadataProvider(),
-        frameworkMetadataProvider: FrameworkMetadataProviding = FrameworkMetadataProvider()
+        frameworkMetadataProvider: FrameworkMetadataProviding = FrameworkMetadataProvider(),
+        systemFrameworkMetadataProvider: SystemFrameworkMetadataProviding = SystemFrameworkMetadataProvider(),
+        developerDirectoryProvider: DeveloperDirectoryProviding = DeveloperDirectoryProvider()
     ) async throws -> GraphDependency {
         switch self {
         // MARK: - Simple Cases
@@ -100,8 +106,18 @@ extension TargetDependency {
         // MARK: - XCTest (System Provided)
 
         case .xctest:
-            // Map XCTest to a system-provided `.framework`
-            let path = try await xctestFrameworkPath()
+            let frameworkData = try systemFrameworkMetadataProvider.loadMetadata(
+                sdkName: "XCTest.framework",
+                status: .required,
+                platform: target.legacyPlatform,
+                source: .developer
+            )
+            let developerDirectory = try await developerDirectoryProvider.developerDirectory()
+            let path = try AbsolutePath(
+                validating: developerDirectory.pathString + frameworkData
+                    .path.pathString
+            )
+
             let metadata = try await frameworkMetadataProvider.loadMetadata(at: path, status: .required)
             return .framework(
                 path: path,

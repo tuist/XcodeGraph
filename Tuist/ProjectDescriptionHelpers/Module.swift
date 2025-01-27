@@ -214,7 +214,7 @@ public enum Module: String, CaseIterable {
             destinations: [.mac],
             product: product,
             bundleId: "io.tuist.\(name)",
-            deploymentTargets: .macOS("12.0"),
+            deploymentTargets: .macOS("13.0"),
             infoPlist: .default,
             sources: [.glob("\(rootFolder)/\(name)/**/*.swift", excluding: ["**/Fixtures/**"])],
             dependencies: dependencies,

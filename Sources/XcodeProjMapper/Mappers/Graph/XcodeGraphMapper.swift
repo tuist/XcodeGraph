@@ -216,7 +216,8 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
                     (dep: TargetDependency) async throws -> (GraphEdge, PlatformCondition?, GraphDependency) in
                     let graphDep = try await dep.graphDependency(
                         sourceDirectory: path.parentDirectory,
-                        allTargetsMap: allTargetsMap
+                        allTargetsMap: allTargetsMap,
+                        target: target
                     )
                     return (GraphEdge(from: sourceDependency, to: graphDep), dep.condition, graphDep)
                 }

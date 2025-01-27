@@ -30,7 +30,7 @@ jobs:
           - ubuntu-22.04
           - macos-15
         swift-version:
-          - "5.9"
+          - "5.10"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
           - ubuntu-22.04
           - macos-15
         swift-version:
-          - "5.9"
+          - "5.10"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

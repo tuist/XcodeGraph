@@ -8,6 +8,7 @@ import XcodeProj
 @Suite
 struct TargetDependencyExtensionsTests {
     let sourceDirectory = AssertionsTesting.fixturePath()
+    let target = Target.test(platform: .iOS)
 
     // A dummy target map for .project dependencies
     let allTargetsMap: [String: Target] = [
@@ -24,7 +25,8 @@ struct TargetDependencyExtensionsTests {
         // When
         let graphDep = try await dependency.graphDependency(
             sourceDirectory: sourceDirectory,
-            allTargetsMap: allTargetsMap
+            allTargetsMap: allTargetsMap,
+            target: target
         )
 
         // Then
@@ -44,7 +46,8 @@ struct TargetDependencyExtensionsTests {
         // When
         let graphDep = try await dependency.graphDependency(
             sourceDirectory: sourceDirectory,
-            allTargetsMap: allTargetsMap
+            allTargetsMap: allTargetsMap,
+            target: target
         )
 
         // Then
@@ -75,7 +78,8 @@ struct TargetDependencyExtensionsTests {
         // When
         let graphDep = try await dependency.graphDependency(
             sourceDirectory: sourceDirectory,
-            allTargetsMap: allTargetsMap
+            allTargetsMap: allTargetsMap,
+            target: target
         )
 
         let expected = GraphDependency.library(
@@ -97,7 +101,11 @@ struct TargetDependencyExtensionsTests {
         let dependency = TargetDependency.framework(path: frameworkPath, status: .required, condition: nil)
 
         // When
-        let graphDep = try await dependency.graphDependency(sourceDirectory: sourceDirectory, allTargetsMap: [:])
+        let graphDep = try await dependency.graphDependency(
+            sourceDirectory: sourceDirectory,
+            allTargetsMap: allTargetsMap,
+            target: target
+        )
         let expectedBinaryPath = frameworkPath.appending(component: frameworkPath.basenameWithoutExt)
         let expectedDsymPath = frameworkPath.parentDirectory.appending(component: "xpm.framework.dSYM")
         let expected = GraphDependency.framework(
@@ -121,7 +129,11 @@ struct TargetDependencyExtensionsTests {
         let dependency = TargetDependency.xcframework(path: xcframeworkPath, status: .required, condition: nil)
 
         // When
-        let graphDep = try await dependency.graphDependency(sourceDirectory: sourceDirectory, allTargetsMap: allTargetsMap)
+        let graphDep = try await dependency.graphDependency(
+            sourceDirectory: sourceDirectory,
+            allTargetsMap: allTargetsMap,
+            target: target
+        )
 
         // Then
         #expect({
@@ -142,7 +154,11 @@ struct TargetDependencyExtensionsTests {
         let dependency = TargetDependency.library(path: libPath, publicHeaders: headersPath, swiftModuleMap: nil, condition: nil)
 
         // When
-        let graphDep = try await dependency.graphDependency(sourceDirectory: sourceDirectory, allTargetsMap: [:])
+        let graphDep = try await dependency.graphDependency(
+            sourceDirectory: sourceDirectory,
+            allTargetsMap: allTargetsMap,
+            target: target
+        )
         let expected = GraphDependency.library(
             path: libPath,
             publicHeaders: headersPath,
@@ -161,8 +177,11 @@ struct TargetDependencyExtensionsTests {
         let dependency = TargetDependency.package(product: "MyPackageProduct", type: .runtime, condition: nil)
 
         // When
-        let graphDep = try await dependency.graphDependency(sourceDirectory: sourceDirectory, allTargetsMap: [:])
-
+        let graphDep = try await dependency.graphDependency(
+            sourceDirectory: sourceDirectory,
+            allTargetsMap: allTargetsMap,
+            target: target
+        )
         // Then
         #expect(graphDep == .packageProduct(path: sourceDirectory, product: "MyPackageProduct", type: .runtime))
     }
@@ -173,8 +192,11 @@ struct TargetDependencyExtensionsTests {
         let dependency = TargetDependency.sdk(name: "MySDK", status: .optional, condition: nil)
 
         // When
-        let graphDep = try await dependency.graphDependency(sourceDirectory: sourceDirectory, allTargetsMap: [:])
-
+        let graphDep = try await dependency.graphDependency(
+            sourceDirectory: sourceDirectory,
+            allTargetsMap: allTargetsMap,
+            target: target
+        )
         // Then
         #expect({
             switch graphDep {
@@ -190,17 +212,25 @@ struct TargetDependencyExtensionsTests {
     func testTargetGraphDependency_XCTest() async throws {
         // Given
         let dependency = TargetDependency.xctest
-        let srcPath: AbsolutePath = "/Applications/Xcode.app/Contents/SharedFrameworks/XCTest.framework"
-        // When
-        let graphDep = try await dependency.graphDependency(sourceDirectory: srcPath, allTargetsMap: [:])
+        let developerDirectory = try await DeveloperDirectoryProvider().developerDirectory()
 
+        let srcPath = "/Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework"
+        let path = try AbsolutePath(
+            validating: developerDirectory.pathString + srcPath
+        )
+        // When
+        let graphDep = try await dependency.graphDependency(
+            sourceDirectory: sourceDirectory,
+            allTargetsMap: allTargetsMap,
+            target: target
+        )
         let expected = GraphDependency.framework(
-            path: srcPath,
-            binaryPath: srcPath.appending(component: "XCTest"),
+            path: path,
+            binaryPath: path.appending(component: "XCTest"),
             dsymPath: nil,
             bcsymbolmapPaths: [],
             linking: .dynamic,
-            architectures: [.x8664, .arm64, .arm64e],
+            architectures: [.arm64, .arm64e],
             status: .required
         )
 
@@ -220,7 +250,7 @@ struct TargetDependencyExtensionsTests {
 
         // When / Then
         do {
-            _ = try await dependency.graphDependency(sourceDirectory: sourceDirectory, allTargetsMap: [:])
+            _ = try await dependency.graphDependency(sourceDirectory: sourceDirectory, allTargetsMap: [:], target: target)
             Issue.record("Expected to throw TargetDependencyMappingError.targetNotFound")
         } catch let error as TargetDependencyMappingError {
             switch error {
