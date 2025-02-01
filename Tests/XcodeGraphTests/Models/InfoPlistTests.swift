@@ -25,6 +25,22 @@ final class InfoPlistTests: XCTestCase {
         XCTAssertCodable(subject)
     }
 
+    func test_codable_extendingFile() {
+        // Given
+        let path = try! AbsolutePath(validating: "/path/Info.list")
+        let subject = InfoPlist.extendingFile(
+            path: path,
+            with: [
+                "key1": "value1",
+                "key2": "value2",
+                "key3": "value3",
+            ]
+        )
+
+        // Then
+        XCTAssertCodable(subject)
+    }
+
     func test_path_when_file() {
         // Given
         let path = try! AbsolutePath(validating: "/path/Info.list")
