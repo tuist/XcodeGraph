@@ -107,11 +107,14 @@ public enum InfoPlist: Equatable, Codable, Sendable {
     // for the target type.
     case extendingDefault(with: [String: Plist.Value])
 
+    // User defined dictionary of keys/values to extend an existing info.plist file.
+    case extendingFile(path: AbsolutePath, with: [String: Plist.Value])
+
     // MARK: - Public
 
     public var path: AbsolutePath? {
         switch self {
-        case let .file(path), let .generatedFile(path: path, data: _):
+        case let .file(path), let .generatedFile(path: path, data: _), let .extendingFile(path: path, with: _):
             return path
         default:
             return nil
