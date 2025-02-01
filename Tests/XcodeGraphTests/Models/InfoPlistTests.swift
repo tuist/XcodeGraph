@@ -50,6 +50,15 @@ final class InfoPlistTests: XCTestCase {
         XCTAssertEqual(subject.path, path)
     }
 
+    func test_path_when_extendingFile() {
+        // Given
+        let path = try! AbsolutePath(validating: "/path/Info.list")
+        let subject: InfoPlist = .extendingFile(path: path, with: [:])
+        
+        // Then
+        XCTAssertEqual(subject.path, path)
+    }
+
     func test_expressive_by_string_literal() {
         // Given
         let subject: InfoPlist = "/path/Info.list"
