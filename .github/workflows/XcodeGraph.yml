@@ -50,8 +50,8 @@ jobs:
           swift build --configuration debug
       - name: Test on Linux
         if: matrix.os == 'ubuntu-22.04'
-        # XcodeProjMapper relies on some Xcode utilities like xcode-select
-        run: swift test --skip XcodeProjMapperTests
+        # These momdules rely on some Xcode utilities like xcode-select
+        run: swift test --skip XcodeProjMapperTests --skip XcodeMetadataTests
       - name: Test
         if: matrix.os != 'ubuntu-22.04'
         run: swift test
