@@ -1,5 +1,9 @@
 import Foundation
-import MachO
+#if canImport(MachO)
+    import MachO
+#else
+    import MachOKitC
+#endif
 
 extension fat_header {
     mutating func swapIfNeeded(_ shouldSwap: Bool) {

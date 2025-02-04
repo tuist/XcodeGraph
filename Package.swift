@@ -18,6 +18,7 @@ let targets: [Target] = [
             .product(name: "ServiceContextModule", package: "swift-service-context"),
             .product(name: "FileSystem", package: "FileSystem"),
             .product(name: "Mockable", package: "Mockable"),
+            .product(name: "MachOKitC", package: "MachOKit"),
         ],
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),
@@ -81,6 +82,7 @@ let package = Package(
         .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.6.17")),
         .package(url: "https://github.com/apple/swift-service-context", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.11")),
+        .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.28.0")),
     ],
     targets: targets
 )

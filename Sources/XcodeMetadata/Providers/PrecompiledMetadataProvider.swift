@@ -1,5 +1,9 @@
 import Foundation
-import MachO
+#if canImport(MachO)
+    import MachO
+#else
+    import MachOKitC
+#endif
 import Path
 import XcodeGraph
 

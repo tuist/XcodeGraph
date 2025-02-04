@@ -30,7 +30,7 @@ jobs:
           - ubuntu-22.04
           - macos-15
         swift-version:
-          - "5.10"
+          - "6.0.3"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -48,7 +48,12 @@ jobs:
         if: steps.debug_build.outcome == 'failure'
         run: |
           swift build --configuration debug
+      - name: Test on Linux
+        if: matrix.os == 'ubuntu-22.04'
+        # XcodeProjMapper relies on some Xcode utilities like xcode-select
+        run: swift test --skip XcodeProjMapperTests
       - name: Test
+        if: matrix.os != 'ubuntu-22.04'
         run: swift test
   spm_build:
     name: SPM Build
@@ -58,7 +63,7 @@ jobs:
           - ubuntu-22.04
           - macos-15
         swift-version:
-          - "5.10"
+          - "6.0.3"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

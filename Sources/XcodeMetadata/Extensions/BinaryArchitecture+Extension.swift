@@ -1,6 +1,9 @@
-import Darwin
 import Foundation
-import MachO
+#if canImport(MachO)
+    import MachO
+#else
+    import MachOKitC
+#endif
 import XcodeGraph
 
 extension BinaryArchitecture {
@@ -62,10 +65,17 @@ extension BinaryArchitecture {
     /// If not found in `architectureMap`, returns `nil`.
     public init?(cputype: cpu_type_t, subtype: cpu_subtype_t) {
         let key = CPUIdentifier(cputype: cputype, cpusubtype: subtype)
-        let fallbackKey = CPUIdentifier(cputype: cputype, cpusubtype: CPU_SUBTYPE_ANY)
-        guard let architecture = Self.architectureMap[key] ?? Self.architectureMap[fallbackKey] else {
-            return nil
-        }
+        // CPU_SUBTYPE_ANY is not available in MachOKitC
+        #if canImport(MachO)
+            let fallbackKey = CPUIdentifier(cputype: cputype, cpusubtype: CPU_SUBTYPE_ANY)
+            guard let architecture = Self.architectureMap[key] ?? Self.architectureMap[fallbackKey] else {
+                return nil
+            }
+        #else
+            guard let architecture = Self.architectureMap[key] else {
+                return nil
+            }
+        #endif
         self = architecture
     }
 }

@@ -1,4 +1,5 @@
 {
+  "originHash" : "e0b3d78a18232f4e8d0bd5c09f120c7920018f6a53c16bc16ff38be99be54dbe",
   "pins" : [
     {
       "identity" : "aexml",
@@ -32,8 +33,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/FileSystem.git",
       "state" : {
-        "revision" : "b2c6c9a68fd7609ca1b7b3e8dd4d2fc76396eac3",
-        "version" : "0.7.2"
+        "revision" : "6fba5e7279d99a0ac057fdda8274ddf23a3377b6",
+        "version" : "0.7.4"
+      }
+    },
+    {
+      "identity" : "machokit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/p-x9/MachOKit",
+      "state" : {
+        "revision" : "518e8e1aca7ee64b87b08ecec5f7cad2a63b8efd",
+        "version" : "0.28.0"
       }
     },
     {
@@ -73,6 +83,15 @@
       }
     },
     {
+      "identity" : "swift-asn1",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-asn1.git",
+      "state" : {
+        "revision" : "ae33e5941bb88d88538d0a6b19ca0b01e6c76dcf",
+        "version" : "1.3.1"
+      }
+    },
+    {
       "identity" : "swift-atomics",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-atomics.git",
@@ -88,6 +107,15 @@
       "state" : {
         "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
         "version" : "1.1.4"
+      }
+    },
+    {
+      "identity" : "swift-crypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-crypto.git",
+      "state" : {
+        "revision" : "ff0f781cf7c6a22d52957e50b104f5768b50c779",
+        "version" : "3.10.0"
       }
     },
     {
@@ -156,12 +184,12 @@
     {
       "identity" : "zipfoundation",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/weichsel/ZIPFoundation",
+      "location" : "https://github.com/tuist/ZIPFoundation",
       "state" : {
-        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
-        "version" : "0.9.19"
+        "revision" : "e9b1917bd4d7d050e0ff4ec157b5d6e253c84385",
+        "version" : "0.9.20"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
