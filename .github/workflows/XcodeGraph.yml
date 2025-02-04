@@ -90,38 +90,6 @@ jobs:
         if: steps.release_build.outcome == 'failure'
         run: |
           swift build --configuration release
-  tuist_test:
-    name: Tuist Test
-    strategy:
-      matrix:
-        os:
-          - macos-15
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
-        with:
-          version: 2024.11.8
-      - name: Install dependencies
-        run: tuist install
-      - name: Test
-        run: tuist test
-  tuist_build:
-    name: Tuist Build
-    strategy:
-      matrix:
-        os:
-          - macos-15
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
-        with:
-          version: 2024.11.8
-      - name: Install dependencies
-        run: tuist install
-      - name: Build
-        run: tuist build
   lint:
     name: Lint
     strategy:
