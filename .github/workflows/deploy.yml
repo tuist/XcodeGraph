@@ -19,7 +19,7 @@ jobs:
       - name: Setup Swift
         uses: SwiftyLab/setup-swift@latest
         with:
-          swift-version: 6.0.3
+          development: true
       - name: Build docs
         run: mise run docs:build
       - name: Deploy
