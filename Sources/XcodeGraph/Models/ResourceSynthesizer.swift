@@ -13,7 +13,7 @@ public struct ResourceSynthesizer: Equatable, Hashable, Codable, Sendable {
         case defaultTemplate(String)
     }
 
-    public enum Parser: String, Equatable, Hashable, Codable, Sendable {
+    public enum Parser: String, CaseIterable, Equatable, Hashable, Codable, Sendable {
         case strings
         case stringsCatalog
         case assets

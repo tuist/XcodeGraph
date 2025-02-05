@@ -2,7 +2,7 @@ import Foundation
 
 /// A directed edge linking representing a dependent relationship
 /// e.g. `from` (MainApp) depends on `to` (UIKit)
-public struct GraphEdge: Hashable, Codable {
+public struct GraphEdge: Hashable, Codable, Sendable {
     public let from: GraphDependency
     public let to: GraphDependency
     public init(from: GraphDependency, to: GraphDependency) {

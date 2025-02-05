@@ -30,7 +30,7 @@ jobs:
           - ubuntu-22.04
           - macos-15
         swift-version:
-          - "5.9"
+          - "6.0.3"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -48,7 +48,12 @@ jobs:
         if: steps.debug_build.outcome == 'failure'
         run: |
           swift build --configuration debug
+      - name: Test on Linux
+        if: matrix.os == 'ubuntu-22.04'
+        # These momdules rely on some Xcode utilities like xcode-select
+        run: swift test --skip XcodeProjMapperTests --skip XcodeMetadataTests
       - name: Test
+        if: matrix.os != 'ubuntu-22.04'
         run: swift test
   spm_build:
     name: SPM Build
@@ -58,7 +63,7 @@ jobs:
           - ubuntu-22.04
           - macos-15
         swift-version:
-          - "5.9"
+          - "6.0.3"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -85,38 +90,6 @@ jobs:
         if: steps.release_build.outcome == 'failure'
         run: |
           swift build --configuration release
-  tuist_test:
-    name: Tuist Test
-    strategy:
-      matrix:
-        os:
-          - macos-15
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
-        with:
-          version: 2024.11.8
-      - name: Install dependencies
-        run: tuist install
-      - name: Test
-        run: tuist test
-  tuist_build:
-    name: Tuist Build
-    strategy:
-      matrix:
-        os:
-          - macos-15
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
-        with:
-          version: 2024.11.8
-      - name: Install dependencies
-        run: tuist install
-      - name: Build
-        run: tuist build
   lint:
     name: Lint
     strategy:

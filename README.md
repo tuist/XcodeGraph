@@ -20,6 +20,29 @@ let package = Package(
     ],
 )
 ```
+
+## XcodeGraphMapper
+
+XcodeGraphMapper parses `.xcworkspace` or `.xcodeproj` files using `XcodeProj` and constructs a `XcodeGraph.Graph` representing their projects, targets, and dependencies:
+
+### Usage
+
+```swift
+import XcodeGraphMapper
+let mapper: XcodeGraphMapping = XcodeGraphMapper()
+let path = try AbsolutePath(validating: "/path/to/MyProjectOrWorkspace")
+let graph = try await mapper.map(at: path)
+// You now have a Graph containing projects, targets, packages, and dependencies.*
+// Example: print all target names across all projects*
+for project in graph.projects.values {
+    for (targetName, _) in project.targets {
+        print("Found target: \(targetName)")
+    }
+}
+```
+
+Once you have the Graph, you can explore or transform it as needed—printing targets, analyzing dependencies, generating reports, or integrating into other build tools.
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):

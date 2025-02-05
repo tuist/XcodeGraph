@@ -102,6 +102,7 @@ Tuist/Dependencies/graph.json
 
 # VSCode Settings
 .vscode/launch.json
+.vscode
 
 # Release artifacts
 .bundle

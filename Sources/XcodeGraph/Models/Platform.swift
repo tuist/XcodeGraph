@@ -1,13 +1,17 @@
 import Foundation
 
-public struct UnsupportedPlatformError: Error, CustomStringConvertible, Equatable {
+public struct UnsupportedPlatformError: LocalizedError, CustomStringConvertible, Equatable {
     let input: String
     public var description: String {
         "Specified platform \(input) does not map to any of these supported platforms: \(Platform.allCases.map(\.caseValue).joined(separator: ", ")) "
     }
+
+    public var errorDescription: String? {
+        description
+    }
 }
 
-public enum Platform: String, CaseIterable, Codable, Comparable {
+public enum Platform: String, CaseIterable, Codable, Comparable, Sendable {
     case iOS = "ios"
     case macOS = "macos"
     case tvOS = "tvos"
