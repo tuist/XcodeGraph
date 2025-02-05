@@ -23,7 +23,7 @@ let package = Package(
 
 ## XcodeGraphMapper
 
-- [Documentation](https://xcodegraph.pages.dev/documentation/xcodegraphmapper)
+- [Documentation](https://xcodegraph.dev/documentation/xcodegraphmapper)
 
 XcodeGraphMapper parses `.xcworkspace` or `.xcodeproj` files using `XcodeProj` and constructs a `XcodeGraph.Graph` representing their projects, targets, and dependencies:
 
