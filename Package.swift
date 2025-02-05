@@ -33,7 +33,7 @@ let targets: [Target] = [
         ]
     ),
     .target(
-        name: "XcodeProjMapper",
+        name: "XcodeGraphMapper",
         dependencies: [
             "XcodeGraph",
             "XcodeMetadata",
@@ -53,9 +53,9 @@ let targets: [Target] = [
         ]
     ),
     .testTarget(
-        name: "XcodeProjMapperTests",
+        name: "XcodeGraphMapperTests",
         dependencies: [
-            "XcodeProjMapper",
+            "XcodeGraphMapper",
             .product(name: "FileSystem", package: "FileSystem"),
         ],
         swiftSettings: [
@@ -72,7 +72,7 @@ let package = Package(
             name: "XcodeGraph",
             targets: ["XcodeGraph"]
         ),
-        .library(name: "XcodeProjMapper", targets: ["XcodeProjMapper"]),
+        .library(name: "XcodeGraphMapper", targets: ["XcodeGraphMapper"]),
     ],
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),

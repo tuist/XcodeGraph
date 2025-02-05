@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.4.0] - 2025-02-05
 ### Details
 #### Feat
-- Introduce XcodeProjMapper to map XcodeProj to XcodeGraph by @ajkolean in [#87](https://github.com/tuist/XcodeGraph/pull/87)
+- Introduce XcodeGraphMapper to map XcodeProj to XcodeGraph by @ajkolean in [#87](https://github.com/tuist/XcodeGraph/pull/87)
 
 ## New Contributors
 * @ajkolean made their first contribution in [#87](https://github.com/tuist/XcodeGraph/pull/87)
