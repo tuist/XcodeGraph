@@ -5,10 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-02-05
+### Details
+#### Feat
+- Rename XcodeProjMapper to XcodeGraphMapper by @fortmarek in [#103](https://github.com/tuist/XcodeGraph/pull/103)
+
 ## [1.4.0] - 2025-02-05
 ### Details
 #### Feat
-- Introduce XcodeGraphMapper to map XcodeProj to XcodeGraph by @ajkolean in [#87](https://github.com/tuist/XcodeGraph/pull/87)
+- Introduce XcodeProjMapper to map XcodeProj to XcodeGraph by @ajkolean in [#87](https://github.com/tuist/XcodeGraph/pull/87)
 
 ## New Contributors
 * @ajkolean made their first contribution in [#87](https://github.com/tuist/XcodeGraph/pull/87)
@@ -360,6 +365,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.5.0]: https://github.com/tuist/XcodeGraph/compare/1.4.0..1.5.0
 [1.4.0]: https://github.com/tuist/XcodeGraph/compare/1.3.4..1.4.0
 [1.3.4]: https://github.com/tuist/XcodeGraph/compare/1.3.3..1.3.4
 [1.3.3]: https://github.com/tuist/XcodeGraph/compare/1.3.2..1.3.3
