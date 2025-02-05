@@ -9,7 +9,7 @@ let targets: [Target] = [
             "Path",
         ],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency"),
+            .enableExperimentalFeature("StrictConcurrency")
         ]
     ),
     .target(
@@ -29,7 +29,7 @@ let targets: [Target] = [
         name: "XcodeMetadataTests",
         dependencies: ["XcodeMetadata", "XcodeGraph"],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency"),
+            .enableExperimentalFeature("StrictConcurrency")
         ]
     ),
     .target(
@@ -42,14 +42,14 @@ let targets: [Target] = [
             .product(name: "XcodeProj", package: "XcodeProj"),
         ],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency"),
+            .enableExperimentalFeature("StrictConcurrency")
         ]
     ),
     .testTarget(
         name: "XcodeGraphTests",
         dependencies: [.target(name: "XcodeGraph")],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency"),
+            .enableExperimentalFeature("StrictConcurrency")
         ]
     ),
     .testTarget(
@@ -59,7 +59,7 @@ let targets: [Target] = [
             .product(name: "FileSystem", package: "FileSystem"),
         ],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency"),
+            .enableExperimentalFeature("StrictConcurrency")
         ]
     ),
 ]
@@ -83,6 +83,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-service-context", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.0.11")),
         .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.28.0")),
+        .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: targets
 )
