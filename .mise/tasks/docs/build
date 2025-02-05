@@ -1,0 +1,5 @@
+#!/bin/bash
+# mise description="Build docs"
+set -euo pipefail
+
+swift package --package-path $MISE_PROJECT_ROOT --allow-writing-to-directory .build/documentation generate-documentation --disable-indexing --output-path .build/documentation --transform-for-static-hosting --enable-experimental-combined-documentation --target XcodeGraph --target XcodeGraphMapper

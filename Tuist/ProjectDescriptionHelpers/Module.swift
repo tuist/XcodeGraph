@@ -3,7 +3,7 @@ import ProjectDescription
 
 public enum Module: String, CaseIterable {
     case xcodeGraph = "XcodeGraph"
-    case xcodeProjMapper = "XcodeProjMapper"
+    case xcodeGraphMapper = "XcodeGraphMapper"
     case xcodeMetadata = "XcodeMetadata"
 
     public var isRunnable: Bool {
@@ -80,14 +80,14 @@ public enum Module: String, CaseIterable {
 
     public var unitTestsTargetName: String? {
         switch self {
-        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
+        case .xcodeGraph, .xcodeGraphMapper, .xcodeMetadata:
             return "\(rawValue)Tests"
         }
     }
 
     public var integrationTestsTargetName: String? {
         switch self {
-        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
+        case .xcodeGraph, .xcodeGraphMapper, .xcodeMetadata:
             return nil
         }
     }
@@ -125,7 +125,7 @@ public enum Module: String, CaseIterable {
                 .external(name: "AnyCodable"),
                 .external(name: "Path"),
             ]
-        case .xcodeProjMapper:
+        case .xcodeGraphMapper:
             [
                 .target(name: Module.xcodeGraph.rawValue),
                 .target(name: Module.xcodeMetadata.rawValue),
@@ -145,7 +145,7 @@ public enum Module: String, CaseIterable {
 
     public var unitTestDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .xcodeMetadata, .xcodeProjMapper:
+        case .xcodeGraph, .xcodeMetadata, .xcodeGraphMapper:
             [
             ]
         }
@@ -155,7 +155,7 @@ public enum Module: String, CaseIterable {
 
     public var testingDependencies: [TargetDependency] {
         let dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
+        case .xcodeGraph, .xcodeGraphMapper, .xcodeMetadata:
             [
             ]
         }
@@ -164,7 +164,7 @@ public enum Module: String, CaseIterable {
 
     public var integrationTestsDependencies: [TargetDependency] {
         var dependencies: [TargetDependency] = switch self {
-        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
+        case .xcodeGraph, .xcodeGraphMapper, .xcodeMetadata:
             []
         }
         dependencies.append(.target(name: targetName))
@@ -184,7 +184,7 @@ public enum Module: String, CaseIterable {
             rootFolder = "Sources"
         }
         let resources: ResourceFileElements = switch self {
-        case .xcodeGraph, .xcodeProjMapper, .xcodeMetadata:
+        case .xcodeGraph, .xcodeGraphMapper, .xcodeMetadata:
             []
         }
         var debugSettings: ProjectDescription.SettingsDictionary = ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"]

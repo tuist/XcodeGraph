@@ -2,7 +2,7 @@ name: XcodeGraph
 on:
   push:
     branches:
-      - "**"
+      - "main"
     tags-ignore:
       - "**"
     paths:
@@ -51,7 +51,7 @@ jobs:
       - name: Test on Linux
         if: matrix.os == 'ubuntu-22.04'
         # These momdules rely on some Xcode utilities like xcode-select
-        run: swift test --skip XcodeProjMapperTests --skip XcodeMetadataTests
+        run: swift test --skip XcodeGraphMapperTests --skip XcodeMetadataTests
       - name: Test
         if: matrix.os != 'ubuntu-22.04'
         run: swift test
