@@ -137,9 +137,11 @@ struct XCSchemeMapperTests {
         )
         let runnable = XCScheme.BuildableProductRunnable(buildableReference: targetRef)
         let envVar = XCScheme.EnvironmentVariable(
-            variable: "RUN_ENV", value: "run_value", enabled: true)
+            variable: "RUN_ENV", value: "run_value", enabled: true
+        )
         let launchArg = XCScheme.CommandLineArguments.CommandLineArgument(
-            name: "run_arg", enabled: true)
+            name: "run_arg", enabled: true
+        )
         let element = runnable.xmlElement()
         let launchAction = XCScheme.LaunchAction(
             runnable: try .init(element: element),

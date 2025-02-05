@@ -9,7 +9,7 @@ let targets: [Target] = [
             "Path",
         ],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency")
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
     .target(
@@ -29,7 +29,7 @@ let targets: [Target] = [
         name: "XcodeMetadataTests",
         dependencies: ["XcodeMetadata", "XcodeGraph"],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency")
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
     .target(
@@ -42,14 +42,14 @@ let targets: [Target] = [
             .product(name: "XcodeProj", package: "XcodeProj"),
         ],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency")
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
     .testTarget(
         name: "XcodeGraphTests",
         dependencies: [.target(name: "XcodeGraph")],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency")
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
     .testTarget(
@@ -59,7 +59,7 @@ let targets: [Target] = [
             .product(name: "FileSystem", package: "FileSystem"),
         ],
         swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency")
+            .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
 ]
