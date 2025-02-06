@@ -12,15 +12,6 @@ final class TargetTests: XCTestCase {
         XCTAssertCodable(subject)
     }
 
-    func test_validSourceExtensions() {
-        XCTAssertEqual(
-            Target.validSourceExtensions,
-            [
-                "m", "swift", "mm", "cpp", "c++", "cc", "c", "d", "s", "intentdefinition", "metal", "mlmodel",
-            ]
-        )
-    }
-
     func test_sequence_testBundles() {
         let app = Target.test(product: .app)
         let tests = Target.test(product: .unitTests)

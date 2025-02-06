@@ -7,7 +7,9 @@ import XcodeProj
 @testable import XcodeGraphMapper
 
 @Suite
-struct PBXTargetMapperTests {
+struct PBXTargetMapperTests: Sendable {
+    private let fileSystem = FileSystem()
+
     @Test("Maps a basic target with a product bundle identifier")
     func testMapBasicTarget() async throws {
         // Given
@@ -133,6 +135,136 @@ struct PBXTargetMapperTests {
         // Then
         #expect(mapped.sources.count == 1)
         #expect(mapped.sources[0].path.basename == "ViewController.swift")
+    }
+
+    @Test("Maps a target with a buildable group")
+    func testMapTargetWithBuildableGroup() async throws {
+        try await fileSystem.runInTemporaryDirectory(prefix: "PBXTargetMapperTests") { appPath in
+            // Given
+            let xcodeProj = try await XcodeProj.test(
+                path: appPath.appending(component: "App.xcodeproj")
+            )
+            let pbxProj = xcodeProj.pbxproj
+            let sourcesPhase = PBXSourcesBuildPhase(files: []).add(to: pbxProj)
+
+            let target = createTarget(
+                name: "App",
+                xcodeProj: xcodeProj,
+                productType: .application,
+                buildPhases: [sourcesPhase],
+                buildSettings: ["PRODUCT_BUNDLE_IDENTIFIER": "com.example.app"]
+            )
+            let exceptionSet = PBXFileSystemSynchronizedBuildFileExceptionSet(
+                target: target,
+                membershipExceptions: [
+                    "Ignored.cpp",
+                ],
+                publicHeaders: [
+                    "Public.h",
+                ],
+                privateHeaders: [
+                    "Private.hpp",
+                ],
+                additionalCompilerFlagsByRelativePath: [
+                    "File.swift": "compiler-flag",
+                ],
+                attributesByRelativePath: [
+                    "Optional.framework": ["Weak"],
+                ]
+            )
+            let rootGroup = PBXFileSystemSynchronizedRootGroup(
+                path: "App",
+                exceptions: [
+                    exceptionSet,
+                ]
+            )
+            target.fileSystemSynchronizedGroups = [
+                rootGroup,
+            ]
+            let buildableGroupPath = appPath.appending(component: "App")
+            try await fileSystem.makeDirectory(at: buildableGroupPath)
+
+            // Sources
+            try await fileSystem.touch(buildableGroupPath.appending(component: "File.swift"))
+            try await fileSystem.touch(buildableGroupPath.appending(component: "File.cpp"))
+            try await fileSystem.touch(buildableGroupPath.appending(component: "Ignored.cpp"))
+            try await fileSystem.makeDirectory(at: buildableGroupPath.appending(component: "Nested"))
+            try await fileSystem.touch(buildableGroupPath.appending(component: "File.c"))
+            try await fileSystem.makeDirectory(at: buildableGroupPath.appending(component: "App.docc"))
+
+            // Resources
+            try await fileSystem.makeDirectory(at: buildableGroupPath.appending(component: "Location.geojson"))
+            try await fileSystem.makeDirectory(at: buildableGroupPath.appending(component: "App.xcassets"))
+
+            // Headers
+            try await fileSystem.touch(buildableGroupPath.appending(component: "Public.h"))
+            try await fileSystem.touch(buildableGroupPath.appending(component: "Project.h"))
+            try await fileSystem.touch(buildableGroupPath.appending(component: "Private.hpp"))
+
+            // Frameworks
+            try await fileSystem.makeDirectory(at: buildableGroupPath.appending(component: "Framework.framework"))
+            try await fileSystem.makeDirectory(at: buildableGroupPath.appending(component: "Optional.framework"))
+
+            let mapper = PBXTargetMapper(
+                fileSystem: fileSystem
+            )
+
+            // When
+            let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+
+            // Then
+            #expect(
+                mapped.sources.sorted(by: { $0.path < $1.path }).map(\.compilerFlags) == [
+                    nil,
+                    nil,
+                    nil,
+                    "compiler-flag",
+                ]
+            )
+            #expect(
+                mapped.sources.map(\.path.basename).sorted() == [
+                    "App.docc",
+                    "File.c",
+                    "File.cpp",
+                    "File.swift",
+                ]
+            )
+            #expect(
+                mapped.resources.resources.map(\.path.basename).sorted() == [
+                    "App.xcassets",
+                    "Location.geojson",
+                ]
+            )
+            #expect(
+                mapped.headers?.private.map(\.basename) == [
+                    "Private.hpp",
+                ]
+            )
+            #expect(
+                mapped.headers?.public.map(\.basename) == [
+                    "Public.h",
+                ]
+            )
+            #expect(
+                mapped.headers?.project.map(\.basename) == [
+                    "Project.h",
+                ]
+            )
+            #expect(
+                mapped.dependencies == [
+                    .framework(
+                        path: buildableGroupPath.appending(component: "Framework.framework"),
+                        status: .required,
+                        condition: nil
+                    ),
+                    .framework(
+                        path: buildableGroupPath.appending(component: "Optional.framework"),
+                        status: .optional,
+                        condition: nil
+                    ),
+                ]
+            )
+        }
     }
 
     @Test("Maps a target with metadata tags")

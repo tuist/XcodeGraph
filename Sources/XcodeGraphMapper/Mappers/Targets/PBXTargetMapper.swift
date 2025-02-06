@@ -64,6 +64,7 @@ struct PBXTargetMapper: PBXTargetMapping {
     private let frameworksMapper: PBXFrameworksBuildPhaseMapping
     private let dependencyMapper: PBXTargetDependencyMapping
     private let buildRuleMapper: BuildRuleMapping
+    private let fileSystem: FileSysteming
 
     init(
         settingsMapper: SettingsMapping = XCConfigurationMapper(),
@@ -75,7 +76,8 @@ struct PBXTargetMapper: PBXTargetMapping {
         coreDataModelsMapper: PBXCoreDataModelsBuildPhaseMapping = PBXCoreDataModelsBuildPhaseMapper(),
         frameworksMapper: PBXFrameworksBuildPhaseMapping = PBXFrameworksBuildPhaseMapper(),
         dependencyMapper: PBXTargetDependencyMapping = PBXTargetDependencyMapper(),
-        buildRuleMapper: BuildRuleMapping = PBXBuildRuleMapper()
+        buildRuleMapper: BuildRuleMapping = PBXBuildRuleMapper(),
+        fileSystem: FileSysteming = FileSystem()
     ) {
         self.settingsMapper = settingsMapper
         self.sourcesMapper = sourcesMapper
@@ -87,6 +89,7 @@ struct PBXTargetMapper: PBXTargetMapping {
         self.frameworksMapper = frameworksMapper
         self.dependencyMapper = dependencyMapper
         self.buildRuleMapper = buildRuleMapper
+        self.fileSystem = fileSystem
     }
 
     func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) async throws -> Target {
@@ -102,17 +105,31 @@ struct PBXTargetMapper: PBXTargetMapping {
         )
 
         // Build Phases
-        let sources = try pbxTarget.sourcesBuildPhase().map {
+        var sources = try pbxTarget.sourcesBuildPhase().map {
             try sourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
+        sources = try await fileSystemSynchronizedGroupsSources(
+            from: pbxTarget,
+            xcodeProj: xcodeProj
+        ) + sources
 
-        let resources = try pbxTarget.resourcesBuildPhase().map {
+        var resources = try pbxTarget.resourcesBuildPhase().map {
             try resourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
+        resources = try await fileSystemSynchronizedGroupsResources(
+            from: pbxTarget,
+            xcodeProj: xcodeProj
+        ) + resources
 
-        let headers = try pbxTarget.headersBuildPhase().map {
+        var headers = try pbxTarget.headersBuildPhase().map {
             try headersMapper.map($0, xcodeProj: xcodeProj)
         } ?? nil
+
+        headers = try await addHeadersFromFileSystemSynchronizedGroups(
+            from: pbxTarget,
+            xcodeProj: xcodeProj,
+            headers: headers
+        )
 
         let runScriptPhases = pbxTarget.runScriptBuildPhases()
         let scripts = try scriptsMapper.map(runScriptPhases, buildPhases: pbxTarget.buildPhases)
@@ -127,9 +144,14 @@ struct PBXTargetMapper: PBXTargetMapping {
 
         // Frameworks & libraries
         let frameworksPhase = try pbxTarget.frameworksBuildPhase()
-        let frameworks = try frameworksPhase.map {
+        var frameworks = try frameworksPhase.map {
             try frameworksMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
+
+        frameworks = try await fileSystemSynchronizedGroupsFrameworks(
+            from: pbxTarget,
+            xcodeProj: xcodeProj
+        ) + frameworks
 
         // Additional files (not in build phases)
         let additionalFiles = try mapAdditionalFiles(from: pbxTarget, xcodeProj: xcodeProj)
@@ -329,6 +351,166 @@ struct PBXTargetMapper: PBXTargetMapping {
         default:
             // If unrecognized, store its string description
             return .string(String(describing: value))
+        }
+    }
+
+    private func fileSystemSynchronizedGroupsSources(
+        from pbxTarget: PBXTarget,
+        xcodeProj: XcodeProj
+    ) async throws -> [SourceFile] {
+        guard let fileSystemSynchronizedGroups = pbxTarget.fileSystemSynchronizedGroups else { return [] }
+        var sources: [SourceFile] = []
+        for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
+            if let path = fileSystemSynchronizedGroup.path {
+                let membershipExceptions = Set(
+                    fileSystemSynchronizedGroup.exceptions
+                        .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
+                )
+                let additionalCompilerFlagsByRelativePath = fileSystemSynchronizedGroup.exceptions?
+                    .reduce([:]) { acc, element in
+                        acc.merging(element.additionalCompilerFlagsByRelativePath ?? [:], uniquingKeysWith: { $1 })
+                    }
+                let directory = xcodeProj.srcPath.appending(component: path)
+                let groupSources = try await fileSystem.glob(
+                    directory: directory,
+                    include: [
+                        "**/*.{\(Target.validSourceExtensions.joined(separator: ","))}",
+                        "**/*.{\(Target.validSourceCompatibleFolderExtensions.joined(separator: ","))}",
+                    ]
+                )
+                .collect()
+                .filter {
+                    !membershipExceptions.contains($0.relative(to: directory).pathString)
+                }
+                .map {
+                    SourceFile(
+                        path: $0,
+                        compilerFlags: additionalCompilerFlagsByRelativePath?[$0.relative(to: directory).pathString]
+                    )
+                }
+                sources.append(contentsOf: groupSources)
+            }
+        }
+        return sources
+    }
+
+    private func fileSystemSynchronizedGroupsResources(
+        from pbxTarget: PBXTarget,
+        xcodeProj: XcodeProj
+    ) async throws -> [ResourceFileElement] {
+        let fileSystemSynchronizedGroups = pbxTarget.fileSystemSynchronizedGroups ?? []
+        var resources: [ResourceFileElement] = []
+        for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
+            guard let path = fileSystemSynchronizedGroup.path else { continue }
+            let directory = xcodeProj.srcPath.appending(component: path)
+            let membershipExceptions = Set(
+                fileSystemSynchronizedGroup.exceptions
+                    .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
+            )
+
+            let groupResources = try await fileSystem.glob(
+                directory: directory,
+                include: [
+                    "**/*.{\(Target.validResourceExtensions.joined(separator: ","))}",
+                    "**/*.{\(Target.validResourceCompatibleFolderExtensions.joined(separator: ","))}",
+                ]
+            )
+            .collect()
+            .filter {
+                !membershipExceptions.contains($0.relative(to: directory).pathString)
+            }
+            .map {
+                ResourceFileElement(path: $0)
+            }
+            resources.append(contentsOf: groupResources)
+        }
+
+        return resources
+    }
+
+    private func fileSystemSynchronizedGroupsFrameworks(
+        from pbxTarget: PBXTarget,
+        xcodeProj: XcodeProj
+    ) async throws -> [TargetDependency] {
+        let fileSystemSynchronizedGroups = pbxTarget.fileSystemSynchronizedGroups ?? []
+        var frameworks: [TargetDependency] = []
+        for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
+            guard let path = fileSystemSynchronizedGroup.path else { continue }
+            let directory = xcodeProj.srcPath.appending(component: path)
+            let membershipExceptions = Set(
+                fileSystemSynchronizedGroup.exceptions
+                    .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
+            )
+
+            let attributesByRelativePath = fileSystemSynchronizedGroup.exceptions?.reduce([:]) { acc, element in
+                acc.merging(element.attributesByRelativePath ?? [:], uniquingKeysWith: { $1 })
+            }
+
+            let groupFrameworks: [TargetDependency] = try await fileSystem.glob(
+                directory: directory,
+                include: [
+                    "**/*.framework",
+                ]
+            )
+            .collect()
+            .filter {
+                !membershipExceptions.contains($0.relative(to: directory).pathString)
+            }
+            .map {
+                return .framework(
+                    path: $0,
+                    status: attributesByRelativePath?[$0.relative(to: directory).pathString]?
+                        .contains("Weak") == true ? .optional : .required,
+                    condition: nil
+                )
+            }
+            frameworks.append(contentsOf: groupFrameworks)
+        }
+
+        return frameworks
+    }
+
+    private func addHeadersFromFileSystemSynchronizedGroups(
+        from pbxTarget: PBXTarget,
+        xcodeProj: XcodeProj,
+        headers: Headers?
+    ) async throws -> Headers? {
+        let fileSystemSynchronizedGroups = pbxTarget.fileSystemSynchronizedGroups ?? []
+        var publicHeaders = headers?.public ?? []
+        var privateHeaders = headers?.private ?? []
+        var projectHeaders = headers?.project ?? []
+        for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
+            guard let path = fileSystemSynchronizedGroup.path else { continue }
+            let directory = xcodeProj.srcPath.appending(component: path)
+            for synchronizedBuildFileSystemExceptionSet in fileSystemSynchronizedGroup.exceptions ?? [] {
+                for publicHeader in synchronizedBuildFileSystemExceptionSet.publicHeaders ?? [] {
+                    publicHeaders.append(directory.appending(component: publicHeader))
+                }
+                for privateHeader in synchronizedBuildFileSystemExceptionSet.privateHeaders ?? [] {
+                    privateHeaders.append(directory.appending(component: privateHeader))
+                }
+            }
+
+            let groupHeaders = try await fileSystem.glob(
+                directory: directory,
+                include: [
+                    "**/*.{h,hpp}",
+                ]
+            )
+            .collect()
+            .filter {
+                !privateHeaders.contains($0) && !publicHeaders.contains($0)
+            }
+            projectHeaders.append(contentsOf: groupHeaders)
+        }
+        if !publicHeaders.isEmpty || !privateHeaders.isEmpty || !projectHeaders.isEmpty || headers != nil {
+            return Headers(
+                public: publicHeaders,
+                private: privateHeaders,
+                project: projectHeaders
+            )
+        } else {
+            return headers
         }
     }
 }
