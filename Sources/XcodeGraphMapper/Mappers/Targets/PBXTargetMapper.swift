@@ -64,6 +64,7 @@ struct PBXTargetMapper: PBXTargetMapping {
     private let frameworksMapper: PBXFrameworksBuildPhaseMapping
     private let dependencyMapper: PBXTargetDependencyMapping
     private let buildRuleMapper: BuildRuleMapping
+    private let fileSystem: FileSysteming
 
     init(
         settingsMapper: SettingsMapping = XCConfigurationMapper(),
@@ -75,7 +76,8 @@ struct PBXTargetMapper: PBXTargetMapping {
         coreDataModelsMapper: PBXCoreDataModelsBuildPhaseMapping = PBXCoreDataModelsBuildPhaseMapper(),
         frameworksMapper: PBXFrameworksBuildPhaseMapping = PBXFrameworksBuildPhaseMapper(),
         dependencyMapper: PBXTargetDependencyMapping = PBXTargetDependencyMapper(),
-        buildRuleMapper: BuildRuleMapping = PBXBuildRuleMapper()
+        buildRuleMapper: BuildRuleMapping = PBXBuildRuleMapper(),
+        fileSystem: FileSysteming = FileSystem()
     ) {
         self.settingsMapper = settingsMapper
         self.sourcesMapper = sourcesMapper
@@ -87,6 +89,7 @@ struct PBXTargetMapper: PBXTargetMapping {
         self.frameworksMapper = frameworksMapper
         self.dependencyMapper = dependencyMapper
         self.buildRuleMapper = buildRuleMapper
+        self.fileSystem = fileSystem
     }
 
     func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) async throws -> Target {
@@ -102,13 +105,51 @@ struct PBXTargetMapper: PBXTargetMapping {
         )
 
         // Build Phases
-        let sources = try pbxTarget.sourcesBuildPhase().map {
+        var sources = try pbxTarget.sourcesBuildPhase().map {
             try sourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
-
-        let resources = try pbxTarget.resourcesBuildPhase().map {
+        
+        var resources = try pbxTarget.resourcesBuildPhase().map {
             try resourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
+        
+        if let fileSystemSynchronizedGroups = pbxTarget.fileSystemSynchronizedGroups {
+            for fileSystemSynchronizedGroup in try fileSystemSynchronizedGroups {
+                if let path = fileSystemSynchronizedGroup.path {
+                    let groupSources = try await fileSystem.glob(
+                        directory: xcodeProj.srcPath.appending(component: path),
+                        include: [
+                            "**/*.{\(Target.validSourceExtensions.joined(separator: ","))}",
+                            "**/*.{\(Target.validSourceCompatibleFolderExtensions.joined(separator: ","))}",
+                        ]
+                    )
+                        .collect()
+                        .map { SourceFile(path: $0) }
+                    sources.append(contentsOf: groupSources)
+                    
+//                    print(
+//                        try await fileSystem.glob(
+//                            directory: xcodeProj.srcPath.appending(component: path),
+//                            include: ["**/*.xcassets"]
+//                        )
+//                            .collect()
+//                    )
+                    
+                    let groupResources = try await fileSystem.glob(
+                        directory: xcodeProj.srcPath.appending(component: path),
+                        include: [
+                            "**/*.{\(Target.validResourceExtensions.joined(separator: ","))}",
+                            "**/*.{\(Target.validResourceCompatibleFolderExtensions.joined(separator: ","))}",
+                        ]
+                    )
+                        .collect()
+                        .map {
+                            ResourceFileElement(path: $0)
+                        }
+                    resources.append(contentsOf: groupResources)
+                }
+            }
+        }
 
         let headers = try pbxTarget.headersBuildPhase().map {
             try headersMapper.map($0, xcodeProj: xcodeProj)
