@@ -68,7 +68,7 @@ extension [GraphEdge: PlatformCondition] {
 
 #if DEBUG
     extension Graph {
-        static func test(
+        public static func test(
             name: String = "graph",
             path: AbsolutePath = .root,
             workspace: Workspace = .test(),
