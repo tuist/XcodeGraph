@@ -173,7 +173,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
             let xcodeProj = try XcodeProj(pathString: path.pathString)
             let projectMapper = PBXProjectMapper()
             let project = try await projectMapper.map(xcodeProj: xcodeProj)
-            projects[path] = project
+            projects[path.parentDirectory] = project
         }
 
         return projects
@@ -209,7 +209,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
 
         for (path, project) in projects {
             for (name, target) in project.targets {
-                let sourceDependency = GraphDependency.target(name: name, path: path.parentDirectory)
+                let sourceDependency = GraphDependency.target(name: name, path: path)
 
                 // Build edges for each target dependency
                 let edgesAndDeps = try await target.dependencies.serialCompactMap { (dep: TargetDependency) async throws -> (
@@ -218,7 +218,7 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
                     GraphDependency
                 ) in
                     let graphDep = try await dep.graphDependency(
-                        sourceDirectory: path.parentDirectory,
+                        sourceDirectory: path,
                         allTargetsMap: allTargetsMap,
                         target: target
                     )

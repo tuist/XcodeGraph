@@ -200,7 +200,7 @@ struct XCSchemeMapper: SchemeMapping {
             let relPath = try RelativePath(validating: relativeContainerPath)
             projectPath = xcworkspace.workspacePath.parentDirectory.appending(relPath)
         case let .project(xcodeProj):
-            projectPath = xcodeProj.projectPath
+            projectPath = xcodeProj.projectPath.parentDirectory
         }
 
         return TargetReference(projectPath: projectPath, name: targetName)
