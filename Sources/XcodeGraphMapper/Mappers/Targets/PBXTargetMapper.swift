@@ -49,6 +49,7 @@ protocol PBXTargetMapping {
 }
 
 // swiftlint:disable function_body_length
+// swiftlint:disable type_body_length
 /// A mapper that converts a `PBXTarget` into a domain `Target` model.
 ///
 /// `PBXTargetMapper` orchestrates various specialized mappers (e.g., sources, resources, headers)
@@ -530,3 +531,4 @@ struct PBXTargetMapper: PBXTargetMapping {
 }
 
 // swiftlint:enable function_body_length
+// swiftlint:enable type_body_length
