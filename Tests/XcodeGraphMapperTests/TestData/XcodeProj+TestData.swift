@@ -1,6 +1,7 @@
 import FileSystem
 import Foundation
 import Path
+import PathKit
 import XcodeGraph
 import XcodeProj
 
@@ -11,7 +12,8 @@ extension XcodeProj {
             buildConfigurations: [.testDebug(), .testRelease()]
         ),
         targets: [PBXTarget] = [],
-        pbxProj: PBXProj = PBXProj()
+        pbxProj: PBXProj = PBXProj(),
+        path: AbsolutePath? = nil
     ) async throws -> XcodeProj {
         pbxProj.add(object: configurationList)
         for config in configurationList.buildConfigurations {
@@ -52,7 +54,7 @@ extension XcodeProj {
         return XcodeProj(
             workspace: XCWorkspace(),
             pbxproj: pbxProj,
-            path: .init("\(sourceDirectory)/\(projectName).xcodeproj")
+            path: path.map(\.pathString).map { Path($0) } ?? Path("\(sourceDirectory)/\(projectName).xcodeproj")
         )
     }
 }
