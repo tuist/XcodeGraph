@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.6] - 2025-02-07
+### Details
+#### Fix
+- Remove .xcodeproj path component from most paths by @fortmarek in [#109](https://github.com/tuist/XcodeGraph/pull/109)
+
 ## [1.5.5] - 2025-02-07
 ### Details
 #### Chore
@@ -390,6 +395,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.5.6]: https://github.com/tuist/XcodeGraph/compare/1.5.5..1.5.6
 [1.5.5]: https://github.com/tuist/XcodeGraph/compare/1.5.4..1.5.5
 [1.5.4]: https://github.com/tuist/XcodeGraph/compare/1.5.3..1.5.4
 [1.5.3]: https://github.com/tuist/XcodeGraph/compare/1.5.2..1.5.3
