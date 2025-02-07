@@ -77,7 +77,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
-        .package(url: "https://github.com/tuist/XcodeProj", from: "8.26.0"),
+        .package(url: "https://github.com/tuist/XcodeProj", from: "8.26.6"),
         .package(url: "https://github.com/tuist/Command.git", from: "0.11.0"),
         .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.6.17")),
         .package(url: "https://github.com/apple/swift-service-context", .upToNextMajor(from: "1.0.0")),
