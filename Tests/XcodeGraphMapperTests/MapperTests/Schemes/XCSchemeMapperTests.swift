@@ -256,7 +256,7 @@ struct XCSchemeMapperTests {
         // Then
         #expect(mappedAction.targets.count == 1)
         #expect(mappedAction.targets[0].name == "App")
-        #expect(mappedAction.targets[0].projectPath == xcodeProj.projectPath)
+        #expect(mappedAction.targets[0].projectPath == xcodeProj.projectPath.parentDirectory)
     }
 
     @Test("Handles schemes without any actions gracefully")
