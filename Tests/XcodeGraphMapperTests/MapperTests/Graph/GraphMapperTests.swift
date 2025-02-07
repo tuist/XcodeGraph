@@ -130,15 +130,15 @@ struct XcodeGraphMapperTests {
 
         // When
         let graph = try await mapper.buildGraph(from: .workspace(xcworkspace))
-        print(projectA.path!)
+
         // Then
         #expect(graph.workspace.name == "Workspace")
         #expect(graph.workspace.projects.contains(projectA.projectPath) == true)
         #expect(graph.workspace.projects.contains(projectB.projectPath) == true)
         #expect(graph.projects.count == 2)
 
-        let mappedProjectA = try #require(graph.projects[projectA.projectPath])
-        let mappedProjectB = try #require(graph.projects[projectB.projectPath])
+        let mappedProjectA = try #require(graph.projects[projectA.projectPath.parentDirectory])
+        let mappedProjectB = try #require(graph.projects[projectB.projectPath.parentDirectory])
         #expect(mappedProjectA.targets["ATarget"] != nil)
         #expect(mappedProjectB.targets["BTarget"] != nil)
 
