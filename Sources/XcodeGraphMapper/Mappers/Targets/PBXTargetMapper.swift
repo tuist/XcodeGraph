@@ -367,21 +367,20 @@ struct PBXTargetMapper: PBXTargetMapping {
                         .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
                 )
                 let additionalCompilerFlagsByRelativePath = fileSystemSynchronizedGroup.exceptions?
-                    .reduce([:]) { acc, element in
-                        acc.merging(element.additionalCompilerFlagsByRelativePath ?? [:], uniquingKeysWith: { $1 })
+                    .reduce(into: [:]) { acc, element in
+                        acc.merge(element.additionalCompilerFlagsByRelativePath ?? [:], uniquingKeysWith: { $1 })
                     }
                 let directory = xcodeProj.srcPath.appending(component: path)
-                let groupSources = try await fileSystem.glob(
+                let groupSources = try await globFiles(
                     directory: directory,
                     include: [
+                        // Build glob patterns for source files and source-compatible folders.
+                        // This creates patterns like "**/*.{m,swift,mm,...}".
                         "**/*.{\(Target.validSourceExtensions.joined(separator: ","))}",
                         "**/*.{\(Target.validSourceCompatibleFolderExtensions.joined(separator: ","))}",
-                    ]
+                    ],
+                    membershipExceptions: membershipExceptions
                 )
-                .collect()
-                .filter {
-                    !membershipExceptions.contains($0.relative(to: directory).pathString)
-                }
                 .map {
                     SourceFile(
                         path: $0,
@@ -408,17 +407,16 @@ struct PBXTargetMapper: PBXTargetMapping {
                     .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
             )
 
-            let groupResources = try await fileSystem.glob(
+            let groupResources = try await globFiles(
                 directory: directory,
                 include: [
+                    // Build glob patterns for resource files and resource-compatible folders.
+                    // This creates patterns like "**/*.{xcassets,png,...}".
                     "**/*.{\(Target.validResourceExtensions.joined(separator: ","))}",
                     "**/*.{\(Target.validResourceCompatibleFolderExtensions.joined(separator: ","))}",
-                ]
+                ],
+                membershipExceptions: membershipExceptions
             )
-            .collect()
-            .filter {
-                !membershipExceptions.contains($0.relative(to: directory).pathString)
-            }
             .map {
                 ResourceFileElement(path: $0)
             }
@@ -446,16 +444,13 @@ struct PBXTargetMapper: PBXTargetMapping {
                 acc.merging(element.attributesByRelativePath ?? [:], uniquingKeysWith: { $1 })
             }
 
-            let groupFrameworks: [TargetDependency] = try await fileSystem.glob(
+            let groupFrameworks: [TargetDependency] = try await globFiles(
                 directory: directory,
                 include: [
                     "**/*.framework",
-                ]
+                ],
+                membershipExceptions: membershipExceptions
             )
-            .collect()
-            .filter {
-                !membershipExceptions.contains($0.relative(to: directory).pathString)
-            }
             .map {
                 return .framework(
                     path: $0,
@@ -491,6 +486,9 @@ struct PBXTargetMapper: PBXTargetMapping {
                 }
             }
 
+            let publicHeadersSet = Set(publicHeaders)
+            let privateHeadersSet = Set(privateHeaders)
+
             let groupHeaders = try await fileSystem.glob(
                 directory: directory,
                 include: [
@@ -499,7 +497,7 @@ struct PBXTargetMapper: PBXTargetMapping {
             )
             .collect()
             .filter {
-                !privateHeaders.contains($0) && !publicHeaders.contains($0)
+                !privateHeadersSet.contains($0) && !publicHeadersSet.contains($0)
             }
             projectHeaders.append(contentsOf: groupHeaders)
         }
@@ -512,6 +510,21 @@ struct PBXTargetMapper: PBXTargetMapping {
         } else {
             return headers
         }
+    }
+
+    /// Performs a glob search in the given directory using specified patterns, filtering out paths
+    /// that appear in the membershipExceptions set.
+    private func globFiles(
+        directory: AbsolutePath,
+        include: [String],
+        membershipExceptions: Set<String> = []
+    ) async throws -> [AbsolutePath] {
+        return try await fileSystem.glob(
+            directory: directory,
+            include: include
+        )
+        .collect()
+        .filter { !membershipExceptions.contains($0.relative(to: directory).pathString) }
     }
 }
 
