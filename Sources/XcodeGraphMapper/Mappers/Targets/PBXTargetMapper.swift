@@ -362,10 +362,7 @@ struct PBXTargetMapper: PBXTargetMapping {
         var sources: [SourceFile] = []
         for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
             if let path = fileSystemSynchronizedGroup.path {
-                let membershipExceptions = Set(
-                    fileSystemSynchronizedGroup.exceptions
-                        .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
-                )
+                let membershipExceptions = membershipExceptions(for: fileSystemSynchronizedGroup)
                 let additionalCompilerFlagsByRelativePath = fileSystemSynchronizedGroup.exceptions?
                     .reduce(into: [:]) { acc, element in
                         acc.merge(element.additionalCompilerFlagsByRelativePath ?? [:], uniquingKeysWith: { $1 })
@@ -435,11 +432,7 @@ struct PBXTargetMapper: PBXTargetMapping {
         for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
             guard let path = fileSystemSynchronizedGroup.path else { continue }
             let directory = xcodeProj.srcPath.appending(component: path)
-            let membershipExceptions = Set(
-                fileSystemSynchronizedGroup.exceptions
-                    .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
-            )
-
+            let membershipExceptions = membershipExceptions(for: fileSystemSynchronizedGroup)
             let attributesByRelativePath = fileSystemSynchronizedGroup.exceptions?.reduce([:]) { acc, element in
                 acc.merging(element.attributesByRelativePath ?? [:], uniquingKeysWith: { $1 })
             }
@@ -485,17 +478,18 @@ struct PBXTargetMapper: PBXTargetMapping {
                     privateHeaders.append(directory.appending(component: privateHeader))
                 }
             }
+            let membershipExceptions = membershipExceptions(for: fileSystemSynchronizedGroup)
 
             let publicHeadersSet = Set(publicHeaders)
             let privateHeadersSet = Set(privateHeaders)
 
-            let groupHeaders = try await fileSystem.glob(
+            let groupHeaders = try await globFiles(
                 directory: directory,
                 include: [
                     "**/*.{h,hpp}",
-                ]
+                ],
+                membershipExceptions: membershipExceptions
             )
-            .collect()
             .filter {
                 !privateHeadersSet.contains($0) && !publicHeadersSet.contains($0)
             }
@@ -512,12 +506,19 @@ struct PBXTargetMapper: PBXTargetMapping {
         }
     }
 
+    private func membershipExceptions(for fileSystemSynchronizedGroup: PBXFileSystemSynchronizedRootGroup) -> Set<String> {
+        Set(
+            fileSystemSynchronizedGroup.exceptions
+                .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
+        )
+    }
+
     /// Performs a glob search in the given directory using specified patterns, filtering out paths
     /// that appear in the membershipExceptions set.
     private func globFiles(
         directory: AbsolutePath,
         include: [String],
-        membershipExceptions: Set<String> = []
+        membershipExceptions: Set<String>
     ) async throws -> [AbsolutePath] {
         return try await fileSystem.glob(
             directory: directory,

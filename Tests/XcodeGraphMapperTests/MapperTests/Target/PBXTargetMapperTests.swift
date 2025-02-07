@@ -158,6 +158,7 @@ struct PBXTargetMapperTests: Sendable {
                 target: target,
                 membershipExceptions: [
                     "Ignored.cpp",
+                    "Ignored.h",
                 ],
                 publicHeaders: [
                     "Public.h",
@@ -199,6 +200,7 @@ struct PBXTargetMapperTests: Sendable {
             // Headers
             try await fileSystem.touch(buildableGroupPath.appending(component: "Public.h"))
             try await fileSystem.touch(buildableGroupPath.appending(component: "Project.h"))
+            try await fileSystem.touch(buildableGroupPath.appending(component: "Ignored.h"))
             try await fileSystem.touch(buildableGroupPath.appending(component: "Private.hpp"))
 
             // Frameworks
