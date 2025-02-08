@@ -45,8 +45,19 @@ struct PBXProjectMapper: PBXProjectMapping {
 
         // Map PBXTargets to domain Targets
         let targetMapper = PBXTargetMapper()
-        let targets = try await pbxProject.targets.serialCompactMap {
-            try await targetMapper.map(pbxTarget: $0, xcodeProj: xcodeProj)
+        let targets = try await withThrowingTaskGroup(of: Target.self, returning: [Target].self) { taskGroup in
+            for pbxTarget in pbxProject.targets {
+                taskGroup.addTask {
+                    try await targetMapper.map(pbxTarget: pbxTarget, xcodeProj: xcodeProj)
+                }
+            }
+
+            var targets: [Target] = []
+            for try await target in taskGroup {
+                targets.append(target)
+            }
+
+            return targets
         }
         .sorted()
 
