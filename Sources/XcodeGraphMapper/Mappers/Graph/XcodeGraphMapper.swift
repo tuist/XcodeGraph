@@ -206,16 +206,11 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     private func resolveDependencies(
         for projects: [AbsolutePath: Project]
     ) async throws -> ([GraphDependency: Set<GraphDependency>], [GraphEdge: PlatformCondition]) {
-        let allTargetsMap = Dictionary(
-            projects.values.flatMap(\.targets),
-            uniquingKeysWith: { existing, _ in existing }
-        )
-        return try await buildDependencies(for: projects, using: allTargetsMap)
+        return try await buildDependencies(for: projects)
     }
 
     private func buildDependencies(
-        for projects: [AbsolutePath: Project],
-        using allTargetsMap: [String: Target]
+        for projects: [AbsolutePath: Project]
     ) async throws -> ([GraphDependency: Set<GraphDependency>], [GraphEdge: PlatformCondition]) {
         var dependencies = [GraphDependency: Set<GraphDependency>]()
         var dependencyConditions = [GraphEdge: PlatformCondition]()
@@ -232,7 +227,6 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
                 ) in
                     let graphDep = try await dep.graphDependency(
                         sourceDirectory: path,
-                        allTargetsMap: allTargetsMap,
                         target: target
                     )
                     return (GraphEdge(from: sourceDependency, to: graphDep), dep.condition, graphDep)
