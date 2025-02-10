@@ -7,11 +7,10 @@ import XcodeProj
 // swiftlint:disable function_body_length
 extension TargetDependency {
     /// Maps this `TargetDependency` to a `GraphDependency` by resolving paths, product types,
-    /// and linking details. Project-based dependencies are resolved using `allTargetsMap`.
+    /// and linking details.
     ///
     /// - Parameters:
     ///   - sourceDirectory: The root directory for resolving relative paths.
-    ///   - allTargetsMap: A map of target names to `Target` models for resolving project-based dependencies.
     ///   - target: The target of this dependency.
     ///   - xcframeworkMetadataProvider: Provides metadata (linking, architectures, etc.) for `.xcframework` dependencies.
     ///   - libraryMetadataProvider: Provides metadata for libraries.
@@ -22,7 +21,6 @@ extension TargetDependency {
     /// - Throws: `TargetDependencyMappingError` if a referenced target is not found or if the dependency type is unknown.
     func graphDependency(
         sourceDirectory: AbsolutePath,
-        allTargetsMap: [String: Target],
         target: Target,
         xcframeworkMetadataProvider: XCFrameworkMetadataProviding = XCFrameworkMetadataProvider(),
         libraryMetadataProvider: LibraryMetadataProviding = LibraryMetadataProvider(),
@@ -37,12 +35,7 @@ extension TargetDependency {
             return .target(name: name, path: sourceDirectory, status: status)
 
         case let .project(targetName, projectPath, status, _):
-            return try mapProjectGraphDependency(
-                projectPath: projectPath,
-                targetName: targetName,
-                status: status,
-                allTargetsMap: allTargetsMap
-            )
+            return .target(name: targetName, path: projectPath, status: status)
 
         // MARK: - Precompiled Binary Cases
 
@@ -129,66 +122,6 @@ extension TargetDependency {
                 architectures: metadata.architectures,
                 status: .required
             )
-        }
-    }
-
-    /// Resolves a project-based target dependency into a `GraphDependency`.
-    ///
-    /// - Parameters:
-    ///   - projectPath: The absolute path of the `.xcodeproj` directory.
-    ///   - targetName: The name of the target within that project.
-    ///   - status: The linking status of the dependency.
-    ///   - allTargetsMap: A dictionary of target names to `Target` models for resolution.
-    /// - Returns: A `GraphDependency` representing the resolved dependency.
-    /// - Throws: `TargetDependencyMappingError.targetNotFound` if `targetName` isn't in `allTargetsMap`,
-    ///           `TargetDependencyMappingError.unknownDependencyType` if the product type can't be mapped.
-    private func mapProjectGraphDependency(
-        projectPath: AbsolutePath,
-        targetName: String,
-        status: LinkingStatus,
-        allTargetsMap: [String: Target]
-    ) throws -> GraphDependency {
-        guard let target = allTargetsMap[targetName] else {
-            throw TargetDependencyMappingError.targetNotFound(
-                targetName: targetName,
-                path: projectPath
-            )
-        }
-
-        let product = target.product
-        switch product {
-        case .framework, .staticFramework:
-            let linking: BinaryLinking = (product == .staticFramework) ? .static : .dynamic
-            return .framework(
-                path: projectPath,
-                binaryPath: projectPath.appending(component: "\(targetName).framework"),
-                dsymPath: nil,
-                bcsymbolmapPaths: [],
-                linking: linking,
-                architectures: [],
-                status: status
-            )
-
-        case .staticLibrary, .dynamicLibrary:
-            let linking: BinaryLinking = (product == .staticLibrary) ? .static : .dynamic
-            let libName = (linking == .static) ? "lib\(targetName).a" : "lib\(targetName).dylib"
-            let publicHeadersPath = projectPath.appending(component: "include")
-            return .library(
-                path: projectPath.appending(component: libName),
-                publicHeaders: publicHeadersPath,
-                linking: linking,
-                architectures: [],
-                swiftModuleMap: nil
-            )
-
-        case .bundle:
-            return .bundle(path: projectPath.appending(component: "\(targetName).bundle"))
-
-        case .app, .commandLineTool:
-            return .target(name: targetName, path: projectPath, status: status)
-
-        default:
-            throw TargetDependencyMappingError.unknownDependencyType(name: product.description)
         }
     }
 }
