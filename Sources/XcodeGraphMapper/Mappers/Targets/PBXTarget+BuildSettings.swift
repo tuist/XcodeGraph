@@ -18,7 +18,7 @@ extension PBXTarget {
     /// Retrieves the path to the Info.plist file from the target's build settings.
     ///
     /// - Returns: The `INFOPLIST_FILE` value if present, otherwise `nil`.
-    func infoPlistPath() -> [BuildConfiguration: String] {
+    func infoPlistPaths() -> [BuildConfiguration: String] {
         buildConfigurationList?.stringSettings(for: .infoPlistFile) ?? [:]
     }
 

@@ -415,6 +415,97 @@ struct PBXTargetMapperTests: Sendable {
         }() == true)
     }
 
+    @Test("Parses a valid Info.plist referenced with a SRCROOT variable")
+    func testMapTarget_validPlist_referenced_with_SRCROOT() async throws {
+        // Given
+
+        let xcodeProj = try await XcodeProj.test()
+        let srcPath = xcodeProj.srcPath
+        let relativePath = try RelativePath(validating: "Info.plist")
+        let plistPath = srcPath.appending(relativePath)
+
+        let plistContent: [String: Any] = [
+            "CFBundleIdentifier": "com.example.app",
+            "CFBundleName": "ExampleApp",
+            "CFVersion": 1.4,
+        ]
+        let data = try PropertyListSerialization.data(fromPropertyList: plistContent, format: .xml, options: 0)
+        try data.write(to: URL(fileURLWithPath: plistPath.pathString))
+
+        let target = createTarget(
+            name: "App",
+            xcodeProj: xcodeProj,
+            productType: .application,
+            buildSettings: [
+                "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
+                "INFOPLIST_FILE": "$(SRCROOT)/\(relativePath.pathString)",
+            ]
+        )
+
+        try xcodeProj.write(path: xcodeProj.path!)
+        let mapper = PBXTargetMapper()
+
+        // When
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+
+        // Then
+        #expect(
+            mapped.infoPlist == .dictionary(
+                [
+                    "CFBundleIdentifier": "com.example.app",
+                    "CFBundleName": "ExampleApp",
+                    "CFVersion": 1.4,
+                ],
+                configuration: .release("Release")
+            )
+        )
+    }
+
+    @Test("Parses a valid Info.plist referenced with a PROJECT_DIR variable")
+    func testMapTarget_validPlist_referenced_with_PROJECT_DIR() async throws {
+        // Given
+        let xcodeProj = try await XcodeProj.test()
+        let srcPath = xcodeProj.srcPath
+        let relativePath = try RelativePath(validating: "Info.plist")
+        let plistPath = srcPath.appending(relativePath)
+
+        let plistContent: [String: Any] = [
+            "CFBundleIdentifier": "com.example.app",
+            "CFBundleName": "ExampleApp",
+            "CFVersion": 1.4,
+        ]
+        let data = try PropertyListSerialization.data(fromPropertyList: plistContent, format: .xml, options: 0)
+        try data.write(to: URL(fileURLWithPath: plistPath.pathString))
+
+        let target = createTarget(
+            name: "App",
+            xcodeProj: xcodeProj,
+            productType: .application,
+            buildSettings: [
+                "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
+                "INFOPLIST_FILE": "$(PROJECT_DIR)/\(relativePath.pathString)",
+            ]
+        )
+
+        try xcodeProj.write(path: xcodeProj.path!)
+        let mapper = PBXTargetMapper()
+
+        // When
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+
+        // Then
+        #expect(
+            mapped.infoPlist == .dictionary(
+                [
+                    "CFBundleIdentifier": "com.example.app",
+                    "CFBundleName": "ExampleApp",
+                    "CFVersion": 1.4,
+                ],
+                configuration: .release("Release")
+            )
+        )
+    }
+
     @Test("Throws invalidPlist when Info.plist cannot be parsed")
     func testMapTarget_invalidPlist() async throws {
         // Given
