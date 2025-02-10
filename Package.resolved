@@ -1,5 +1,5 @@
 {
-  "originHash" : "d85d2800ade4b7815fc45dc86a042a0565bf66be2c0a52d40c24b35d11f9a0be",
+  "originHash" : "252c1ee702d5bd9c4155485fe13cdca178e46fc497b3f48683ff138bb43d7492",
   "pins" : [
     {
       "identity" : "aexml",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/Command.git",
       "state" : {
-        "revision" : "437e0c0ca18d1a16194c55b4690971b5bfb1f185",
-        "version" : "0.12.0"
+        "revision" : "9d03a95faa94b961edc1cf2c5f4379b0108ee97a",
+        "version" : "0.12.1"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-service-context",
       "state" : {
-        "revision" : "0c62c5b4601d6c125050b5c3a97f20cce881d32b",
-        "version" : "1.1.0"
+        "revision" : "8946c930cae601452149e45d31d8ddfac973c3c7",
+        "version" : "1.2.0"
       }
     },
     {

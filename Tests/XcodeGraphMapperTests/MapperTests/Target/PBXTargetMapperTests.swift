@@ -26,7 +26,7 @@ struct PBXTargetMapperTests: Sendable {
         // When
         let mapper = PBXTargetMapper()
 
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(mapped.name == "App")
@@ -50,7 +50,7 @@ struct PBXTargetMapperTests: Sendable {
 
         // When / Then
         await #expect(throws: PBXTargetMappingError.missingBundleIdentifier(targetName: "App")) {
-            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
         }
     }
 
@@ -70,7 +70,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(mapped.environmentVariables["TEST_VAR"]?.value == "test_value")
@@ -94,7 +94,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         let expected = [
@@ -130,7 +130,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(mapped.sources.count == 1)
@@ -212,7 +212,7 @@ struct PBXTargetMapperTests: Sendable {
             )
 
             // When
-            let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+            let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
             // Then
             #expect(
@@ -285,7 +285,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(mapped.metadata.tags == Set(["tag1", "tag2", "tag3"]))
@@ -338,7 +338,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(mapped.entitlements == .file(
@@ -361,7 +361,7 @@ struct PBXTargetMapperTests: Sendable {
         // When / Then
 
         do {
-            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
             Issue.record("Should throw an error")
         } catch {
             let err = try #require(error as? PBXObjectError)
@@ -400,7 +400,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect({
@@ -439,7 +439,7 @@ struct PBXTargetMapperTests: Sendable {
 
         // When / Then
         await #expect {
-            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+            _ = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
         } throws: { error in
             error.localizedDescription
                 == "Failed to read a valid plist dictionary from file at: \(invalidPlistPath.pathString)."
