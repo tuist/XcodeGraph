@@ -14,7 +14,10 @@ protocol PBXProjectMapping {
     /// - Parameter xcodeProj: The Xcode project to be transformed.
     /// - Returns: A fully constructed `Project` model.
     /// - Throws: If reading or transforming project data fails.
-    func map(xcodeProj: XcodeProj) async throws -> Project
+    func map(
+        xcodeProj: XcodeProj,
+        projectNativeTargets: [String: ProjectNativeTarget]
+    ) async throws -> Project
 }
 
 /// A mapper that transforms a `.xcodeproj` into a `Project` domain model.
@@ -31,7 +34,10 @@ struct PBXProjectMapper: PBXProjectMapping {
     /// - Parameter xcodeProj: The Xcode project reference containing `.pbxproj` data.
     /// - Returns: A fully constructed `Project` model.
     /// - Throws: If reading or transforming project data fails.
-    func map(xcodeProj: XcodeProj) async throws -> Project {
+    func map(
+        xcodeProj: XcodeProj,
+        projectNativeTargets: [String: ProjectNativeTarget]
+    ) async throws -> Project {
         let settingsMapper = XCConfigurationMapper()
         let pbxProject = try xcodeProj.mainPBXProject()
         let xcodeProjPath = xcodeProj.projectPath
@@ -48,7 +54,11 @@ struct PBXProjectMapper: PBXProjectMapping {
         let targets = try await withThrowingTaskGroup(of: Target.self, returning: [Target].self) { taskGroup in
             for pbxTarget in pbxProject.targets {
                 taskGroup.addTask {
-                    try await targetMapper.map(pbxTarget: pbxTarget, xcodeProj: xcodeProj)
+                    try await targetMapper.map(
+                        pbxTarget: pbxTarget,
+                        xcodeProj: xcodeProj,
+                        projectNativeTargets: projectNativeTargets
+                    )
                 }
             }
 

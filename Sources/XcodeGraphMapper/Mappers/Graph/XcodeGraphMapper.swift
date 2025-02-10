@@ -168,12 +168,25 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
 
     private func loadProjects(_ projectPaths: [AbsolutePath]) async throws -> [AbsolutePath: Project] {
         var projects = [AbsolutePath: Project]()
+        let xcodeProjects = try projectPaths.map {
+            try XcodeProj(pathString: $0.pathString)
+        }
+        let projectNativeTargets: [String: ProjectNativeTarget] = xcodeProjects.reduce(into: [:]) { acc, xcodeProject in
+            for nativeTarget in xcodeProject.pbxproj.nativeTargets {
+                acc[nativeTarget.name] = ProjectNativeTarget(
+                    nativeTarget: nativeTarget,
+                    project: xcodeProject
+                )
+            }
+        }
 
-        for path in projectPaths {
-            let xcodeProj = try XcodeProj(pathString: path.pathString)
+        for xcodeProject in xcodeProjects {
             let projectMapper = PBXProjectMapper()
-            let project = try await projectMapper.map(xcodeProj: xcodeProj)
-            projects[path.parentDirectory] = project
+            let project = try await projectMapper.map(
+                xcodeProj: xcodeProject,
+                projectNativeTargets: projectNativeTargets
+            )
+            projects[project.path] = project
         }
 
         return projects

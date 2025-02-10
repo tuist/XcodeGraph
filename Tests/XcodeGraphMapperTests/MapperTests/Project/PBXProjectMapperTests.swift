@@ -13,7 +13,7 @@ struct PBXProjectMapperTests {
         let mapper = PBXProjectMapper()
 
         // When
-        let project = try await mapper.map(xcodeProj: xcodeProj)
+        let project = try await mapper.map(xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(project.name == "TestProject")
@@ -38,7 +38,7 @@ struct PBXProjectMapperTests {
         xcodeProj.pbxproj.projects.first?.attributes = customAttributes
 
         // When
-        let project = try await mapper.map(xcodeProj: xcodeProj)
+        let project = try await mapper.map(xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(project.name == "TestProject")
@@ -62,7 +62,7 @@ struct PBXProjectMapperTests {
         let mapper = PBXProjectMapper()
 
         // When
-        let project = try await mapper.map(xcodeProj: xcodeProj)
+        let project = try await mapper.map(xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(project.packages.count == 1)
@@ -82,7 +82,7 @@ struct PBXProjectMapperTests {
         let mapper = PBXProjectMapper()
 
         // When
-        let project = try await mapper.map(xcodeProj: xcodeProj)
+        let project = try await mapper.map(xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(project.defaultKnownRegions?.count == 3)
@@ -99,7 +99,7 @@ struct PBXProjectMapperTests {
         let mapper = PBXProjectMapper()
 
         // When
-        let project = try await mapper.map(xcodeProj: xcodeProj)
+        let project = try await mapper.map(xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(project.developmentRegion == "fr")
@@ -112,7 +112,7 @@ struct PBXProjectMapperTests {
         let mapper = PBXProjectMapper()
 
         // When
-        let project = try await mapper.map(xcodeProj: xcodeProj)
+        let project = try await mapper.map(xcodeProj: xcodeProj, projectNativeTargets: [:])
         let synthesizers = project.resourceSynthesizers
 
         // Then
@@ -145,7 +145,7 @@ struct PBXProjectMapperTests {
         let mapper = PBXProjectMapper()
 
         // When
-        let project = try await mapper.map(xcodeProj: xcodeProj)
+        let project = try await mapper.map(xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(project.schemes.count == 1)

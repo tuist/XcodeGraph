@@ -45,7 +45,11 @@ protocol PBXTargetMapping {
     /// - Returns: A fully mapped `Target` model.
     /// - Throws: `PBXTargetMappingError` if required data (like a bundle identifier) is missing,
     ///           or if necessary files/groups cannot be found.
-    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) async throws -> Target
+    func map(
+        pbxTarget: PBXTarget,
+        xcodeProj: XcodeProj,
+        projectNativeTargets: [String: ProjectNativeTarget]
+    ) async throws -> Target
 }
 
 // swiftlint:disable function_body_length
@@ -93,7 +97,11 @@ struct PBXTargetMapper: PBXTargetMapping {
         self.fileSystem = fileSystem
     }
 
-    func map(pbxTarget: PBXTarget, xcodeProj: XcodeProj) async throws -> Target {
+    func map(
+        pbxTarget: PBXTarget,
+        xcodeProj: XcodeProj,
+        projectNativeTargets: [String: ProjectNativeTarget]
+    ) async throws -> Target {
         let platform = try pbxTarget.platform()
         let deploymentTargets = pbxTarget.deploymentTargets()
         let productType = pbxTarget.productType?.mapProductType()
@@ -146,7 +154,11 @@ struct PBXTargetMapper: PBXTargetMapping {
         // Frameworks & libraries
         let frameworksPhase = try pbxTarget.frameworksBuildPhase()
         var frameworks = try frameworksPhase.map {
-            try frameworksMapper.map($0, xcodeProj: xcodeProj)
+            try frameworksMapper.map(
+                $0,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: projectNativeTargets
+            )
         } ?? []
 
         frameworks = try await fileSystemSynchronizedGroupsFrameworks(
@@ -181,10 +193,10 @@ struct PBXTargetMapper: PBXTargetMapping {
         let metadata = try pbxTarget.metadata()
 
         // Dependencies
-        let targetDependencies = try pbxTarget.dependencies.compactMap {
+        let projectNativeTargets = try pbxTarget.dependencies.compactMap {
             try dependencyMapper.map($0, xcodeProj: xcodeProj)
         }
-        let allDependencies = (targetDependencies + frameworks).sorted { $0.name < $1.name }
+        let allDependencies = (projectNativeTargets + frameworks).sorted { $0.name < $1.name }
 
         // Construct final Target
         return Target(

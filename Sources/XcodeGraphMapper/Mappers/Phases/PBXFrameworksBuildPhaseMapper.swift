@@ -14,7 +14,8 @@ protocol PBXFrameworksBuildPhaseMapping {
     /// - Throws: If any file paths or references cannot be resolved.
     func map(
         _ frameworksBuildPhase: PBXFrameworksBuildPhase,
-        xcodeProj: XcodeProj
+        xcodeProj: XcodeProj,
+        projectNativeTargets: [String: ProjectNativeTarget]
     ) throws -> [TargetDependency]
 }
 
@@ -28,10 +29,17 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
 
     func map(
         _ frameworksBuildPhase: PBXFrameworksBuildPhase,
-        xcodeProj: XcodeProj
+        xcodeProj: XcodeProj,
+        projectNativeTargets: [String: ProjectNativeTarget]
     ) throws -> [TargetDependency] {
         let files = frameworksBuildPhase.files ?? []
-        return try files.map { try mapFrameworkDependency($0, xcodeProj: xcodeProj) }
+        return try files.map {
+            try mapFrameworkDependency(
+                $0,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: projectNativeTargets
+            )
+        }
     }
 
     // MARK: - Private Helpers
@@ -39,22 +47,34 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
     /// Maps a single PBXBuildFile from the frameworks build phase to a `TargetDependency`.
     private func mapFrameworkDependency(
         _ buildFile: PBXBuildFile,
-        xcodeProj: XcodeProj
+        xcodeProj: XcodeProj,
+        projectNativeTargets: [String: ProjectNativeTarget]
     ) throws -> TargetDependency {
         let fileRef = try buildFile.file.throwing(PBXFrameworksBuildPhaseMappingError.missingFileReference)
         switch fileRef.sourceTree {
         case .buildProductsDir:
             guard let path = fileRef.path else { break }
             let name = path.replacingOccurrences(of: ".framework", with: "")
-            return .target(
-                name: name,
-                status: .required,
-                condition: nil
-            )
+            let linkingStatus: LinkingStatus = (buildFile.settings?["ATTRIBUTES"] as? [String])?
+                .contains("Weak") == true ? .optional : .required
+            if let target = xcodeProj.pbxproj.targets(named: name).first {
+                return .target(
+                    name: target.name,
+                    status: linkingStatus,
+                    condition: nil
+                )
+            } else if let projectNativeTarget = projectNativeTargets[name] {
+                return .project(
+                    target: projectNativeTarget.nativeTarget.name,
+                    path: projectNativeTarget.project.projectPath.parentDirectory,
+                    status: linkingStatus,
+                    condition: nil
+                )
+            }
         default:
             break
         }
-        let filePathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
+        let filePathString = try! fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
             .throwing(PBXFrameworksBuildPhaseMappingError.missingFilePath(name: fileRef.name))
 
         let absolutePath = try AbsolutePath(validating: filePathString)
