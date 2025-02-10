@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.14] - 2025-02-10
+### Details
+#### Fix
+- Mapping Info.plist when referenced with a SRCROOT or PROJECT_DIR variable by @fortmarek in [#114](https://github.com/tuist/XcodeGraph/pull/114)
+- Do not map project target dependency to an underlying type by @fortmarek in [#112](https://github.com/tuist/XcodeGraph/pull/112)
+- Correctly map project target framework by @fortmarek in [#113](https://github.com/tuist/XcodeGraph/pull/113)
+
 ## [1.5.13] - 2025-02-09
 ### Details
 #### Chore
@@ -430,6 +437,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.5.14]: https://github.com/tuist/XcodeGraph/compare/1.5.13..1.5.14
 [1.5.13]: https://github.com/tuist/XcodeGraph/compare/1.5.12..1.5.13
 [1.5.12]: https://github.com/tuist/XcodeGraph/compare/1.5.11..1.5.12
 [1.5.11]: https://github.com/tuist/XcodeGraph/compare/1.5.10..1.5.11
