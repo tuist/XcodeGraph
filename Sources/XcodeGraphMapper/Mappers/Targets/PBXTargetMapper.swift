@@ -259,8 +259,15 @@ struct PBXTargetMapper: PBXTargetMapping {
 
     /// Extracts and parses the project's Info.plist as a dictionary, or returns an empty dictionary if none is found.
     private func extractInfoPlist(from target: PBXTarget, xcodeProj: XcodeProj) async throws -> InfoPlist {
-        if let (config, plistPath) = target.infoPlistPath().first {
-            let path = xcodeProj.srcPath.appending(try RelativePath(validating: plistPath))
+        if let (config, plistPath) = target.infoPlistPaths().sorted(by: { $0.key.name > $1.key.name }).first {
+            let pathString = plistPath
+                .replacingOccurrences(of: "$(SRCROOT)", with: xcodeProj.srcPathString)
+                .replacingOccurrences(of: "$(PROJECT_DIR)", with: xcodeProj.projectPath.parentDirectory.pathString)
+            let path = if pathString.starts(with: "/") {
+                try AbsolutePath(validating: pathString)
+            } else {
+                xcodeProj.srcPath.appending(try RelativePath(validating: pathString))
+            }
             let plistDictionary = try await readPlistAsDictionary(at: path)
             return .dictionary(plistDictionary, configuration: config)
         }
