@@ -47,12 +47,18 @@ struct PBXFrameworksBuildPhaseMapperTests {
             settings: ["ATTRIBUTES": ["Weak"]]
         ).add(to: pbxProj)
 
+        let packageProduct = XCSwiftPackageProductDependency(productName: "PackageProduct")
+        let packageProductBuildFile = PBXBuildFile(
+            product: packageProduct
+        ).add(to: pbxProj)
+
         let frameworksPhase = PBXFrameworksBuildPhase(
             files: [
                 frameworkBuildFile,
                 targetFrameworkBuildFile,
                 projectTargetFrameworkBuildFile,
                 weakProjectTargetFrameworkBuildFile,
+                packageProductBuildFile,
             ]
         ).add(to: pbxProj)
 
@@ -104,6 +110,11 @@ struct PBXFrameworksBuildPhaseMapperTests {
                 .framework(
                     path: frameworkPath,
                     status: .required,
+                    condition: nil
+                ),
+                .package(
+                    product: "PackageProduct",
+                    type: .runtime,
                     condition: nil
                 ),
                 .project(

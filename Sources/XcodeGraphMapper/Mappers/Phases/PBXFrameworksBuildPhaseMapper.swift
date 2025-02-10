@@ -50,6 +50,13 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
         xcodeProj: XcodeProj,
         projectNativeTargets: [String: ProjectNativeTarget]
     ) throws -> TargetDependency {
+        if let product = buildFile.product {
+            return .package(
+                product: product.productName,
+                type: .runtime,
+                condition: nil
+            )
+        }
         let fileRef = try buildFile.file.throwing(PBXFrameworksBuildPhaseMappingError.missingFileReference)
         switch fileRef.sourceTree {
         case .buildProductsDir:
@@ -74,7 +81,7 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
         default:
             break
         }
-        let filePathString = try! fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
+        let filePathString = try fileRef.fullPath(sourceRoot: xcodeProj.srcPathString)
             .throwing(PBXFrameworksBuildPhaseMappingError.missingFilePath(name: fileRef.name))
 
         let absolutePath = try AbsolutePath(validating: filePathString)
