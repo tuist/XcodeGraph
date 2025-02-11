@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.15] - 2025-02-11
+### Details
+#### Docs
+- Update README.md by @fortmarek
+
 ## [1.5.14] - 2025-02-10
 ### Details
 #### Fix
@@ -437,6 +442,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.5.15]: https://github.com/tuist/XcodeGraph/compare/1.5.14..1.5.15
 [1.5.14]: https://github.com/tuist/XcodeGraph/compare/1.5.13..1.5.14
 [1.5.13]: https://github.com/tuist/XcodeGraph/compare/1.5.12..1.5.13
 [1.5.12]: https://github.com/tuist/XcodeGraph/compare/1.5.11..1.5.12
