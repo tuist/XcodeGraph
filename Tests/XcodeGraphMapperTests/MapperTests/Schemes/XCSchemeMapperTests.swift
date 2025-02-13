@@ -1,4 +1,5 @@
 import AEXML
+import FileSystem
 import Path
 import Testing
 import XcodeGraph
@@ -7,10 +8,11 @@ import XcodeGraph
 @testable import XcodeProj
 
 @Suite
-struct XCSchemeMapperTests {
-    let xcodeProj: XcodeProj
-    let mapper: XCSchemeMapper
-    let graphType: XcodeMapperGraphType
+struct XCSchemeMapperTests: Sendable {
+    private let xcodeProj: XcodeProj
+    private let mapper: XCSchemeMapper
+    private let graphType: XcodeMapperGraphType
+    private let fileSystem = FileSystem()
 
     init() async throws {
         xcodeProj = try await XcodeProj.test()
@@ -24,7 +26,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "SharedScheme")
 
         // When
-        let scheme = try mapper.map(xcscheme, shared: true, graphType: graphType)
+        let scheme = try await mapper.map(xcscheme, shared: true, graphType: graphType)
 
         // Then
         #expect(scheme.name == "SharedScheme")
@@ -37,7 +39,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme")
 
         // When
-        let scheme = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let scheme = try await mapper.map(xcscheme, shared: false, graphType: graphType)
 
         // Then
         #expect(scheme.name == "UserScheme")
@@ -66,7 +68,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme", buildAction: buildAction)
 
         // When
-        let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let mapped = try await mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.buildAction
         // Then
         #expect(mappedAction != nil)
@@ -111,7 +113,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme", testAction: testAction)
 
         // When
-        let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let mapped = try await mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.testAction
 
         // Then
@@ -124,6 +126,99 @@ struct XCSchemeMapperTests {
         #expect(mappedAction?.arguments?.launchArguments.first?.name == "test_arg")
         #expect(mappedAction?.language == "en")
         #expect(mappedAction?.region == "US")
+    }
+
+    @Test("Maps a test action with test plans")
+    func testMapTestActionWithTestPlans() async throws {
+        try await fileSystem.runInTemporaryDirectory(prefix: "XCSchemeMapperTests") { temporaryPath in
+            // Given
+            let targetRef = XCScheme.BuildableReference(
+                referencedContainer: "container:App.xcodeproj",
+                blueprintIdentifier: "123",
+                buildableName: "AppTests.xctest",
+                blueprintName: "AppTests"
+            )
+            let testableEntry = XCScheme.TestableReference.test(
+                skipped: false,
+                buildableReference: targetRef
+            )
+            let testPlan = XCTestPlan(
+                testTargets: [
+                    XCTestPlan.TestTarget(
+                        parallelizable: nil,
+                        target: XCTestPlan.TestTargetReference(
+                            containerPath: "container:App.xcodeproj",
+                            identifier: "AppTests",
+                            name: "AppTests"
+                        )
+                    ),
+                    XCTestPlan.TestTarget(
+                        parallelizable: true,
+                        target: XCTestPlan.TestTargetReference(
+                            containerPath: "container:Library",
+                            identifier: "LibraryTests",
+                            name: "LibraryTests"
+                        )
+                    ),
+                ]
+            )
+            let testPlanPath = temporaryPath.appending(component: "App.xctestplan")
+            try await fileSystem.writeAsJSON(
+                testPlan,
+                at: testPlanPath
+            )
+            let testAction = XCScheme.TestAction(
+                buildConfiguration: "Debug",
+                macroExpansion: nil,
+                testables: [testableEntry],
+                testPlans: [
+                    XCScheme.TestPlanReference(
+                        reference: "container:App.xctestplan",
+                        default: true
+                    ),
+                ],
+                codeCoverageEnabled: true,
+                commandlineArguments: XCScheme.CommandLineArguments(arguments: []),
+                environmentVariables: [],
+                language: "en",
+                region: "US"
+            )
+            let xcscheme = XCScheme.test(name: "UserScheme", testAction: testAction)
+
+            // When
+            let mapped = try await mapper.map(
+                xcscheme,
+                shared: false,
+                graphType: .project(.test(path: temporaryPath.appending(component: "App.xcodeproj")))
+            )
+            let mappedAction = mapped.testAction
+
+            // Then
+            #expect(
+                mappedAction?.testPlans == [
+                    TestPlan(
+                        path: testPlanPath,
+                        testTargets: [
+                            TestableTarget(
+                                target: TargetReference(
+                                    projectPath: temporaryPath,
+                                    name: "AppTests"
+                                ),
+                                parallelization: .swiftTestingOnly
+                            ),
+                            TestableTarget(
+                                target: TargetReference(
+                                    projectPath: temporaryPath,
+                                    name: "LibraryTests"
+                                ),
+                                parallelization: .all
+                            ),
+                        ],
+                        isDefault: true
+                    ),
+                ]
+            )
+        }
     }
 
     @Test("Maps a run action with environment variables and launch arguments")
@@ -154,7 +249,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme", launchAction: launchAction)
 
         // When
-        let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let mapped = try await mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.runAction
 
         // Then
@@ -177,7 +272,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme", archiveAction: archiveAction)
 
         // When
-        let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let mapped = try await mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.archiveAction
 
         // Then
@@ -204,7 +299,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme", profileAction: profileAction)
 
         // When
-        let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let mapped = try await mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.profileAction
 
         // Then
@@ -221,7 +316,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme", analyzeAction: analyzeAction)
 
         // When
-        let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let mapped = try await mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = mapped.analyzeAction
 
         // Then
@@ -250,7 +345,7 @@ struct XCSchemeMapperTests {
         let xcscheme = XCScheme.test(name: "UserScheme", buildAction: buildAction)
 
         // When
-        let mapped = try mapper.map(xcscheme, shared: false, graphType: graphType)
+        let mapped = try await mapper.map(xcscheme, shared: false, graphType: graphType)
         let mappedAction = try #require(mapped.buildAction)
 
         // Then
@@ -272,7 +367,7 @@ struct XCSchemeMapperTests {
         )
 
         // When
-        let mapped = try mapper.map(scheme, shared: true, graphType: graphType)
+        let mapped = try await mapper.map(scheme, shared: true, graphType: graphType)
 
         // Then
         #expect(mapped.buildAction == nil)

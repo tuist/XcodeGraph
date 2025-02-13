@@ -446,7 +446,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(
@@ -491,7 +491,7 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj)
+        let mapped = try await mapper.map(pbxTarget: target, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(

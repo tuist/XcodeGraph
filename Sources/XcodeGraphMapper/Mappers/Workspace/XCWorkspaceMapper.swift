@@ -46,7 +46,7 @@ struct XCWorkspaceMapper: WorkspaceMapping {
         )
 
         let workspaceName = xcWorkspacePath.basenameWithoutExt
-        let schemes = try mapSchemes(from: xcworkspace)
+        let schemes = try await mapSchemes(from: xcworkspace)
 
         let generationOptions = Workspace.GenerationOptions(
             enableAutomaticXcodeSchemes: nil,
@@ -109,7 +109,7 @@ struct XCWorkspaceMapper: WorkspaceMapping {
     ///
     /// - Parameter xcworkspace: The workspace whose schemes should be mapped.
     /// - Returns: An array of `Scheme` instances for all shared schemes in the workspace.
-    private func mapSchemes(from xcworkspace: XCWorkspace) throws -> [Scheme] {
+    private func mapSchemes(from xcworkspace: XCWorkspace) async throws -> [Scheme] {
         let srcPath = xcworkspace.workspacePath.parentDirectory
         let sharedDataPath = Path(srcPath.pathString) + "xcshareddata/xcschemes"
 
@@ -118,13 +118,17 @@ struct XCWorkspaceMapper: WorkspaceMapping {
         }
 
         let schemePaths = try sharedDataPath.children().filter { $0.extension == "xcscheme" }
-        return try schemePaths.map { schemePath in
+        var schemes: [Scheme] = []
+        for schemePath in try schemePaths {
             let xcscheme = try XCScheme(path: schemePath)
-            return try schemeMapper.map(
-                xcscheme,
-                shared: true,
-                graphType: .workspace(xcworkspace)
+            schemes.append(
+                try await schemeMapper.map(
+                    xcscheme,
+                    shared: true,
+                    graphType: .workspace(xcworkspace)
+                )
             )
         }
+        return schemes
     }
 }
