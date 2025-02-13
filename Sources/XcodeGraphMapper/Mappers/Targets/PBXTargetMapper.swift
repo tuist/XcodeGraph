@@ -1,5 +1,6 @@
 import FileSystem
 import Foundation
+import Mockable
 import Path
 import XcodeGraph
 import XcodeProj
@@ -30,6 +31,7 @@ enum PBXTargetMappingError: LocalizedError, Equatable {
 /// Conforming types transform raw `PBXTarget` instances—including their build phases,
 /// settings, and dependencies—into fully realized `Target` models suitable for analysis,
 /// code generation, or tooling integration.
+@Mockable
 protocol PBXTargetMapping {
     /// Maps a given `PBXTarget` into a `Target` model.
     ///
@@ -48,7 +50,8 @@ protocol PBXTargetMapping {
     func map(
         pbxTarget: PBXTarget,
         xcodeProj: XcodeProj,
-        projectNativeTargets: [String: ProjectNativeTarget]
+        projectNativeTargets: [String: ProjectNativeTarget],
+        packages: [AbsolutePath]
     ) async throws -> Target
 }
 
@@ -100,7 +103,8 @@ struct PBXTargetMapper: PBXTargetMapping {
     func map(
         pbxTarget: PBXTarget,
         xcodeProj: XcodeProj,
-        projectNativeTargets: [String: ProjectNativeTarget]
+        projectNativeTargets: [String: ProjectNativeTarget],
+        packages: [AbsolutePath]
     ) async throws -> Target {
         let platform = try pbxTarget.platform()
         let deploymentTargets = pbxTarget.deploymentTargets()
@@ -119,7 +123,8 @@ struct PBXTargetMapper: PBXTargetMapping {
         } ?? []
         sources = try await fileSystemSynchronizedGroupsSources(
             from: pbxTarget,
-            xcodeProj: xcodeProj
+            xcodeProj: xcodeProj,
+            packages: packages
         ) + sources
 
         var resources = try pbxTarget.resourcesBuildPhase().map {
@@ -227,7 +232,8 @@ struct PBXTargetMapper: PBXTargetMapping {
             mergedBinaryType: mergedBinaryType,
             mergeable: mergeable,
             onDemandResourcesTags: onDemandResourcesTags,
-            metadata: metadata
+            metadata: metadata,
+            packages: packages
         )
     }
 
@@ -376,7 +382,8 @@ struct PBXTargetMapper: PBXTargetMapping {
 
     private func fileSystemSynchronizedGroupsSources(
         from pbxTarget: PBXTarget,
-        xcodeProj: XcodeProj
+        xcodeProj: XcodeProj,
+        packages: [AbsolutePath]
     ) async throws -> [SourceFile] {
         guard let fileSystemSynchronizedGroups = pbxTarget.fileSystemSynchronizedGroups else { return [] }
         var sources: [SourceFile] = []
@@ -398,6 +405,9 @@ struct PBXTargetMapper: PBXTargetMapping {
                     ],
                     membershipExceptions: membershipExceptions
                 )
+                .filter { path in
+                    !packages.contains(where: { $0.isAncestor(of: path) })
+                }
                 .map {
                     SourceFile(
                         path: $0,

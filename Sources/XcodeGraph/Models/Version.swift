@@ -39,6 +39,11 @@ public struct Version: Hashable, Codable, Sendable {
     public var xcodeStringValue: String {
         "\(major)\(minor)\(patch)"
     }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(description)
+    }
 }
 
 extension Version: Comparable {

@@ -1,4 +1,6 @@
+import FileSystem
 import Foundation
+import Mockable
 import Path
 import Testing
 import XcodeGraph
@@ -7,6 +9,8 @@ import XcodeProj
 
 @Suite
 struct XcodeGraphMapperTests {
+    private let fileSystem = FileSystem()
+
     @Test("Maps a single project into a workspace graph")
     func testSingleProjectGraph() async throws {
         // Given
@@ -212,5 +216,153 @@ struct XcodeGraphMapperTests {
         let expectedDependency = try #require(graph.dependencies.first?.value)
 
         #expect(expectedDependency == [targetDep])
+    }
+
+    @Test("Maps a project graph with local packages")
+    func testGraphWithLocalPackages() async throws {
+        // Given
+        let pbxProj = PBXProj()
+        let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)
+        let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProj)
+        let configurationList: XCConfigurationList = .test(
+            buildConfigurations: [debug, releaseConfig]
+        )
+        .add(to: pbxProj)
+
+        let xcodeProj = try await XcodeProj.test(
+            projectName: "ProjectWithPackages",
+            configurationList: configurationList,
+            pbxProj: pbxProj
+        )
+
+        let appTarget = try PBXNativeTarget.test(
+            name: "App",
+            buildConfigurationList: configurationList,
+            buildPhases: [],
+            productType: .application
+        )
+        .add(to: pbxProj)
+        .add(to: pbxProj.rootObject)
+
+        try xcodeProj.write(path: xcodeProj.path!)
+        let packageMapper = MockPackageMapping()
+        let packageInfoLoader = MockPackageInfoLoading()
+        let projectMapper = MockPBXProjectMapping()
+        given(projectMapper)
+            .map(
+                xcodeProj: .any,
+                projectNativeTargets: .any
+            )
+            .willReturn(
+                .test(
+                    packages: [
+                        .local(path: "/tmp/LibraryA"),
+                        .local(path: "/tmp/LibraryB"),
+                    ]
+                )
+            )
+        given(packageInfoLoader)
+            .loadPackageInfo(at: .value("/tmp/LibraryA"))
+            .willReturn(
+                .test(
+                    name: "LibraryA"
+                )
+            )
+        given(packageInfoLoader)
+            .loadPackageInfo(at: .value("/tmp/LibraryB"))
+            .willReturn(
+                .test(
+                    name: "LibraryB"
+                )
+            )
+        let libraryAProject: Project = .test(
+            targets: [
+                .test(
+                    name: "LibraryA",
+                    dependencies: [
+                        .project(
+                            target: "LibraryB",
+                            path: "/tmp/LibraryB",
+                            status: .required,
+                            condition: nil
+                        ),
+                    ]
+                ),
+                .test(
+                    name: "LibraryATests",
+                    dependencies: [
+                        .target(
+                            name: "LibraryA",
+                            status: .required,
+                            condition: nil
+                        ),
+                    ]
+                ),
+            ]
+        )
+        let libraryBProject: Project = .test(
+            targets: [
+                .test(
+                    name: "LibraryB"
+                ),
+            ]
+        )
+        given(packageMapper)
+            .map(
+                .any,
+                packages: .any,
+                at: .value("/tmp/LibraryA")
+            )
+            .willReturn(libraryAProject)
+        given(packageMapper)
+            .map(
+                .any,
+                packages: .any,
+                at: .value("/tmp/LibraryB")
+            )
+            .willReturn(libraryBProject)
+        let mapper = XcodeGraphMapper(
+            packageInfoLoader: packageInfoLoader,
+            packageMapper: packageMapper,
+            projectMapper: projectMapper
+        )
+
+        // When
+        let graph = try await mapper.buildGraph(from: .project(xcodeProj))
+
+        // Then
+        #expect(graph.projects["/tmp/LibraryA"] == libraryAProject)
+        #expect(graph.projects["/tmp/LibraryB"] == libraryBProject)
+        #expect(
+            graph.dependencies == [
+                .target(
+                    name: "LibraryATests",
+                    path: "/tmp/LibraryA",
+                    status: .required
+                ): [
+                    .target(
+                        name: "LibraryA",
+                        path: "/tmp/LibraryA",
+                        status: .required
+                    ),
+                ],
+                .target(
+                    name: "LibraryA",
+                    path: "/tmp/LibraryA",
+                    status: .required
+                ): [
+                    .target(
+                        name: "LibraryB",
+                        path: "/tmp/LibraryB",
+                        status: .required
+                    ),
+                ],
+            ]
+        )
+//        // Verify dependencies are mapped
+//        let targetDep = GraphDependency.target(name: "AFramework", path: xcodeProj.srcPath)
+//        let expectedDependency = try #require(graph.dependencies.first?.value)
+
+//        #expect(expectedDependency == [targetDep])
     }
 }

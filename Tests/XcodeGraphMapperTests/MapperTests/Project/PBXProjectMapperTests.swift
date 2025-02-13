@@ -1,3 +1,5 @@
+import FileSystem
+import Mockable
 import Path
 import Testing
 import XcodeGraph
@@ -5,7 +7,9 @@ import XcodeProj
 @testable import XcodeGraphMapper
 
 @Suite
-struct PBXProjectMapperTests {
+struct PBXProjectMapperTests: Sendable {
+    private let fileSystem = FileSystem()
+
     @Test("Maps a basic project with default attributes")
     func testMapBasicProject() async throws {
         // Given
@@ -45,6 +49,82 @@ struct PBXProjectMapperTests {
         #expect(project.organizationName == "Example Org")
         #expect(project.classPrefix == "EX")
         #expect(project.lastUpgradeCheck == "1500")
+    }
+
+    @Test("Maps a project with local packages")
+    func testMapProjectWithLocalPackages() async throws {
+        try await fileSystem.runInTemporaryDirectory(prefix: "PBXProjectMapperTests") { path in
+            // Given
+            let xcodeProj = try await XcodeProj.test(
+                path: path.appending(component: "App.xcodeproj")
+            )
+            let pbxProj = xcodeProj.pbxproj
+
+            let appGroup = try PBXFileSystemSynchronizedRootGroup(
+                path: "App",
+                exceptions: []
+            )
+            .addToMainGroup(in: xcodeProj.pbxproj)
+            let fileReference = PBXFileReference(
+                sourceTree: .group,
+                path: "LibraryB"
+            )
+            let packagesGroup = try PBXGroup(
+                children: [
+                    fileReference,
+                ],
+                sourceTree: .sourceRoot,
+                path: "Group"
+            )
+            .addToMainGroup(in: pbxProj)
+            // We need to keep these references, so they are not deinitialized
+            _ = appGroup
+            _ = packagesGroup
+            let target = try PBXNativeTarget(name: "App")
+                .add(to: pbxProj)
+                .add(to: pbxProj.rootObject)
+
+            let libraryAPath = path.appending(components: "App", "LibraryA")
+            try await fileSystem.makeDirectory(at: libraryAPath)
+            try await fileSystem.touch(libraryAPath.appending(component: "Package.swift"))
+
+            let libraryBPath = path.appending(components: "Group", "LibraryB")
+            try await fileSystem.makeDirectory(at: libraryBPath)
+            try await fileSystem.touch(libraryBPath.appending(component: "Package.swift"))
+            let targetMapper = MockPBXTargetMapping()
+            given(targetMapper)
+                .map(
+                    pbxTarget: .any,
+                    xcodeProj: .any,
+                    projectNativeTargets: .any,
+                    packages: .any
+                )
+                .willReturn(.test())
+
+            let mapper = PBXProjectMapper(targetMapper: targetMapper)
+
+            // When
+            let project = try await mapper.map(
+                xcodeProj: xcodeProj,
+                projectNativeTargets: [:]
+            )
+
+            // Then
+            try #expect(
+                project.packages.map(\.url).map { try AbsolutePath(validating: $0) }.map(\.basename).sorted() == [
+                    libraryAPath.basename,
+                    libraryBPath.basename,
+                ]
+            )
+            verify(targetMapper)
+                .map(
+                    pbxTarget: .value(target),
+                    xcodeProj: .value(xcodeProj),
+                    projectNativeTargets: .any,
+                    packages: .matching { $0.count == 2 }
+                )
+                .called(1)
+        }
     }
 
     @Test("Maps a project with remote package dependencies")

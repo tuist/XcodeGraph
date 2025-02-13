@@ -1,4 +1,6 @@
+import FileSystem
 import Foundation
+import Mockable
 import Path
 import PathKit
 import XcodeGraph
@@ -8,6 +10,7 @@ import XcodeMetadata
 // swiftlint:disable function_body_length
 
 /// A protocol for mapping an Xcode project (`.xcodeproj`) into a `Project` domain model.
+@Mockable
 protocol PBXProjectMapping {
     /// Maps the given `XcodeProj` into a `Project` model.
     ///
@@ -29,6 +32,17 @@ protocol PBXProjectMapping {
 /// - Identifying and integrating user and shared schemes.
 /// - Providing resource synthesizers for code generation.
 struct PBXProjectMapper: PBXProjectMapping {
+    private let fileSystem: FileSysteming
+    private let targetMapper: PBXTargetMapping
+
+    init(
+        fileSystem: FileSysteming = FileSystem(),
+        targetMapper: PBXTargetMapping = PBXTargetMapper()
+    ) {
+        self.fileSystem = fileSystem
+        self.targetMapper = targetMapper
+    }
+
     /// Maps the given Xcode project into a `Project` model.
     ///
     /// - Parameter xcodeProj: The Xcode project reference containing `.pbxproj` data.
@@ -49,15 +63,17 @@ struct PBXProjectMapper: PBXProjectMapping {
             configurationList: pbxProject.buildConfigurationList
         )
 
+        let localPackagePaths = try await collectAllPackages(from: pbxProject.mainGroup, xcodeProj: xcodeProj)
+
         // Map PBXTargets to domain Targets
-        let targetMapper = PBXTargetMapper()
         let targets = try await withThrowingTaskGroup(of: Target.self, returning: [Target].self) { taskGroup in
             for pbxTarget in pbxProject.targets {
                 taskGroup.addTask {
                     try await targetMapper.map(
                         pbxTarget: pbxTarget,
                         xcodeProj: xcodeProj,
-                        projectNativeTargets: projectNativeTargets
+                        projectNativeTargets: projectNativeTargets,
+                        packages: localPackagePaths
                     )
                 }
             }
@@ -78,7 +94,7 @@ struct PBXProjectMapper: PBXProjectMapping {
         }
         let localPackages = try pbxProject.localPackages.compactMap {
             try packageMapper.map(package: $0, sourceDirectory: sourceDirectory)
-        }
+        } + localPackagePaths.map { .local(path: $0) }
 
         // Create a files group for the main group
         let filesGroup = ProjectGroup.group(name: pbxProject.mainGroup?.name ?? "Project")
@@ -87,13 +103,13 @@ struct PBXProjectMapper: PBXProjectMapping {
         let schemeMapper = XCSchemeMapper()
         let graphType: XcodeMapperGraphType = .project(xcodeProj)
         var userSchemes: [Scheme] = []
-        for scheme in try xcodeProj.userData.flatMap(\.schemes) {
+        for scheme in xcodeProj.userData.flatMap(\.schemes) {
             userSchemes.append(
                 try await schemeMapper.map(scheme, shared: false, graphType: graphType)
             )
         }
         var sharedSchemes: [Scheme] = []
-        for scheme in try (xcodeProj.sharedData?.schemes ?? []) {
+        for scheme in xcodeProj.sharedData?.schemes ?? [] {
             sharedSchemes.append(
                 try await schemeMapper.map(scheme, shared: true, graphType: graphType)
             )
@@ -150,6 +166,36 @@ struct PBXProjectMapper: PBXProjectMapping {
                 template: .defaultTemplate(template)
             )
         }
+    }
+
+    private func collectAllPackages(from group: PBXGroup, xcodeProj: XcodeProj) async throws -> [AbsolutePath] {
+        var packages = Set<AbsolutePath>()
+        for child in group.children {
+            if let file = child as? PBXFileReference,
+               let pathString = try file.fullPath(sourceRoot: xcodeProj.srcPathString)
+            {
+                let path = try AbsolutePath(validating: pathString)
+                if try await fileSystem.exists(path, isDirectory: true),
+                   try await fileSystem.exists(path.appending(component: "Package.swift"))
+                {
+                    packages.insert(path)
+                }
+            } else if let subgroup = child as? PBXGroup {
+                packages.formUnion(try await collectAllPackages(from: subgroup, xcodeProj: xcodeProj))
+            } else if let subgroup = child as? PBXFileSystemSynchronizedRootGroup, let synchronizedGroupPath = subgroup.path {
+                let directory = xcodeProj.srcPath.appending(component: synchronizedGroupPath)
+                let groupPackages = try await fileSystem.glob(
+                    directory: directory,
+                    include: [
+                        "**/Package.swift",
+                    ]
+                )
+                .collect()
+                .map(\.parentDirectory)
+                packages.formUnion(groupPackages)
+            }
+        }
+        return Array(packages)
     }
 }
 

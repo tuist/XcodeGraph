@@ -208,7 +208,7 @@ struct XCSchemeMapperTests: Sendable {
                             ),
                             TestableTarget(
                                 target: TargetReference(
-                                    projectPath: temporaryPath,
+                                    projectPath: temporaryPath.appending(component: "Library"),
                                     name: "LibraryTests"
                                 ),
                                 parallelization: .all

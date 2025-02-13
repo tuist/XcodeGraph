@@ -49,11 +49,26 @@ enum XcodeMapperGraphType {
 /// ```
 public struct XcodeGraphMapper: XcodeGraphMapping {
     private let fileSystem: FileSysteming
+    private let packageInfoLoader: PackageInfoLoading
+    private let packageMapper: PackageMapping
+    private let projectMapper: PBXProjectMapping
 
     // MARK: - Initialization
 
-    public init(fileSystem: FileSysteming = FileSystem()) {
+    public init() {
+        self.init(fileSystem: FileSystem())
+    }
+
+    init(
+        fileSystem: FileSysteming = FileSystem(),
+        packageInfoLoader: PackageInfoLoading = PackageInfoLoader(),
+        packageMapper: PackageMapping = PackageMapper(),
+        projectMapper: PBXProjectMapping = PBXProjectMapper()
+    ) {
         self.fileSystem = fileSystem
+        self.packageInfoLoader = packageInfoLoader
+        self.packageMapper = packageMapper
+        self.projectMapper = projectMapper
     }
 
     // MARK: - Public API
@@ -96,15 +111,15 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     }
 
     private func detectGraphTypeInDirectory(at path: AbsolutePath) async throws -> XcodeMapperGraphType {
-        let patterns = ["**/*.xcworkspace", "**/*.xcodeproj"]
-        let contents = try fileSystem.glob(directory: path, include: patterns)
+        let patterns = ["*.xcworkspace", "*.xcodeproj"]
+        let contents = try await fileSystem.glob(directory: path, include: patterns).collect()
 
-        if let workspacePath = try await contents.first(where: { $0.extension?.lowercased() == "xcworkspace" }) {
+        if let workspacePath = contents.first(where: { $0.extension?.lowercased() == "xcworkspace" }) {
             let xcworkspace = try XCWorkspace(path: Path(workspacePath.pathString))
             return .workspace(xcworkspace)
         }
 
-        if let projectPath = try await contents.first(where: { $0.extension?.lowercased() == "xcodeproj" }) {
+        if let projectPath = contents.first(where: { $0.extension?.lowercased() == "xcodeproj" }) {
             let xcodeProj = try XcodeProj(pathString: projectPath.pathString)
             return .project(xcodeProj)
         }
@@ -117,8 +132,28 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
     func buildGraph(from graphType: XcodeMapperGraphType) async throws -> Graph {
         let projectPaths = try await identifyProjectPaths(from: graphType)
         let workspace = assembleWorkspace(graphType: graphType, projectPaths: projectPaths)
-        let projects = try await loadProjects(projectPaths)
+        var projects = try await loadProjects(projectPaths)
         let packages = extractPackages(from: projects)
+        var packageInfos: [AbsolutePath: PackageInfo] = [:]
+        var packagesByName: [String: AbsolutePath] = [:]
+        for projectPackage in projects.values.flatMap(\.packages) {
+            switch projectPackage {
+            case .remote:
+                break
+            case let .local(path: packagePath):
+                guard packageInfos[packagePath] == nil else { break }
+                let packageInfo = try await packageInfoLoader.loadPackageInfo(at: packagePath)
+                packageInfos[packagePath] = packageInfo
+                packagesByName[packageInfo.name] = packagePath
+            }
+        }
+        for (path, packageInfo) in packageInfos {
+            projects[path] = try await packageMapper.map(
+                packageInfo,
+                packages: packagesByName,
+                at: path
+            )
+        }
         let (dependencies, dependencyConditions) = try await resolveDependencies(for: projects)
 
         return assembleFinalGraph(
@@ -181,7 +216,6 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         }
 
         for xcodeProject in xcodeProjects {
-            let projectMapper = PBXProjectMapper()
             let project = try await projectMapper.map(
                 xcodeProj: xcodeProject,
                 projectNativeTargets: projectNativeTargets

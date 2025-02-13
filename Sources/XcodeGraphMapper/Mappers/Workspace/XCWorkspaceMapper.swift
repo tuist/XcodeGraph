@@ -119,7 +119,7 @@ struct XCWorkspaceMapper: WorkspaceMapping {
 
         let schemePaths = try sharedDataPath.children().filter { $0.extension == "xcscheme" }
         var schemes: [Scheme] = []
-        for schemePath in try schemePaths {
+        for schemePath in schemePaths {
             let xcscheme = try XCScheme(path: schemePath)
             schemes.append(
                 try await schemeMapper.map(

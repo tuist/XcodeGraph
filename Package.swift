@@ -43,6 +43,7 @@ let targets: [Target] = [
         ],
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),
+            .define("MOCKING", .when(configuration: .debug)),
         ]
     ),
     .testTarget(
@@ -60,6 +61,7 @@ let targets: [Target] = [
         ],
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),
+            .define("MOCKING", .when(configuration: .debug)),
         ]
     ),
 ]
