@@ -1,3 +1,4 @@
+import FileSystem
 import Foundation
 import Path
 import XcodeGraph
@@ -20,7 +21,7 @@ protocol SchemeMapping {
         _ xcscheme: XCScheme,
         shared: Bool,
         graphType: XcodeMapperGraphType
-    ) throws -> Scheme
+    ) async throws -> Scheme
 }
 
 /// A mapper responsible for converting an `XCScheme` object into a `Scheme` model.
@@ -28,19 +29,28 @@ protocol SchemeMapping {
 /// `XCSchemeMapper` resolves references to targets, environment variables, and all scheme actions.
 /// The resulting `Scheme` models enable analysis, code generation, or integration with custom tooling.
 struct XCSchemeMapper: SchemeMapping {
+    private let fileSystem: FileSysteming
+    private let jsonDecoder = JSONDecoder()
+
+    init(
+        fileSystem: FileSysteming = FileSystem()
+    ) {
+        self.fileSystem = fileSystem
+    }
+
     // MARK: - Public API
 
     func map(
         _ xcscheme: XCScheme,
         shared: Bool,
         graphType: XcodeMapperGraphType
-    ) throws -> Scheme {
+    ) async throws -> Scheme {
         Scheme(
             name: xcscheme.name,
             shared: shared,
             hidden: false,
             buildAction: try mapBuildAction(action: xcscheme.buildAction, graphType: graphType),
-            testAction: try mapTestAction(action: xcscheme.testAction, graphType: graphType),
+            testAction: try await mapTestAction(action: xcscheme.testAction, graphType: graphType),
             runAction: try mapRunAction(action: xcscheme.launchAction, graphType: graphType),
             archiveAction: try mapArchiveAction(action: xcscheme.archiveAction),
             profileAction: try mapProfileAction(action: xcscheme.profileAction, graphType: graphType),
@@ -74,7 +84,7 @@ struct XCSchemeMapper: SchemeMapping {
     private func mapTestAction(
         action: XCScheme.TestAction?,
         graphType: XcodeMapperGraphType
-    ) throws -> TestAction? {
+    ) async throws -> TestAction? {
         guard let action else { return nil }
 
         let testTargets = try action.testables.compactMap { testable in
@@ -91,6 +101,16 @@ struct XCSchemeMapper: SchemeMapping {
         )
         let diagnosticsOptions = SchemeDiagnosticsOptions(action: action)
 
+        var testPlans: [TestPlan]?
+        if let actionTestPlans = action.testPlans {
+            testPlans = []
+            for testPlan in actionTestPlans {
+                testPlans?.append(
+                    try await mapTestPlan(testPlan, graphType: graphType)
+                )
+            }
+        }
+
         return TestAction(
             targets: testTargets,
             arguments: arguments,
@@ -103,8 +123,59 @@ struct XCSchemeMapper: SchemeMapping {
             postActions: [],
             diagnosticsOptions: diagnosticsOptions,
             language: action.language,
-            region: action.region
+            region: action.region,
+            testPlans: testPlans
         )
+    }
+
+    private func mapTestPlan(
+        _ testPlan: XCScheme.TestPlanReference,
+        graphType: XcodeMapperGraphType
+    ) async throws -> TestPlan {
+        let testPlanPath = try containerPath(from: testPlan.reference, graphType: graphType)
+        let xctestPlan: XCTestPlan = try await fileSystem.readJSONFile(at: testPlanPath)
+
+        return TestPlan(
+            path: testPlanPath,
+            testTargets: try xctestPlan.testTargets.map {
+                let parallelization: TestableTarget.Parallelization = switch $0.parallelizable {
+                case .none:
+                    .swiftTestingOnly
+                case .some(true):
+                    .all
+                case .some(false):
+                    .none
+                }
+
+                return TestableTarget(
+                    target: TargetReference(
+                        projectPath: try containerPath(
+                            from: $0.target.containerPath,
+                            graphType: graphType
+                        ).parentDirectory,
+                        name: $0.target.name
+                    ),
+                    parallelization: parallelization
+                )
+            },
+            isDefault: testPlan.default
+        )
+    }
+
+    private func containerPath(
+        from containerReference: String,
+        graphType: XcodeMapperGraphType
+    ) throws -> AbsolutePath {
+        let relativeContainerPath = try RelativePath(validating: containerReference.replacingOccurrences(
+            of: "container:",
+            with: ""
+        ))
+        switch graphType {
+        case let .workspace(xcworkspace):
+            return xcworkspace.workspacePath.parentDirectory.appending(relativeContainerPath)
+        case let .project(xcodeProj):
+            return xcodeProj.projectPath.parentDirectory.appending(relativeContainerPath)
+        }
     }
 
     /// Maps the optional run (launch) action into a domain `RunAction`, or returns `nil` if not present.

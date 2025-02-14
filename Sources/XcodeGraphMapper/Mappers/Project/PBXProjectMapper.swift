@@ -86,12 +86,18 @@ struct PBXProjectMapper: PBXProjectMapping {
         // Map user and shared schemes
         let schemeMapper = XCSchemeMapper()
         let graphType: XcodeMapperGraphType = .project(xcodeProj)
-        let userSchemes = try xcodeProj.userData.flatMap(\.schemes).map {
-            try schemeMapper.map($0, shared: false, graphType: graphType)
+        var userSchemes: [Scheme] = []
+        for scheme in try xcodeProj.userData.flatMap(\.schemes) {
+            userSchemes.append(
+                try await schemeMapper.map(scheme, shared: false, graphType: graphType)
+            )
         }
-        let sharedSchemes = try xcodeProj.sharedData?.schemes.map {
-            try schemeMapper.map($0, shared: true, graphType: graphType)
-        } ?? []
+        var sharedSchemes: [Scheme] = []
+        for scheme in try (xcodeProj.sharedData?.schemes ?? []) {
+            sharedSchemes.append(
+                try await schemeMapper.map(scheme, shared: true, graphType: graphType)
+            )
+        }
         let schemes = userSchemes + sharedSchemes
 
         // Other project-level metadata
