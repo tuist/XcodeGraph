@@ -19,6 +19,7 @@ let targets: [Target] = [
             .product(name: "FileSystem", package: "FileSystem"),
             .product(name: "Mockable", package: "Mockable"),
             .product(name: "MachOKitC", package: "MachOKit"),
+            "XcodeGraph",
         ],
         swiftSettings: [
             .enableExperimentalFeature("StrictConcurrency"),
