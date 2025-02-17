@@ -62,6 +62,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public let onDemandResourcesTags: OnDemandResourcesTags?
     public let metadata: TargetMetadata
     public let type: TargetType
+    /// Package directories
+    public let packages: [AbsolutePath]
 
     // MARK: - Init
 
@@ -94,7 +96,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         mergeable: Bool = false,
         onDemandResourcesTags: OnDemandResourcesTags? = nil,
         metadata: TargetMetadata = .metadata(tags: []),
-        type: TargetType = .local
+        type: TargetType = .local,
+        packages: [AbsolutePath] = []
     ) {
         self.name = name
         self.product = product
@@ -125,6 +128,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         self.onDemandResourcesTags = onDemandResourcesTags
         self.metadata = metadata
         self.type = type
+        self.packages = packages
     }
 
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"

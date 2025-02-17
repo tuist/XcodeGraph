@@ -146,13 +146,20 @@ struct XCSchemeMapper: SchemeMapping {
                 case .some(false):
                     .none
                 }
+                let containerPath = try containerPath(
+                    from: $0.target.containerPath,
+                    graphType: graphType
+                )
+                let projectPath: AbsolutePath
+                if containerPath.extension == nil {
+                    projectPath = containerPath
+                } else {
+                    projectPath = containerPath.parentDirectory
+                }
 
                 return TestableTarget(
                     target: TargetReference(
-                        projectPath: try containerPath(
-                            from: $0.target.containerPath,
-                            graphType: graphType
-                        ).parentDirectory,
+                        projectPath: projectPath,
                         name: $0.target.name
                     ),
                     parallelization: parallelization

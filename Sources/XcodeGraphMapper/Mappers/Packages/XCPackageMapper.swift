@@ -16,7 +16,7 @@ enum PackageMappingError: Error, LocalizedError, Equatable {
 }
 
 /// A protocol defining how to map remote and local Swift package references into `Package` models.
-protocol PackageMapping {
+protocol XCPackageMapping {
     /// Maps a remote Swift package reference to a `Package`.
     ///
     /// - Parameter package: The remote package reference.
@@ -35,7 +35,7 @@ protocol PackageMapping {
 }
 
 /// A mapper that converts remote and local Swift package references into `Package` domain models.
-struct XCPackageMapper: PackageMapping {
+struct XCPackageMapper: XCPackageMapping {
     func map(package: XCRemoteSwiftPackageReference) throws -> Package {
         guard let repositoryURL = package.repositoryURL else {
             let name = package.name ?? "Unknown Package"
