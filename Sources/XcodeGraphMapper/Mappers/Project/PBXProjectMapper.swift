@@ -175,7 +175,7 @@ struct PBXProjectMapper: PBXProjectMapping {
                let pathString = try file.fullPath(sourceRoot: xcodeProj.srcPathString)
             {
                 let path = try AbsolutePath(validating: pathString)
-                if try await fileSystem.exists(path, isDirectory: true),
+                if (try? await fileSystem.exists(path, isDirectory: true)) ?? false,
                    try await fileSystem.exists(path.appending(component: "Package.swift"))
                 {
                     packages.insert(path)

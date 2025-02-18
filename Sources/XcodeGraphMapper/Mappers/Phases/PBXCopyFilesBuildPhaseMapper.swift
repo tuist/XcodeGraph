@@ -93,7 +93,7 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
                 let groupFiles = buildPhaseExceptions.compactMap {
                     $0.membershipExceptions?.map {
                         return CopyFileElement.file(
-                            path: xcodeProj.srcPath.appending(component: path).appending(component: $0),
+                            path: xcodeProj.srcPath.appending(component: path).appending(RelativePath($0)),
                             condition: nil,
                             codeSignOnCopy: true
                         )

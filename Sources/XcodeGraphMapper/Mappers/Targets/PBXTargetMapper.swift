@@ -10,7 +10,6 @@ enum PBXTargetMappingError: LocalizedError, Equatable {
     case noProjectsFound(path: String)
     case missingFilesGroup(targetName: String)
     case invalidPlist(path: String)
-    case missingBundleIdentifier(targetName: String)
 
     var errorDescription: String? {
         switch self {
@@ -20,8 +19,6 @@ enum PBXTargetMappingError: LocalizedError, Equatable {
             return "The files group is missing for the target '\(targetName)'."
         case let .invalidPlist(path):
             return "Failed to read a valid plist dictionary from file at: \(path)."
-        case let .missingBundleIdentifier(targetName):
-            return "The bundle identifier is missing for the target '\(targetName)'."
         }
     }
 }
