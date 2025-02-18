@@ -145,18 +145,6 @@ extension [BuildConfiguration: Configuration?] {
     }
 }
 
-extension [String: SettingValue] {
-    public func toAny() -> [String: Any] {
-        mapValues { value in
-            switch value {
-            case let .array(array):
-                return array
-            case let .string(string):
-                return string
-            }
-        }
-    }
-}
 
 #if DEBUG
     extension Configuration {
