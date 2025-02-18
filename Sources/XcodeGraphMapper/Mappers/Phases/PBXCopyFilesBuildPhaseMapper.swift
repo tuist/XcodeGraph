@@ -11,15 +11,29 @@ protocol PBXCopyFilesBuildPhaseMapping {
     ///   - xcodeProj: The `XcodeProj` containing project configuration and file references.
     /// - Returns: An array of mapped `CopyFilesAction`s.
     /// - Throws: If any file paths are invalid or cannot be resolved.
-    func map(_ copyFilesPhases: [PBXCopyFilesBuildPhase], xcodeProj: XcodeProj) throws -> [CopyFilesAction]
+    func map(
+        _ copyFilesPhases: [PBXCopyFilesBuildPhase],
+        fileSystemSynchronizedGroups: [PBXFileSystemSynchronizedRootGroup],
+        xcodeProj: XcodeProj
+    ) throws -> [CopyFilesAction]
 }
 
 /// A mapper that converts `PBXCopyFilesBuildPhase` objects into `CopyFilesAction` domain models.
 struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
     /// Maps the provided copy files phases to sorted `CopyFilesAction` models.
-    func map(_ copyFilesPhases: [PBXCopyFilesBuildPhase], xcodeProj: XcodeProj) throws -> [CopyFilesAction] {
+    func map(
+        _ copyFilesPhases: [PBXCopyFilesBuildPhase],
+        fileSystemSynchronizedGroups: [PBXFileSystemSynchronizedRootGroup],
+        xcodeProj: XcodeProj
+    ) throws -> [CopyFilesAction] {
         try copyFilesPhases
-            .compactMap { try mapCopyFilesPhase($0, xcodeProj: xcodeProj) }
+            .compactMap {
+                try mapCopyFilesPhase(
+                    $0,
+                    fileSystemSynchronizedGroups: fileSystemSynchronizedGroups,
+                    xcodeProj: xcodeProj
+                )
+            }
             .sorted { $0.name < $1.name }
     }
 
@@ -33,6 +47,7 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
     /// - Throws: If file paths are invalid or unresolved.
     private func mapCopyFilesPhase(
         _ phase: PBXCopyFilesBuildPhase,
+        fileSystemSynchronizedGroups: [PBXFileSystemSynchronizedRootGroup],
         xcodeProj: XcodeProj
     ) throws -> CopyFilesAction? {
         let files = try (phase.files ?? [])
@@ -50,13 +65,45 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
                 return .file(path: absolutePath, condition: nil, codeSignOnCopy: codeSignOnCopy)
             }
             .sorted { $0.path < $1.path }
+        let groupsFiles = fileSystemSynchronizedGroupsFiles(
+            phase,
+            fileSystemSynchronizedGroups: fileSystemSynchronizedGroups,
+            xcodeProj: xcodeProj
+        )
 
         return CopyFilesAction(
             name: phase.name ?? BuildPhaseConstants.copyFilesDefault,
             destination: mapDstSubfolderSpec(phase.dstSubfolderSpec),
             subpath: (phase.dstPath?.isEmpty == true) ? nil : phase.dstPath,
-            files: files
+            files: files + groupsFiles
         )
+    }
+
+    private func fileSystemSynchronizedGroupsFiles(
+        _ phase: PBXCopyFilesBuildPhase,
+        fileSystemSynchronizedGroups: [PBXFileSystemSynchronizedRootGroup],
+        xcodeProj: XcodeProj
+    ) -> [CopyFileElement] {
+        var files: [CopyFileElement] = []
+        for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
+            if let path = fileSystemSynchronizedGroup.path {
+                let buildPhaseExceptions = fileSystemSynchronizedGroup.exceptions?
+                    .compactMap { $0 as? PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet }
+                    .filter { $0.buildPhase == phase } ?? []
+                let groupFiles = buildPhaseExceptions.compactMap {
+                    $0.membershipExceptions?.map {
+                        return CopyFileElement.file(
+                            path: xcodeProj.srcPath.appending(component: path).appending(component: $0),
+                            condition: nil,
+                            codeSignOnCopy: true
+                        )
+                    }
+                }
+                .flatMap { $0 }
+                files.append(contentsOf: groupFiles)
+            }
+        }
+        return files
     }
 
     /// Maps a `PBXCopyFilesBuildPhase.SubFolder` to a `CopyFilesAction.Destination`.
