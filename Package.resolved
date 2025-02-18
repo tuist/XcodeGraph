@@ -1,5 +1,5 @@
 {
-  "originHash" : "a0c582ac4ca6203193d903182729cbfc3421a26c187eda13dbf15825aa4658e7",
+  "originHash" : "377d0890e78ed330d863806cbf4cdc28ce4dc14faeb68c692140ca84153f49ff",
   "pins" : [
     {
       "identity" : "aexml",
@@ -166,10 +166,10 @@
     {
       "identity" : "xcodeproj",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/adincebic/XcodeProj",
+      "location" : "https://github.com/tuist/XcodeProj",
       "state" : {
-        "branch" : "support/PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet",
-        "revision" : "aa1a3c98a2d1a3fdd7e7464e7849c6c7a1b7c2aa"
+        "revision" : "b9992de5b44b37a25c57e472a17e392f20923d71",
+        "version" : "8.26.8"
       }
     },
     {
