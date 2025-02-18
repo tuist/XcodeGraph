@@ -40,7 +40,7 @@ struct PBXTargetMapperTests: Sendable {
         #expect(mapped.bundleId == "com.example.app")
     }
 
-    @Test("Throws an error if the target is missing a bundle identifier")
+    @Test("Defaults to unknown if the target is missing a bundle identifier")
     func testMapTargetWithMissingBundleId() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
@@ -53,15 +53,16 @@ struct PBXTargetMapperTests: Sendable {
         )
         let mapper = PBXTargetMapper()
 
-        // When / Then
-        await #expect(throws: PBXTargetMappingError.missingBundleIdentifier(targetName: "App")) {
-            _ = try await mapper.map(
-                pbxTarget: target,
-                xcodeProj: xcodeProj,
-                projectNativeTargets: [:],
-                packages: []
-            )
-        }
+        // When
+        let mapped = try await mapper.map(
+            pbxTarget: target,
+            xcodeProj: xcodeProj,
+            projectNativeTargets: [:],
+            packages: []
+        )
+
+        // Then
+        #expect(mapped.bundleId == "Unknown")
     }
 
     @Test("Maps a target with environment variables")

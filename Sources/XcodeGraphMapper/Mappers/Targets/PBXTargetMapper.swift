@@ -10,7 +10,6 @@ enum PBXTargetMappingError: LocalizedError, Equatable {
     case noProjectsFound(path: String)
     case missingFilesGroup(targetName: String)
     case invalidPlist(path: String)
-    case missingBundleIdentifier(targetName: String)
 
     var errorDescription: String? {
         switch self {
@@ -20,8 +19,6 @@ enum PBXTargetMappingError: LocalizedError, Equatable {
             return "The files group is missing for the target '\(targetName)'."
         case let .invalidPlist(path):
             return "Failed to read a valid plist dictionary from file at: \(path)."
-        case let .missingBundleIdentifier(targetName):
-            return "The bundle identifier is missing for the target '\(targetName)'."
         }
     }
 }
@@ -150,7 +147,11 @@ struct PBXTargetMapper: PBXTargetMapping {
         let rawScriptBuildPhases = scriptsMapper.mapRawScriptBuildPhases(runScriptPhases)
 
         let copyFilesPhases = pbxTarget.copyFilesBuildPhases()
-        let copyFiles = try copyFilesMapper.map(copyFilesPhases, xcodeProj: xcodeProj)
+        let copyFiles = try copyFilesMapper.map(
+            copyFilesPhases,
+            fileSystemSynchronizedGroups: pbxTarget.fileSystemSynchronizedGroups ?? [],
+            xcodeProj: xcodeProj
+        )
 
         // Core Data models
         let resourceFiles = try pbxTarget.resourcesBuildPhase()?.files ?? []
@@ -390,8 +391,9 @@ struct PBXTargetMapper: PBXTargetMapping {
         for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
             if let path = fileSystemSynchronizedGroup.path {
                 let membershipExceptions = membershipExceptions(for: fileSystemSynchronizedGroup)
-                let additionalCompilerFlagsByRelativePath = fileSystemSynchronizedGroup.exceptions?
+                let additionalCompilerFlagsByRelativePath: [String: String]? = fileSystemSynchronizedGroup.exceptions?
                     .reduce(into: [:]) { acc, element in
+                        guard let element = element as? PBXFileSystemSynchronizedBuildFileExceptionSet else { return }
                         acc.merge(element.additionalCompilerFlagsByRelativePath ?? [:], uniquingKeysWith: { $1 })
                     }
                 let directory = xcodeProj.srcPath.appending(component: path)
@@ -429,10 +431,7 @@ struct PBXTargetMapper: PBXTargetMapping {
         for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
             guard let path = fileSystemSynchronizedGroup.path else { continue }
             let directory = xcodeProj.srcPath.appending(component: path)
-            let membershipExceptions = Set(
-                fileSystemSynchronizedGroup.exceptions
-                    .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
-            )
+            let membershipExceptions = membershipExceptions(for: fileSystemSynchronizedGroup)
 
             let groupResources = try await globFiles(
                 directory: directory,
@@ -463,9 +462,10 @@ struct PBXTargetMapper: PBXTargetMapping {
             guard let path = fileSystemSynchronizedGroup.path else { continue }
             let directory = xcodeProj.srcPath.appending(component: path)
             let membershipExceptions = membershipExceptions(for: fileSystemSynchronizedGroup)
-            let attributesByRelativePath = fileSystemSynchronizedGroup.exceptions?.reduce([:]) { acc, element in
-                acc.merging(element.attributesByRelativePath ?? [:], uniquingKeysWith: { $1 })
-            }
+            let attributesByRelativePath = fileSystemSynchronizedGroup.exceptions?
+                .compactMap { $0 as? PBXFileSystemSynchronizedBuildFileExceptionSet }.reduce([:]) { acc, element in
+                    acc.merging(element.attributesByRelativePath ?? [:], uniquingKeysWith: { $1 })
+                }
 
             let groupFrameworks: [TargetDependency] = try await globFiles(
                 directory: directory,
@@ -500,7 +500,9 @@ struct PBXTargetMapper: PBXTargetMapping {
         for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
             guard let path = fileSystemSynchronizedGroup.path else { continue }
             let directory = xcodeProj.srcPath.appending(component: path)
-            for synchronizedBuildFileSystemExceptionSet in fileSystemSynchronizedGroup.exceptions ?? [] {
+            for synchronizedBuildFileSystemExceptionSet in fileSystemSynchronizedGroup.exceptions?
+                .compactMap({ $0 as? PBXFileSystemSynchronizedBuildFileExceptionSet }) ?? []
+            {
                 for publicHeader in synchronizedBuildFileSystemExceptionSet.publicHeaders ?? [] {
                     publicHeaders.append(directory.appending(component: publicHeader))
                 }
@@ -539,6 +541,7 @@ struct PBXTargetMapper: PBXTargetMapping {
     private func membershipExceptions(for fileSystemSynchronizedGroup: PBXFileSystemSynchronizedRootGroup) -> Set<String> {
         Set(
             fileSystemSynchronizedGroup.exceptions
+                .map { $0.compactMap { $0 as? PBXFileSystemSynchronizedBuildFileExceptionSet } }
                 .map { $0.compactMap(\.membershipExceptions).flatMap { $0 } } ?? []
         )
     }
