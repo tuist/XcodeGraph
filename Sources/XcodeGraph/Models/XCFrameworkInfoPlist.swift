@@ -50,6 +50,7 @@ public struct XCFrameworkInfoPlist: Codable, Hashable, Equatable, Sendable {
             try container.encode(path, forKey: .path)
             try container.encode(mergeable, forKey: .mergeable)
             try container.encode(architectures, forKey: .architectures)
+            try container.encode(platform, forKey: .platform)
         }
 
         public init(
