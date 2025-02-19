@@ -124,9 +124,13 @@ struct PBXTargetMapper: PBXTargetMapping {
             packages: packages
         ) + sources
 
-        var resources = try pbxTarget.resourcesBuildPhase().map {
-            try resourcesMapper.map($0, xcodeProj: xcodeProj)
-        } ?? []
+        var (resources, resourceDependencies) = try pbxTarget.resourcesBuildPhase().map {
+            try resourcesMapper.map(
+                $0,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: projectNativeTargets
+            )
+        } ?? ([], [])
         resources = try await fileSystemSynchronizedGroupsResources(
             from: pbxTarget,
             xcodeProj: xcodeProj
@@ -202,7 +206,7 @@ struct PBXTargetMapper: PBXTargetMapping {
         let projectNativeTargets = try pbxTarget.dependencies.compactMap {
             try dependencyMapper.map($0, xcodeProj: xcodeProj)
         }
-        let allDependencies = (projectNativeTargets + frameworks).sorted { $0.name < $1.name }
+        let allDependencies = (projectNativeTargets + frameworks + resourceDependencies).sorted { $0.name < $1.name }
 
         // Construct final Target
         return Target(
@@ -275,8 +279,7 @@ struct PBXTargetMapper: PBXTargetMapping {
             } else {
                 xcodeProj.srcPath.appending(try RelativePath(validating: pathString))
             }
-            let plistDictionary = try await readPlistAsDictionary(at: path)
-            return .dictionary(plistDictionary, configuration: config)
+            return .file(path: path, configuration: config)
         }
         return .dictionary([:])
     }
@@ -332,28 +335,6 @@ struct PBXTargetMapper: PBXTargetMapping {
             try sourcesMapper.map($0, xcodeProj: xcodeProj)
         } ?? []
         return sources.filter { $0.path.fileExtension == .playground }.map(\.path)
-    }
-
-    /// Reads and parses a plist file into a `[String: Plist.Value]` dictionary.
-    private func readPlistAsDictionary(
-        at path: AbsolutePath,
-        fileSystem: FileSysteming = FileSystem()
-    ) async throws -> [String: Plist.Value] {
-        var format = PropertyListSerialization.PropertyListFormat.xml
-
-        let data = try await fileSystem.readFile(at: path)
-
-        guard let plist = try? PropertyListSerialization.propertyList(
-            from: data,
-            options: .mutableContainersAndLeaves,
-            format: &format
-        ) as? [String: Any] else {
-            throw PBXTargetMappingError.invalidPlist(path: path.pathString)
-        }
-
-        return try plist.reduce(into: [String: Plist.Value]()) { result, item in
-            result[item.key] = try convertToPlistValue(item.value)
-        }
     }
 
     /// Converts a raw plist value into a `Plist.Value`.

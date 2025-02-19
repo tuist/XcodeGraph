@@ -34,7 +34,7 @@ struct PBXResourcesBuildPhaseMapperTests {
         let mapper = PBXResourcesBuildPhaseMapper()
 
         // When
-        let resources = try mapper.map(resourcesPhase, xcodeProj: xcodeProj)
+        let (resources, _) = try mapper.map(resourcesPhase, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(resources.count == 1)
@@ -45,6 +45,85 @@ struct PBXResourcesBuildPhaseMapperTests {
         default:
             Issue.record("Expected a file resource.")
         }
+    }
+
+    @Test("Maps resource bundle target dependencies from resources phase")
+    func testMapResourceBundleTargets() async throws {
+        // Given
+        let xcodeProj = try await XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
+
+        let targetABundle = try PBXFileReference(
+            sourceTree: .buildProductsDir,
+            path: "TargetA.bundle"
+        )
+        .add(to: pbxProj)
+        .addToMainGroup(in: pbxProj)
+        .add(to: pbxProj)
+
+        let buildFile = PBXBuildFile(file: targetABundle).add(to: pbxProj)
+
+        let projectTargetPath = xcodeProj.projectPath.parentDirectory.appending(
+            components: "AnotherProject",
+            "AnotherProject.xcodeproj"
+        )
+        let targetBFrameworkRef = PBXFileReference(
+            sourceTree: .buildProductsDir,
+            path: "TargetB.bundle"
+        )
+        let targetBFrameworkBuildFile = PBXBuildFile(file: targetBFrameworkRef).add(to: pbxProj)
+
+        let resourcesPhase = PBXResourcesBuildPhase(files: [buildFile, targetBFrameworkBuildFile]).add(to: pbxProj)
+
+        try PBXNativeTarget(
+            name: "App",
+            buildPhases: [resourcesPhase],
+            productType: .application
+        )
+        .add(to: pbxProj)
+        .add(to: pbxProj.rootObject)
+
+        PBXNativeTarget(
+            name: "TargetA",
+            buildPhases: [resourcesPhase],
+            productType: .bundle
+        )
+        .add(to: pbxProj)
+
+        let mapper = PBXResourcesBuildPhaseMapper()
+
+        // When
+        let (_, resourceDependencies) = try await mapper.map(
+            resourcesPhase,
+            xcodeProj: xcodeProj,
+            projectNativeTargets: [
+                "TargetB": ProjectNativeTarget(
+                    nativeTarget: .test(
+                        name: "TargetB"
+                    ),
+                    project: .test(
+                        path: projectTargetPath
+                    )
+                ),
+            ]
+        )
+
+        // Then
+        #expect(
+            resourceDependencies == [
+                .target(
+                    name: "TargetA",
+                    status: .required,
+                    condition: nil
+                ),
+                .project(
+                    target: "TargetB",
+                    path: projectTargetPath.parentDirectory,
+                    status: .required,
+                    condition: nil
+                ),
+            ]
+        )
     }
 
     @Test("Maps localized variant groups from resources")
@@ -78,7 +157,7 @@ struct PBXResourcesBuildPhaseMapperTests {
         let mapper = PBXResourcesBuildPhaseMapper()
 
         // When
-        let resources = try mapper.map(resourcesPhase, xcodeProj: xcodeProj)
+        let (resources, _) = try mapper.map(resourcesPhase, xcodeProj: xcodeProj, projectNativeTargets: [:])
 
         // Then
         #expect(resources.count == 2)
