@@ -13,4 +13,12 @@ final class VersionTests: XCTestCase {
         // Then
         XCTAssertEqual(got, "123")
     }
+
+    func test_codable() {
+        // Given
+        let version = Version(stringLiteral: "1.2.3")
+
+        // Then
+        XCTAssertCodable(version)
+    }
 }

@@ -35,6 +35,17 @@ public struct Version: Hashable, Codable, Sendable {
         self.buildMetadataIdentifiers = buildMetadataIdentifiers
     }
 
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+
+        guard let version = Version(string: value) else {
+            fatalError("\(value) is not a valid version")
+        }
+
+        self = version
+    }
+
     /// Returns the value that Xcode projects use internally.
     public var xcodeStringValue: String {
         "\(major)\(minor)\(patch)"
