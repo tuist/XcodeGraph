@@ -14,7 +14,8 @@ protocol PBXScriptsBuildPhaseMapping {
     /// - Throws: If any file paths cannot be validated.
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
-        buildPhases: [PBXBuildPhase]
+        buildPhases: [PBXBuildPhase],
+        settings: SettingsDictionary
     ) throws -> [TargetScript]
 
     /// Maps shell script build phases into a simpler, “raw” representation (`RawScriptBuildPhase`).
@@ -28,10 +29,15 @@ protocol PBXScriptsBuildPhaseMapping {
 struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
     func map(
         _ scriptPhases: [PBXShellScriptBuildPhase],
-        buildPhases: [PBXBuildPhase]
+        buildPhases: [PBXBuildPhase],
+        settings: SettingsDictionary
     ) throws -> [TargetScript] {
         try scriptPhases.compactMap {
-            try mapScriptPhase($0, buildPhases: buildPhases)
+            try mapScriptPhase(
+                $0,
+                buildPhases: buildPhases,
+                settings: settings
+            )
         }
     }
 
@@ -44,22 +50,23 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
     /// Converts a single `PBXShellScriptBuildPhase` to a `TargetScript`, if valid.
     private func mapScriptPhase(
         _ scriptPhase: PBXShellScriptBuildPhase,
-        buildPhases: [PBXBuildPhase]
+        buildPhases: [PBXBuildPhase],
+        settings: SettingsDictionary
     ) throws -> TargetScript? {
         guard let shellScript = scriptPhase.shellScript else {
             return nil
         }
 
         let inputFileListPaths = try scriptPhase.inputFileListPaths?.compactMap {
-            try AbsolutePath(validating: $0)
+            try AbsolutePath(validating: $0.replacingSettingsVariables(with: settings))
         } ?? []
 
         let outputFileListPaths = try scriptPhase.outputFileListPaths?.compactMap {
-            try AbsolutePath(validating: $0)
+            try AbsolutePath(validating: $0.replacingSettingsVariables(with: settings))
         } ?? []
 
         let dependencyFile = try scriptPhase.dependencyFile.map {
-            try AbsolutePath(validating: $0)
+            try AbsolutePath(validating: $0.replacingSettingsVariables(with: settings))
         }
 
         return TargetScript(
@@ -112,5 +119,31 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
 
         // Fallback: if it's at index 0, consider it pre; otherwise post.
         return scriptIndex == 0 ? .pre : .post
+    }
+}
+
+extension String {
+    fileprivate func replacingSettingsVariables(
+        with settings: SettingsDictionary
+    ) -> String {
+        settings.compactMapValues { value -> String? in
+            switch value {
+            case .array:
+                return nil
+            case let .string(string):
+                return string
+            }
+        }
+        .reduce(self) { string, setting in
+            string
+                .replacingOccurrences(
+                of: "${\(setting.key)}",
+                with: setting.value
+                )
+                .replacingOccurrences(
+                    of: "$(\(setting.key)",
+                    with: setting.value
+                )
+        }
     }
 }

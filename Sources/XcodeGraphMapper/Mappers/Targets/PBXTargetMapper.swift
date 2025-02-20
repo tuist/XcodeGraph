@@ -145,9 +145,29 @@ struct PBXTargetMapper: PBXTargetMapping {
             xcodeProj: xcodeProj,
             headers: headers
         )
-
+        
+        let debugConfiguration = settings.configurations
+            .filter ({ $0.key.name == "Debug" })
+            .first
+        var debugSettings = debugConfiguration?.value?.settings ?? [:]
+        debugSettings["CONFIGURATION"] = "Debug"
+        if let xcconfigPath = settings.configurations
+            .filter ({ $0.key.name == "Debug" })
+            .first?.value?.xcconfig {
+            let xcconfigSettings = try await BuildSettingsExtractor()
+                .extractBuildSettings(
+                    for: xcconfigPath,
+                    projectPath: xcodeProj.projectPath
+                )
+            debugSettings = debugSettings.combine(with: xcconfigSettings)
+        }
+        
         let runScriptPhases = pbxTarget.runScriptBuildPhases()
-        let scripts = try scriptsMapper.map(runScriptPhases, buildPhases: pbxTarget.buildPhases)
+        let scripts = try scriptsMapper.map(
+            runScriptPhases,
+            buildPhases: pbxTarget.buildPhases,
+            settings: debugSettings
+        )
         let rawScriptBuildPhases = scriptsMapper.mapRawScriptBuildPhases(runScriptPhases)
 
         let copyFilesPhases = pbxTarget.copyFilesBuildPhases()
@@ -545,3 +565,50 @@ struct PBXTargetMapper: PBXTargetMapping {
 
 // swiftlint:enable function_body_length
 // swiftlint:enable type_body_length
+
+import Command
+
+struct BuildSettingsExtractor {
+    private let commandRunner: CommandRunning
+    
+    init(
+        commandRunner: CommandRunning = CommandRunner()
+    ) {
+        self.commandRunner = commandRunner
+    }
+    
+    func extractBuildSettings(
+        for xcconfig: AbsolutePath,
+        projectPath: AbsolutePath
+    ) async throws -> [String: SettingValue] {
+        let output = try await commandRunner
+            .run(
+                arguments: [
+                    "/usr/bin/xcodebuild",
+                    "-showBuildSettings",
+                    "-xcconfig", xcconfig.pathString,
+                    "-project", projectPath.pathString,
+                    "-json"
+                ]
+            )
+            .concatenatedString()
+        guard let data = output.data(using: .utf8) else { return [:] }
+        let actionBuildSettings = try JSONDecoder().decode([ActionBuildSettings].self, from: data)
+        guard let buildAction = actionBuildSettings.first(where: { $0.action == "build" }) else { return [:] }
+        return buildAction.buildSettings.mapValues { value in
+            let components = value.components(separatedBy: " ")
+            if components.count == 1 {
+                return .string(components[0])
+            } else {
+                return .array(components)
+            }
+                
+        }
+    }
+    
+    
+    private struct ActionBuildSettings: Codable {
+        let action: String
+        let buildSettings: [String: String]
+    }
+}
