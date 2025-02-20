@@ -31,19 +31,9 @@ extension SettingsDictionary {
             }
             switch oldValue {
             case let .array(values):
-                return .array(
-                    Array(
-                        Set(values + newValues)
-                    )
-                )
+                return .array(values + newValues)
             case let .string(value):
-                return .array(
-                    Array(
-                        Set(
-                            value.split(separator: " ").map(String.init) + newValues
-                        )
-                    )
-                )
+                return .array(value.split(separator: " ").map(String.init) + newValues)
             }
         })
     }
