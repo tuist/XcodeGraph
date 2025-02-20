@@ -74,13 +74,13 @@ public struct TargetScript: Equatable, Codable, Sendable {
     public let inputPaths: [String]
 
     /// List of input filelist paths
-    public let inputFileListPaths: [AbsolutePath]
+    public let inputFileListPaths: [String]
 
     /// List of output file paths
     public let outputPaths: [String]
 
     /// List of output filelist paths
-    public let outputFileListPaths: [AbsolutePath]
+    public let outputFileListPaths: [String]
 
     /// Show environment variables in the logs
     public var showEnvVarsInLog: Bool
@@ -117,9 +117,9 @@ public struct TargetScript: Equatable, Codable, Sendable {
         order: Order,
         script: Script = .embedded(""),
         inputPaths: [String] = [],
-        inputFileListPaths: [AbsolutePath] = [],
+        inputFileListPaths: [String] = [],
         outputPaths: [String] = [],
-        outputFileListPaths: [AbsolutePath] = [],
+        outputFileListPaths: [String] = [],
         showEnvVarsInLog: Bool = true,
         basedOnDependencyAnalysis: Bool? = nil,
         runForInstallBuildsOnly: Bool = false,
