@@ -137,4 +137,63 @@ struct PBXFrameworksBuildPhaseMapperTests {
             ]
         )
     }
+
+    @Test("Maps SDK frameworks")
+    func testMapSDKFrameworks() async throws {
+        // Given
+        let xcodeProj = try await XcodeProj.test()
+        let pbxProj = xcodeProj.pbxproj
+
+        let accessibilityFrameworkRef = PBXFileReference(
+            sourceTree: .sdkRoot,
+            path: "Accessibility.framework"
+        )
+        let accessibilityFrameworkBuildFile = PBXBuildFile(file: accessibilityFrameworkRef).add(to: pbxProj)
+
+        let foundationFrameworkRef = PBXFileReference(
+            sourceTree: .developerDir,
+            path: "Foundation.framework"
+        )
+        let foundationFrameworkBuildFile = PBXBuildFile(file: foundationFrameworkRef).add(to: pbxProj)
+
+        let frameworksPhase = PBXFrameworksBuildPhase(
+            files: [
+                accessibilityFrameworkBuildFile,
+                foundationFrameworkBuildFile,
+            ]
+        ).add(to: pbxProj)
+
+        try PBXNativeTarget(
+            name: "App",
+            buildPhases: [frameworksPhase],
+            productType: .application
+        )
+        .add(to: pbxProj)
+        .add(to: pbxProj.rootObject)
+
+        let mapper = PBXFrameworksBuildPhaseMapper()
+
+        // When
+        let frameworks = try mapper.map(
+            frameworksPhase,
+            xcodeProj: xcodeProj,
+            projectNativeTargets: [:]
+        )
+
+        // Then
+        #expect(
+            frameworks.sorted(by: { $0.name < $1.name }) == [
+                .sdk(
+                    name: "Accessibility",
+                    status: .required,
+                    condition: nil
+                ),
+                .sdk(
+                    name: "Foundation",
+                    status: .required,
+                    condition: nil
+                ),
+            ]
+        )
+    }
 }
