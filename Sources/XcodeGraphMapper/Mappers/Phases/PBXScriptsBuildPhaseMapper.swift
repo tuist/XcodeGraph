@@ -50,14 +50,6 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
             return nil
         }
 
-        let inputFileListPaths = try scriptPhase.inputFileListPaths?.compactMap {
-            try AbsolutePath(validating: $0)
-        } ?? []
-
-        let outputFileListPaths = try scriptPhase.outputFileListPaths?.compactMap {
-            try AbsolutePath(validating: $0)
-        } ?? []
-
         let dependencyFile = try scriptPhase.dependencyFile.map {
             try AbsolutePath(validating: $0)
         }
@@ -67,9 +59,9 @@ struct PBXScriptsBuildPhaseMapper: PBXScriptsBuildPhaseMapping {
             order: determineScriptOrder(buildPhases: buildPhases, scriptPhase: scriptPhase),
             script: .embedded(shellScript),
             inputPaths: scriptPhase.inputPaths,
-            inputFileListPaths: inputFileListPaths,
+            inputFileListPaths: scriptPhase.inputFileListPaths ?? [],
             outputPaths: scriptPhase.outputPaths,
-            outputFileListPaths: outputFileListPaths,
+            outputFileListPaths: scriptPhase.outputFileListPaths ?? [],
             showEnvVarsInLog: scriptPhase.showEnvVarsInLog,
             basedOnDependencyAnalysis: scriptPhase.alwaysOutOfDate ? false : nil,
             runForInstallBuildsOnly: scriptPhase.runOnlyForDeploymentPostprocessing,

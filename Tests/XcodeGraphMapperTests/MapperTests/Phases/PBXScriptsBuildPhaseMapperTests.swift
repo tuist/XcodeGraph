@@ -15,7 +15,8 @@ struct PBXScriptsBuildPhaseMapperTests {
             name: "Run Script",
             shellScript: "echo Hello",
             inputPaths: ["$(SRCROOT)/input.txt"],
-            outputPaths: ["$(DERIVED_FILE_DIR)/output.txt"]
+            outputPaths: ["$(DERIVED_FILE_DIR)/output.txt"],
+            inputFileListPaths: ["${PODS_ROOT}/${CONFIGURATION}/file-list.xcfilelist"]
         )
         .add(to: pbxProj)
 
@@ -39,6 +40,7 @@ struct PBXScriptsBuildPhaseMapperTests {
         #expect(script.script == .embedded("echo Hello"))
         #expect(script.inputPaths == ["$(SRCROOT)/input.txt"])
         #expect(script.outputPaths == ["$(DERIVED_FILE_DIR)/output.txt"])
+        #expect(script.inputFileListPaths == ["${PODS_ROOT}/${CONFIGURATION}/file-list.xcfilelist"])
     }
 
     @Test("Maps raw script build phases not covered by other categories")
