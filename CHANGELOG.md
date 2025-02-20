@@ -5,10 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.8] - 2025-02-20
+### Details
+#### Chore
+- Update dependency tuist/command to from: "0.13.0" by @renovate[bot] in [#130](https://github.com/tuist/XcodeGraph/pull/130)
+
 ## [1.6.7] - 2025-02-20
 ### Details
 #### Fix
-- Mapping SDK frameworks
+- Mapping SDK frameworks by @fortmarek in [#128](https://github.com/tuist/XcodeGraph/pull/128)
 - Duplicated values in build settings by @fortmarek in [#125](https://github.com/tuist/XcodeGraph/pull/125)
 
 ## [1.6.6] - 2025-02-20
@@ -511,6 +516,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.6.8]: https://github.com/tuist/XcodeGraph/compare/1.6.7..1.6.8
 [1.6.7]: https://github.com/tuist/XcodeGraph/compare/1.6.6..1.6.7
 [1.6.6]: https://github.com/tuist/XcodeGraph/compare/1.6.5..1.6.6
 [1.6.5]: https://github.com/tuist/XcodeGraph/compare/1.6.4..1.6.5
