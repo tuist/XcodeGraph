@@ -1,4 +1,5 @@
 import Foundation
+import XcodeProj
 
 extension SettingsDictionary {
     /// Overlays a SettingsDictionary by adding a `[sdk=<sdk>*]` qualifier
@@ -32,19 +33,28 @@ extension SettingsDictionary {
             switch oldValue {
             case let .array(values):
                 return .array(
-                    Array(
-                        Set(values + newValues)
-                    )
+                    (values + newValues)
+                        .uniqued()
                 )
             case let .string(value):
                 return .array(
-                    Array(
-                        Set(
-                            value.split(separator: " ").map(String.init) + newValues
-                        )
-                    )
+                    (value.split(separator: " ").map(String.init) + newValues)
+                        .uniqued()
                 )
             }
         })
+    }
+}
+
+extension Array where Element: Hashable {
+    /// Return the array with all duplicates removed in order.
+    ///
+    /// i.e. `[ 1, 2, 3, 1, 2 ].uniqued() == [ 1, 2, 3 ]`
+    ///
+    /// - note: Taken from stackoverflow.com/a/46354989/3141234, as
+    ///         per @Alexander's comment.
+    fileprivate func uniqued() -> [Element] {
+        var seen = Set<Element>()
+        return filter { seen.insert($0).inserted }
     }
 }
