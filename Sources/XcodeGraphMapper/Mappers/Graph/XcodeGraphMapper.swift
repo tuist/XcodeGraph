@@ -208,7 +208,10 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
         }
         let projectNativeTargets: [String: ProjectNativeTarget] = xcodeProjects.reduce(into: [:]) { acc, xcodeProject in
             for nativeTarget in xcodeProject.pbxproj.nativeTargets {
-                acc[nativeTarget.name] = ProjectNativeTarget(
+                let name = Target.sanitizedProductNameFrom(
+                    targetName: nativeTarget.name
+                )
+                acc[name] = ProjectNativeTarget(
                     nativeTarget: nativeTarget,
                     project: xcodeProject
                 )
