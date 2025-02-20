@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.9] - 2025-02-20
+### Details
+#### Fix
+- Framework not found when name needs to be sanitized by @fortmarek in [#129](https://github.com/tuist/XcodeGraph/pull/129)
+
 ## [1.6.8] - 2025-02-20
 ### Details
 #### Chore
@@ -516,6 +521,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.6.9]: https://github.com/tuist/XcodeGraph/compare/1.6.8..1.6.9
 [1.6.8]: https://github.com/tuist/XcodeGraph/compare/1.6.7..1.6.8
 [1.6.7]: https://github.com/tuist/XcodeGraph/compare/1.6.6..1.6.7
 [1.6.6]: https://github.com/tuist/XcodeGraph/compare/1.6.5..1.6.6
