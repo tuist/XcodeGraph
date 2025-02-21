@@ -285,7 +285,7 @@ struct XcodeGraphMapperTests {
             pbxProj: pbxProj
         )
 
-        let appTarget = try PBXNativeTarget.test(
+        try PBXNativeTarget.test(
             name: "App",
             buildConfigurationList: configurationList,
             buildPhases: [],

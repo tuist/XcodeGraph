@@ -1,5 +1,5 @@
 {
-  "originHash" : "11c91097a7d3815aa19aa8bdc65446d1e51f2b556e7afb8fdff27ce1384ed4b6",
+  "originHash" : "e00b9b258083e5d180326ee4f3fedbcfea7db4ae854a2bf6745abd5db9a73971",
   "pins" : [
     {
       "identity" : "aexml",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/Command.git",
       "state" : {
-        "revision" : "07846291097a593de29846c0083b758471071cdf",
-        "version" : "0.12.2"
+        "revision" : "079a7803b581d3022469b3a331bccd51d48d2fc0",
+        "version" : "0.13.0"
       }
     },
     {
