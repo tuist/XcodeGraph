@@ -65,7 +65,7 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
                 return .file(path: absolutePath, condition: nil, codeSignOnCopy: codeSignOnCopy)
             }
             .sorted { $0.path < $1.path }
-        let groupsFiles = fileSystemSynchronizedGroupsFiles(
+        let groupsFiles = try fileSystemSynchronizedGroupsFiles(
             phase,
             fileSystemSynchronizedGroups: fileSystemSynchronizedGroups,
             xcodeProj: xcodeProj
@@ -83,17 +83,17 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
         _ phase: PBXCopyFilesBuildPhase,
         fileSystemSynchronizedGroups: [PBXFileSystemSynchronizedRootGroup],
         xcodeProj: XcodeProj
-    ) -> [CopyFileElement] {
+    ) throws -> [CopyFileElement] {
         var files: [CopyFileElement] = []
         for fileSystemSynchronizedGroup in fileSystemSynchronizedGroups {
             if let path = fileSystemSynchronizedGroup.path {
                 let buildPhaseExceptions = fileSystemSynchronizedGroup.exceptions?
                     .compactMap { $0 as? PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet }
                     .filter { $0.buildPhase == phase } ?? []
-                let groupFiles = buildPhaseExceptions.compactMap {
-                    $0.membershipExceptions?.map {
+                let groupFiles = try buildPhaseExceptions.compactMap {
+                    try $0.membershipExceptions?.map {
                         return CopyFileElement.file(
-                            path: xcodeProj.srcPath.appending(component: path).appending(RelativePath($0)),
+                            path: xcodeProj.srcPath.appending(component: path).appending(try RelativePath(validating: $0)),
                             condition: nil,
                             codeSignOnCopy: true
                         )

@@ -57,7 +57,12 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
                 condition: nil
             )
         }
-        let fileRef = try buildFile.file.throwing(PBXFrameworksBuildPhaseMappingError.missingFileReference)
+        let fileRef = try buildFile.file.throwing(
+            PBXFrameworksBuildPhaseMappingError.missingFileReference(
+                buildFile.uuid,
+                xcodeProj.projectPath.appending(component: "project.pbxproj")
+            )
+        )
         if let path = fileRef.path {
             let name = path.replacingOccurrences(of: ".framework", with: "")
             let linkingStatus: LinkingStatus = (buildFile.settings?["ATTRIBUTES"] as? [String])?
@@ -98,16 +103,16 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
 
 /// Errors that may occur when mapping framework build phase files.
 enum PBXFrameworksBuildPhaseMappingError: Error, LocalizedError {
-    case missingFileReference
+    case missingFileReference(String, AbsolutePath)
     case missingFilePath(name: String?)
 
     var errorDescription: String? {
         switch self {
-        case .missingFileReference:
-            return "Missing `PBXBuildFile.file` reference."
+        case let .missingFileReference(buildFileUUID, pbxprojPath):
+            return "Missing 'PBXBuildFile.file' reference for \(buildFileUUID) id. Make sure an element with that id is present in the \(pbxprojPath.pathString) file."
         case let .missingFilePath(name):
             let fileName = name ?? "Unknown"
-            return "Missing or invalid file path for `PBXBuildFile`: \(fileName)."
+            return "Missing or invalid file path for 'PBXBuildFile': \(fileName)."
         }
     }
 }
