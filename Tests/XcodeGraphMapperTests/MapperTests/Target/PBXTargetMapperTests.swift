@@ -26,11 +26,13 @@ struct PBXTargetMapperTests: Sendable {
         // When
         let mapper = PBXTargetMapper()
 
-        let mapped = try await mapper.map(
-            pbxTarget: target,
-            xcodeProj: xcodeProj,
-            projectNativeTargets: [:],
-            packages: []
+        let mapped = try #require(
+            try await mapper.map(
+                pbxTarget: target,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: [:],
+                packages: []
+            )
         )
 
         // Then
@@ -54,11 +56,13 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(
-            pbxTarget: target,
-            xcodeProj: xcodeProj,
-            projectNativeTargets: [:],
-            packages: []
+        let mapped = try #require(
+            try await mapper.map(
+                pbxTarget: target,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: [:],
+                packages: []
+            )
         )
 
         // Then
@@ -81,11 +85,13 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(
-            pbxTarget: target,
-            xcodeProj: xcodeProj,
-            projectNativeTargets: [:],
-            packages: []
+        let mapped = try #require(
+            try await mapper.map(
+                pbxTarget: target,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: [:],
+                packages: []
+            )
         )
 
         // Then
@@ -110,11 +116,13 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(
-            pbxTarget: target,
-            xcodeProj: xcodeProj,
-            projectNativeTargets: [:],
-            packages: []
+        let mapped = try #require(
+            try await mapper.map(
+                pbxTarget: target,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: [:],
+                packages: []
+            )
         )
 
         // Then
@@ -151,11 +159,13 @@ struct PBXTargetMapperTests: Sendable {
         let mapper = PBXTargetMapper()
 
         // When
-        let mapped = try await mapper.map(
-            pbxTarget: target,
-            xcodeProj: xcodeProj,
-            projectNativeTargets: [:],
-            packages: []
+        let mapped = try #require(
+            try await mapper.map(
+                pbxTarget: target,
+                xcodeProj: xcodeProj,
+                projectNativeTargets: [:],
+                packages: []
+            )
         )
 
         // Then
@@ -243,13 +253,15 @@ struct PBXTargetMapperTests: Sendable {
             )
 
             // When
-            let mapped = try await mapper.map(
-                pbxTarget: target,
-                xcodeProj: xcodeProj,
-                projectNativeTargets: [:],
-                packages: [
-                    packagePath,
-                ]
+            let mapped = try #require(
+                try await mapper.map(
+                    pbxTarget: target,
+                    xcodeProj: xcodeProj,
+                    projectNativeTargets: [:],
+                    packages: [
+                        packagePath,
+                    ]
+                )
             )
 
             // Then
@@ -331,7 +343,7 @@ struct PBXTargetMapperTests: Sendable {
         )
 
         // Then
-        #expect(mapped.metadata.tags == Set(["tag1", "tag2", "tag3"]))
+        #expect(mapped?.metadata.tags == Set(["tag1", "tag2", "tag3"]))
     }
 
     @Test("Maps entitlements when CODE_SIGN_ENTITLEMENTS is set")
@@ -389,7 +401,7 @@ struct PBXTargetMapperTests: Sendable {
         )
 
         // Then
-        #expect(mapped.entitlements == .file(
+        #expect(mapped?.entitlements == .file(
             path: entitlementsPath,
             configuration: BuildConfiguration(name: "Debug", variant: .debug)
         ))
@@ -462,13 +474,36 @@ struct PBXTargetMapperTests: Sendable {
 
         // Then
         #expect({
-            switch mapped.infoPlist {
+            switch mapped?.infoPlist {
             case let .file(path, _):
                 return path == plistPath
             default:
                 return false
             }
         }() == true)
+    }
+
+    @Test
+    func testMapAggregateTarget() async throws {
+        // Given
+        let xcodeProj = try await XcodeProj.test()
+        let target = PBXAggregateTarget(
+            name: "App"
+        )
+
+        try xcodeProj.write(path: xcodeProj.path!)
+        let mapper = PBXTargetMapper()
+
+        // When
+        let mapped = try await mapper.map(
+            pbxTarget: target,
+            xcodeProj: xcodeProj,
+            projectNativeTargets: [:],
+            packages: []
+        )
+
+        // Then
+        #expect(mapped == nil)
     }
 
     // MARK: - Helper Methods
