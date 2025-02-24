@@ -66,7 +66,8 @@ struct PBXProjectMapper: PBXProjectMapping {
         let localPackagePaths = try await collectAllPackages(from: pbxProject.mainGroup, xcodeProj: xcodeProj)
 
         // Map PBXTargets to domain Targets
-        let targets = try await withThrowingTaskGroup(of: Target.self, returning: [Target].self) { taskGroup in
+        let targets = try await withThrowingTaskGroup(of: Target?.self, returning: [Target].self) { taskGroup in
+            let projectNativeTargets = projectNativeTargets
             for pbxTarget in pbxProject.targets {
                 taskGroup.addTask {
                     try await targetMapper.map(
@@ -80,7 +81,9 @@ struct PBXProjectMapper: PBXProjectMapping {
 
             var targets: [Target] = []
             for try await target in taskGroup {
-                targets.append(target)
+                if let target {
+                    targets.append(target)
+                }
             }
 
             return targets

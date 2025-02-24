@@ -49,7 +49,7 @@ protocol PBXTargetMapping {
         xcodeProj: XcodeProj,
         projectNativeTargets: [String: ProjectNativeTarget],
         packages: [AbsolutePath]
-    ) async throws -> Target
+    ) async throws -> Target?
 }
 
 // swiftlint:disable function_body_length
@@ -102,7 +102,11 @@ struct PBXTargetMapper: PBXTargetMapping {
         xcodeProj: XcodeProj,
         projectNativeTargets: [String: ProjectNativeTarget],
         packages: [AbsolutePath]
-    ) async throws -> Target {
+    ) async throws -> Target? {
+        // `XcodeGraph` currently doesn't support representing aggregate targets
+        if pbxTarget is PBXAggregateTarget {
+            return nil
+        }
         let platform = try pbxTarget.platform()
         let deploymentTargets = pbxTarget.deploymentTargets()
         let productType = pbxTarget.productType?.mapProductType()
