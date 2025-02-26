@@ -6,12 +6,14 @@ import XcodeProj
 extension PBXTarget {
     enum EnvironmentExtractor {
         static func extract(from buildSettings: BuildSettings) -> [String: EnvironmentVariable] {
-            guard let envVars = buildSettings.stringDict(for: .environmentVariables) else {
-                return [:]
-            }
-            return envVars.reduce(into: [:]) { result, pair in
-                result[pair.key] = EnvironmentVariable(value: pair.value, isEnabled: true)
-            }
+//            guard let envVars = buildSettings.stringDict(for: .environmentVariables) else {
+//                return [:]
+//            }
+//            return envVars.reduce(into: [:]) { result, pair in
+//                result[pair.key] = EnvironmentVariable(value: pair.value, isEnabled: true)
+//            }
+//            
+            [:]
         }
     }
 
