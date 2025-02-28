@@ -54,7 +54,7 @@ struct PBXHeadersBuildPhaseMapper: PBXHeadersBuildPhaseMapping {
         }
 
         let absolutePath = try AbsolutePath(validating: pathString)
-        let attributes = buildFile.settings?.stringArray(for: .attributes)
+        let attributes = buildFile.attributes
 
         let visibility: HeaderInfo.HeaderVisibility
         if attributes?.contains(HeaderAttribute.public.rawValue) == true {
