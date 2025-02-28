@@ -1,5 +1,5 @@
 {
-  "originHash" : "fc72c66a6cff23618311dcc542ac7e97cc291d309abdc7587911390ff07d6146",
+  "originHash" : "56a03b215fd4f33810ae1cb636cf8d70c2f4e7022271158ab48129a825867add",
   "pins" : [
     {
       "identity" : "aexml",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/p-x9/MachOKit",
       "state" : {
-        "revision" : "30b56f12a448137123c17b4f9b67ee867baecc86",
-        "version" : "0.29.0"
+        "revision" : "7ea55264554310709a4669091be21e5b5423aa44",
+        "version" : "0.29.1"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system.git",
       "state" : {
-        "revision" : "c8a44d836fe7913603e246acab7c528c2e780168",
-        "version" : "1.4.0"
+        "revision" : "a34201439c74b53f0fd71ef11741af7e7caf01e1",
+        "version" : "1.4.2"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/XcodeProj",
       "state" : {
-        "revision" : "7cb7fbe091b3feb087bb179c445fb96b4fa10982",
-        "version" : "8.27.2"
+        "branch" : "waltflanagan/StrongTypes",
+        "revision" : "5d26cf5b0348f41d0ff7b2611e0e9f7441efd1a7"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "a3f634d1a409c7979cabc0a71b3f26ffa9fc8af1",
-        "version" : "1.4.3"
+        "revision" : "39de59b2d47f7ef3ca88a039dff3084688fe27f4",
+        "version" : "1.5.2"
       }
     },
     {

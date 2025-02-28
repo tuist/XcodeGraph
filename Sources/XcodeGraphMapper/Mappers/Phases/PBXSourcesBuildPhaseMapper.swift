@@ -40,9 +40,8 @@ struct PBXSourcesBuildPhaseMapper: PBXSourcesBuildPhaseMapping {
         }
 
         let path = try AbsolutePath(validating: pathString)
-        let settings = buildFile.settings ?? [:]
-        let compilerFlags: String? = settings.string(for: .compilerFlags)
-        let attributes: [String]? = settings.stringArray(for: .attributes)
+        let compilerFlags: String? = buildFile.compilerFlags
+        let attributes: [String]? = buildFile.attributes
 
         return SourceFile(
             path: path,
