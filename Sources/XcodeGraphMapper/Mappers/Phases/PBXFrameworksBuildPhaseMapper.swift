@@ -65,7 +65,7 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
         )
         if let path = fileRef.path {
             let name = path.replacingOccurrences(of: ".framework", with: "")
-            let linkingStatus: LinkingStatus = (buildFile.settings?["ATTRIBUTES"] as? [String])?
+            let linkingStatus: LinkingStatus = buildFile.attributes?
                 .contains("Weak") == true ? .optional : .required
             switch fileRef.sourceTree {
             case .buildProductsDir:
