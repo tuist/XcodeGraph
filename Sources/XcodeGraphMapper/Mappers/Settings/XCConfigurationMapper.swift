@@ -84,33 +84,15 @@ final class XCConfigurationMapper: SettingsMapping {
     /// - Parameter buildSettings: A dictionary of raw build settings.
     /// - Returns: A `SettingsDictionary` containing `SettingValue`-typed settings.
     /// - Throws: If a setting value cannot be mapped (this is typically non-fatal; most values can be stringified).
-    func mapBuildSettings(_ buildSettings: [String: Any]) throws -> SettingsDictionary {
+    func mapBuildSettings(_ buildSettings: [String: BuildSetting]) throws -> SettingsDictionary {
         var settingsDict = SettingsDictionary()
         for (key, value) in buildSettings {
-            settingsDict[key] = try mapSettingValue(value)
+            settingsDict[key] = switch value {
+            case let .string(string): .string(string)
+            case let .array(array): .array(array)
+            }
         }
         return settingsDict
-    }
-
-    /// Maps a single raw setting value into a `SettingValue`.
-    ///
-    /// - If the value is a `String`, it becomes a `SettingValue.string`.
-    /// - If the value is an `Array`, each element is converted to a string if possible, resulting in `SettingValue.array`.
-    /// - Otherwise, the value is stringified using `String(describing:)` and returned as `SettingValue.string`.
-    ///
-    /// - Parameter value: A raw setting value from the build settings dictionary.
-    /// - Returns: A `SettingValue` representing the processed setting.
-    private func mapSettingValue(_ value: Any) throws -> SettingValue {
-        if let stringValue = value as? String {
-            return .string(stringValue)
-        } else if let arrayValue = value as? [Any] {
-            let stringArray = arrayValue.compactMap { $0 as? String }
-            return .array(stringArray)
-        } else {
-            // Fallback: convert unknown types to strings
-            let stringValue = String(describing: value)
-            return .string(stringValue)
-        }
     }
 
     /// Determines a `BuildConfiguration.Variant` (e.g., `.debug` or `.release`) from a configuration name.
