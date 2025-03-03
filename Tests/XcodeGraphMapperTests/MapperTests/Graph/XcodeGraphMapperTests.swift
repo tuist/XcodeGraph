@@ -253,6 +253,81 @@ struct XcodeGraphMapperTests {
         #expect(graph.dependencyConditions.isEmpty == true)
     }
 
+    @Test("Maps a workspace with multiple projects in different directories into a single graph")
+    func testWorkspaceGraphMultipleProjectsInDifferentDirectories() async throws {
+        // Given
+        //
+        // A project structure like this:
+        // .
+        // ├── Workspace.xcworkspace
+        // ├── App
+        // │   └── ProjectA.xcodeproj
+        // └── Modules
+        //     └── ProjectB.xcodeproj
+        //
+
+        let pbxProjA = PBXProj()
+        let pbxProjB = PBXProj()
+
+        let debug: XCBuildConfiguration = .testDebug().add(to: pbxProjA).add(to: pbxProjB)
+        let releaseConfig: XCBuildConfiguration = .testRelease().add(to: pbxProjA).add(to: pbxProjB)
+        let configurationList: XCConfigurationList = .test(
+            buildConfigurations: [debug, releaseConfig]
+        )
+        .add(to: pbxProjA)
+        .add(to: pbxProjB)
+
+        let projectA = try await XcodeProj.test(
+            projectName: "ProjectA",
+            configurationList: configurationList,
+            pbxProj: pbxProjA,
+            path: "/tmp/App/ProjectA.xcodeproj"
+        )
+
+        let projectB = try await XcodeProj.test(
+            projectName: "ProjectB",
+            configurationList: configurationList,
+            pbxProj: pbxProjB,
+            path: "/tmp/Modules/ProjectB/ProjectB.xcodeproj"
+        )
+
+        let projectAPath = try #require(projectA.path?.string)
+        let projectBPath = try #require(projectB.path?.string)
+
+        let xcworkspace = XCWorkspace(
+            data: XCWorkspaceData(
+                children: [
+                    .group(.init(location: .group("App"), name: "App", children: [
+                        .file(.init(location: .absolute(projectAPath))),
+                    ])),
+                    .group(.init(location: .group("Modules"), name: "Modules", children: [
+                        .file(.init(location: .absolute(projectBPath))),
+                    ])),
+                ]
+            ),
+            path: .init("/tmp/Workspace.xcworkspace")
+        )
+
+        try projectA.write(path: projectA.path!)
+        try projectB.write(path: projectB.path!)
+        let mapper = XcodeGraphMapper()
+
+        // When
+        let graph = try await mapper.buildGraph(from: .workspace(xcworkspace))
+
+        // Then
+
+        // General workspace checks
+        #expect(graph.workspace.name == "Workspace")
+        #expect(graph.workspace.projects.contains(projectA.projectPath) == true)
+        #expect(graph.workspace.projects.contains(projectB.projectPath) == true)
+        #expect(graph.projects.count == 2)
+
+        // Nested paths are correct
+        #expect(graph.projects["/tmp/App"] != nil)
+        #expect(graph.projects["/tmp/Modules/ProjectB"] != nil)
+    }
+
     @Test("Maps a project graph with dependencies between targets")
     func testGraphWithDependencies() async throws {
         // Given

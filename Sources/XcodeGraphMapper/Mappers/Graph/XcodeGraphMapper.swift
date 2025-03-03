@@ -320,7 +320,10 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
                     paths.append(refPath)
                 }
             case let .group(group):
-                let nestedPaths = try await extractProjectPaths(from: group.children, srcPath: srcPath)
+                // Set a new src root to account for projects in nested directories
+                let recursiveRoot = srcPath.appending(component: group.location.path)
+
+                let nestedPaths = try await extractProjectPaths(from: group.children, srcPath: recursiveRoot)
                 paths.append(contentsOf: nestedPaths)
             }
         }
