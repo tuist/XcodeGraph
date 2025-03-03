@@ -112,6 +112,57 @@ struct XcodeGraphMapperTests {
             .called(1)
     }
 
+    @Test("Maps a project with custom target product names")
+    func testProjectWithCustomTargetProductNames() async throws {
+        // Given
+        let pbxProj = PBXProj()
+
+        let xcodeProj = try await XcodeProj.test(
+            projectName: "SingleProject",
+            pbxProj: pbxProj
+        )
+
+        let projectMapper = MockPBXProjectMapping()
+        given(projectMapper)
+            .map(
+                xcodeProj: .any,
+                projectNativeTargets: .any
+            )
+            .willReturn(
+                .test()
+            )
+
+        // Add a single target to the project
+        try PBXNativeTarget.test(
+            name: "Alamofire-tvOS",
+            productName: "Alamofire",
+            productType: .application
+        )
+        .add(to: pbxProj)
+        .add(to: pbxProj.rootObject)
+
+        try xcodeProj.write(path: xcodeProj.path!)
+        let mapper = XcodeGraphMapper(
+            projectMapper: projectMapper
+        )
+        // When
+        _ = try await mapper.buildGraph(from: .project(xcodeProj))
+
+        // Then
+        verify(projectMapper)
+            .map(
+                xcodeProj: .any,
+                projectNativeTargets: .matching(
+                    {
+                        $0.keys.map { $0 } == [
+                            "Alamofire",
+                        ]
+                    }
+                )
+            )
+            .called(1)
+    }
+
     @Test("Maps a workspace with multiple projects into a single graph")
     func testWorkspaceGraphMultipleProjects() async throws {
         // Given
