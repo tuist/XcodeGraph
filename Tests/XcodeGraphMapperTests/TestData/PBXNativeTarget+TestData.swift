@@ -12,6 +12,7 @@ extension PBXNativeTarget {
         ],
         dependencies: [PBXTargetDependency] = [],
         productInstallPath: String? = nil,
+        productName: String? = nil,
         productType: PBXProductType = .application,
         product: PBXFileReference? = PBXFileReference.test(
             sourceTree: .buildProductsDir,
@@ -28,7 +29,7 @@ extension PBXNativeTarget {
             buildRules: buildRules,
             dependencies: dependencies,
             productInstallPath: productInstallPath,
-            productName: name,
+            productName: productName ?? name,
             product: product,
             productType: productType
         )
