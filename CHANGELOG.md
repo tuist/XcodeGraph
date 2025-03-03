@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.8] - 2025-03-03
+### Details
+#### Fix
+- Mapping fails when bundle product name differs from target name by @fortmarek in [#146](https://github.com/tuist/XcodeGraph/pull/146)
+
 ## [1.8.7] - 2025-02-26
 ### Details
 #### Chore
@@ -571,6 +576,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.8.8]: https://github.com/tuist/XcodeGraph/compare/1.8.7..1.8.8
 [1.8.7]: https://github.com/tuist/XcodeGraph/compare/1.8.6..1.8.7
 [1.8.6]: https://github.com/tuist/XcodeGraph/compare/1.8.5..1.8.6
 [1.8.5]: https://github.com/tuist/XcodeGraph/compare/1.8.4..1.8.5
