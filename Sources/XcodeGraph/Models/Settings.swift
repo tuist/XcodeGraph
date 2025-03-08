@@ -145,7 +145,6 @@ extension [BuildConfiguration: Configuration?] {
     }
 }
 
-
 #if DEBUG
     extension Configuration {
         public static func test(

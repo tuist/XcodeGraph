@@ -75,8 +75,6 @@ struct XCConfigurationMapperTests {
         #expect(releaseConfig?.settings["PRODUCT_BUNDLE_IDENTIFIER"] == "com.example.release")
     }
 
-
-
     @Test("Resolves XCConfig file paths correctly")
     func testXCConfigPathResolution() async throws {
         // Given

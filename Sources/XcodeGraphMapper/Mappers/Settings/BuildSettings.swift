@@ -16,7 +16,6 @@ enum BuildSettingKey: String {
     case visionOSDeploymentTarget = "VISIONOS_DEPLOYMENT_TARGET"
 }
 
-
 extension BuildSettings {
     subscript(_ key: BuildSettingKey) -> BuildSetting? {
         self[key.rawValue]

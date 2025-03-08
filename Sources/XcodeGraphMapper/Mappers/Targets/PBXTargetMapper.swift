@@ -199,7 +199,6 @@ struct PBXTargetMapper: PBXTargetMapping {
         let mergedBinaryType = try pbxTarget.mergedBinaryType()
         let onDemandResourcesTags = try pbxTarget.onDemandResourcesTags()
 
-
         // Dependencies
         let projectNativeTargets = try pbxTarget.dependencies.compactMap {
             try dependencyMapper.map($0, xcodeProj: xcodeProj)
