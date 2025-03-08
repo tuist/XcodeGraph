@@ -69,70 +69,6 @@ struct PBXTargetMapperTests: Sendable {
         #expect(mapped.bundleId == "Unknown")
     }
 
-    @Test("Maps a target with environment variables")
-    func testMapTargetWithEnvironmentVariables() async throws {
-        // Given
-        let xcodeProj = try await XcodeProj.test()
-        let target = createTarget(
-            name: "App",
-            xcodeProj: xcodeProj,
-            productType: .application,
-            buildSettings: [
-                "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "ENVIRONMENT_VARIABLES": ["TEST_VAR": "test_value"],
-            ]
-        )
-        let mapper = PBXTargetMapper()
-
-        // When
-        let mapped = try #require(
-            try await mapper.map(
-                pbxTarget: target,
-                xcodeProj: xcodeProj,
-                projectNativeTargets: [:],
-                packages: []
-            )
-        )
-
-        // Then
-        #expect(mapped.environmentVariables["TEST_VAR"]?.value == "test_value")
-        #expect(mapped.environmentVariables["TEST_VAR"]?.isEnabled == true)
-    }
-
-    @Test("Maps a target with launch arguments")
-    func testMapTargetWithLaunchArguments() async throws {
-        // Given
-        let xcodeProj = try await XcodeProj.test()
-
-        let target = createTarget(
-            name: "App",
-            xcodeProj: xcodeProj,
-            productType: .application,
-            buildSettings: [
-                "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "LAUNCH_ARGUMENTS": ["-debug", "--verbose"],
-            ]
-        )
-        let mapper = PBXTargetMapper()
-
-        // When
-        let mapped = try #require(
-            try await mapper.map(
-                pbxTarget: target,
-                xcodeProj: xcodeProj,
-                projectNativeTargets: [:],
-                packages: []
-            )
-        )
-
-        // Then
-        let expected = [
-            LaunchArgument(name: "-debug", isEnabled: true),
-            LaunchArgument(name: "--verbose", isEnabled: true),
-        ]
-        #expect(mapped.launchArguments == expected)
-    }
-
     @Test("Maps a target with source files")
     func testMapTargetWithSourceFiles() async throws {
         // Given
@@ -457,7 +393,7 @@ struct PBXTargetMapperTests: Sendable {
             productType: .application,
             buildSettings: [
                 "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "INFOPLIST_FILE": relativePath.pathString,
+                "INFOPLIST_FILE": .string(relativePath.pathString),
             ]
         )
 
@@ -513,7 +449,7 @@ struct PBXTargetMapperTests: Sendable {
         xcodeProj: XcodeProj,
         productType: PBXProductType,
         buildPhases: [PBXBuildPhase] = [],
-        buildSettings: [String: Any] = [:],
+        buildSettings: [String: BuildSetting] = [:],
         dependencies: [PBXTargetDependency] = []
     ) -> PBXNativeTarget {
         let debugConfig = XCBuildConfiguration(

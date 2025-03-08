@@ -75,25 +75,7 @@ struct XCConfigurationMapperTests {
         #expect(releaseConfig?.settings["PRODUCT_BUNDLE_IDENTIFIER"] == "com.example.release")
     }
 
-    @Test("Coerces non-string values to strings in build settings")
-    func testCoercionOfNonStringValues() async throws {
-        // Given
-        let pbxProj = PBXProj()
-        let config: XCBuildConfiguration = .testDebug(
-            buildSettings: ["SOME_NUMBER": 42, "A_BOOL": true]
-        ).add(to: pbxProj)
-        let configList = XCConfigurationList.test(buildConfigurations: [config]).add(to: pbxProj)
-        let xcodeProj = try await XcodeProj.test(configurationList: configList)
 
-        // When
-        let settings = try mapper.map(xcodeProj: xcodeProj, configurationList: configList)
-
-        // Then
-        let debugKey = try #require(settings.configurations.keys.first { $0.name == "Debug" })
-        let debugConfig = try #require(settings.configurations[debugKey])
-
-        #expect(debugConfig?.settings["SOME_NUMBER"] == "42")
-    }
 
     @Test("Resolves XCConfig file paths correctly")
     func testXCConfigPathResolution() async throws {

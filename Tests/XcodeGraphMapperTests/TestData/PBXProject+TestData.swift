@@ -18,9 +18,9 @@ extension PBXProject {
         ],
         projectRoots: [String] = [""],
         targets: [PBXTarget] = [],
-        attributes: [String: Any] = MockDefaults.defaultProjectAttributes,
+        attributes: [String: ProjectAttribute] = MockDefaults.defaultProjectAttributes,
         packageReferences: [XCRemoteSwiftPackageReference] = [],
-        targetAttributes: [PBXTarget: [String: Any]] = [:]
+        targetAttributes: [PBXTarget: [String: ProjectAttribute]] = [:]
     ) -> PBXProject {
         PBXProject(
             name: name,
