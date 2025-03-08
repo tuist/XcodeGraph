@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.10] - 2025-03-08
+### Details
+#### Chore
+- Update dependency p-x9/machokit to from: "0.30.0" by @renovate[bot] in [#148](https://github.com/tuist/XcodeGraph/pull/148)
+
 ## [1.8.9] - 2025-03-04
 ### Details
 #### Fix
@@ -581,6 +586,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.8.10]: https://github.com/tuist/XcodeGraph/compare/1.8.9..1.8.10
 [1.8.9]: https://github.com/tuist/XcodeGraph/compare/1.8.8..1.8.9
 [1.8.8]: https://github.com/tuist/XcodeGraph/compare/1.8.7..1.8.8
 [1.8.7]: https://github.com/tuist/XcodeGraph/compare/1.8.6..1.8.7
