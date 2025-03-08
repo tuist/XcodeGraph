@@ -6,7 +6,7 @@ import XcodeProj
 extension PBXTarget {
     /// Attempts to retrieve the bundle identifier from the target's debug build settings, or throws an error if missing.
     func bundleIdentifier() throws -> String {
-        if let bundleId = debugBuildSettings[BuildSettingKey.productBundleIdentifier.rawValue]?.stringValue {
+        if let bundleId = debugBuildSettings[BuildSettingKey.productBundleIdentifier]?.stringValue {
             return bundleId
         } else {
             return "Unknown"
@@ -19,7 +19,7 @@ extension PBXTarget {
     }
 
     func mergedBinaryType() throws -> MergedBinaryType {
-        let mergedBinaryTypeString = debugBuildSettings[BuildSettingKey.mergedBinaryType.rawValue]?.stringValue
+        let mergedBinaryTypeString = debugBuildSettings[BuildSettingKey.mergedBinaryType]?.stringValue
         return mergedBinaryTypeString == "automatic" ? .automatic : .disabled
     }
 
