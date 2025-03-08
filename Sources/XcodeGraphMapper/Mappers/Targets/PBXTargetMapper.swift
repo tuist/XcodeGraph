@@ -189,10 +189,6 @@ struct PBXTargetMapper: PBXTargetMapping {
         // Build Rules
         let buildRules = try pbxTarget.buildRules.compactMap { try buildRuleMapper.map($0) }
 
-        // Environment & Launch
-//        let environmentVariables = pbxTarget.extractEnvironmentVariables()
-//        let launchArguments = try pbxTarget.launchArguments()
-
         // Files group
         let filesGroup = try extractFilesGroup(from: pbxTarget, xcodeProj: xcodeProj)
 
@@ -200,11 +196,9 @@ struct PBXTargetMapper: PBXTargetMapping {
         let playgrounds = try extractPlaygrounds(from: pbxTarget, xcodeProj: xcodeProj)
 
         // Misc
-//        let prune = try pbxTarget.prune()
         let mergedBinaryType = try pbxTarget.mergedBinaryType()
-//        let mergeable = try pbxTarget.mergeable()
         let onDemandResourcesTags = try pbxTarget.onDemandResourcesTags()
-//        let metadata = try pbxTarget.metadata()
+
 
         // Dependencies
         let projectNativeTargets = try pbxTarget.dependencies.compactMap {
