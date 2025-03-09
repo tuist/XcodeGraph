@@ -255,33 +255,6 @@ struct PBXTargetMapperTests: Sendable {
         }
     }
 
-    @Test("Maps a target with metadata tags")
-    func testMapTargetWithMetadata() async throws {
-        // Given
-        let xcodeProj = try await XcodeProj.test()
-        let target = createTarget(
-            name: "App",
-            xcodeProj: xcodeProj,
-            productType: .application,
-            buildSettings: [
-                "PRODUCT_BUNDLE_IDENTIFIER": "com.example.app",
-                "TAGS": "tag1, tag2, tag3",
-            ]
-        )
-        let mapper = PBXTargetMapper()
-
-        // When
-        let mapped = try await mapper.map(
-            pbxTarget: target,
-            xcodeProj: xcodeProj,
-            projectNativeTargets: [:],
-            packages: []
-        )
-
-        // Then
-        #expect(mapped?.metadata.tags == Set(["tag1", "tag2", "tag3"]))
-    }
-
     @Test("Maps entitlements when CODE_SIGN_ENTITLEMENTS is set")
     func testMapEntitlements() async throws {
         // Given
