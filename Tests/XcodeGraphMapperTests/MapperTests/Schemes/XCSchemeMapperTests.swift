@@ -4,8 +4,8 @@ import Path
 import Testing
 import XcodeGraph
 
-@testable import XcodeGraphMapper
-@testable import XcodeProj
+@testable @preconcurrency import XcodeGraphMapper
+@testable @preconcurrency import XcodeProj
 
 @Suite
 struct XCSchemeMapperTests: Sendable {
