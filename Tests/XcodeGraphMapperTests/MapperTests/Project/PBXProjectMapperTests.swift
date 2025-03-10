@@ -34,7 +34,7 @@ struct PBXProjectMapperTests: Sendable {
 
         let mapper = PBXProjectMapper()
 
-        let customAttributes: [String: Any] = [
+        let customAttributes: [String: ProjectAttribute] = [
             "ORGANIZATIONNAME": "Example Org",
             "CLASSPREFIX": "EX",
             "LastUpgradeCheck": "1500",

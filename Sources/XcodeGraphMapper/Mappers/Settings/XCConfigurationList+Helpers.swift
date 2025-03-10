@@ -10,7 +10,7 @@ extension XCConfigurationList {
         let configurationMatcher = ConfigurationMatcher()
         var results = [BuildConfiguration: String]()
         for config in buildConfigurations {
-            if let value = config.buildSettings.string(for: key) {
+            if let value = config.buildSettings[key]?.stringValue {
                 let variant = configurationMatcher.variant(for: config.name)
                 let buildConfig = BuildConfiguration(name: config.name, variant: variant)
                 results[buildConfig] = value
@@ -29,7 +29,7 @@ extension XCConfigurationList {
 
         for key in keys {
             for config in buildConfigurations {
-                if let value = config.buildSettings.string(for: key) {
+                if let value = config.buildSettings[key]?.stringValue {
                     results[key] = value
                     break // Once found, move to the next key
                 }
