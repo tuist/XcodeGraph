@@ -80,7 +80,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
-        .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "8.27.5")),
+        .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "8.27.6")),
         .package(url: "https://github.com/tuist/Command.git", from: "0.13.0"),
         .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.7.7")),
         .package(url: "https://github.com/apple/swift-service-context", .upToNextMajor(from: "1.2.0")),
