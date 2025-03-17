@@ -13,6 +13,7 @@ public struct XCFrameworkMetadata: Equatable {
     public var swiftModules: [AbsolutePath]
     /// All `.modulemap` files present in the `.xcframework`
     public var moduleMaps: [AbsolutePath]
+    public var expectedSignature: XCFrameworkSignature?
 
     public init(
         path: AbsolutePath,
@@ -22,7 +23,8 @@ public struct XCFrameworkMetadata: Equatable {
         status: LinkingStatus,
         macroPath: AbsolutePath?,
         swiftModules: [AbsolutePath] = [],
-        moduleMaps: [AbsolutePath] = []
+        moduleMaps: [AbsolutePath] = [],
+        expectedSignature: XCFrameworkSignature? = nil
     ) {
         self.path = path
         self.infoPlist = infoPlist
@@ -32,6 +34,7 @@ public struct XCFrameworkMetadata: Equatable {
         self.macroPath = macroPath
         self.swiftModules = swiftModules
         self.moduleMaps = moduleMaps
+        self.expectedSignature = expectedSignature
     }
 }
 
@@ -46,7 +49,8 @@ public struct XCFrameworkMetadata: Equatable {
             status: LinkingStatus = .required,
             macroPath: AbsolutePath? = nil,
             swiftModules: [AbsolutePath] = [],
-            moduleMaps: [AbsolutePath] = []
+            moduleMaps: [AbsolutePath] = [],
+            expectedSignature: XCFrameworkSignature? = nil
         ) -> XCFrameworkMetadata {
             XCFrameworkMetadata(
                 path: path,
@@ -56,7 +60,8 @@ public struct XCFrameworkMetadata: Equatable {
                 status: status,
                 macroPath: macroPath,
                 swiftModules: swiftModules,
-                moduleMaps: moduleMaps
+                moduleMaps: moduleMaps,
+                expectedSignature: expectedSignature
             )
         }
     }
