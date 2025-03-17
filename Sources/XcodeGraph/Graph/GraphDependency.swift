@@ -10,6 +10,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         public let status: LinkingStatus
         public let swiftModules: [AbsolutePath]
         public let moduleMaps: [AbsolutePath]
+        public let expectedSignature: String?
 
         public init(
             path: AbsolutePath,
@@ -19,7 +20,8 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             status: LinkingStatus,
             macroPath _: AbsolutePath?,
             swiftModules: [AbsolutePath],
-            moduleMaps: [AbsolutePath]
+            moduleMaps: [AbsolutePath],
+            expectedSignature: String? = nil
         ) {
             self.path = path
             self.infoPlist = infoPlist
@@ -28,6 +30,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             self.status = status
             self.swiftModules = swiftModules
             self.moduleMaps = moduleMaps
+            self.expectedSignature = expectedSignature
         }
 
         public var description: String {
