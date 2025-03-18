@@ -204,7 +204,11 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         }
     }
 
-    @available(*, deprecated, renamed: "validatedSources()")
+    @available(*, deprecated, message: """
+    Whether a target supports sources or not is not as binary decision as we originally assumed and codified in this getter.
+    Because it's something that depends on other variables, we decided to pull this logic out of tuist/XcodeGraph into tuist/tuist.
+    If you are interested in having a similar logic in your XcodeGraph-dependent project, you might want to check out tuist/tuist.
+    """)
     /// Returns true if the target supports having sources.
     public var supportsSources: Bool {
         switch product {
@@ -215,27 +219,6 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
             return isExclusiveTo(.macOS)
         default:
             return true
-        }
-    }
-
-    /// This function validates the sources against other target metadata returning which sources from the list
-    /// are valid and invalid.
-    /// - Returns: A list of valid and invalid sources.
-    public func validatedSources() -> (valid: [SourceFile], invalid: [SourceFile]) {
-        switch product {
-        case .stickerPackExtension, .watch2App:
-            return (valid: [], invalid: sources)
-        case .bundle:
-            if isExclusiveTo(.macOS) {
-                return (valid: sources, invalid: [])
-            } else {
-                return (
-                    valid: sources.filter { $0.path.extension == "metal" },
-                    invalid: []
-                )
-            }
-        default:
-            return (valid: sources, invalid: [])
         }
     }
 
