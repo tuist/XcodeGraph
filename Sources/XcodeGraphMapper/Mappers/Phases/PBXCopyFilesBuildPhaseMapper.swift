@@ -59,7 +59,7 @@ struct PBXCopyFilesBuildPhaseMapper: PBXCopyFilesBuildPhaseMapping {
                 }
 
                 let absolutePath = try AbsolutePath(validating: pathString)
-                let attributes = buildFile.settings?.stringArray(for: .attributes)
+                let attributes = buildFile.attributes
                 let codeSignOnCopy = attributes?.contains(BuildFileAttribute.codeSignOnCopy.rawValue) ?? false
 
                 return .file(path: absolutePath, condition: nil, codeSignOnCopy: codeSignOnCopy)

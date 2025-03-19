@@ -4,17 +4,6 @@ import XcodeGraph
 import XcodeProj
 
 extension PBXTarget {
-    enum EnvironmentExtractor {
-        static func extract(from buildSettings: BuildSettings) -> [String: EnvironmentVariable] {
-            guard let envVars = buildSettings.stringDict(for: .environmentVariables) else {
-                return [:]
-            }
-            return envVars.reduce(into: [:]) { result, pair in
-                result[pair.key] = EnvironmentVariable(value: pair.value, isEnabled: true)
-            }
-        }
-    }
-
     /// Retrieves the path to the Info.plist file from the target's build settings.
     ///
     /// - Returns: The `INFOPLIST_FILE` value if present, otherwise `nil`.
@@ -70,18 +59,8 @@ extension PBXTarget {
         )
     }
 
-    /// Extracts environment variables from all build configurations of the target.
-    ///
-    /// If multiple configurations define the same environment variable, the last processed configuration takes precedence.
-    func extractEnvironmentVariables() -> [String: EnvironmentVariable] {
-        buildConfigurationList?.buildConfigurations.reduce(into: [:]) { result, config in
-            result.merge(EnvironmentExtractor.extract(from: config.buildSettings)) { current, _ in current
-            }
-        } ?? [:]
-    }
-
     /// Returns the build settings from the "Debug" build configuration, or an empty dictionary if not present.
-    var debugBuildSettings: [String: Any] {
+    var debugBuildSettings: [String: BuildSetting] {
         buildConfigurationList?.buildConfigurations.first(where: { $0.name == "Debug" })?.buildSettings
             ?? [:]
     }
