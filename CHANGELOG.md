@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.18] - 2025-03-19
+### Details
+#### Refactor
+- Migrate to xcodeproj 9 by @waltflanagan in [#147](https://github.com/tuist/XcodeGraph/pull/147)
+
 ## [1.8.17] - 2025-03-18
 ### Details
 #### Chore
@@ -538,8 +543,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Chore
 - Sendability conformance by @waltflanagan in [#44](https://github.com/tuist/XcodeGraph/pull/44)
 
-## New Contributors
-* @waltflanagan made their first contribution
 ## [0.11.4] - 2024-09-04
 ### Details
 #### Chore
@@ -621,6 +624,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.8.18]: https://github.com/tuist/XcodeGraph/compare/1.8.17..1.8.18
 [1.8.17]: https://github.com/tuist/XcodeGraph/compare/1.8.16..1.8.17
 [1.8.16]: https://github.com/tuist/XcodeGraph/compare/1.8.15..1.8.16
 [1.8.15]: https://github.com/tuist/XcodeGraph/compare/1.8.14..1.8.15
