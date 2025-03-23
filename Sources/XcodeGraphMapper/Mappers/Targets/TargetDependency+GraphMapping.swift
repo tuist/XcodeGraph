@@ -51,8 +51,12 @@ extension TargetDependency {
                 status: status
             )
 
-        case let .xcframework(path, originalSignature, status, _):
-          let metadata = try await xcframeworkMetadataProvider.loadMetadata(at: path, expectedSignature: originalSignature.expectedSignature(), status: status)
+        case let .xcframework(path, expectedSignature, status, _):
+          let metadata = try await xcframeworkMetadataProvider.loadMetadata(
+            at: path,
+            expectedSignature: expectedSignature?.expectedSignature(),
+            status: status
+          )
             return .xcframework(
                 .init(
                     path: path,

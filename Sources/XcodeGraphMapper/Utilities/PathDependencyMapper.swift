@@ -8,16 +8,16 @@ protocol PathDependencyMapping {
     ///
     /// - Parameters:
     ///   - path: The file path to map.
-    ///   - originalSignature: The expected signature if `path` is of a signed XCFramework, `nil` otherwise.
+    ///   - expectedSignature: The expected signature if `path` is of a signed XCFramework, `nil` otherwise.
     ///   - condition: An optional platform condition (e.g., iOS only).
     /// - Returns: The corresponding `TargetDependency`, if the path extension is recognized.
     /// - Throws: `PathDependencyError.invalidExtension` if the file extension is not supported.
-  func map(path: AbsolutePath, originalSignature:XCFrameworkOriginalSignatureType?, condition: PlatformCondition?) throws -> TargetDependency
+  func map(path: AbsolutePath, expectedSignature:XCFrameworkSignature?, condition: PlatformCondition?) throws -> TargetDependency
 }
 
 /// A mapper that converts file paths (like `.framework`, `.xcframework`, or libraries) to `TargetDependency` models.
 struct PathDependencyMapper: PathDependencyMapping {
-  func map(path: AbsolutePath, originalSignature: XCFrameworkOriginalSignatureType? = nil, condition: PlatformCondition?) throws -> TargetDependency {
+  func map(path: AbsolutePath, expectedSignature: XCFrameworkSignature? = nil, condition: PlatformCondition?) throws -> TargetDependency {
         let status: LinkingStatus = .required
 
         switch path.fileExtension {
@@ -25,7 +25,7 @@ struct PathDependencyMapper: PathDependencyMapping {
             return .framework(path: path, status: status, condition: condition)
         case .xcframework:
           // TODO: throw some error? log warning? this is very general, but from what I can tell it's only called from a non-xcframework contexts
-          return .xcframework(path: path, originalSignature: originalSignature ?? .notSigned, status: status, condition: condition)
+          return .xcframework(path: path, expectedSignature: expectedSignature ?? .notSigned, status: status, condition: condition)
         case .dynamicLibrary, .textBasedDynamicLibrary, .staticLibrary:
             return .library(
                 path: path,

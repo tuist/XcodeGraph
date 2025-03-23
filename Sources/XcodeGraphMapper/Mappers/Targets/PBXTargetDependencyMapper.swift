@@ -108,14 +108,14 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
             if let fileRef = object as? PBXFileReference {
                 return try mapFileDependency(
                   pathString: fileRef.path,
-                  originalSignature: nil,
+                  expectedSignature: nil,
                   condition: condition,
                   xcodeProj: xcodeProj
                 )
             } else if let refProxy = object as? PBXReferenceProxy {
                 return try mapFileDependency(
                     pathString: refProxy.path,
-                    originalSignature: nil,
+                    expectedSignature: nil,
                     condition: condition,
                     xcodeProj: xcodeProj
                 )
@@ -132,14 +132,14 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
     /// Maps file-based dependencies (e.g., frameworks, libraries) into `TargetDependency` models.
     /// - Parameters:
     ///   - pathString: The path string for the file-based dependency (relative or absolute).
-    ///   - originalSignature: The expected signature if `path` is of a signed XCFramework, `nil` otherwise.
+    ///   - expectedSignature: The expected signature if `path` is of a signed XCFramework, `nil` otherwise.
     ///   - condition: An optional platform condition.
     ///   - xcodeProj: The Xcode project reference for resolving the directory structure.
     /// - Returns: A `TargetDependency` reflecting the file’s extension (framework, library, etc.).
     /// - Throws: If the path is missing or invalid.
     private func mapFileDependency(
         pathString: String?,
-        originalSignature:XCFrameworkOriginalSignatureType?,
+        expectedSignature:XCFrameworkSignature?,
         condition: PlatformCondition?,
         xcodeProj: XcodeProj
     ) throws -> TargetDependency {
@@ -147,7 +147,7 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
             TargetDependencyMappingError.missingFileReference("Path string is nil in file dependency.")
         )
         let path = xcodeProj.srcPath.appending(try RelativePath(validating: pathString))
-      return try pathMapper.map(path: path, originalSignature:originalSignature, condition: condition)
+      return try pathMapper.map(path: path, expectedSignature:expectedSignature, condition: condition)
     }
 }
 
