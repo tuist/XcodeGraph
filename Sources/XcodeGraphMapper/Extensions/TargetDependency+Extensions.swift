@@ -14,7 +14,7 @@ extension TargetDependency {
             return product
         case let .framework(path, _, _):
             return path.basenameWithoutExt
-        case let .xcframework(path, _, _):
+        case let .xcframework(path, _, _, _):
             return path.basenameWithoutExt
         case let .library(path, _, _, _):
             return path.basenameWithoutExt
