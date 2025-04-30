@@ -24,7 +24,6 @@ public enum XCFrameworkSignature: Equatable, Hashable, Codable, Sendable {
     }
 }
 
-
 public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
     public enum PackageType: String, Equatable, Hashable, Codable, Sendable {
         case runtime
@@ -36,7 +35,12 @@ public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
     case target(name: String, status: LinkingStatus = .required, condition: PlatformCondition? = nil)
     case project(target: String, path: AbsolutePath, status: LinkingStatus = .required, condition: PlatformCondition? = nil)
     case framework(path: AbsolutePath, status: LinkingStatus, condition: PlatformCondition? = nil)
-    case xcframework(path: AbsolutePath, expectedSignature: XCFrameworkSignature?, status: LinkingStatus, condition: PlatformCondition? = nil)
+    case xcframework(
+        path: AbsolutePath,
+        expectedSignature: XCFrameworkSignature?,
+        status: LinkingStatus,
+        condition: PlatformCondition? = nil
+    )
     case library(
         path: AbsolutePath,
         publicHeaders: AbsolutePath,
@@ -76,7 +80,7 @@ public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
         case .framework(path: let path, status: let status, condition: _):
             return .framework(path: path, status: status, condition: condition)
         case .xcframework(path: let path, expectedSignature: let expectedSignature, status: let status, condition: _):
-          return .xcframework(path: path, expectedSignature:expectedSignature, status: status, condition: condition)
+            return .xcframework(path: path, expectedSignature: expectedSignature, status: status, condition: condition)
         case .library(path: let path, publicHeaders: let headers, swiftModuleMap: let moduleMap, condition: _):
             return .library(path: path, publicHeaders: headers, swiftModuleMap: moduleMap, condition: condition)
         case .package(product: let product, type: let type, condition: _):

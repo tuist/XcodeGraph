@@ -12,19 +12,29 @@ protocol PathDependencyMapping {
     ///   - condition: An optional platform condition (e.g., iOS only).
     /// - Returns: The corresponding `TargetDependency`, if the path extension is recognized.
     /// - Throws: `PathDependencyError.invalidExtension` if the file extension is not supported.
-  func map(path: AbsolutePath, expectedSignature:XCFrameworkSignature?, condition: PlatformCondition?) throws -> TargetDependency
+    func map(path: AbsolutePath, expectedSignature: XCFrameworkSignature?, condition: PlatformCondition?) throws
+        -> TargetDependency
 }
 
 /// A mapper that converts file paths (like `.framework`, `.xcframework`, or libraries) to `TargetDependency` models.
 struct PathDependencyMapper: PathDependencyMapping {
-  func map(path: AbsolutePath, expectedSignature: XCFrameworkSignature? = nil, condition: PlatformCondition?) throws -> TargetDependency {
+    func map(
+        path: AbsolutePath,
+        expectedSignature: XCFrameworkSignature? = nil,
+        condition: PlatformCondition?
+    ) throws -> TargetDependency {
         let status: LinkingStatus = .required
 
         switch path.fileExtension {
         case .framework:
             return .framework(path: path, status: status, condition: condition)
         case .xcframework:
-          return .xcframework(path: path, expectedSignature: expectedSignature ?? .unsigned, status: status, condition: condition)
+            return .xcframework(
+                path: path,
+                expectedSignature: expectedSignature ?? .unsigned,
+                status: status,
+                condition: condition
+            )
         case .dynamicLibrary, .textBasedDynamicLibrary, .staticLibrary:
             return .library(
                 path: path,
