@@ -50,7 +50,12 @@ final class TargetDependencyTests: XCTestCase {
             .sdk(name: "", status: .required, condition: expected),
             .package(product: "", type: .plugin, condition: expected),
             .target(name: "", condition: expected),
-            .xcframework(path: try! AbsolutePath(validating: "/"), status: .required, condition: expected),
+            .xcframework(
+                path: try! AbsolutePath(validating: "/"),
+                expectedSignature: nil,
+                status: .required,
+                condition: expected
+            ),
             .project(target: "", path: try! AbsolutePath(validating: "/"), condition: expected),
         ]
 

@@ -97,7 +97,7 @@ struct XCFrameworkMetadataProviderTests {
         )
 
         // When
-        let metadata = try await subject.loadMetadata(at: frameworkPath, status: .required)
+        let metadata = try await subject.loadMetadata(at: frameworkPath, expectedSignature: nil, status: .required)
 
         // Then
         let expectedInfoPlist = XCFrameworkInfoPlist(libraries: [
@@ -161,7 +161,7 @@ struct XCFrameworkMetadataProviderTests {
         )
 
         // When
-        let metadata = try await subject.loadMetadata(at: frameworkPath, status: .required)
+        let metadata = try await subject.loadMetadata(at: frameworkPath, expectedSignature: nil, status: .required)
 
         // Then
         let expectedInfoPlist = XCFrameworkInfoPlist(libraries: [
@@ -243,7 +243,7 @@ struct XCFrameworkMetadataProviderTests {
         )
 
         // When
-        let metadata = try await subject.loadMetadata(at: frameworkPath, status: .required)
+        let metadata = try await subject.loadMetadata(at: frameworkPath, expectedSignature: nil, status: .required)
 
         // Then
         #expect(metadata.infoPlist.libraries.count == 2, "Libraries count mismatch")
