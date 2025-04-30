@@ -83,7 +83,12 @@ struct TargetDependencyExtensionsTests {
     func testTargetGraphDependency_XCFramework() async throws {
         // Given
         let xcframeworkPath = sourceDirectory.appending(component: "MyFramework.xcframework")
-        let dependency = TargetDependency.xcframework(path: xcframeworkPath, status: .required, condition: nil)
+        let dependency = TargetDependency.xcframework(
+            path: xcframeworkPath,
+            expectedSignature: nil,
+            status: .required,
+            condition: nil
+        )
 
         // When
         let graphDep = try await dependency.graphDependency(
