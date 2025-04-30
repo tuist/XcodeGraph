@@ -54,7 +54,7 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
             case .nativeTarget:
                 return try mapNativeTargetProxy(targetProxy, condition: condition, xcodeProj: xcodeProj)
             case .reference:
-              return try mapReferenceProxy(targetProxy, condition: condition, xcodeProj: xcodeProj)
+                return try mapReferenceProxy(targetProxy, condition: condition, xcodeProj: xcodeProj)
             case .other, .none:
                 throw TargetDependencyMappingError.unsupportedProxyType(dependency.name)
             }
@@ -107,10 +107,10 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
             // File-based dependency
             if let fileRef = object as? PBXFileReference {
                 return try mapFileDependency(
-                  pathString: fileRef.path,
-                  expectedSignature: nil,
-                  condition: condition,
-                  xcodeProj: xcodeProj
+                    pathString: fileRef.path,
+                    expectedSignature: nil,
+                    condition: condition,
+                    xcodeProj: xcodeProj
                 )
             } else if let refProxy = object as? PBXReferenceProxy {
                 return try mapFileDependency(
@@ -129,6 +129,7 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
             )
         }
     }
+
     /// Maps file-based dependencies (e.g., frameworks, libraries) into `TargetDependency` models.
     /// - Parameters:
     ///   - pathString: The path string for the file-based dependency (relative or absolute).
@@ -139,7 +140,7 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
     /// - Throws: If the path is missing or invalid.
     private func mapFileDependency(
         pathString: String?,
-        expectedSignature:XCFrameworkSignature?,
+        expectedSignature: XCFrameworkSignature?,
         condition: PlatformCondition?,
         xcodeProj: XcodeProj
     ) throws -> TargetDependency {
@@ -147,7 +148,7 @@ struct PBXTargetDependencyMapper: PBXTargetDependencyMapping {
             TargetDependencyMappingError.missingFileReference("Path string is nil in file dependency.")
         )
         let path = xcodeProj.srcPath.appending(try RelativePath(validating: pathString))
-      return try pathMapper.map(path: path, expectedSignature:expectedSignature, condition: condition)
+        return try pathMapper.map(path: path, expectedSignature: expectedSignature, condition: condition)
     }
 }
 

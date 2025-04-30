@@ -36,11 +36,11 @@ public struct DependenciesGraph: Equatable, Codable, Sendable {
             expectedSignature: XCFrameworkSignature = .unsigned,
             status: LinkingStatus = .required
         ) -> DependenciesGraph {
-          let externalDependencies = [name: [TargetDependency.xcframework(
-            path: path,
-            expectedSignature: expectedSignature,
-            status: status
-          )]]
+            let externalDependencies = [name: [TargetDependency.xcframework(
+                path: path,
+                expectedSignature: expectedSignature,
+                status: status
+            )]]
 
             return .init(
                 externalDependencies: externalDependencies,

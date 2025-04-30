@@ -51,7 +51,7 @@ public protocol XCFrameworkMetadataProviding: PrecompiledMetadataProviding {
 
     /// Loads all the metadata associated with an XCFramework at the specified path, and expected signature if signed
     /// - Note: This performs various shell calls and disk operations
-  func loadMetadata(at path: AbsolutePath, expectedSignature: XCFrameworkSignature?, status: LinkingStatus) async throws
+    func loadMetadata(at path: AbsolutePath, expectedSignature: XCFrameworkSignature?, status: LinkingStatus) async throws
         -> XCFrameworkMetadata
 
     /// Returns the info.plist of the xcframework at the given path.

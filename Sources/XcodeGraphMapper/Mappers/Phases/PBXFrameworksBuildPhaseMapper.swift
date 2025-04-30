@@ -97,7 +97,7 @@ struct PBXFrameworksBuildPhaseMapper: PBXFrameworksBuildPhaseMapping {
             .throwing(PBXFrameworksBuildPhaseMappingError.missingFilePath(name: fileRef.name))
 
         let absolutePath = try AbsolutePath(validating: filePathString)
-      return try pathMapper.map(path: absolutePath, expectedSignature: nil, condition: nil)
+        return try pathMapper.map(path: absolutePath, expectedSignature: nil, condition: nil)
     }
 }
 
