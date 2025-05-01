@@ -103,6 +103,9 @@ public enum InfoPlist: Equatable, Codable, Sendable {
     // User defined dictionary of keys/values for an info.plist file.
     case dictionary([String: Plist.Value], configuration: BuildConfiguration? = nil)
 
+    // A user defined xcconfig variable map to .entitlements file
+    case variable(String, configuration: BuildConfiguration? = nil)
+
     // User defined dictionary of keys/values for an info.plist file extending the default set of keys/values
     // for the target type.
     case extendingDefault(with: [String: Plist.Value], configuration: BuildConfiguration? = nil)
@@ -123,7 +126,12 @@ public enum InfoPlist: Equatable, Codable, Sendable {
 
 extension InfoPlist: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        self = .file(path: try! AbsolutePath(validating: value)) // swiftlint:disable:this force_try
+        let regexPattern = #"^\$\((.+)\)$|^\$\{(.+)\}$"#
+        if let _ = value.range(of: regexPattern, options: .regularExpression) {
+            self = .variable(value)
+        } else {
+            self = .file(path: try! AbsolutePath(validating: value)) // swiftlint:disable:this force_try
+        }
     }
 }
 
