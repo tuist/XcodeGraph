@@ -218,7 +218,8 @@ struct XCSchemeMapper: SchemeMapping {
             filePath: nil,
             arguments: arguments,
             options: RunActionOptions(),
-            diagnosticsOptions: diagnosticsOptions
+            diagnosticsOptions: diagnosticsOptions,
+            appClipInvocationURLString: action.appClipInvocationURLString
         )
     }
 

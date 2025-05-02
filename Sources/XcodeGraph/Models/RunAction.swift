@@ -17,6 +17,7 @@ public struct RunAction: Equatable, Codable, Sendable {
     public let metalOptions: MetalOptions?
     public let expandVariableFromTarget: TargetReference?
     public let launchStyle: LaunchStyle
+    public let appClipInvocationURLString: String?
 
     // MARK: - Init
 
@@ -33,7 +34,8 @@ public struct RunAction: Equatable, Codable, Sendable {
         diagnosticsOptions: SchemeDiagnosticsOptions,
         metalOptions: MetalOptions? = nil,
         expandVariableFromTarget: TargetReference? = nil,
-        launchStyle: LaunchStyle = .automatically
+        launchStyle: LaunchStyle = .automatically,
+        appClipInvocationURLString: String?
     ) {
         self.configurationName = configurationName
         self.attachDebugger = attachDebugger
@@ -48,6 +50,7 @@ public struct RunAction: Equatable, Codable, Sendable {
         self.metalOptions = metalOptions
         self.expandVariableFromTarget = expandVariableFromTarget
         self.launchStyle = launchStyle
+        self.appClipInvocationURLString = appClipInvocationURLString
     }
 }
 
@@ -72,7 +75,8 @@ public struct RunAction: Equatable, Codable, Sendable {
                 apiValidation: true
             ),
             expandVariableFromTarget: TargetReference? = nil,
-            launchStyle: LaunchStyle = .automatically
+            launchStyle: LaunchStyle = .automatically,
+            appClipInvocationURLString: String? = nil
         ) -> RunAction {
             RunAction(
                 configurationName: configurationName,
@@ -87,7 +91,8 @@ public struct RunAction: Equatable, Codable, Sendable {
                 diagnosticsOptions: diagnosticsOptions,
                 metalOptions: metalOptions,
                 expandVariableFromTarget: expandVariableFromTarget,
-                launchStyle: launchStyle
+                launchStyle: launchStyle,
+                appClipInvocationURLString: appClipInvocationURLString
             )
         }
     }
