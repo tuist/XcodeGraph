@@ -82,7 +82,7 @@ let package = Package(
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
         .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "9.3.0")),
         .package(url: "https://github.com/tuist/Command.git", from: "0.13.0"),
-        .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.7.18")),
+        .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.8.0")),
         .package(url: "https://github.com/apple/swift-service-context", .upToNextMajor(from: "1.2.0")),
         .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.3.2")),
         .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.32.0")),
