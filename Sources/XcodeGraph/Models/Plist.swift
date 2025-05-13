@@ -126,7 +126,7 @@ public enum InfoPlist: Equatable, Codable, Sendable {
 
 extension InfoPlist: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        let regexPattern = #"^\$\((.+)\)$|^\$\{(.+)\}$"#
+        let regexPattern = #"^\$\((.+)\)|^\$\{(.+)\}"#
         if let _ = value.range(of: regexPattern, options: .regularExpression) {
             self = .variable(value)
         } else {
