@@ -84,6 +84,7 @@ public struct Settings: Equatable, Codable, Sendable {
     public let baseDebug: SettingsDictionary
     public let configurations: [BuildConfiguration: Configuration?]
     public let defaultSettings: DefaultSettings
+    public let defaultConfiguration: String?
 
     // MARK: - Init
 
@@ -91,12 +92,14 @@ public struct Settings: Equatable, Codable, Sendable {
         base: SettingsDictionary = [:],
         baseDebug: SettingsDictionary = [:],
         configurations: [BuildConfiguration: Configuration?],
-        defaultSettings: DefaultSettings = .recommended
+        defaultSettings: DefaultSettings = .recommended,
+        defaultConfiguration: String? = nil
     ) {
         self.base = base
         self.baseDebug = baseDebug
         self.configurations = configurations
         self.defaultSettings = defaultSettings
+        self.defaultConfiguration = defaultConfiguration
     }
 
     public func with(base: SettingsDictionary) -> Settings {
@@ -104,7 +107,8 @@ public struct Settings: Equatable, Codable, Sendable {
             base: base,
             baseDebug: baseDebug,
             configurations: configurations,
-            defaultSettings: defaultSettings
+            defaultSettings: defaultSettings,
+            defaultConfiguration: defaultConfiguration
         )
     }
 }
