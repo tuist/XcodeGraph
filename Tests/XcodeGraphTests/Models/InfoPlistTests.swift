@@ -41,4 +41,14 @@ final class InfoPlistTests: XCTestCase {
         // Then
         XCTAssertEqual(subject.path, try AbsolutePath(validating: "/path/Info.list"))
     }
+
+    func test_expressive_by_string_literal_using_build_variable() {
+        // Given
+        let subject1: InfoPlist = "$(CONFIGURATION)/Info.list"
+        let subject2: InfoPlist = "${CONFIGURATION}/Info.list"
+
+        // Then
+        XCTAssertEqual(subject1, .variable("$(CONFIGURATION)/Info.list", configuration: nil))
+        XCTAssertEqual(subject2, .variable("${CONFIGURATION}/Info.list", configuration: nil))
+    }
 }
