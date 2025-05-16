@@ -59,6 +59,8 @@ extension Project.Options {
             testLanguage: String? = nil,
             testRegion: String? = nil,
             testScreenCaptureFormat: ScreenCaptureFormat? = nil,
+            captureScreenshotsAutomatically: Bool,
+            deleteScreenshotsWhenEachTestSucceeds: Bool,
             runLanguage: String? = nil,
             runRegion: String? = nil
         )
@@ -100,7 +102,7 @@ extension Project.Options {
 extension Project.Options {
     public var targetSchemesGrouping: AutomaticSchemesOptions.TargetSchemesGrouping? {
         switch automaticSchemesOptions {
-        case let .enabled(targetSchemesGrouping, _, _, _, _, _, _, _):
+        case let .enabled(targetSchemesGrouping, _, _, _, _, _, _, _, _, _):
             return targetSchemesGrouping
         case .disabled:
             return nil
@@ -109,7 +111,7 @@ extension Project.Options {
 
     public var codeCoverageEnabled: Bool {
         switch automaticSchemesOptions {
-        case let .enabled(_, codeCoverageEnabled, _, _, _, _, _, _):
+        case let .enabled(_, codeCoverageEnabled, _, _, _, _, _, _, _, _):
             return codeCoverageEnabled
         case .disabled:
             return false
@@ -118,7 +120,7 @@ extension Project.Options {
 
     public var testingOptions: TestingOptions {
         switch automaticSchemesOptions {
-        case let .enabled(_, _, testingOptions, _, _, _, _, _):
+        case let .enabled(_, _, testingOptions, _, _, _, _, _, _, _):
             return testingOptions
         case .disabled:
             return []
@@ -127,7 +129,7 @@ extension Project.Options {
 
     public var testLanguage: String? {
         switch automaticSchemesOptions {
-        case let .enabled(_, _, _, language, _, _, _, _):
+        case let .enabled(_, _, _, language, _, _, _, _, _, _):
             return language
         case .disabled:
             return nil
@@ -136,7 +138,7 @@ extension Project.Options {
 
     public var testRegion: String? {
         switch automaticSchemesOptions {
-        case let .enabled(_, _, _, _, region, _, _, _):
+        case let .enabled(_, _, _, _, region, _, _, _, _, _):
             return region
         case .disabled:
             return nil
@@ -145,16 +147,34 @@ extension Project.Options {
 
     public var testScreenCaptureFormat: ScreenCaptureFormat? {
         switch automaticSchemesOptions {
-        case let .enabled(_, _, _, _, _, testScreenCaptureFormat, _, _):
+        case let .enabled(_, _, _, _, _, testScreenCaptureFormat, _, _, _, _):
             return testScreenCaptureFormat
         case .disabled:
             return nil
         }
     }
 
+    public var captureScreenshotsAutomatically: Bool {
+      switch automaticSchemesOptions {
+      case let .enabled(_, _, _, _, _, _, captureScreenshotsAutomatically, _, _, _):
+        return captureScreenshotsAutomatically
+      case .disabled:
+        return false
+      }
+    }
+
+    public var deleteScreenshotsWhenEachTestSucceeds: Bool {
+      switch automaticSchemesOptions {
+      case let .enabled(_, _, _, _, _, _, _, deleteScreenshotsWhenEachTestSucceeds, _, _):
+        return deleteScreenshotsWhenEachTestSucceeds
+      case .disabled:
+        return false
+      }
+    }
+
     public var runLanguage: String? {
         switch automaticSchemesOptions {
-        case let .enabled(_, _, _, _, _, _, language, _):
+        case let .enabled(_, _, _, _, _, _, _, _, language, _):
             return language
         case .disabled:
             return nil
@@ -163,7 +183,7 @@ extension Project.Options {
 
     public var runRegion: String? {
         switch automaticSchemesOptions {
-        case let .enabled(_, _, _, _, _, _, _, region):
+        case let .enabled(_, _, _, _, _, _, _, _, _, region):
             return region
         case .disabled:
             return nil
