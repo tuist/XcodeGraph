@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.12] - 2025-05-19
+### Details
+#### Chore
+- Update dependency tuist/xcodeproj to from: "9.4.1" by @renovate[bot] in [#197](https://github.com/tuist/XcodeGraph/pull/197)
+
 ## [1.10.11] - 2025-05-16
 ### Details
 #### Chore
@@ -791,6 +796,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.10.12]: https://github.com/tuist/XcodeGraph/compare/1.10.11..1.10.12
 [1.10.11]: https://github.com/tuist/XcodeGraph/compare/1.10.10..1.10.11
 [1.10.10]: https://github.com/tuist/XcodeGraph/compare/1.10.9..1.10.10
 [1.10.9]: https://github.com/tuist/XcodeGraph/compare/1.10.8..1.10.9
