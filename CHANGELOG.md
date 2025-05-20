@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2025-05-20
+### Details
+#### Feat
+- Add support for defining Info.plist files using a variable by @alexmx in [#184](https://github.com/tuist/XcodeGraph/pull/184)
+
+## New Contributors
+* @alexmx made their first contribution in [#184](https://github.com/tuist/XcodeGraph/pull/184)
+## [1.10.14] - 2025-05-20
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.9.2" by @renovate[bot] in [#199](https://github.com/tuist/XcodeGraph/pull/199)
+
+## [1.10.13] - 2025-05-20
+### Details
+#### Chore
+- Update dependency tuist to v4.50.2 by @renovate[bot] in [#198](https://github.com/tuist/XcodeGraph/pull/198)
+
 ## [1.10.12] - 2025-05-19
 ### Details
 #### Chore
@@ -796,6 +813,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.11.0]: https://github.com/tuist/XcodeGraph/compare/1.10.14..1.11.0
+[1.10.14]: https://github.com/tuist/XcodeGraph/compare/1.10.13..1.10.14
+[1.10.13]: https://github.com/tuist/XcodeGraph/compare/1.10.12..1.10.13
 [1.10.12]: https://github.com/tuist/XcodeGraph/compare/1.10.11..1.10.12
 [1.10.11]: https://github.com/tuist/XcodeGraph/compare/1.10.10..1.10.11
 [1.10.10]: https://github.com/tuist/XcodeGraph/compare/1.10.9..1.10.10
