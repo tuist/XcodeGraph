@@ -1,5 +1,4 @@
 import Path
-import ServiceContextModule
 import Testing
 import XcodeGraph
 @testable import XcodeMetadata

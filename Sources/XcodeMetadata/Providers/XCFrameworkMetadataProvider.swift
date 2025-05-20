@@ -2,8 +2,8 @@ import FileSystem
 import Foundation
 import Mockable
 import Path
-import ServiceContextModule
 import XcodeGraph
+import Logging
 
 // MARK: - Provider Errors
 
@@ -65,11 +65,14 @@ public final class XCFrameworkMetadataProvider: PrecompiledMetadataProvider,
     XCFrameworkMetadataProviding
 {
     private let fileSystem: FileSysteming
+    private let logger: Logger?
 
     public init(
-        fileSystem: FileSysteming = FileSystem()
+        fileSystem: FileSysteming = FileSystem(),
+        logger: Logger? = nil
     ) {
         self.fileSystem = fileSystem
+        self.logger = logger
         super.init()
     }
 
@@ -184,7 +187,7 @@ public final class XCFrameworkMetadataProvider: PrecompiledMetadataProvider,
             let relativeArchitectureBinaryPath = binaryPath.components.suffix(3).joined(
                 separator: "/"
             )
-            ServiceContext.current?.logger?
+            logger?
                 .warning(
                     "\(xcframeworkPath.basename) is missing architecture \(relativeArchitectureBinaryPath) defined in the Info.plist"
                 )
