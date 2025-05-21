@@ -7,7 +7,7 @@ import XcodeGraph
 
 // MARK: - Provider Errors
 
-enum XCFrameworkMetadataProviderError: LocalizedError, Equatable {
+public enum XCFrameworkMetadataProviderError: LocalizedError, Equatable {
     case xcframeworkNotFound(AbsolutePath)
     case missingRequiredFile(AbsolutePath)
     case supportedArchitectureReferencesNotFound(AbsolutePath)
@@ -15,7 +15,7 @@ enum XCFrameworkMetadataProviderError: LocalizedError, Equatable {
 
     // MARK: - FatalError
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case let .xcframeworkNotFound(path):
             return "Couldn't find xcframework at \(path.pathString)"

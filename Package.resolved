@@ -1,5 +1,5 @@
 {
-  "originHash" : "81601743f024016fa9ffed7e529536371c1454a0d1da820033e0a40acbd8b2fe",
+  "originHash" : "b92f2d9817035bd19956e4bcb16078ff69c6f55783a4b7050209f008e615826f",
   "pins" : [
     {
       "identity" : "aexml",
@@ -146,15 +146,6 @@
       }
     },
     {
-      "identity" : "swift-service-context",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-service-context",
-      "state" : {
-        "revision" : "8946c930cae601452149e45d31d8ddfac973c3c7",
-        "version" : "1.2.0"
-      }
-    },
-    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
@@ -177,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/XcodeProj",
       "state" : {
-        "revision" : "6783abd2ec171e254f3d4aedb2efa1cc73fea414",
-        "version" : "9.4.1"
+        "revision" : "4488984883071307a9136251e7ccf06a41b6258d",
+        "version" : "9.4.2"
       }
     },
     {
