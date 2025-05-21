@@ -1,13 +1,13 @@
 import FileSystem
 import Foundation
+import Logging
 import Mockable
 import Path
-import ServiceContextModule
 import XcodeGraph
 
 // MARK: - Provider Errors
 
-enum XCFrameworkMetadataProviderError: LocalizedError, Equatable {
+public enum XCFrameworkMetadataProviderError: LocalizedError, Equatable {
     case xcframeworkNotFound(AbsolutePath)
     case missingRequiredFile(AbsolutePath)
     case supportedArchitectureReferencesNotFound(AbsolutePath)
@@ -15,7 +15,7 @@ enum XCFrameworkMetadataProviderError: LocalizedError, Equatable {
 
     // MARK: - FatalError
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case let .xcframeworkNotFound(path):
             return "Couldn't find xcframework at \(path.pathString)"
@@ -65,11 +65,14 @@ public final class XCFrameworkMetadataProvider: PrecompiledMetadataProvider,
     XCFrameworkMetadataProviding
 {
     private let fileSystem: FileSysteming
+    private let logger: Logger?
 
     public init(
-        fileSystem: FileSysteming = FileSystem()
+        fileSystem: FileSysteming = FileSystem(),
+        logger: Logger? = nil
     ) {
         self.fileSystem = fileSystem
+        self.logger = logger
         super.init()
     }
 
@@ -184,7 +187,7 @@ public final class XCFrameworkMetadataProvider: PrecompiledMetadataProvider,
             let relativeArchitectureBinaryPath = binaryPath.components.suffix(3).joined(
                 separator: "/"
             )
-            ServiceContext.current?.logger?
+            logger?
                 .warning(
                     "\(xcframeworkPath.basename) is missing architecture \(relativeArchitectureBinaryPath) defined in the Info.plist"
                 )
