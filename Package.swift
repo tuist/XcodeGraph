@@ -74,6 +74,7 @@ let package = Package(
             name: "XcodeGraph",
             targets: ["XcodeGraph"]
         ),
+        .library(name: "XcodeMetadata", targets: ["XcodeMetadata"]),
         .library(name: "XcodeGraphMapper", targets: ["XcodeGraphMapper"]),
     ],
     dependencies: [
