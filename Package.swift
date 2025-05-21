@@ -84,7 +84,7 @@ let package = Package(
         .package(url: "https://github.com/tuist/Command.git", from: "0.13.0"),
         .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.9.2")),
         .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.3.2")),
-        .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.32.0")),
+        .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.33.0")),
         .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.4.3"),
     ],
     targets: targets
