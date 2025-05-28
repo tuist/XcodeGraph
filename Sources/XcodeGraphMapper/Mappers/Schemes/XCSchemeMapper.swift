@@ -75,6 +75,7 @@ struct XCSchemeMapper: SchemeMapping {
             targets: targets,
             preActions: [],
             postActions: [],
+            parallelizeBuild: action.parallelizeBuild,
             runPostActionsOnFailure: action.runPostActionsOnFailure ?? false,
             findImplicitDependencies: action.buildImplicitDependencies
         )

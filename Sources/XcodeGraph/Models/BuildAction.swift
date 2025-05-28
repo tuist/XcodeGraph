@@ -7,6 +7,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
     public var targets: [TargetReference]
     public var preActions: [ExecutionAction]
     public var postActions: [ExecutionAction]
+    public var parallelizeBuild: Bool
     public var runPostActionsOnFailure: Bool
     public var findImplicitDependencies: Bool
 
@@ -16,12 +17,14 @@ public struct BuildAction: Equatable, Codable, Sendable {
         targets: [TargetReference] = [],
         preActions: [ExecutionAction] = [],
         postActions: [ExecutionAction] = [],
+        parallelizeBuild: Bool = true,
         runPostActionsOnFailure: Bool = false,
         findImplicitDependencies: Bool = true
     ) {
         self.targets = targets
         self.preActions = preActions
         self.postActions = postActions
+        self.parallelizeBuild = parallelizeBuild
         self.runPostActionsOnFailure = runPostActionsOnFailure
         self.findImplicitDependencies = findImplicitDependencies
     }
