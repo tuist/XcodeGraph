@@ -61,7 +61,7 @@ struct XCSchemeMapperTests: Sendable {
         )
         let buildAction = XCScheme.BuildAction(
             buildActionEntries: [buildActionEntry],
-            parallelizeBuild: true,
+            parallelizeBuild: false,
             buildImplicitDependencies: true,
             runPostActionsOnFailure: true
         )
@@ -74,6 +74,7 @@ struct XCSchemeMapperTests: Sendable {
         #expect(mappedAction != nil)
         #expect(mappedAction?.targets.count == 1)
         #expect(mappedAction?.targets[0].name == "App")
+        #expect(mappedAction?.parallelizeBuild == false)
         #expect(mappedAction?.runPostActionsOnFailure == true)
         #expect(mappedAction?.findImplicitDependencies == true)
     }
