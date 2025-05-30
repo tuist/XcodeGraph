@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2025-05-30
+### Details
+#### Feat
+- Add parallelizeBuild to BuildAction by @mattjung in [#208](https://github.com/tuist/XcodeGraph/pull/208)
+
+## New Contributors
+* @mattjung made their first contribution in [#208](https://github.com/tuist/XcodeGraph/pull/208)
 ## [1.14.1] - 2025-05-26
 ### Details
 #### Chore
@@ -853,6 +860,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.15.0]: https://github.com/tuist/XcodeGraph/compare/1.14.1..1.15.0
 [1.14.1]: https://github.com/tuist/XcodeGraph/compare/1.14.0..1.14.1
 [1.14.0]: https://github.com/tuist/XcodeGraph/compare/1.13.1..1.14.0
 [1.13.1]: https://github.com/tuist/XcodeGraph/compare/1.13.0..1.13.1
