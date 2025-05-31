@@ -166,7 +166,8 @@ struct PBXProjectMapper: PBXProjectMapping {
                 parser: parser,
                 parserOptions: [:],
                 extensions: Set(exts),
-                template: .defaultTemplate(template)
+                template: .defaultTemplate(template),
+                templateParameters: [:]
             )
         }
     }
