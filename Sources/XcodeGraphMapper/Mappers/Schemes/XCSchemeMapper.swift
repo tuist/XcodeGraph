@@ -219,7 +219,7 @@ struct XCSchemeMapper: SchemeMapping {
             arguments: arguments,
             options: RunActionOptions(),
             diagnosticsOptions: diagnosticsOptions,
-            appClipInvocationURLString: action.appClipInvocationURLString
+            appClipInvocationURL: action.appClipInvocationURLString.flatMap { URL(string: $0) }
         )
     }
 
