@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.12] - 2025-06-12
+### Details
+#### Chore
+- Update dependency kolos65/mockable to from: "0.4.0" by @renovate[bot] in [#220](https://github.com/tuist/XcodeGraph/pull/220)
+
 ## [1.15.11] - 2025-06-12
 ### Details
 #### Chore
@@ -915,6 +920,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.15.12]: https://github.com/tuist/XcodeGraph/compare/1.15.11..1.15.12
 [1.15.11]: https://github.com/tuist/XcodeGraph/compare/1.15.10..1.15.11
 [1.15.10]: https://github.com/tuist/XcodeGraph/compare/1.15.9..1.15.10
 [1.15.9]: https://github.com/tuist/XcodeGraph/compare/1.15.8..1.15.9
