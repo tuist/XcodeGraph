@@ -19,7 +19,11 @@ public struct TargetMetadata: Codable, Equatable, Sendable {
         self.ignoreRedundantDependencies = ignoreRedundantDependencies
     }
 
-    public static func metadata(tags: Set<String> = Set(), isLocal: Bool = true, ignoreRedundantDependencies: Bool = false) -> TargetMetadata {
+    public static func metadata(
+        tags: Set<String> = Set(),
+        isLocal: Bool = true,
+        ignoreRedundantDependencies: Bool = false
+    ) -> TargetMetadata {
         self.init(tags: tags, isLocal: isLocal, ignoreRedundantDependencies: ignoreRedundantDependencies)
     }
 }
