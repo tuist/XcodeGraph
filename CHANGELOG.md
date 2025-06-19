@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.21] - 2025-06-19
+### Details
+#### Docs
+- Add CLAUDE.md for Claude Code guidance by @pepicrft in [#234](https://github.com/tuist/XcodeGraph/pull/234)
+
 ## [1.15.20] - 2025-06-17
 ### Details
 #### Chore
@@ -958,6 +963,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.15.21]: https://github.com/tuist/XcodeGraph/compare/1.15.20..1.15.21
 [1.15.20]: https://github.com/tuist/XcodeGraph/compare/1.15.19..1.15.20
 [1.15.19]: https://github.com/tuist/XcodeGraph/compare/1.15.18..1.15.19
 [1.15.18]: https://github.com/tuist/XcodeGraph/compare/1.15.17..1.15.18
