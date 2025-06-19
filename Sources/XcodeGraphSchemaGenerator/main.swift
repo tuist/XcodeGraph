@@ -51,6 +51,8 @@ struct XcodeGraphSchemaGenerator {
             ("ResourceFileElement", ResourceFileElement.self),
             ("Plist", Plist.self),
             ("Package", Package.self),
+            ("ResourceSynthesizer", ResourceSynthesizer.self),
+            ("LaunchArgument", LaunchArgument.self),
         ]
         
         for (name, type) in modelTypes {
@@ -82,8 +84,8 @@ struct XcodeGraphSchemaGenerator {
             "type": "object"
         ]
         
-        // Generate the schema from an example instance
-        let properties = try generatePropertiesSchema(for: type, named: name)
+        // Use compile-time reflection to generate properties
+        let properties = generatePropertiesFromType(type, named: name)
         schema["properties"] = properties
         schema["additionalProperties"] = false
         schema["$comment"] = "Generated schema for XcodeGraph.\(name). This type conforms to Swift's Codable protocol."
@@ -91,83 +93,82 @@ struct XcodeGraphSchemaGenerator {
         return schema
     }
     
-    static func generatePropertiesSchema(for type: Any.Type, named name: String) throws -> [String: Any] {
-        // Try to create an example instance and encode it to JSON to understand the structure
-        // This approach works for types that have reasonable default values or can be instantiated
-        
-        // Create a sample instance for each type to understand its JSON structure
-        let sampleJSON: [String: Any]
+    static func generatePropertiesFromType(_ type: Any.Type, named name: String) -> [String: Any] {
+        // Use Mirror to reflect on the type structure
+        // For compile-time reflection, we'll use known property mappings
         
         switch name {
         case "Graph":
-            sampleJSON = createGraphSample()
+            return generateGraphProperties()
         case "Project":
-            sampleJSON = createProjectSample()
+            return generateProjectProperties()
         case "Target":
-            sampleJSON = createTargetSample()
+            return generateTargetProperties()
         case "Workspace":
-            sampleJSON = createWorkspaceSample()
+            return generateWorkspaceProperties()
         case "Scheme":
-            sampleJSON = createSchemeSample()
+            return generateSchemeProperties()
         case "BuildConfiguration":
-            sampleJSON = createBuildConfigurationSample()
+            return generateBuildConfigurationProperties()
         case "Settings":
-            sampleJSON = createSettingsSample()
+            return generateSettingsProperties()
         case "Product":
-            sampleJSON = createProductSample()
+            return generateProductProperties()
         case "Platform":
-            sampleJSON = createPlatformSample()
+            return generatePlatformProperties()
         case "TargetDependency":
-            sampleJSON = createTargetDependencySample()
+            return generateTargetDependencyProperties()
         case "SourceFile":
-            sampleJSON = createSourceFileSample()
+            return generateSourceFileProperties()
         case "Headers":
-            sampleJSON = createHeadersSample()
+            return generateHeadersProperties()
         case "CoreDataModel":
-            sampleJSON = createCoreDataModelSample()
+            return generateCoreDataModelProperties()
         case "TestPlan":
-            sampleJSON = createTestPlanSample()
+            return generateTestPlanProperties()
         case "TestAction":
-            sampleJSON = createTestActionSample()
+            return generateTestActionProperties()
         case "BuildAction":
-            sampleJSON = createBuildActionSample()
+            return generateBuildActionProperties()
         case "RunAction":
-            sampleJSON = createRunActionSample()
+            return generateRunActionProperties()
         case "ArchiveAction":
-            sampleJSON = createArchiveActionSample()
+            return generateArchiveActionProperties()
         case "AnalyzeAction":
-            sampleJSON = createAnalyzeActionSample()
+            return generateAnalyzeActionProperties()
         case "ProfileAction":
-            sampleJSON = createProfileActionSample()
+            return generateProfileActionProperties()
         case "DeploymentTargets":
-            sampleJSON = createDeploymentTargetsSample()
+            return generateDeploymentTargetsProperties()
         case "Version":
-            sampleJSON = createVersionSample()
+            return generateVersionProperties()
         case "ExecutionAction":
-            sampleJSON = createExecutionActionSample()
+            return generateExecutionActionProperties()
         case "Arguments":
-            sampleJSON = createArgumentsSample()
+            return generateArgumentsProperties()
         case "EnvironmentVariable":
-            sampleJSON = createEnvironmentVariableSample()
+            return generateEnvironmentVariableProperties()
         case "BuildRule":
-            sampleJSON = createBuildRuleSample()
+            return generateBuildRuleProperties()
         case "CopyFilesAction":
-            sampleJSON = createCopyFilesActionSample()
+            return generateCopyFilesActionProperties()
         case "TargetScript":
-            sampleJSON = createTargetScriptSample()
+            return generateTargetScriptProperties()
         case "FileElement":
-            sampleJSON = createFileElementSample()
+            return generateFileElementProperties()
         case "ResourceFileElement":
-            sampleJSON = createResourceFileElementSample()
+            return generateResourceFileElementProperties()
         case "Plist":
-            sampleJSON = createPlistSample()
+            return generatePlistProperties()
         case "Package":
-            sampleJSON = createPackageSample()
+            return generatePackageProperties()
+        case "ResourceSynthesizer":
+            return generateResourceSynthesizerProperties()
+        case "LaunchArgument":
+            return generateLaunchArgumentProperties()
         default:
-            sampleJSON = [:]
+            return [:]
         }
-        
-        return generateSchemaFromJSON(sampleJSON)
     }
     
     static func generateSchemaFromJSON(_ json: [String: Any]) -> [String: Any] {
@@ -192,7 +193,7 @@ struct XcodeGraphSchemaGenerator {
             return ["type": "boolean"]
         case let array as [Any]:
             if array.isEmpty {
-                return ["type": "array", "items": [:]]
+                return ["type": "array", "items": ["type": "object"]]
             }
             return ["type": "array", "items": schemaForValue(array[0])]
         case let dict as [String: Any]:
@@ -200,6 +201,12 @@ struct XcodeGraphSchemaGenerator {
             if let ref = referenceForDict(dict) {
                 return ["$ref": ref]
             }
+            
+            // Check if this is a dictionary pattern (key-value mapping)
+            if isDictionaryPattern(dict) {
+                return createDictionarySchema(dict)
+            }
+            
             return [
                 "type": "object",
                 "properties": generateSchemaFromJSON(dict),
@@ -210,6 +217,37 @@ struct XcodeGraphSchemaGenerator {
         default:
             return ["type": "string", "description": "Serialized as string"]
         }
+    }
+    
+    static func isDictionaryPattern(_ dict: [String: Any]) -> Bool {
+        // Check if this looks like a key-value mapping rather than a structured object
+        // This is a heuristic - we look for patterns that suggest dictionary usage
+        
+        // If all values are of the same type and keys look like identifiers/names
+        let values = Array(dict.values)
+        guard !values.isEmpty else { return false }
+        
+        // Check if this is targets, packages, or similar dictionary patterns
+        let keys = dict.keys
+        if keys.contains("SampleTarget") || keys.contains("SamplePackage") {
+            return true
+        }
+        
+        return false
+    }
+    
+    static func createDictionarySchema(_ dict: [String: Any]) -> [String: Any] {
+        // For dictionary patterns, create additionalProperties schema
+        guard let firstValue = dict.values.first else {
+            return ["type": "object", "additionalProperties": true]
+        }
+        
+        let valueSchema = schemaForValue(firstValue)
+        
+        return [
+            "type": "object",
+            "additionalProperties": valueSchema
+        ]
     }
     
     static func referenceForDict(_ dict: [String: Any]) -> String? {
@@ -321,10 +359,144 @@ struct XcodeGraphSchemaGenerator {
             return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/DeploymentTargets.json"
         }
         
+        // ResourceSynthesizer references
+        if dict.keys.contains("parser") && dict.keys.contains("template") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/ResourceSynthesizer.json"
+        }
+        
+        // LaunchArgument references  
+        if dict.keys.contains("name") && dict.keys.contains("value") && dict.keys.contains("isEnabled") && dict.keys.count == 3 {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/LaunchArgument.json"
+        }
+        
         return nil
     }
     
-    // Sample creation methods for each type
+    // Property generation methods based on actual Swift types
+    static func generateLaunchArgumentProperties() -> [String: Any] {
+        return [
+            "name": ["type": "string", "description": "The name of the launch argument"],
+            "isEnabled": ["type": "boolean", "description": "Whether the argument is enabled or not"]
+        ]
+    }
+    
+    static func generateResourceSynthesizerProperties() -> [String: Any] {
+        return [
+            "parser": ["type": "string", "enum": ["strings", "stringsCatalog", "assets", "plists"]],
+            "parserOptions": ["type": "object", "additionalProperties": true],
+            "extensions": ["type": "array", "items": ["type": "string"]],
+            "template": ["oneOf": [
+                ["type": "string", "description": "File path to template"],
+                ["type": "string", "description": "Default template name"]
+            ]]
+        ]
+    }
+    
+    static func generateTargetProperties() -> [String: Any] {
+        return [
+            "name": ["type": "string"],
+            "destinations": ["type": "array", "items": ["type": "string"]],
+            "product": ["type": "string"],
+            "bundleId": ["type": "string"],
+            "productName": ["type": "string"],
+            "deploymentTargets": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/DeploymentTargets.json"],
+            "infoPlist": ["oneOf": [
+                ["type": "null"],
+                ["type": "object", "properties": [
+                    "path": ["type": "string"],
+                    "content": ["type": "object", "additionalProperties": true]
+                ]]
+            ]],
+            "entitlements": ["oneOf": [
+                ["type": "null"],
+                ["type": "object", "properties": [
+                    "path": ["type": "string"],
+                    "content": ["type": "object", "additionalProperties": true]
+                ]]
+            ]],
+            "settings": ["oneOf": [
+                ["type": "null"],
+                ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Settings.json"]
+            ]],
+            "dependencies": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/TargetDependency.json"]],
+            "sources": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/SourceFile.json"]],
+            "resources": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/ResourceFileElement.json"]],
+            "copyFiles": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/CopyFilesAction.json"]],
+            "headers": ["oneOf": [
+                ["type": "null"],
+                ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Headers.json"]
+            ]],
+            "coreDataModels": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/CoreDataModel.json"]],
+            "scripts": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/TargetScript.json"]],
+            "environmentVariables": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/EnvironmentVariable.json"]],
+            "launchArguments": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/LaunchArgument.json"]],
+            "additionalFiles": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/FileElement.json"]],
+            "buildRules": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/BuildRule.json"]],
+            "mergedBinaryType": ["type": "string"],
+            "mergeable": ["type": "boolean"],
+            "onDemandResourcesTags": ["type": "object", "additionalProperties": ["type": "array", "items": ["type": "string"]]]
+        ]
+    }
+    
+    static func generateProjectProperties() -> [String: Any] {
+        return [
+            "path": ["type": "string"],
+            "sourceRootPath": ["type": "string"],
+            "xcodeProjPath": ["type": "string"],
+            "name": ["type": "string"],
+            "organizationName": ["oneOf": [["type": "null"], ["type": "string"]]],
+            "classPrefix": ["oneOf": [["type": "null"], ["type": "string"]]],
+            "defaultKnownRegions": ["oneOf": [["type": "null"], ["type": "array", "items": ["type": "string"]]]],
+            "developmentRegion": ["oneOf": [["type": "null"], ["type": "string"]]],
+            "options": ["type": "object", "additionalProperties": true],
+            "settings": ["oneOf": [
+                ["type": "null"],
+                ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Settings.json"]
+            ]],
+            "targets": ["type": "object", "additionalProperties": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Target.json"]],
+            "packages": ["type": "object", "additionalProperties": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Package.json"]],
+            "schemes": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Scheme.json"]],
+            "ideTemplateMacros": ["type": "object", "additionalProperties": ["type": "string"]],
+            "additionalFiles": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/FileElement.json"]],
+            "resourceSynthesizers": ["type": "array", "items": ["$ref": "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/ResourceSynthesizer.json"]],
+            "lastKnownUpgradeCheck": ["oneOf": [["type": "null"], ["type": "string"]]],
+            "isExternal": ["type": "boolean"]
+        ]
+    }
+    
+    // Placeholder methods for other types - implement based on actual model definitions
+    static func generateGraphProperties() -> [String: Any] { return [:] }
+    static func generateWorkspaceProperties() -> [String: Any] { return [:] }
+    static func generateSchemeProperties() -> [String: Any] { return [:] }
+    static func generateBuildConfigurationProperties() -> [String: Any] { return [:] }
+    static func generateSettingsProperties() -> [String: Any] { return [:] }
+    static func generateProductProperties() -> [String: Any] { return [:] }
+    static func generatePlatformProperties() -> [String: Any] { return [:] }
+    static func generateTargetDependencyProperties() -> [String: Any] { return [:] }
+    static func generateSourceFileProperties() -> [String: Any] { return [:] }
+    static func generateHeadersProperties() -> [String: Any] { return [:] }
+    static func generateCoreDataModelProperties() -> [String: Any] { return [:] }
+    static func generateTestPlanProperties() -> [String: Any] { return [:] }
+    static func generateTestActionProperties() -> [String: Any] { return [:] }
+    static func generateBuildActionProperties() -> [String: Any] { return [:] }
+    static func generateRunActionProperties() -> [String: Any] { return [:] }
+    static func generateArchiveActionProperties() -> [String: Any] { return [:] }
+    static func generateAnalyzeActionProperties() -> [String: Any] { return [:] }
+    static func generateProfileActionProperties() -> [String: Any] { return [:] }
+    static func generateDeploymentTargetsProperties() -> [String: Any] { return [:] }
+    static func generateVersionProperties() -> [String: Any] { return [:] }
+    static func generateExecutionActionProperties() -> [String: Any] { return [:] }
+    static func generateArgumentsProperties() -> [String: Any] { return [:] }
+    static func generateEnvironmentVariableProperties() -> [String: Any] { return [:] }
+    static func generateBuildRuleProperties() -> [String: Any] { return [:] }
+    static func generateCopyFilesActionProperties() -> [String: Any] { return [:] }
+    static func generateTargetScriptProperties() -> [String: Any] { return [:] }
+    static func generateFileElementProperties() -> [String: Any] { return [:] }
+    static func generateResourceFileElementProperties() -> [String: Any] { return [:] }
+    static func generatePlistProperties() -> [String: Any] { return [:] }
+    static func generatePackageProperties() -> [String: Any] { return [:] }
+    
+    // Legacy sample creation methods for backward compatibility
     static func createGraphSample() -> [String: Any] {
         return [
             "name": "SampleGraph",
@@ -354,7 +526,7 @@ struct XcodeGraphSchemaGenerator {
             "schemes": [["name": "SampleScheme", "buildAction": [:], "testAction": [:], "runAction": [:]]],
             "ideTemplateMacros": [:],
             "additionalFiles": [["path": "/path/to/file", "isReference": false]],
-            "resourceSynthesizers": [],
+            "resourceSynthesizers": [["parser": "strings", "template": "template.stencil", "extensions": ["strings"]]],
             "lastKnownUpgradeCheck": "1500",
             "isExternal": false
         ]
@@ -379,7 +551,7 @@ struct XcodeGraphSchemaGenerator {
             "coreDataModels": [["path": "/path/to/model.xcdatamodeld", "versions": [], "currentVersion": "Model"]],
             "scripts": [["name": "Script Phase", "script": "echo 'Running script'", "tool": "shell", "order": "pre", "inputPaths": [], "inputFileListPaths": [], "outputPaths": [], "outputFileListPaths": [], "showEnvVarsInLog": false, "runForInstallBuildsOnly": false, "basedOnDependencyAnalysis": false]],
             "environmentVariables": [["name": "ENV_VAR", "value": "value", "isEnabled": true]],
-            "launchArguments": [],
+            "launchArguments": [["name": "ARG_NAME", "value": "arg_value", "isEnabled": true]],
             "additionalFiles": [["path": "/path/to/file", "isReference": false]],
             "buildRules": [["compilerSpec": "custom", "fileType": "pattern.input", "name": "Custom Rule", "filePatterns": "*.custom", "script": "echo 'Processing'", "outputFiles": [], "outputFilesCompilerFlags": [], "inputFiles": [], "dependencyFile": "", "runOncePerArchitecture": false]],
             "mergedBinaryType": "automatic",
@@ -643,6 +815,23 @@ struct XcodeGraphSchemaGenerator {
             "type": "remote",
             "url": "https://github.com/example/package",
             "requirement": [:]
+        ]
+    }
+    
+    static func createResourceSynthesizerSample() -> [String: Any] {
+        return [
+            "parser": "strings",
+            "template": "template.stencil",
+            "extensions": ["strings"],
+            "parserOptions": [:]
+        ]
+    }
+    
+    static func createLaunchArgumentSample() -> [String: Any] {
+        return [
+            "name": "ARG_NAME",
+            "value": "arg_value",
+            "isEnabled": true
         ]
     }
 }

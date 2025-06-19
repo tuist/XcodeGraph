@@ -1,0 +1,19 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.LaunchArgument. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/LaunchArgument.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph LaunchArgument model",
+  "properties" : {
+    "isEnabled" : {
+      "description" : "Whether the argument is enabled or not",
+      "type" : "boolean"
+    },
+    "name" : {
+      "description" : "The name of the launch argument",
+      "type" : "string"
+    }
+  },
+  "title" : "LaunchArgument",
+  "type" : "object"
+}

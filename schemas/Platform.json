@@ -5,9 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Platform model",
   "properties" : {
-    "rawValue" : {
-      "type" : "string"
-    }
+
   },
   "title" : "Platform",
   "type" : "object"

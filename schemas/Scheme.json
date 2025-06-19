@@ -5,57 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Scheme model",
   "properties" : {
-    "analyzeAction" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "archiveAction" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "buildAction" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "hidden" : {
-      "type" : "boolean"
-    },
-    "name" : {
-      "type" : "string"
-    },
-    "profileAction" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "runAction" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "shared" : {
-      "type" : "boolean"
-    },
-    "testAction" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    }
   },
   "title" : "Scheme",
   "type" : "object"

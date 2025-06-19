@@ -5,15 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Version model",
   "properties" : {
-    "major" : {
-      "type" : "integer"
-    },
-    "minor" : {
-      "type" : "integer"
-    },
-    "patch" : {
-      "type" : "integer"
-    }
+
   },
   "title" : "Version",
   "type" : "object"

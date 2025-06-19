@@ -5,27 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph ArchiveAction model",
   "properties" : {
-    "configurationName" : {
-      "type" : "string"
-    },
-    "customArchiveName" : {
-      "type" : "string"
-    },
-    "postActions" : {
-      "items" : {
 
-      },
-      "type" : "array"
-    },
-    "preActions" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "revealArchiveInOrganizer" : {
-      "type" : "boolean"
-    }
   },
   "title" : "ArchiveAction",
   "type" : "object"

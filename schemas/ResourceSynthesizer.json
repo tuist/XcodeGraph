@@ -1,0 +1,42 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.ResourceSynthesizer. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/ResourceSynthesizer.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph ResourceSynthesizer model",
+  "properties" : {
+    "extensions" : {
+      "items" : {
+        "type" : "string"
+      },
+      "type" : "array"
+    },
+    "parser" : {
+      "enum" : [
+        "strings",
+        "stringsCatalog",
+        "assets",
+        "plists"
+      ],
+      "type" : "string"
+    },
+    "parserOptions" : {
+      "additionalProperties" : true,
+      "type" : "object"
+    },
+    "template" : {
+      "oneOf" : [
+        {
+          "description" : "File path to template",
+          "type" : "string"
+        },
+        {
+          "description" : "Default template name",
+          "type" : "string"
+        }
+      ]
+    }
+  },
+  "title" : "ResourceSynthesizer",
+  "type" : "object"
+}

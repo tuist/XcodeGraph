@@ -5,15 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph EnvironmentVariable model",
   "properties" : {
-    "isEnabled" : {
-      "type" : "boolean"
-    },
-    "name" : {
-      "type" : "string"
-    },
-    "value" : {
-      "type" : "string"
-    }
+
   },
   "title" : "EnvironmentVariable",
   "type" : "object"

@@ -5,23 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Settings model",
   "properties" : {
-    "base" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "configurations" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "defaultSettings" : {
-      "type" : "string"
-    }
   },
   "title" : "Settings",
   "type" : "object"

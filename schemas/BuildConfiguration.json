@@ -5,12 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph BuildConfiguration model",
   "properties" : {
-    "name" : {
-      "type" : "string"
-    },
-    "variant" : {
-      "type" : "string"
-    }
+
   },
   "title" : "BuildConfiguration",
   "type" : "object"

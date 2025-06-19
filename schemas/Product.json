@@ -5,9 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Product model",
   "properties" : {
-    "rawValue" : {
-      "type" : "string"
-    }
+
   },
   "title" : "Product",
   "type" : "object"

@@ -5,19 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Arguments model",
   "properties" : {
-    "environment" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "launchArguments" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    }
   },
   "title" : "Arguments",
   "type" : "object"

@@ -5,22 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph TestPlan model",
   "properties" : {
-    "defaultOptions" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "path" : {
-      "type" : "string"
-    },
-    "testTargets" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    }
   },
   "title" : "TestPlan",
   "type" : "object"

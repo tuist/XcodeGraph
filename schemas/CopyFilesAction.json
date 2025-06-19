@@ -5,21 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph CopyFilesAction model",
   "properties" : {
-    "destination" : {
-      "type" : "string"
-    },
-    "files" : {
-      "items" : {
 
-      },
-      "type" : "array"
-    },
-    "name" : {
-      "type" : "string"
-    },
-    "subpath" : {
-      "type" : "string"
-    }
   },
   "title" : "CopyFilesAction",
   "type" : "object"

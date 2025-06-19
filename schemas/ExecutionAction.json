@@ -5,21 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph ExecutionAction model",
   "properties" : {
-    "scriptText" : {
-      "type" : "string"
-    },
-    "shellPath" : {
-      "type" : "string"
-    },
-    "showEnvVarsInLog" : {
-      "type" : "boolean"
-    },
-    "target" : {
-      "type" : "string"
-    },
-    "title" : {
-      "type" : "string"
-    }
+
   },
   "title" : "ExecutionAction",
   "type" : "object"

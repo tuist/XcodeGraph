@@ -5,47 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Workspace model",
   "properties" : {
-    "additionalFiles" : {
-      "items" : {
-        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/FileElement.json"
-      },
-      "type" : "array"
-    },
-    "generationOptions" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "ideTemplateMacros" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "name" : {
-      "type" : "string"
-    },
-    "path" : {
-      "type" : "string"
-    },
-    "projects" : {
-      "items" : {
-        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Project.json"
-      },
-      "type" : "array"
-    },
-    "schemes" : {
-      "items" : {
-        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Scheme.json"
-      },
-      "type" : "array"
-    },
-    "xcWorkspacePath" : {
-      "type" : "string"
-    }
   },
   "title" : "Workspace",
   "type" : "object"

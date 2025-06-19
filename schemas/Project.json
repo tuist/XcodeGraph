@@ -12,21 +12,41 @@
       "type" : "array"
     },
     "classPrefix" : {
-      "type" : "string"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "type" : "string"
+        }
+      ]
     },
     "defaultKnownRegions" : {
-      "items" : {
-        "type" : "string"
-      },
-      "type" : "array"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        }
+      ]
     },
     "developmentRegion" : {
-      "type" : "string"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "type" : "string"
+        }
+      ]
     },
     "ideTemplateMacros" : {
-      "additionalProperties" : false,
-      "properties" : {
-
+      "additionalProperties" : {
+        "type" : "string"
       },
       "type" : "object"
     },
@@ -34,27 +54,35 @@
       "type" : "boolean"
     },
     "lastKnownUpgradeCheck" : {
-      "type" : "string"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "type" : "string"
+        }
+      ]
     },
     "name" : {
       "type" : "string"
     },
     "options" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
+      "additionalProperties" : true,
       "type" : "object"
     },
     "organizationName" : {
-      "type" : "string"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "type" : "string"
+        }
+      ]
     },
     "packages" : {
-      "additionalProperties" : false,
-      "properties" : {
-        "SamplePackage" : {
-          "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Package.json"
-        }
+      "additionalProperties" : {
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Package.json"
       },
       "type" : "object"
     },
@@ -63,7 +91,7 @@
     },
     "resourceSynthesizers" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/ResourceSynthesizer.json"
       },
       "type" : "array"
     },
@@ -74,17 +102,21 @@
       "type" : "array"
     },
     "settings" : {
-      "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Settings.json"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Settings.json"
+        }
+      ]
     },
     "sourceRootPath" : {
       "type" : "string"
     },
     "targets" : {
-      "additionalProperties" : false,
-      "properties" : {
-        "SampleTarget" : {
-          "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Target.json"
-        }
+      "additionalProperties" : {
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Target.json"
       },
       "type" : "object"
     },

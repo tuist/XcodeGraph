@@ -5,27 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph BuildAction model",
   "properties" : {
-    "postActions" : {
-      "items" : {
 
-      },
-      "type" : "array"
-    },
-    "preActions" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "runPostActionsOnFailure" : {
-      "type" : "boolean"
-    },
-    "targets" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    }
   },
   "title" : "BuildAction",
   "type" : "object"

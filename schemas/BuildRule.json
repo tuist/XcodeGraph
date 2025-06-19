@@ -5,45 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph BuildRule model",
   "properties" : {
-    "compilerSpec" : {
-      "type" : "string"
-    },
-    "dependencyFile" : {
-      "type" : "string"
-    },
-    "filePatterns" : {
-      "type" : "string"
-    },
-    "fileType" : {
-      "type" : "string"
-    },
-    "inputFiles" : {
-      "items" : {
 
-      },
-      "type" : "array"
-    },
-    "name" : {
-      "type" : "string"
-    },
-    "outputFiles" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "outputFilesCompilerFlags" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "runOncePerArchitecture" : {
-      "type" : "boolean"
-    },
-    "script" : {
-      "type" : "string"
-    }
   },
   "title" : "BuildRule",
   "type" : "object"

@@ -5,9 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph AnalyzeAction model",
   "properties" : {
-    "configurationName" : {
-      "type" : "string"
-    }
+
   },
   "title" : "AnalyzeAction",
   "type" : "object"

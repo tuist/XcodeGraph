@@ -5,50 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph TestAction model",
   "properties" : {
-    "arguments" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "codeCoverageTargets" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "configurationName" : {
-      "type" : "string"
-    },
-    "coverage" : {
-      "type" : "boolean"
-    },
-    "diagnosticsOptions" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "postActions" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "preActions" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "targets" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    }
   },
   "title" : "TestAction",
   "type" : "object"

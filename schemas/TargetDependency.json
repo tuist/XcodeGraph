@@ -5,19 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph TargetDependency model",
   "properties" : {
-    "condition" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "name" : {
-      "type" : "string"
-    },
-    "type" : {
-      "type" : "string"
-    }
   },
   "title" : "TargetDependency",
   "type" : "object"

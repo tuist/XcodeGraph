@@ -5,37 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph RunAction model",
   "properties" : {
-    "arguments" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "configurationName" : {
-      "type" : "string"
-    },
-    "diagnosticsOptions" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "executable" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    },
-    "options" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
-    }
   },
   "title" : "RunAction",
   "type" : "object"

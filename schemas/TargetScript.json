@@ -5,51 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph TargetScript model",
   "properties" : {
-    "basedOnDependencyAnalysis" : {
-      "type" : "boolean"
-    },
-    "inputFileListPaths" : {
-      "items" : {
 
-      },
-      "type" : "array"
-    },
-    "inputPaths" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "name" : {
-      "type" : "string"
-    },
-    "order" : {
-      "type" : "string"
-    },
-    "outputFileListPaths" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "outputPaths" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "runForInstallBuildsOnly" : {
-      "type" : "boolean"
-    },
-    "script" : {
-      "type" : "string"
-    },
-    "showEnvVarsInLog" : {
-      "type" : "boolean"
-    },
-    "tool" : {
-      "type" : "string"
-    }
   },
   "title" : "TargetScript",
   "type" : "object"

@@ -5,18 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph DeploymentTargets model",
   "properties" : {
-    "iOS" : {
-      "type" : "string"
-    },
-    "macOS" : {
-      "type" : "string"
-    },
-    "tvOS" : {
-      "type" : "string"
-    },
-    "watchOS" : {
-      "type" : "string"
-    }
+
   },
   "title" : "DeploymentTargets",
   "type" : "object"

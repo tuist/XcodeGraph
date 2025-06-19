@@ -5,24 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Headers model",
   "properties" : {
-    "private" : {
-      "items" : {
 
-      },
-      "type" : "array"
-    },
-    "project" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "public" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    }
   },
   "title" : "Headers",
   "type" : "object"

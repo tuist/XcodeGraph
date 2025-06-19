@@ -5,22 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph ResourceFileElement model",
   "properties" : {
-    "inclusionCondition" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "path" : {
-      "type" : "string"
-    },
-    "tags" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    }
   },
   "title" : "ResourceFileElement",
   "type" : "object"

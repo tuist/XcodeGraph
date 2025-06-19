@@ -5,18 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph CoreDataModel model",
   "properties" : {
-    "currentVersion" : {
-      "type" : "string"
-    },
-    "path" : {
-      "type" : "string"
-    },
-    "versions" : {
-      "items" : {
 
-      },
-      "type" : "array"
-    }
   },
   "title" : "CoreDataModel",
   "type" : "object"

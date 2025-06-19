@@ -5,19 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Package model",
   "properties" : {
-    "requirement" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "type" : {
-      "type" : "string"
-    },
-    "url" : {
-      "type" : "string"
-    }
   },
   "title" : "Package",
   "type" : "object"

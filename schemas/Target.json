@@ -48,20 +48,23 @@
       "type" : "array"
     },
     "entitlements" : {
-      "additionalProperties" : false,
-      "properties" : {
-        "content" : {
-          "additionalProperties" : false,
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
           "properties" : {
-
+            "content" : {
+              "additionalProperties" : true,
+              "type" : "object"
+            },
+            "path" : {
+              "type" : "string"
+            }
           },
           "type" : "object"
-        },
-        "path" : {
-          "type" : "string"
         }
-      },
-      "type" : "object"
+      ]
     },
     "environmentVariables" : {
       "items" : {
@@ -70,27 +73,37 @@
       "type" : "array"
     },
     "headers" : {
-      "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Headers.json"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Headers.json"
+        }
+      ]
     },
     "infoPlist" : {
-      "additionalProperties" : false,
-      "properties" : {
-        "content" : {
-          "additionalProperties" : false,
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
           "properties" : {
-
+            "content" : {
+              "additionalProperties" : true,
+              "type" : "object"
+            },
+            "path" : {
+              "type" : "string"
+            }
           },
           "type" : "object"
-        },
-        "path" : {
-          "type" : "string"
         }
-      },
-      "type" : "object"
+      ]
     },
     "launchArguments" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/LaunchArgument.json"
       },
       "type" : "array"
     },
@@ -104,9 +117,11 @@
       "type" : "string"
     },
     "onDemandResourcesTags" : {
-      "additionalProperties" : false,
-      "properties" : {
-
+      "additionalProperties" : {
+        "items" : {
+          "type" : "string"
+        },
+        "type" : "array"
       },
       "type" : "object"
     },
@@ -129,7 +144,14 @@
       "type" : "array"
     },
     "settings" : {
-      "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Settings.json"
+      "oneOf" : [
+        {
+          "type" : "null"
+        },
+        {
+          "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Settings.json"
+        }
+      ]
     },
     "sources" : {
       "items" : {

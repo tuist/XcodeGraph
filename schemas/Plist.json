@@ -5,16 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph Plist model",
   "properties" : {
-    "content" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "path" : {
-      "type" : "string"
-    }
   },
   "title" : "Plist",
   "type" : "object"

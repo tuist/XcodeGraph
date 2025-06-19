@@ -5,22 +5,7 @@
   "additionalProperties" : false,
   "description" : "JSON Schema for XcodeGraph SourceFile model",
   "properties" : {
-    "codeGen" : {
-      "additionalProperties" : false,
-      "properties" : {
 
-      },
-      "type" : "object"
-    },
-    "compilerFlags" : {
-      "items" : {
-
-      },
-      "type" : "array"
-    },
-    "path" : {
-      "type" : "string"
-    }
   },
   "title" : "SourceFile",
   "type" : "object"
