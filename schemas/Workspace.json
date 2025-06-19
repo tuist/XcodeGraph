@@ -7,7 +7,7 @@
   "properties" : {
     "additionalFiles" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/FileElement.json"
       },
       "type" : "array"
     },
@@ -33,13 +33,13 @@
     },
     "projects" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Project.json"
       },
       "type" : "array"
     },
     "schemes" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Scheme.json"
       },
       "type" : "array"
     },

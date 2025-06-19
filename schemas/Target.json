@@ -7,13 +7,13 @@
   "properties" : {
     "additionalFiles" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/FileElement.json"
       },
       "type" : "array"
     },
     "buildRules" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/BuildRule.json"
       },
       "type" : "array"
     },
@@ -22,28 +22,24 @@
     },
     "copyFiles" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/CopyFilesAction.json"
       },
       "type" : "array"
     },
     "coreDataModels" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/CoreDataModel.json"
       },
       "type" : "array"
     },
     "dependencies" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/TargetDependency.json"
       },
       "type" : "array"
     },
     "deploymentTargets" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
+      "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/DeploymentTargets.json"
     },
     "destinations" : {
       "items" : {
@@ -54,28 +50,41 @@
     "entitlements" : {
       "additionalProperties" : false,
       "properties" : {
+        "content" : {
+          "additionalProperties" : false,
+          "properties" : {
 
+          },
+          "type" : "object"
+        },
+        "path" : {
+          "type" : "string"
+        }
       },
       "type" : "object"
     },
     "environmentVariables" : {
-      "additionalProperties" : false,
-      "properties" : {
-
+      "items" : {
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/EnvironmentVariable.json"
       },
-      "type" : "object"
+      "type" : "array"
     },
     "headers" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
+      "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Headers.json"
     },
     "infoPlist" : {
       "additionalProperties" : false,
       "properties" : {
+        "content" : {
+          "additionalProperties" : false,
+          "properties" : {
 
+          },
+          "type" : "object"
+        },
+        "path" : {
+          "type" : "string"
+        }
       },
       "type" : "object"
     },
@@ -109,26 +118,22 @@
     },
     "resources" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/ResourceFileElement.json"
       },
       "type" : "array"
     },
     "scripts" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/TargetScript.json"
       },
       "type" : "array"
     },
     "settings" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
+      "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Settings.json"
     },
     "sources" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/SourceFile.json"
       },
       "type" : "array"
     }

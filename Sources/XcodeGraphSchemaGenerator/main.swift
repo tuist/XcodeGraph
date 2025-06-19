@@ -196,6 +196,10 @@ struct XcodeGraphSchemaGenerator {
             }
             return ["type": "array", "items": schemaForValue(array[0])]
         case let dict as [String: Any]:
+            // Check if this dictionary represents a known model type
+            if let ref = referenceForDict(dict) {
+                return ["$ref": ref]
+            }
             return [
                 "type": "object",
                 "properties": generateSchemaFromJSON(dict),
@@ -206,6 +210,118 @@ struct XcodeGraphSchemaGenerator {
         default:
             return ["type": "string", "description": "Serialized as string"]
         }
+    }
+    
+    static func referenceForDict(_ dict: [String: Any]) -> String? {
+        // Map specific property combinations to model types
+        // This is a simplified approach - in a real implementation you might use more sophisticated detection
+        
+        // Package references
+        if dict.keys.contains("type") && dict.keys.contains("url") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Package.json"
+        }
+        
+        // TargetDependency references
+        if dict.keys.contains("type") && dict.keys.contains("name") && dict.keys.contains("condition") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/TargetDependency.json"
+        }
+        
+        // BuildConfiguration references
+        if dict.keys.contains("name") && dict.keys.contains("variant") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/BuildConfiguration.json"
+        }
+        
+        // Version references
+        if dict.keys.contains("major") && dict.keys.contains("minor") && dict.keys.contains("patch") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Version.json"
+        }
+        
+        // SourceFile references
+        if dict.keys.contains("path") && dict.keys.contains("compilerFlags") && dict.keys.contains("codeGen") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/SourceFile.json"
+        }
+        
+        // Headers references
+        if dict.keys.contains("public") && dict.keys.contains("private") && dict.keys.contains("project") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Headers.json"
+        }
+        
+        // CoreDataModel references
+        if dict.keys.contains("path") && dict.keys.contains("versions") && dict.keys.contains("currentVersion") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/CoreDataModel.json"
+        }
+        
+        // BuildRule references
+        if dict.keys.contains("compilerSpec") && dict.keys.contains("fileType") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/BuildRule.json"
+        }
+        
+        // CopyFilesAction references
+        if dict.keys.contains("destination") && dict.keys.contains("subpath") && dict.keys.contains("files") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/CopyFilesAction.json"
+        }
+        
+        // TargetScript references
+        if dict.keys.contains("script") && dict.keys.contains("tool") && dict.keys.contains("order") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/TargetScript.json"
+        }
+        
+        // FileElement references
+        if dict.keys.contains("path") && dict.keys.contains("isReference") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/FileElement.json"
+        }
+        
+        // ResourceFileElement references
+        if dict.keys.contains("path") && dict.keys.contains("tags") && dict.keys.contains("inclusionCondition") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/ResourceFileElement.json"
+        }
+        
+        // Arguments references
+        if dict.keys.contains("environment") && dict.keys.contains("launchArguments") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Arguments.json"
+        }
+        
+        // EnvironmentVariable references
+        if dict.keys.contains("name") && dict.keys.contains("value") && dict.keys.contains("isEnabled") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/EnvironmentVariable.json"
+        }
+        
+        // ExecutionAction references
+        if dict.keys.contains("title") && dict.keys.contains("scriptText") && dict.keys.contains("target") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/ExecutionAction.json"
+        }
+        
+        // Settings references
+        if dict.keys.contains("base") && dict.keys.contains("configurations") && dict.keys.contains("defaultSettings") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Settings.json"
+        }
+        
+        // Scheme references  
+        if dict.keys.contains("buildAction") && dict.keys.contains("testAction") && dict.keys.contains("runAction") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Scheme.json"
+        }
+        
+        // Target references
+        if dict.keys.contains("bundleId") && dict.keys.contains("destinations") && dict.keys.contains("product") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Target.json"
+        }
+        
+        // Project references
+        if dict.keys.contains("xcodeProjPath") && dict.keys.contains("targets") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Project.json"
+        }
+        
+        // Workspace references
+        if dict.keys.contains("xcWorkspacePath") && dict.keys.contains("projects") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/Workspace.json"
+        }
+        
+        // DeploymentTargets references
+        if dict.keys.contains("iOS") || dict.keys.contains("macOS") || dict.keys.contains("watchOS") || dict.keys.contains("tvOS") {
+            return "https://raw.githubusercontent.com/tuist/XcodeGraph/main/schemas/DeploymentTargets.json"
+        }
+        
+        return nil
     }
     
     // Sample creation methods for each type
@@ -232,12 +348,12 @@ struct XcodeGraphSchemaGenerator {
             "defaultKnownRegions": ["en"],
             "developmentRegion": "en",
             "options": [:],
-            "settings": [:],
-            "targets": [:],
-            "packages": [:],
-            "schemes": [],
+            "settings": ["base": [:], "configurations": [:], "defaultSettings": "recommended"],
+            "targets": ["SampleTarget": ["name": "SampleTarget", "bundleId": "com.example.app", "destinations": ["iOS"], "product": "app"]],
+            "packages": ["SamplePackage": ["type": "remote", "url": "https://github.com/example/package", "requirement": [:]]],
+            "schemes": [["name": "SampleScheme", "buildAction": [:], "testAction": [:], "runAction": [:]]],
             "ideTemplateMacros": [:],
-            "additionalFiles": [],
+            "additionalFiles": [["path": "/path/to/file", "isReference": false]],
             "resourceSynthesizers": [],
             "lastKnownUpgradeCheck": "1500",
             "isExternal": false
@@ -251,21 +367,21 @@ struct XcodeGraphSchemaGenerator {
             "product": "app",
             "bundleId": "com.example.app",
             "productName": "SampleApp",
-            "deploymentTargets": [:],
-            "infoPlist": [:],
-            "entitlements": [:],
-            "settings": [:],
-            "dependencies": [],
-            "sources": [],
-            "resources": [],
-            "copyFiles": [],
-            "headers": [:],
-            "coreDataModels": [],
-            "scripts": [],
-            "environmentVariables": [:],
+            "deploymentTargets": ["iOS": "14.0", "macOS": "11.0"],
+            "infoPlist": ["path": "/path/to/Info.plist", "content": [:]],
+            "entitlements": ["path": "/path/to/entitlements.plist", "content": [:]],
+            "settings": ["base": [:], "configurations": [:], "defaultSettings": "recommended"],
+            "dependencies": [["type": "target", "name": "DependentTarget", "condition": [:]]],
+            "sources": [["path": "/path/to/file.swift", "compilerFlags": [], "codeGen": [:]]],
+            "resources": [["path": "/path/to/resource", "tags": [], "inclusionCondition": [:]]],
+            "copyFiles": [["name": "Copy Files", "destination": "resources", "subpath": "", "files": []]],
+            "headers": ["public": [], "private": [], "project": []],
+            "coreDataModels": [["path": "/path/to/model.xcdatamodeld", "versions": [], "currentVersion": "Model"]],
+            "scripts": [["name": "Script Phase", "script": "echo 'Running script'", "tool": "shell", "order": "pre", "inputPaths": [], "inputFileListPaths": [], "outputPaths": [], "outputFileListPaths": [], "showEnvVarsInLog": false, "runForInstallBuildsOnly": false, "basedOnDependencyAnalysis": false]],
+            "environmentVariables": [["name": "ENV_VAR", "value": "value", "isEnabled": true]],
             "launchArguments": [],
-            "additionalFiles": [],
-            "buildRules": [],
+            "additionalFiles": [["path": "/path/to/file", "isReference": false]],
+            "buildRules": [["compilerSpec": "custom", "fileType": "pattern.input", "name": "Custom Rule", "filePatterns": "*.custom", "script": "echo 'Processing'", "outputFiles": [], "outputFilesCompilerFlags": [], "inputFiles": [], "dependencyFile": "", "runOncePerArchitecture": false]],
             "mergedBinaryType": "automatic",
             "mergeable": false,
             "onDemandResourcesTags": [:]
@@ -277,10 +393,10 @@ struct XcodeGraphSchemaGenerator {
             "path": "/path/to/workspace",
             "xcWorkspacePath": "/path/to/workspace.xcworkspace",
             "name": "SampleWorkspace",
-            "projects": [],
-            "schemes": [],
+            "projects": [["path": "/path/to/project", "xcodeProjPath": "/path/to/project.xcodeproj", "targets": [:]]],
+            "schemes": [["name": "SampleScheme", "buildAction": [:], "testAction": [:], "runAction": [:]]],
             "ideTemplateMacros": [:],
-            "additionalFiles": [],
+            "additionalFiles": [["path": "/path/to/file", "isReference": false]],
             "generationOptions": [:]
         ]
     }

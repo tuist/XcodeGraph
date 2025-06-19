@@ -7,7 +7,7 @@
   "properties" : {
     "additionalFiles" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/FileElement.json"
       },
       "type" : "array"
     },
@@ -52,7 +52,9 @@
     "packages" : {
       "additionalProperties" : false,
       "properties" : {
-
+        "SamplePackage" : {
+          "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Package.json"
+        }
       },
       "type" : "object"
     },
@@ -67,16 +69,12 @@
     },
     "schemes" : {
       "items" : {
-
+        "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Scheme.json"
       },
       "type" : "array"
     },
     "settings" : {
-      "additionalProperties" : false,
-      "properties" : {
-
-      },
-      "type" : "object"
+      "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Settings.json"
     },
     "sourceRootPath" : {
       "type" : "string"
@@ -84,7 +82,9 @@
     "targets" : {
       "additionalProperties" : false,
       "properties" : {
-
+        "SampleTarget" : {
+          "$ref" : "https:\/\/raw.githubusercontent.com\/tuist\/XcodeGraph\/main\/schemas\/Target.json"
+        }
       },
       "type" : "object"
     },
