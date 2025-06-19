@@ -104,3 +104,19 @@ jobs:
           version: 2024.11.8
       - name: Lint
         run: mise run lint
+  schema_generation:
+    name: Schema Generation Test
+    strategy:
+      matrix:
+        os:
+          - macos-15
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Schema Generation
+        run: |
+          echo "Testing JSON schema generation..."
+          swift run XcodeGraphSchemaGenerator
+          echo "Verifying schemas were generated..."
+          ls -la schemas/
+          echo "Schema generation test completed successfully"
