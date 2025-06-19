@@ -1,0 +1,20 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Version. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Version.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Version model",
+  "properties" : {
+    "major" : {
+      "type" : "integer"
+    },
+    "minor" : {
+      "type" : "integer"
+    },
+    "patch" : {
+      "type" : "integer"
+    }
+  },
+  "title" : "Version",
+  "type" : "object"
+}

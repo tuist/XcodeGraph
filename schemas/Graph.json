@@ -1,0 +1,52 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Graph. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Graph.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Graph model",
+  "properties" : {
+    "dependencies" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "dependencyConditions" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "packages" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "path" : {
+      "type" : "string"
+    },
+    "projects" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "workspace" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    }
+  },
+  "title" : "Graph",
+  "type" : "object"
+}

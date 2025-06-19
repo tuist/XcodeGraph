@@ -1,0 +1,97 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Project. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Project.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Project model",
+  "properties" : {
+    "additionalFiles" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "classPrefix" : {
+      "type" : "string"
+    },
+    "defaultKnownRegions" : {
+      "items" : {
+        "type" : "string"
+      },
+      "type" : "array"
+    },
+    "developmentRegion" : {
+      "type" : "string"
+    },
+    "ideTemplateMacros" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "isExternal" : {
+      "type" : "boolean"
+    },
+    "lastKnownUpgradeCheck" : {
+      "type" : "string"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "options" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "organizationName" : {
+      "type" : "string"
+    },
+    "packages" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "path" : {
+      "type" : "string"
+    },
+    "resourceSynthesizers" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "schemes" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "settings" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "sourceRootPath" : {
+      "type" : "string"
+    },
+    "targets" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "xcodeProjPath" : {
+      "type" : "string"
+    }
+  },
+  "title" : "Project",
+  "type" : "object"
+}

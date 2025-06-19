@@ -1,0 +1,32 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.BuildAction. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/BuildAction.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph BuildAction model",
+  "properties" : {
+    "postActions" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "preActions" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "runPostActionsOnFailure" : {
+      "type" : "boolean"
+    },
+    "targets" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    }
+  },
+  "title" : "BuildAction",
+  "type" : "object"
+}

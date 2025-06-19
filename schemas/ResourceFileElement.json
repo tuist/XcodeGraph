@@ -1,0 +1,27 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.ResourceFileElement. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/ResourceFileElement.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph ResourceFileElement model",
+  "properties" : {
+    "inclusionCondition" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "path" : {
+      "type" : "string"
+    },
+    "tags" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    }
+  },
+  "title" : "ResourceFileElement",
+  "type" : "object"
+}

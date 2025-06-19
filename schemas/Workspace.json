@@ -1,0 +1,52 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Workspace. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Workspace.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Workspace model",
+  "properties" : {
+    "additionalFiles" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "generationOptions" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "ideTemplateMacros" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "path" : {
+      "type" : "string"
+    },
+    "projects" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "schemes" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "xcWorkspacePath" : {
+      "type" : "string"
+    }
+  },
+  "title" : "Workspace",
+  "type" : "object"
+}

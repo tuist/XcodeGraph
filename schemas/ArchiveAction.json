@@ -1,0 +1,32 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.ArchiveAction. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/ArchiveAction.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph ArchiveAction model",
+  "properties" : {
+    "configurationName" : {
+      "type" : "string"
+    },
+    "customArchiveName" : {
+      "type" : "string"
+    },
+    "postActions" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "preActions" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "revealArchiveInOrganizer" : {
+      "type" : "boolean"
+    }
+  },
+  "title" : "ArchiveAction",
+  "type" : "object"
+}

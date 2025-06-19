@@ -1,0 +1,28 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Settings. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Settings.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Settings model",
+  "properties" : {
+    "base" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "configurations" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "defaultSettings" : {
+      "type" : "string"
+    }
+  },
+  "title" : "Settings",
+  "type" : "object"
+}

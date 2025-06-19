@@ -1,0 +1,26 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.ExecutionAction. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/ExecutionAction.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph ExecutionAction model",
+  "properties" : {
+    "scriptText" : {
+      "type" : "string"
+    },
+    "shellPath" : {
+      "type" : "string"
+    },
+    "showEnvVarsInLog" : {
+      "type" : "boolean"
+    },
+    "target" : {
+      "type" : "string"
+    },
+    "title" : {
+      "type" : "string"
+    }
+  },
+  "title" : "ExecutionAction",
+  "type" : "object"
+}

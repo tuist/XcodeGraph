@@ -1,0 +1,17 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.FileElement. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/FileElement.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph FileElement model",
+  "properties" : {
+    "isReference" : {
+      "type" : "boolean"
+    },
+    "path" : {
+      "type" : "string"
+    }
+  },
+  "title" : "FileElement",
+  "type" : "object"
+}

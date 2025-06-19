@@ -1,0 +1,28 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.ProfileAction. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/ProfileAction.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph ProfileAction model",
+  "properties" : {
+    "arguments" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "configurationName" : {
+      "type" : "string"
+    },
+    "executable" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    }
+  },
+  "title" : "ProfileAction",
+  "type" : "object"
+}

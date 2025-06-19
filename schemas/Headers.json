@@ -1,0 +1,29 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Headers. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Headers.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Headers model",
+  "properties" : {
+    "private" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "project" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "public" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    }
+  },
+  "title" : "Headers",
+  "type" : "object"
+}

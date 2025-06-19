@@ -1,0 +1,27 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.SourceFile. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/SourceFile.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph SourceFile model",
+  "properties" : {
+    "codeGen" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "compilerFlags" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "path" : {
+      "type" : "string"
+    }
+  },
+  "title" : "SourceFile",
+  "type" : "object"
+}

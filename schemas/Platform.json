@@ -1,0 +1,14 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Platform. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Platform.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Platform model",
+  "properties" : {
+    "rawValue" : {
+      "type" : "string"
+    }
+  },
+  "title" : "Platform",
+  "type" : "object"
+}

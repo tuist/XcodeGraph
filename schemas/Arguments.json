@@ -1,0 +1,24 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Arguments. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Arguments.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Arguments model",
+  "properties" : {
+    "environment" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "launchArguments" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    }
+  },
+  "title" : "Arguments",
+  "type" : "object"
+}

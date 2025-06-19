@@ -12,6 +12,16 @@ let targets: [Target] = [
             .enableExperimentalFeature("StrictConcurrency"),
         ]
     ),
+    .executableTarget(
+        name: "XcodeGraphSchemaGenerator",
+        dependencies: [
+            "XcodeGraph",
+            .product(name: "Path", package: "Path"),
+        ],
+        swiftSettings: [
+            .enableExperimentalFeature("StrictConcurrency"),
+        ]
+    ),
     .target(
         name: "XcodeMetadata",
         dependencies: [

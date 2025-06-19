@@ -1,0 +1,55 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.TestAction. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/TestAction.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph TestAction model",
+  "properties" : {
+    "arguments" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "codeCoverageTargets" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "configurationName" : {
+      "type" : "string"
+    },
+    "coverage" : {
+      "type" : "boolean"
+    },
+    "diagnosticsOptions" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "postActions" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "preActions" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "targets" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    }
+  },
+  "title" : "TestAction",
+  "type" : "object"
+}

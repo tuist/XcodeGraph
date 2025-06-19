@@ -1,0 +1,14 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Product. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Product.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Product model",
+  "properties" : {
+    "rawValue" : {
+      "type" : "string"
+    }
+  },
+  "title" : "Product",
+  "type" : "object"
+}

@@ -1,0 +1,50 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.BuildRule. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/BuildRule.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph BuildRule model",
+  "properties" : {
+    "compilerSpec" : {
+      "type" : "string"
+    },
+    "dependencyFile" : {
+      "type" : "string"
+    },
+    "filePatterns" : {
+      "type" : "string"
+    },
+    "fileType" : {
+      "type" : "string"
+    },
+    "inputFiles" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "outputFiles" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "outputFilesCompilerFlags" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "runOncePerArchitecture" : {
+      "type" : "boolean"
+    },
+    "script" : {
+      "type" : "string"
+    }
+  },
+  "title" : "BuildRule",
+  "type" : "object"
+}

@@ -1,0 +1,21 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Plist. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Plist.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Plist model",
+  "properties" : {
+    "content" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "path" : {
+      "type" : "string"
+    }
+  },
+  "title" : "Plist",
+  "type" : "object"
+}

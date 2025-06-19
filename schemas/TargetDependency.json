@@ -1,0 +1,24 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.TargetDependency. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/TargetDependency.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph TargetDependency model",
+  "properties" : {
+    "condition" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "type" : {
+      "type" : "string"
+    }
+  },
+  "title" : "TargetDependency",
+  "type" : "object"
+}

@@ -1,0 +1,17 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.BuildConfiguration. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/BuildConfiguration.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph BuildConfiguration model",
+  "properties" : {
+    "name" : {
+      "type" : "string"
+    },
+    "variant" : {
+      "type" : "string"
+    }
+  },
+  "title" : "BuildConfiguration",
+  "type" : "object"
+}

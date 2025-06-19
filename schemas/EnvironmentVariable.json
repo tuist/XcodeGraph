@@ -1,0 +1,20 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.EnvironmentVariable. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/EnvironmentVariable.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph EnvironmentVariable model",
+  "properties" : {
+    "isEnabled" : {
+      "type" : "boolean"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "value" : {
+      "type" : "string"
+    }
+  },
+  "title" : "EnvironmentVariable",
+  "type" : "object"
+}

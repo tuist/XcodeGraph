@@ -19,7 +19,7 @@ permissions:
 jobs:
   release:
     name: Release
-    runs-on: "ubuntu-latest"
+    runs-on: "macos-15"
     timeout-minutes: 15
     if: "!startsWith(github.event.head_commit.message, '[Release]')"
     steps:
@@ -56,6 +56,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: git cliff --bump -o CHANGELOG.md
+      - name: Generate JSON Schemas
+        if: env.should-release == 'true'
+        run: |
+          echo "Generating JSON schemas for XcodeGraph models..."
+          swift run XcodeGraphSchemaGenerator
+          echo "JSON schemas generated successfully"
       - name: Commit changes
         id: auto-commit-action
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -65,6 +71,7 @@ jobs:
           tagging_message: ${{ steps.next-version.outputs.NEXT_VERSION }}
           skip_dirty_check: true
           commit_message: "[Release] XcodeGraph ${{ steps.next-version.outputs.NEXT_VERSION }}"
+          file_pattern: "CHANGELOG.md schemas/*.json"
       - name: Get release notes
         id: release-notes
         if: env.should-release == 'true'

@@ -1,0 +1,138 @@
+{
+  "$comment" : "Generated schema for XcodeGraph.Target. This type conforms to Swift's Codable protocol.",
+  "$id" : "https:\/\/github.com\/tuist\/XcodeGraph\/schemas\/Target.json",
+  "$schema" : "https:\/\/json-schema.org\/draft\/2020-12\/schema",
+  "additionalProperties" : false,
+  "description" : "JSON Schema for XcodeGraph Target model",
+  "properties" : {
+    "additionalFiles" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "buildRules" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "bundleId" : {
+      "type" : "string"
+    },
+    "copyFiles" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "coreDataModels" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "dependencies" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "deploymentTargets" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "destinations" : {
+      "items" : {
+        "type" : "string"
+      },
+      "type" : "array"
+    },
+    "entitlements" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "environmentVariables" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "headers" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "infoPlist" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "launchArguments" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "mergeable" : {
+      "type" : "boolean"
+    },
+    "mergedBinaryType" : {
+      "type" : "string"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "onDemandResourcesTags" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "product" : {
+      "type" : "string"
+    },
+    "productName" : {
+      "type" : "string"
+    },
+    "resources" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "scripts" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    },
+    "settings" : {
+      "additionalProperties" : false,
+      "properties" : {
+
+      },
+      "type" : "object"
+    },
+    "sources" : {
+      "items" : {
+
+      },
+      "type" : "array"
+    }
+  },
+  "title" : "Target",
+  "type" : "object"
+}
