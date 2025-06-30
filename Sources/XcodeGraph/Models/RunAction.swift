@@ -35,7 +35,7 @@ public struct RunAction: Equatable, Codable, Sendable {
         metalOptions: MetalOptions? = nil,
         expandVariableFromTarget: TargetReference? = nil,
         launchStyle: LaunchStyle = .automatically,
-        appClipInvocationURL: URL?
+        appClipInvocationURL: URL? = nil
     ) {
         self.configurationName = configurationName
         self.attachDebugger = attachDebugger
