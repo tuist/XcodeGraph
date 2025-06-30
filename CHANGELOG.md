@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.1] - 2025-06-30
+### Details
+#### Chore
+- Update dependency tuist to v4.55.2 by @renovate[bot] in [#242](https://github.com/tuist/XcodeGraph/pull/242)
+
 ## [1.16.0] - 2025-06-30
 ### Details
 #### Feat
@@ -1005,6 +1010,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.16.1]: https://github.com/tuist/XcodeGraph/compare/1.16.0..1.16.1
 [1.16.0]: https://github.com/tuist/XcodeGraph/compare/1.15.28..1.16.0
 [1.15.28]: https://github.com/tuist/XcodeGraph/compare/1.15.27..1.15.28
 [1.15.27]: https://github.com/tuist/XcodeGraph/compare/1.15.26..1.15.27
