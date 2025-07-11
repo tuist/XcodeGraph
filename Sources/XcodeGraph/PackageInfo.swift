@@ -498,6 +498,7 @@ extension PackageInfo.Target {
                 case unsafeFlags([String])
                 case enableUpcomingFeature(String)
                 case enableExperimentalFeature(String)
+                case interoperabilityMode(String)
             }
 
             public init(from decoder: Decoder) throws {
@@ -507,6 +508,9 @@ extension PackageInfo.Target {
                 condition = try container.decodeIfPresent(PackageInfo.PackageConditionDescription.self, forKey: .condition)
                 if let kind = try? container.decode(Kind.self, forKey: .kind) {
                     switch kind {
+                    case let .interoperabilityMode(mode):
+                        name = .interoperabilityMode
+                        value = [mode]
                     case let .headerSearchPath(value):
                         name = .headerSearchPath
                         self.value = [value]
@@ -544,6 +548,8 @@ extension PackageInfo.Target {
                 try container.encode(tool, forKey: .tool)
                 try container.encodeIfPresent(condition, forKey: .condition)
                 switch name {
+                case .interoperabilityMode:
+                    try container.encode(Kind.interoperabilityMode(value.first!), forKey: .kind)
                 case .headerSearchPath:
                     try container.encode(Kind.headerSearchPath(value.first!), forKey: .kind)
                 case .define:
