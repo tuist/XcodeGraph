@@ -448,6 +448,7 @@ extension PackageInfo.Target {
             case unsafeFlags
             case enableUpcomingFeature
             case enableExperimentalFeature
+            case interoperabilityMode
         }
 
         /// An individual build setting.
