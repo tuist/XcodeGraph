@@ -3,7 +3,11 @@ import Path
 
 public enum Package: Equatable, Codable, Sendable {
     case remote(url: String, requirement: Requirement)
-    case local(path: AbsolutePath)
+    /// Parameters
+    ///  - path: Absolute path of a package
+    ///  - groupPath: Path which would be used to
+    ///  structure packages in generated project
+    case local(path: AbsolutePath, groupPath: String?)
 }
 
 extension XcodeGraph.Package {
