@@ -141,10 +141,10 @@ public struct XcodeGraphMapper: XcodeGraphMapping {
             case .remote:
                 break
             case let .local(path: packagePath):
-                guard packageInfos[packagePath] == nil else { break }
-                let packageInfo = try await packageInfoLoader.loadPackageInfo(at: packagePath)
-                packageInfos[packagePath] = packageInfo
-                packagesByName[packageInfo.name] = packagePath
+                guard packageInfos[packagePath.path] == nil else { break }
+                let packageInfo = try await packageInfoLoader.loadPackageInfo(at: packagePath.path)
+                packageInfos[packagePath.path] = packageInfo
+                packagesByName[packageInfo.name] = packagePath.path
             }
         }
         for (path, packageInfo) in packageInfos {
