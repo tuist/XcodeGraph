@@ -62,8 +62,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public let onDemandResourcesTags: OnDemandResourcesTags?
     public let metadata: TargetMetadata
     public let type: TargetType
-    /// Package directories
     public let packages: [AbsolutePath]
+    public let buildableFolders: [BuildableFolder]
 
     // MARK: - Init
 
@@ -97,7 +97,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         onDemandResourcesTags: OnDemandResourcesTags? = nil,
         metadata: TargetMetadata = .metadata(tags: []),
         type: TargetType = .local,
-        packages: [AbsolutePath] = []
+        packages: [AbsolutePath] = [],
+        buildableFolders: [BuildableFolder] = []
     ) {
         self.name = name
         self.product = product
@@ -129,6 +130,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         self.metadata = metadata
         self.type = type
         self.packages = packages
+        self.buildableFolders = buildableFolders
     }
 
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
@@ -441,7 +443,8 @@ extension Sequence<Target> {
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
             mergeable: Bool = false,
-            metadata: TargetMetadata = .test()
+            metadata: TargetMetadata = .test(),
+            buildableFolders: [BuildableFolder] = [],
         ) -> Target {
             Target(
                 name: name,
@@ -469,7 +472,8 @@ extension Sequence<Target> {
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
                 mergeable: mergeable,
-                metadata: metadata
+                metadata: metadata,
+                buildableFolders: buildableFolders
             )
         }
 
@@ -501,7 +505,8 @@ extension Sequence<Target> {
             prune: Bool = false,
             mergedBinaryType: MergedBinaryType = .disabled,
             mergeable: Bool = false,
-            metadata: TargetMetadata = .test()
+            metadata: TargetMetadata = .test(),
+            buildableFolders: [BuildableFolder] = []
         ) -> Target {
             Target(
                 name: name,
@@ -529,7 +534,8 @@ extension Sequence<Target> {
                 prune: prune,
                 mergedBinaryType: mergedBinaryType,
                 mergeable: mergeable,
-                metadata: metadata
+                metadata: metadata,
+                buildableFolders: buildableFolders
             )
         }
 
@@ -554,7 +560,8 @@ extension Sequence<Target> {
             filesGroup: ProjectGroup = .group(name: "Project"),
             dependencies: [TargetDependency] = [],
             rawScriptBuildPhases: [RawScriptBuildPhase] = [],
-            onDemandResourcesTags: OnDemandResourcesTags? = nil
+            onDemandResourcesTags: OnDemandResourcesTags? = nil,
+            buildableFolders: [BuildableFolder] = []
         ) -> Target {
             Target(
                 name: name,
@@ -576,7 +583,8 @@ extension Sequence<Target> {
                 filesGroup: filesGroup,
                 dependencies: dependencies,
                 rawScriptBuildPhases: rawScriptBuildPhases,
-                onDemandResourcesTags: onDemandResourcesTags
+                onDemandResourcesTags: onDemandResourcesTags,
+                buildableFolders: buildableFolders
             )
         }
 
