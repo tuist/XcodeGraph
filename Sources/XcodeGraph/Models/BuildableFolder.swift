@@ -4,7 +4,7 @@ import Path
 /// Synchronized groups were introduced in Xcode 16 to reduce git conflicts by having a reference
 /// to a folder whose content is "synchronized" by Xcode itself. Think of it as Xcode resolving
 /// the globs.
-public struct BuildableFolder: Sendable, Codable {
+public struct BuildableFolder: Sendable, Codable, Equatable, Hashable {
     /// The absolute path to the buildable folder.
     public var path: AbsolutePath
 
