@@ -444,7 +444,7 @@ extension Sequence<Target> {
             mergedBinaryType: MergedBinaryType = .disabled,
             mergeable: Bool = false,
             metadata: TargetMetadata = .test(),
-            buildableFolders: [BuildableFolder] = [],
+            buildableFolders: [BuildableFolder] = []
         ) -> Target {
             Target(
                 name: name,
