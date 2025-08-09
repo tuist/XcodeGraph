@@ -6,12 +6,16 @@ import XcodeGraph
 
 public enum SystemFrameworkMetadataProviderError: LocalizedError, Equatable {
     case unsupportedSDK(name: String)
+    case unsupportedSDKPlatform(sdk: String, platform: Platform, supported: [Platform])
 
     public var errorDescription: String? {
         switch self {
         case let .unsupportedSDK(sdk):
             let supportedTypes = SDKType.supportedTypesDescription
             return "The SDK type of \(sdk) is not currently supported - only \(supportedTypes) are supported."
+        case let .unsupportedSDKPlatform(sdk, platform, supported):
+            let platforms = supported.map(\.caseValue).joined(separator: ", ")
+            return "The Platform type of \(platform.caseValue) is not currently supported for \(sdk) - only \(platforms) are supported."
         }
     }
 }
@@ -61,6 +65,10 @@ public final class SystemFrameworkMetadataProvider: SystemFrameworkMetadataProvi
         var source = sdkSource
         if sdkName == "XcodeKit.framework" {
             source = .developer
+            if platform != .macOS {
+                throw SystemFrameworkMetadataProviderError
+                    .unsupportedSDKPlatform(sdk: sdkName, platform: platform, supported: [.macOS])
+            }
         }
 
         let path = try sdkPath(name: sdkName, platform: platform, type: sdkType, source: source)
