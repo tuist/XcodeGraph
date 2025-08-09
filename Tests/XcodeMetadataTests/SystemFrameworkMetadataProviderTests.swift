@@ -85,6 +85,21 @@ struct SystemFrameworkMetadataProviderTests {
     }
 
     @Test
+    func loadMetadataUnsupportedPlatform() throws {
+        // Given
+        let sdkName = "XcodeKit.framework"
+        let platform = Platform.iOS
+
+        // When / Then
+        #expect(
+            throws: SystemFrameworkMetadataProviderError
+                .unsupportedSDKPlatform(sdk: sdkName, platform: platform, supported: [.macOS])
+        ) {
+            try subject.loadMetadata(sdkName: sdkName, status: .required, platform: platform, source: .system)
+        }
+    }
+
+    @Test
     func loadMetadataDeveloperSourceSupportedPlatform() throws {
         // Given
         let sdkName = "XCTest.framework"
@@ -99,6 +114,28 @@ struct SystemFrameworkMetadataProviderTests {
             metadata == SystemFrameworkMetadata(
                 name: sdkName,
                 path: "/Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework",
+                status: .required,
+                source: .developer
+            ),
+            "Metadata does not match expected value"
+        )
+    }
+
+    @Test
+    func loadMetadataXcodeKit() throws {
+        // Given
+        let sdkName = "XcodeKit.framework"
+        let platform = Platform.macOS
+        let source = SDKSource.system
+
+        // When
+        let metadata = try subject.loadMetadata(sdkName: sdkName, status: .required, platform: platform, source: source)
+
+        // Then
+        #expect(
+            metadata == SystemFrameworkMetadata(
+                name: sdkName,
+                path: "/Library/Frameworks/XcodeKit.framework",
                 status: .required,
                 source: .developer
             ),
