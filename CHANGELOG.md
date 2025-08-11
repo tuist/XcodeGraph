@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2025-08-11
+### Details
+#### Feat
+- Add XcodeKit Framework Support by @navtoj in [#263](https://github.com/tuist/XcodeGraph/pull/263)
+
+## New Contributors
+* @navtoj made their first contribution in [#263](https://github.com/tuist/XcodeGraph/pull/263)
 ## [1.17.16] - 2025-08-10
 ### Details
 #### Chore
@@ -1130,6 +1137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.18.0]: https://github.com/tuist/XcodeGraph/compare/1.17.16..1.18.0
 [1.17.16]: https://github.com/tuist/XcodeGraph/compare/1.17.15..1.17.16
 [1.17.15]: https://github.com/tuist/XcodeGraph/compare/1.17.14..1.17.15
 [1.17.14]: https://github.com/tuist/XcodeGraph/compare/1.17.13..1.17.14
