@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.1] - 2025-08-11
+### Details
+#### Chore
+- Update actions/checkout action to v5 by @renovate[bot] in [#273](https://github.com/tuist/XcodeGraph/pull/273)
+- Update actions/checkout digest to 08eba0b by @renovate[bot] in [#272](https://github.com/tuist/XcodeGraph/pull/272)
+
 ## [1.18.0] - 2025-08-11
 ### Details
 #### Feat
@@ -1137,6 +1143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.18.1]: https://github.com/tuist/XcodeGraph/compare/1.18.0..1.18.1
 [1.18.0]: https://github.com/tuist/XcodeGraph/compare/1.17.16..1.18.0
 [1.17.16]: https://github.com/tuist/XcodeGraph/compare/1.17.15..1.17.16
 [1.17.15]: https://github.com/tuist/XcodeGraph/compare/1.17.14..1.17.15
