@@ -80,9 +80,9 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
-        .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "9.4.3")),
+        .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "9.5.0")),
         .package(url: "https://github.com/tuist/Command.git", from: "0.13.0"),
-        .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.11.3")),
+        .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.11.7")),
         .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.4.0")),
         .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.37.0")),
         .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.4.5"),

@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.16] - 2025-08-10
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.11.7" by @renovate[bot] in [#271](https://github.com/tuist/XcodeGraph/pull/271)
+
+## [1.17.15] - 2025-08-09
+### Details
+#### Chore
+- Update dependency tuist to v4.59.2 by @renovate[bot] in [#270](https://github.com/tuist/XcodeGraph/pull/270)
+
+## [1.17.14] - 2025-08-09
+### Details
+#### Chore
+- Update dependency tuist/xcodeproj to from: "9.5.0" by @renovate[bot] in [#268](https://github.com/tuist/XcodeGraph/pull/268)
+
+## [1.17.13] - 2025-08-09
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.11.6" by @renovate[bot] in [#269](https://github.com/tuist/XcodeGraph/pull/269)
+
+## [1.17.12] - 2025-08-08
+### Details
+#### Chore
+- Update dependency tuist to v4.59.1 by @renovate[bot] in [#267](https://github.com/tuist/XcodeGraph/pull/267)
+
+## [1.17.11] - 2025-08-07
+### Details
+#### Chore
+- Update dependency tuist to v4.58.1 by @renovate[bot] in [#265](https://github.com/tuist/XcodeGraph/pull/265)
+
+## [1.17.10] - 2025-08-07
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.11.5" by @renovate[bot] in [#264](https://github.com/tuist/XcodeGraph/pull/264)
+
 ## [1.17.9] - 2025-07-27
 ### Details
 #### Chore
@@ -1095,6 +1130,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.17.16]: https://github.com/tuist/XcodeGraph/compare/1.17.15..1.17.16
+[1.17.15]: https://github.com/tuist/XcodeGraph/compare/1.17.14..1.17.15
+[1.17.14]: https://github.com/tuist/XcodeGraph/compare/1.17.13..1.17.14
+[1.17.13]: https://github.com/tuist/XcodeGraph/compare/1.17.12..1.17.13
+[1.17.12]: https://github.com/tuist/XcodeGraph/compare/1.17.11..1.17.12
+[1.17.11]: https://github.com/tuist/XcodeGraph/compare/1.17.10..1.17.11
+[1.17.10]: https://github.com/tuist/XcodeGraph/compare/1.17.9..1.17.10
 [1.17.9]: https://github.com/tuist/XcodeGraph/compare/1.17.8..1.17.9
 [1.17.8]: https://github.com/tuist/XcodeGraph/compare/1.17.7..1.17.8
 [1.17.7]: https://github.com/tuist/XcodeGraph/compare/1.17.6..1.17.7
