@@ -56,11 +56,16 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public var playgrounds: [AbsolutePath]
     public let additionalFiles: [FileElement]
     public var buildRules: [BuildRule]
+    @available(*, deprecated, message: """
+    The prune attribute coupled XcodeGraph to a particular use-case of Tuist and therefore
+    we removed it in favor of using metadata as an in-memory context holder that can be leveraged
+    using conventional tags.
+    """)
     public var prune: Bool
     public let mergedBinaryType: MergedBinaryType
     public let mergeable: Bool
     public let onDemandResourcesTags: OnDemandResourcesTags?
-    public let metadata: TargetMetadata
+    public var metadata: TargetMetadata
     public let type: TargetType
     public let packages: [AbsolutePath]
     public let buildableFolders: [BuildableFolder]
