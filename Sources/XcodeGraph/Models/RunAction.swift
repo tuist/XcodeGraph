@@ -18,6 +18,8 @@ public struct RunAction: Equatable, Codable, Sendable {
     public let expandVariableFromTarget: TargetReference?
     public let launchStyle: LaunchStyle
     public let appClipInvocationURL: URL?
+    public var customWorkingDirectory: AbsolutePath?
+    public var useCustomWorkingDirectory: Bool
 
     // MARK: - Init
 
@@ -35,7 +37,9 @@ public struct RunAction: Equatable, Codable, Sendable {
         metalOptions: MetalOptions? = nil,
         expandVariableFromTarget: TargetReference? = nil,
         launchStyle: LaunchStyle = .automatically,
-        appClipInvocationURL: URL? = nil
+        appClipInvocationURL: URL? = nil,
+        customWorkingDirectory: AbsolutePath? = nil,
+        useCustomWorkingDirectory: Bool = false
     ) {
         self.configurationName = configurationName
         self.attachDebugger = attachDebugger
@@ -51,6 +55,8 @@ public struct RunAction: Equatable, Codable, Sendable {
         self.expandVariableFromTarget = expandVariableFromTarget
         self.launchStyle = launchStyle
         self.appClipInvocationURL = appClipInvocationURL
+        self.customWorkingDirectory = customWorkingDirectory
+        self.useCustomWorkingDirectory = useCustomWorkingDirectory
     }
 }
 
@@ -76,7 +82,9 @@ public struct RunAction: Equatable, Codable, Sendable {
             ),
             expandVariableFromTarget: TargetReference? = nil,
             launchStyle: LaunchStyle = .automatically,
-            appClipInvocationURL: URL? = nil
+            appClipInvocationURL: URL? = nil,
+            customWorkingDirectory: AbsolutePath? = nil,
+            useCustomWorkingDirectory: Bool = false
         ) -> RunAction {
             RunAction(
                 configurationName: configurationName,
@@ -92,7 +100,9 @@ public struct RunAction: Equatable, Codable, Sendable {
                 metalOptions: metalOptions,
                 expandVariableFromTarget: expandVariableFromTarget,
                 launchStyle: launchStyle,
-                appClipInvocationURL: appClipInvocationURL
+                appClipInvocationURL: appClipInvocationURL,
+                customWorkingDirectory: customWorkingDirectory,
+                useCustomWorkingDirectory: useCustomWorkingDirectory
             )
         }
     }
