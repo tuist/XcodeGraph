@@ -6,7 +6,7 @@ extension Package {
         switch self {
         case let .remote(url, _):
             return url
-        case let .local(path):
+        case let .local(path, _):
             return path.pathString
         }
     }
