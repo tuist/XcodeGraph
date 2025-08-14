@@ -1,5 +1,5 @@
 {
-  "originHash" : "505645cbb783e49767bfc742c0bb9feef1221fa8bd51dda3c6497ea1c2598b4c",
+  "originHash" : "3723bf697fd3c9deb411523eef2023627c93557d8d2729d3e438c927a4be3b5c",
   "pins" : [
     {
       "identity" : "aexml",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/FileSystem.git",
       "state" : {
-        "revision" : "23bcf23ce85edb653817a34c42c5140b16a6132c",
-        "version" : "0.11.5"
+        "revision" : "d2f49d5a9f8ada3b6e1a2bc4254d715b214d5753",
+        "version" : "0.11.8"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/XcodeProj",
       "state" : {
-        "revision" : "9799bb429fda8e360f4c535af1716bebc89fb235",
-        "version" : "9.4.3"
+        "revision" : "e1f2a4365669e02272b2f381b13a2378b15fb485",
+        "version" : "9.5.0"
       }
     },
     {
