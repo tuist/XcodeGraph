@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.0] - 2025-08-14
+### Details
+#### Feat
+- Make `Target.metadata` mutable and mark `Target.prune` as deprecated by @pepicrft in [#275](https://github.com/tuist/XcodeGraph/pull/275)
+
 ## [1.19.1] - 2025-08-11
 ### Details
 #### Chore
@@ -1153,6 +1158,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.20.0]: https://github.com/tuist/XcodeGraph/compare/1.19.1..1.20.0
 [1.19.1]: https://github.com/tuist/XcodeGraph/compare/1.19.0..1.19.1
 [1.19.0]: https://github.com/tuist/XcodeGraph/compare/1.18.1..1.19.0
 [1.18.1]: https://github.com/tuist/XcodeGraph/compare/1.18.0..1.18.1
