@@ -28,7 +28,7 @@ public protocol SystemFrameworkMetadataProviding {
 }
 
 extension SystemFrameworkMetadataProviding {
-    func loadXCTestMetadata(platform: Platform) throws -> SystemFrameworkMetadata {
+    public func loadXCTestMetadata(platform: Platform) throws -> SystemFrameworkMetadata {
         try loadMetadata(sdkName: "XCTest.framework", status: .required, platform: platform, source: .developer)
     }
 }
