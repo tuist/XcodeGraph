@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 15
     if: "!startsWith(github.event.head_commit.message, '[Release]')"
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
       - uses: jdx/mise-action@v2
@@ -58,7 +58,7 @@ jobs:
         run: git cliff --bump -o CHANGELOG.md
       - name: Commit changes
         id: auto-commit-action
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         if: env.should-release == 'true'
         with:
           commit_options: "--allow-empty"

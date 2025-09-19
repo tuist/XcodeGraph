@@ -6,12 +6,16 @@ import XcodeGraph
 
 public enum SystemFrameworkMetadataProviderError: LocalizedError, Equatable {
     case unsupportedSDK(name: String)
+    case unsupportedSDKPlatform(sdk: String, platform: Platform, supported: [Platform])
 
     public var errorDescription: String? {
         switch self {
         case let .unsupportedSDK(sdk):
             let supportedTypes = SDKType.supportedTypesDescription
             return "The SDK type of \(sdk) is not currently supported - only \(supportedTypes) are supported."
+        case let .unsupportedSDKPlatform(sdk, platform, supported):
+            let platforms = supported.map(\.caseValue).joined(separator: ", ")
+            return "The Platform type of \(platform.caseValue) is not currently supported for \(sdk) - only \(platforms) are supported."
         }
     }
 }
@@ -24,7 +28,7 @@ public protocol SystemFrameworkMetadataProviding {
 }
 
 extension SystemFrameworkMetadataProviding {
-    func loadXCTestMetadata(platform: Platform) throws -> SystemFrameworkMetadata {
+    public func loadXCTestMetadata(platform: Platform) throws -> SystemFrameworkMetadata {
         try loadMetadata(sdkName: "XCTest.framework", status: .required, platform: platform, source: .developer)
     }
 }
@@ -38,7 +42,7 @@ public final class SystemFrameworkMetadataProvider: SystemFrameworkMetadataProvi
         sdkName: String,
         status: LinkingStatus,
         platform: Platform,
-        source: SDKSource
+        source sdkSource: SDKSource
     ) throws -> SystemFrameworkMetadata {
         let sdkNamePath = try AbsolutePath(validating: "/\(sdkName)")
         guard let sdkExtension = sdkNamePath.extension
@@ -58,6 +62,15 @@ public final class SystemFrameworkMetadataProvider: SystemFrameworkMetadataProvi
             throw SystemFrameworkMetadataProviderError.unsupportedSDK(name: sdkName)
         }
 
+        var source = sdkSource
+        if sdkName == "XcodeKit.framework" {
+            source = .developer
+            if platform != .macOS {
+                throw SystemFrameworkMetadataProviderError
+                    .unsupportedSDKPlatform(sdk: sdkName, platform: platform, supported: [.macOS])
+            }
+        }
+
         let path = try sdkPath(name: sdkName, platform: platform, type: sdkType, source: source)
         return SystemFrameworkMetadata(
             name: sdkName,
@@ -70,7 +83,7 @@ public final class SystemFrameworkMetadataProvider: SystemFrameworkMetadataProvi
     private func sdkPath(name: String, platform: Platform, type: SDKType, source: SDKSource) throws -> AbsolutePath {
         switch source {
         case .developer:
-            let xcodeDeveloperSdkRootPath = platform.xcodeDeveloperSdkRootPath
+            let xcodeDeveloperSdkRootPath = name == "XcodeKit.framework" ? "Library" : platform.xcodeDeveloperSdkRootPath
             let sdkRootPath = try AbsolutePath(validating: "/\(xcodeDeveloperSdkRootPath)")
             return sdkRootPath
                 .appending(try RelativePath(validating: "Frameworks"))
