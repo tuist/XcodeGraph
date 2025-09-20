@@ -8,9 +8,13 @@ public struct BuildableFolder: Sendable, Codable, Equatable, Hashable {
     /// The absolute path to the buildable folder.
     public var path: AbsolutePath
 
+    /// Exceptions to the buildable folder.
+    public var exceptions: BuildableFolderExceptions
+
     /// Creates an instance of buildable folder.
     /// - Parameter path: Absolute path to the buildable folder.
-    public init(path: AbsolutePath) {
+    public init(path: AbsolutePath, exceptions: BuildableFolderExceptions) {
         self.path = path
+        self.exceptions = exceptions
     }
 }
