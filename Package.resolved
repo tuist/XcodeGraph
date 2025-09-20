@@ -1,5 +1,5 @@
 {
-  "originHash" : "3723bf697fd3c9deb411523eef2023627c93557d8d2729d3e438c927a4be3b5c",
+  "originHash" : "88fcdf8451554503ef74eb5a6e07f1c3b4af720431bfc6f6ba1d606475e66ced",
   "pins" : [
     {
       "identity" : "aexml",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/FileSystem.git",
       "state" : {
-        "revision" : "d2f49d5a9f8ada3b6e1a2bc4254d715b214d5753",
-        "version" : "0.11.8"
+        "revision" : "1e8890203abfc0dcd887b49ec5e91ea75b394495",
+        "version" : "0.11.23"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/p-x9/MachOKit",
       "state" : {
-        "revision" : "5a09d8ad1be010bcd58d8a39554480b19e0a45e1",
-        "version" : "0.37.0"
+        "revision" : "fc1f2646220b3ce9db2e415b6b8848f5a89ed865",
+        "version" : "0.39.0"
       }
     },
     {
