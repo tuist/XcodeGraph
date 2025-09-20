@@ -13,7 +13,7 @@ public struct BuildableFolderExceptions: Sendable, Codable, Equatable, Hashable,
         exceptions = elements
     }
 
-    private init(exceptions: [BuildableFolderException]) {
+    public init(exceptions: [BuildableFolderException]) {
         self.exceptions = exceptions
     }
 }
