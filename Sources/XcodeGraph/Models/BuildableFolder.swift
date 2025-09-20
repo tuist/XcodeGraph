@@ -8,13 +8,21 @@ public struct BuildableFolder: Sendable, Codable, Equatable, Hashable {
     /// The absolute path to the buildable folder.
     public var path: AbsolutePath
 
-    /// Exceptions to the buildable folder.
+    /// Exceptions associated with this buildable folder, describing files to exclude or per-file build configuration overrides.
     public var exceptions: BuildableFolderExceptions
 
-    /// Creates an instance of buildable folder.
-    /// - Parameter path: Absolute path to the buildable folder.
-    public init(path: AbsolutePath, exceptions: BuildableFolderExceptions) {
+    /// A list of absolute paths resolved from this folder, allowing consumers to work with all files without extra I/O
+    /// operations.
+    public var resolvedPaths: [AbsolutePath]
+
+    /// Creates a new `BuildableFolder` instance.
+    /// - Parameters:
+    ///   - path: The absolute path to the buildable folder.
+    ///   - exceptions: The set of exceptions (such as excluded files or custom compiler flags) for the folder.
+    ///   - resolvedPaths: The list of absolute file paths resolved from the folder, to avoid extra file system operations.
+    public init(path: AbsolutePath, exceptions: BuildableFolderExceptions, resolvedPaths: [AbsolutePath]) {
         self.path = path
         self.exceptions = exceptions
+        self.resolvedPaths = resolvedPaths
     }
 }
