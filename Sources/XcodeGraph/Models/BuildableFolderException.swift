@@ -8,12 +8,27 @@ public struct BuildableFolderException: Sendable, Codable, Equatable, Hashable {
     /// A dictionary mapping files (referenced by their absolute path) to the compiler flags to apply.
     public var compilerFlags: [AbsolutePath: String]
 
+    /// The list of public headers.
+    public var publicHeaders: [AbsolutePath]
+
+    /// The list of private headers.
+    public var privateHeaders: [AbsolutePath]
+
     /// Creates a new exception for a buildable folder.
     /// - Parameters:
     ///   - excluded: An array of absolute paths to files that should be excluded from the buildable folder.
     ///   - compilerFlags: A dictionary mapping absolute file paths to specific compiler flags to apply to those files.
-    public init(excluded: [AbsolutePath], compilerFlags: [AbsolutePath: String]) {
+    ///   - publicHeaders: The list of public headers.
+    ///   - privateHeaders: The list of private headers.
+    public init(
+        excluded: [AbsolutePath],
+        compilerFlags: [AbsolutePath: String],
+        publicHeaders: [AbsolutePath],
+        privateHeaders: [AbsolutePath]
+    ) {
         self.excluded = excluded
         self.compilerFlags = compilerFlags
+        self.publicHeaders = publicHeaders
+        self.privateHeaders = privateHeaders
     }
 }
