@@ -6,13 +6,13 @@ public struct BuildableFolderFile: Sendable, Codable, Equatable, Hashable {
     public let path: AbsolutePath
 
     /// Compiler flags to apply when building this file. An empty string means no extra flags.
-    public let compilerFlags: String
+    public let compilerFlags: String?
 
     /// Initializes a buildable folder file.
     /// - Parameters:
     ///   - path: The absolute path to the file within the buildable folder.
     ///   - compilerFlags: Compiler flags to apply when building this file. An empty string means no extra flags.
-    public init(path: AbsolutePath, compilerFlags: String) {
+    public init(path: AbsolutePath, compilerFlags: String?) {
         self.path = path
         self.compilerFlags = compilerFlags
     }
