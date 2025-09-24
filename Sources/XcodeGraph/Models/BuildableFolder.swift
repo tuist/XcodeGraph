@@ -7,6 +7,15 @@ public struct BuildableFolderFile: Sendable, Codable, Equatable, Hashable {
 
     /// Compiler flags to apply when building this file. An empty string means no extra flags.
     public let compilerFlags: String
+
+    /// Initializes a buildable folder file.
+    /// - Parameters:
+    ///   - path: The absolute path to the file within the buildable folder.
+    ///   - compilerFlags: Compiler flags to apply when building this file. An empty string means no extra flags.
+    public init(path: AbsolutePath, compilerFlags: String) {
+        self.path = path
+        self.compilerFlags = compilerFlags
+    }
 }
 
 /// A buildable folder maps to a PBXFileSystemSynchronizedRootGroup in Xcode projects.
