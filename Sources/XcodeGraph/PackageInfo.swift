@@ -449,6 +449,7 @@ extension PackageInfo.Target {
             case enableUpcomingFeature
             case enableExperimentalFeature
             case interoperabilityMode
+            case defaultIsolation
         }
 
         /// An individual build setting.
@@ -499,6 +500,7 @@ extension PackageInfo.Target {
                 case enableUpcomingFeature(String)
                 case enableExperimentalFeature(String)
                 case interoperabilityMode(String)
+                case defaultIsolation(String)
             }
 
             public init(from decoder: Decoder) throws {
@@ -535,6 +537,9 @@ extension PackageInfo.Target {
                     case let .swiftLanguageMode(value):
                         name = .swiftLanguageMode
                         self.value = [value]
+                    case let .defaultIsolation(value):
+                        name = .defaultIsolation
+                        self.value = [value]
                     }
                 } else {
                     name = try container.decode(SettingName.self, forKey: .name)
@@ -566,6 +571,8 @@ extension PackageInfo.Target {
                     try container.encode(Kind.enableExperimentalFeature(value.first!), forKey: .kind)
                 case .swiftLanguageMode:
                     try container.encode(Kind.swiftLanguageMode(value.first!), forKey: .kind)
+                case .defaultIsolation:
+                    try container.encode(Kind.defaultIsolation(value.first!), forKey: .kind)
                 }
             }
         }
