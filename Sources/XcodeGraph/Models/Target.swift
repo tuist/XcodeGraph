@@ -68,7 +68,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public var metadata: TargetMetadata
     public let type: TargetType
     public let packages: [AbsolutePath]
-    public let buildableFolders: [BuildableFolder]
+    public var buildableFolders: [BuildableFolder]
 
     // MARK: - Init
 
