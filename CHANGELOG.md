@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.24.19] - 2025-10-28
+### Details
+#### Fix
+- Add 'txt', 'js' and 'json' to valid resource extensions by @natanrolnik in [#349](https://github.com/tuist/XcodeGraph/pull/349)
+
+## New Contributors
+* @natanrolnik made their first contribution in [#349](https://github.com/tuist/XcodeGraph/pull/349)
 ## [1.24.18] - 2025-10-24
 ### Details
 #### Chore
@@ -1502,6 +1509,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.24.19]: https://github.com/tuist/XcodeGraph/compare/1.24.18..1.24.19
 [1.24.18]: https://github.com/tuist/XcodeGraph/compare/1.24.17..1.24.18
 [1.24.17]: https://github.com/tuist/XcodeGraph/compare/1.24.16..1.24.17
 [1.24.16]: https://github.com/tuist/XcodeGraph/compare/1.24.15..1.24.16
