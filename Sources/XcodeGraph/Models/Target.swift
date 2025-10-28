@@ -15,7 +15,9 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     ]
     public static let validResourceExtensions: [String] = [
         // Resource
-        "md", "xcstrings", "plist", "rtf", "tutorial", "sks", "xcprivacy", "gpx", "strings", "stringsdict", "geojson",
+        "md", "xcstrings", "plist", "rtf", "tutorial", "sks", "xcprivacy", "gpx", "strings", "stringsdict",
+        "geojson", "txt", "json", "js",
+
         // User interface
         "storyboard", "xib",
         // Other
