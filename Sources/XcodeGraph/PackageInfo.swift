@@ -436,7 +436,7 @@ extension PackageInfo.Target {
     /// A namespace for target-specific build settings.
     public enum TargetBuildSettingDescription {
         /// The tool for which a build setting is declared.
-        public enum Tool: String, Codable, Hashable, CaseIterable {
+        public enum Tool: String, Codable, Hashable, CaseIterable, Sendable {
             case c
             case cxx
             case swift
@@ -455,6 +455,7 @@ extension PackageInfo.Target {
             case enableExperimentalFeature
             case interoperabilityMode
             case defaultIsolation
+            case strictMemorySafety
         }
 
         /// An individual build setting.
@@ -506,6 +507,26 @@ extension PackageInfo.Target {
                 case enableExperimentalFeature(String)
                 case interoperabilityMode(String)
                 case defaultIsolation(String)
+                case strictMemorySafety(String)
+            }
+
+            enum SettingDecodingError: LocalizedError {
+                case missingRequiredKeys(tool: Tool, availableKeys: [String], codingPath: [CodingKey])
+
+                var errorDescription: String? {
+                    switch self {
+                    case let .missingRequiredKeys(tool, availableKeys, codingPath):
+                        let path = codingPath.map(\.stringValue).joined(separator: ".")
+                        return """
+                        Failed to decode target build setting at '\(path)'.
+                        Expected either 'kind' (Xcode 14+ format) or 'name' (legacy format) key, but neither was found.
+                        Tool: \(tool)
+                        Available keys: \(availableKeys.joined(separator: ", "))
+
+                        This usually indicates a malformed Package.swift manifest or an unsupported Swift Package Manager version.
+                        """
+                    }
+                }
             }
 
             public init(from decoder: Decoder) throws {
@@ -545,10 +566,24 @@ extension PackageInfo.Target {
                     case let .defaultIsolation(value):
                         name = .defaultIsolation
                         self.value = [value]
+                    case let .strictMemorySafety(value):
+                        name = .strictMemorySafety
+                        self.value = [value]
                     }
                 } else {
-                    name = try container.decode(SettingName.self, forKey: .name)
-                    value = try container.decode([String].self, forKey: .value)
+                    // Legacy format - try to decode name
+                    do {
+                        name = try container.decode(SettingName.self, forKey: .name)
+                        value = try container.decode([String].self, forKey: .value)
+                    } catch {
+                        // Neither 'kind' nor 'name' was found - provide helpful error
+                        let availableKeys = container.allKeys.map(\.stringValue)
+                        throw SettingDecodingError.missingRequiredKeys(
+                            tool: tool,
+                            availableKeys: availableKeys,
+                            codingPath: decoder.codingPath
+                        )
+                    }
                 }
             }
 
@@ -578,6 +613,8 @@ extension PackageInfo.Target {
                     try container.encode(Kind.swiftLanguageMode(value.first!), forKey: .kind)
                 case .defaultIsolation:
                     try container.encode(Kind.defaultIsolation(value.first!), forKey: .kind)
+                case .strictMemorySafety:
+                    try container.encode(Kind.strictMemorySafety(value.first!), forKey: .kind)
                 }
             }
         }
