@@ -14,7 +14,7 @@ public struct PackageInfo: Equatable, Hashable {
     public let targets: [Target]
 
     /// The traits the package supports
-    public let traits: [PackageTrait]
+    public let traits: [PackageTrait]?
 
     /// The declared platforms in the manifest.
     public let platforms: [Platform]
@@ -49,7 +49,7 @@ public struct PackageInfo: Equatable, Hashable {
         name: String,
         products: [Product],
         targets: [Target],
-        traits: [PackageTrait],
+        traits: [PackageTrait]?,
         platforms: [Platform],
         cLanguageStandard: String?,
         cxxLanguageStandard: String?,
@@ -621,7 +621,7 @@ extension PackageInfo: Codable {
             )
         }
         self.toolsVersion = toolsVersion
-        traits = try values.decode([PackageTrait].self, forKey: .traits)
+        traits = try values.decodeIfPresent([PackageTrait].self, forKey: .traits)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -630,6 +630,7 @@ extension PackageInfo: Codable {
         try container.encode(products, forKey: .products)
         try container.encode(targets, forKey: .targets)
         try container.encode(platforms, forKey: .platforms)
+        try container.encode(traits, forKey: .traits)
         try container.encodeIfPresent(cLanguageStandard, forKey: .cLanguageStandard)
         try container.encodeIfPresent(cxxLanguageStandard, forKey: .cxxLanguageStandard)
         try container.encodeIfPresent(swiftLanguageVersions, forKey: .swiftLanguageVersions)
