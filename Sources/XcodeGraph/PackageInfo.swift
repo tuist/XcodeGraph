@@ -436,7 +436,7 @@ extension PackageInfo.Target {
     /// A namespace for target-specific build settings.
     public enum TargetBuildSettingDescription {
         /// The tool for which a build setting is declared.
-        public enum Tool: String, Codable, Hashable, CaseIterable {
+        public enum Tool: String, Codable, Hashable, CaseIterable, Sendable {
             case c
             case cxx
             case swift
@@ -510,10 +510,10 @@ extension PackageInfo.Target {
                 case strictMemorySafety(String)
             }
 
-            enum SettingDecodingError: Error, CustomStringConvertible {
+            enum SettingDecodingError: LocalizedError {
                 case missingRequiredKeys(tool: Tool, availableKeys: [String], codingPath: [CodingKey])
 
-                var description: String {
+                var errorDescription: String? {
                     switch self {
                     case let .missingRequiredKeys(tool, availableKeys, codingPath):
                         let path = codingPath.map(\.stringValue).joined(separator: ".")
