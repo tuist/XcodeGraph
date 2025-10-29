@@ -13,6 +13,9 @@ public struct PackageInfo: Equatable, Hashable {
     /// The targets declared in the manifest.
     public let targets: [Target]
 
+    /// The traits the package supports
+    public let traits: [PackageTrait]
+
     /// The declared platforms in the manifest.
     public let platforms: [Platform]
 
@@ -46,6 +49,7 @@ public struct PackageInfo: Equatable, Hashable {
         name: String,
         products: [Product],
         targets: [Target],
+        traits: [PackageTrait],
         platforms: [Platform],
         cLanguageStandard: String?,
         cxxLanguageStandard: String?,
@@ -55,6 +59,7 @@ public struct PackageInfo: Equatable, Hashable {
         self.name = name
         self.products = products
         self.targets = targets
+        self.traits = traits
         self.platforms = platforms
         self.cLanguageStandard = cLanguageStandard
         self.cxxLanguageStandard = cxxLanguageStandard
@@ -588,7 +593,8 @@ extension PackageInfo: Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case name, products, targets, platforms, cLanguageStandard, cxxLanguageStandard, swiftLanguageVersions, toolsVersion
+        case name, products, targets, platforms, cLanguageStandard, cxxLanguageStandard, swiftLanguageVersions, toolsVersion,
+             traits
     }
 
     public init(from decoder: Decoder) throws {
@@ -615,6 +621,7 @@ extension PackageInfo: Codable {
             )
         }
         self.toolsVersion = toolsVersion
+        traits = try values.decode([PackageTrait].self, forKey: .traits)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -795,6 +802,7 @@ extension PackageInfo.Target.TargetType {
             name: String = "Package",
             products: [Product] = [],
             targets: [Target] = [],
+            traits: [PackageTrait] = [],
             platforms: [Platform] = [],
             cLanguageStandard: String? = nil,
             cxxLanguageStandard: String? = nil,
@@ -805,6 +813,7 @@ extension PackageInfo.Target.TargetType {
                 name: name,
                 products: products,
                 targets: targets,
+                traits: traits,
                 platforms: platforms,
                 cLanguageStandard: cLanguageStandard,
                 cxxLanguageStandard: cxxLanguageStandard,
