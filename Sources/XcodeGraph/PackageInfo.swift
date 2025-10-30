@@ -456,6 +456,7 @@ extension PackageInfo.Target {
             case interoperabilityMode
             case defaultIsolation
             case strictMemorySafety
+            case disableWarning
         }
 
         /// An individual build setting.
@@ -508,6 +509,7 @@ extension PackageInfo.Target {
                 case interoperabilityMode(String)
                 case defaultIsolation(String)
                 case strictMemorySafety(String)
+                case disableWarning(String)
             }
 
             enum SettingDecodingError: LocalizedError {
@@ -569,6 +571,9 @@ extension PackageInfo.Target {
                     case let .strictMemorySafety(value):
                         name = .strictMemorySafety
                         self.value = [value]
+                    case let .disableWarning(value):
+                        name = .disableWarning
+                        self.value = [value]
                     }
                 } else {
                     // Legacy format - try to decode name
@@ -615,6 +620,8 @@ extension PackageInfo.Target {
                     try container.encode(Kind.defaultIsolation(value.first!), forKey: .kind)
                 case .strictMemorySafety:
                     try container.encode(Kind.strictMemorySafety(value.first!), forKey: .kind)
+                case .disableWarning:
+                    try container.encode(Kind.disableWarning(value.first!), forKey: .kind)
                 }
             }
         }
