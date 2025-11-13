@@ -54,6 +54,13 @@ struct PackageInfoTests {
                     checksum: nil
                 ),
             ],
+            traits: [
+                PackageTrait(
+                    enabledTraits: ["Tuist"],
+                    name: "Tuist",
+                    description: "This is the default Tuist trait"
+                ),
+            ],
             platforms: [
                 PackageInfo.Platform(platformName: "iOS", version: "17.2", options: []),
             ],

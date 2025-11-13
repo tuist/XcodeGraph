@@ -5,6 +5,273 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.28.22] - 2025-11-13
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.27" by @renovate[bot] in [#378](https://github.com/tuist/XcodeGraph/pull/378)
+
+## [1.28.21] - 2025-11-12
+### Details
+#### Chore
+- Update dependency tuist to v4.104.1 by @renovate[bot] in [#377](https://github.com/tuist/XcodeGraph/pull/377)
+
+## [1.28.20] - 2025-11-12
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.26" by @renovate[bot] in [#376](https://github.com/tuist/XcodeGraph/pull/376)
+
+## [1.28.19] - 2025-11-11
+### Details
+#### Chore
+- Update dependency tuist to v4.103.0 by @renovate[bot] in [#375](https://github.com/tuist/XcodeGraph/pull/375)
+
+## [1.28.18] - 2025-11-11
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.25" by @renovate[bot] in [#374](https://github.com/tuist/XcodeGraph/pull/374)
+
+## [1.28.17] - 2025-11-11
+### Details
+#### Chore
+- Update dependency tuist to v4.102.0 by @renovate[bot] in [#373](https://github.com/tuist/XcodeGraph/pull/373)
+
+## [1.28.16] - 2025-11-10
+### Details
+#### Chore
+- Update stefanzweifel/git-auto-commit-action action to v7 by @renovate[bot] in [#332](https://github.com/tuist/XcodeGraph/pull/332)
+
+## [1.28.15] - 2025-11-08
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.24" by @renovate[bot] in [#372](https://github.com/tuist/XcodeGraph/pull/372)
+
+## [1.28.14] - 2025-11-07
+### Details
+#### Chore
+- Update dependency tuist to v4.101.0 by @renovate[bot] in [#371](https://github.com/tuist/XcodeGraph/pull/371)
+
+## [1.28.13] - 2025-11-07
+### Details
+#### Chore
+- Update dependency tuist to v4.100.0 by @renovate[bot] in [#369](https://github.com/tuist/XcodeGraph/pull/369)
+
+## [1.28.12] - 2025-11-07
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.23" by @renovate[bot] in [#370](https://github.com/tuist/XcodeGraph/pull/370)
+
+## [1.28.11] - 2025-11-06
+### Details
+#### Chore
+- Update dependency p-x9/machokit to from: "0.40.0" by @renovate[bot] in [#368](https://github.com/tuist/XcodeGraph/pull/368)
+
+## [1.28.10] - 2025-11-06
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.22" by @renovate[bot] in [#367](https://github.com/tuist/XcodeGraph/pull/367)
+
+## [1.28.9] - 2025-11-05
+### Details
+#### Chore
+- Update dependency tuist to v4.99.2 by @renovate[bot] in [#366](https://github.com/tuist/XcodeGraph/pull/366)
+
+## [1.28.8] - 2025-11-05
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.21" by @renovate[bot] in [#365](https://github.com/tuist/XcodeGraph/pull/365)
+
+## [1.28.7] - 2025-11-04
+### Details
+#### Chore
+- Update dependency tuist to v4.99.0 by @renovate[bot] in [#364](https://github.com/tuist/XcodeGraph/pull/364)
+
+## [1.28.6] - 2025-11-04
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.20" by @renovate[bot] in [#363](https://github.com/tuist/XcodeGraph/pull/363)
+
+## [1.28.5] - 2025-11-03
+### Details
+#### Chore
+- Update dependency tuist to v4.98.0 by @renovate[bot] in [#362](https://github.com/tuist/XcodeGraph/pull/362)
+
+## [1.28.4] - 2025-11-02
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.19" by @renovate[bot] in [#361](https://github.com/tuist/XcodeGraph/pull/361)
+
+## [1.28.3] - 2025-11-01
+### Details
+#### Chore
+- Update dependency tuist to v4.97.2 by @renovate[bot] in [#360](https://github.com/tuist/XcodeGraph/pull/360)
+
+## [1.28.2] - 2025-11-01
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.18" by @renovate[bot] in [#359](https://github.com/tuist/XcodeGraph/pull/359)
+
+## [1.28.1] - 2025-10-31
+### Details
+#### Chore
+- Update dependency tuist to v4.97.1 by @renovate[bot] in [#353](https://github.com/tuist/XcodeGraph/pull/353)
+
+## [1.28.0] - 2025-10-31
+### Details
+#### Feat
+- Add support for disableWarning CSetting by @pepicrft in [#356](https://github.com/tuist/XcodeGraph/pull/356)
+
+## [1.27.4] - 2025-10-31
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.17" by @renovate[bot] in [#358](https://github.com/tuist/XcodeGraph/pull/358)
+
+## [1.27.3] - 2025-10-31
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.16" by @renovate[bot] in [#357](https://github.com/tuist/XcodeGraph/pull/357)
+
+## [1.27.2] - 2025-10-30
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.15" by @renovate[bot] in [#355](https://github.com/tuist/XcodeGraph/pull/355)
+
+## [1.27.1] - 2025-10-30
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.14" by @renovate[bot] in [#351](https://github.com/tuist/XcodeGraph/pull/351)
+
+## [1.27.0] - 2025-10-29
+### Details
+#### Feat
+- Add support for strictMemorySafety SwiftSetting and improve error handling by @pepicrft in [#354](https://github.com/tuist/XcodeGraph/pull/354)
+
+## [1.26.0] - 2025-10-29
+### Details
+#### Feat
+- Add support for Swift Package Manager traits by @pepicrft in [#352](https://github.com/tuist/XcodeGraph/pull/352)
+
+## [1.25.1] - 2025-10-29
+### Details
+#### Chore
+- Update dependency tuist to v4.91.1 by @renovate[bot] in [#350](https://github.com/tuist/XcodeGraph/pull/350)
+
+## [1.25.0] - 2025-10-28
+### Details
+#### Feat
+- Make buildableFolders property mutable and update dependencies by @pepicrft in [#348](https://github.com/tuist/XcodeGraph/pull/348)
+
+## [1.24.19] - 2025-10-28
+### Details
+#### Fix
+- Add 'txt', 'js' and 'json' to valid resource extensions by @natanrolnik in [#349](https://github.com/tuist/XcodeGraph/pull/349)
+
+## New Contributors
+* @natanrolnik made their first contribution in [#349](https://github.com/tuist/XcodeGraph/pull/349)
+## [1.24.18] - 2025-10-24
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.13" by @renovate[bot] in [#347](https://github.com/tuist/XcodeGraph/pull/347)
+
+## [1.24.17] - 2025-10-23
+### Details
+#### Chore
+- Update dependency tuist to v4.90.0 by @renovate[bot] in [#346](https://github.com/tuist/XcodeGraph/pull/346)
+
+## [1.24.16] - 2025-10-23
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.12" by @renovate[bot] in [#345](https://github.com/tuist/XcodeGraph/pull/345)
+
+## [1.24.15] - 2025-10-22
+### Details
+#### Chore
+- Update dependency tuist to v4.89.0 by @renovate[bot] in [#344](https://github.com/tuist/XcodeGraph/pull/344)
+
+## [1.24.14] - 2025-10-20
+### Details
+#### Chore
+- Update dependency tuist to v4.88.1 by @renovate[bot] in [#343](https://github.com/tuist/XcodeGraph/pull/343)
+
+## [1.24.13] - 2025-10-18
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.11" by @renovate[bot] in [#342](https://github.com/tuist/XcodeGraph/pull/342)
+
+## [1.24.12] - 2025-10-17
+### Details
+#### Chore
+- Update dependency tuist to v4.88.0 by @renovate[bot] in [#341](https://github.com/tuist/XcodeGraph/pull/341)
+
+## [1.24.11] - 2025-10-17
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.10" by @renovate[bot] in [#340](https://github.com/tuist/XcodeGraph/pull/340)
+
+## [1.24.10] - 2025-10-17
+### Details
+#### Chore
+- Update dependency tuist to v4.87.0 by @renovate[bot] in [#339](https://github.com/tuist/XcodeGraph/pull/339)
+
+## [1.24.9] - 2025-10-16
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.9" by @renovate[bot] in [#338](https://github.com/tuist/XcodeGraph/pull/338)
+
+## [1.24.8] - 2025-10-15
+### Details
+#### Chore
+- Update dependency tuist to v4.86.3 by @renovate[bot] in [#337](https://github.com/tuist/XcodeGraph/pull/337)
+
+## [1.24.7] - 2025-10-15
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.8" by @renovate[bot] in [#336](https://github.com/tuist/XcodeGraph/pull/336)
+
+## [1.24.6] - 2025-10-15
+### Details
+#### Chore
+- Update dependency tuist to v4.85.1 by @renovate[bot] in [#335](https://github.com/tuist/XcodeGraph/pull/335)
+
+## [1.24.5] - 2025-10-14
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.6" by @renovate[bot] in [#334](https://github.com/tuist/XcodeGraph/pull/334)
+
+## [1.24.4] - 2025-10-14
+### Details
+#### Chore
+- Update dependency tuist to v4.84.2 by @renovate[bot] in [#333](https://github.com/tuist/XcodeGraph/pull/333)
+
+## [1.24.3] - 2025-10-08
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.5" by @renovate[bot] in [#331](https://github.com/tuist/XcodeGraph/pull/331)
+
+## [1.24.2] - 2025-10-08
+### Details
+#### Chore
+- Update dependency tuist to v4.83.0 by @renovate[bot] in [#330](https://github.com/tuist/XcodeGraph/pull/330)
+
+## [1.24.1] - 2025-10-07
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.4" by @renovate[bot] in [#329](https://github.com/tuist/XcodeGraph/pull/329)
+
+## [1.24.0] - 2025-10-07
+### Details
+#### Feat
+- Add support for defaultIsolation setting in PackageInfo by @pepicrft in [#326](https://github.com/tuist/XcodeGraph/pull/326)
+
+## [1.23.13] - 2025-10-07
+### Details
+#### Chore
+- Update dependency tuist to v4.82.3 by @renovate[bot] in [#327](https://github.com/tuist/XcodeGraph/pull/327)
+
+## [1.23.12] - 2025-10-06
+### Details
+#### Chore
+- Update dependency tuist/xcodeproj to from: "9.6.0" by @renovate[bot] in [#328](https://github.com/tuist/XcodeGraph/pull/328)
+
 ## [1.23.11] - 2025-10-03
 ### Details
 #### Chore
@@ -1397,6 +1664,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.28.22]: https://github.com/tuist/XcodeGraph/compare/1.28.21..1.28.22
+[1.28.21]: https://github.com/tuist/XcodeGraph/compare/1.28.20..1.28.21
+[1.28.20]: https://github.com/tuist/XcodeGraph/compare/1.28.19..1.28.20
+[1.28.19]: https://github.com/tuist/XcodeGraph/compare/1.28.18..1.28.19
+[1.28.18]: https://github.com/tuist/XcodeGraph/compare/1.28.17..1.28.18
+[1.28.17]: https://github.com/tuist/XcodeGraph/compare/1.28.16..1.28.17
+[1.28.16]: https://github.com/tuist/XcodeGraph/compare/1.28.15..1.28.16
+[1.28.15]: https://github.com/tuist/XcodeGraph/compare/1.28.14..1.28.15
+[1.28.14]: https://github.com/tuist/XcodeGraph/compare/1.28.13..1.28.14
+[1.28.13]: https://github.com/tuist/XcodeGraph/compare/1.28.12..1.28.13
+[1.28.12]: https://github.com/tuist/XcodeGraph/compare/1.28.11..1.28.12
+[1.28.11]: https://github.com/tuist/XcodeGraph/compare/1.28.10..1.28.11
+[1.28.10]: https://github.com/tuist/XcodeGraph/compare/1.28.9..1.28.10
+[1.28.9]: https://github.com/tuist/XcodeGraph/compare/1.28.8..1.28.9
+[1.28.8]: https://github.com/tuist/XcodeGraph/compare/1.28.7..1.28.8
+[1.28.7]: https://github.com/tuist/XcodeGraph/compare/1.28.6..1.28.7
+[1.28.6]: https://github.com/tuist/XcodeGraph/compare/1.28.5..1.28.6
+[1.28.5]: https://github.com/tuist/XcodeGraph/compare/1.28.4..1.28.5
+[1.28.4]: https://github.com/tuist/XcodeGraph/compare/1.28.3..1.28.4
+[1.28.3]: https://github.com/tuist/XcodeGraph/compare/1.28.2..1.28.3
+[1.28.2]: https://github.com/tuist/XcodeGraph/compare/1.28.1..1.28.2
+[1.28.1]: https://github.com/tuist/XcodeGraph/compare/1.28.0..1.28.1
+[1.28.0]: https://github.com/tuist/XcodeGraph/compare/1.27.4..1.28.0
+[1.27.4]: https://github.com/tuist/XcodeGraph/compare/1.27.3..1.27.4
+[1.27.3]: https://github.com/tuist/XcodeGraph/compare/1.27.2..1.27.3
+[1.27.2]: https://github.com/tuist/XcodeGraph/compare/1.27.1..1.27.2
+[1.27.1]: https://github.com/tuist/XcodeGraph/compare/1.27.0..1.27.1
+[1.27.0]: https://github.com/tuist/XcodeGraph/compare/1.26.0..1.27.0
+[1.26.0]: https://github.com/tuist/XcodeGraph/compare/1.25.1..1.26.0
+[1.25.1]: https://github.com/tuist/XcodeGraph/compare/1.25.0..1.25.1
+[1.25.0]: https://github.com/tuist/XcodeGraph/compare/1.24.19..1.25.0
+[1.24.19]: https://github.com/tuist/XcodeGraph/compare/1.24.18..1.24.19
+[1.24.18]: https://github.com/tuist/XcodeGraph/compare/1.24.17..1.24.18
+[1.24.17]: https://github.com/tuist/XcodeGraph/compare/1.24.16..1.24.17
+[1.24.16]: https://github.com/tuist/XcodeGraph/compare/1.24.15..1.24.16
+[1.24.15]: https://github.com/tuist/XcodeGraph/compare/1.24.14..1.24.15
+[1.24.14]: https://github.com/tuist/XcodeGraph/compare/1.24.13..1.24.14
+[1.24.13]: https://github.com/tuist/XcodeGraph/compare/1.24.12..1.24.13
+[1.24.12]: https://github.com/tuist/XcodeGraph/compare/1.24.11..1.24.12
+[1.24.11]: https://github.com/tuist/XcodeGraph/compare/1.24.10..1.24.11
+[1.24.10]: https://github.com/tuist/XcodeGraph/compare/1.24.9..1.24.10
+[1.24.9]: https://github.com/tuist/XcodeGraph/compare/1.24.8..1.24.9
+[1.24.8]: https://github.com/tuist/XcodeGraph/compare/1.24.7..1.24.8
+[1.24.7]: https://github.com/tuist/XcodeGraph/compare/1.24.6..1.24.7
+[1.24.6]: https://github.com/tuist/XcodeGraph/compare/1.24.5..1.24.6
+[1.24.5]: https://github.com/tuist/XcodeGraph/compare/1.24.4..1.24.5
+[1.24.4]: https://github.com/tuist/XcodeGraph/compare/1.24.3..1.24.4
+[1.24.3]: https://github.com/tuist/XcodeGraph/compare/1.24.2..1.24.3
+[1.24.2]: https://github.com/tuist/XcodeGraph/compare/1.24.1..1.24.2
+[1.24.1]: https://github.com/tuist/XcodeGraph/compare/1.24.0..1.24.1
+[1.24.0]: https://github.com/tuist/XcodeGraph/compare/1.23.13..1.24.0
+[1.23.13]: https://github.com/tuist/XcodeGraph/compare/1.23.12..1.23.13
+[1.23.12]: https://github.com/tuist/XcodeGraph/compare/1.23.11..1.23.12
 [1.23.11]: https://github.com/tuist/XcodeGraph/compare/1.23.10..1.23.11
 [1.23.10]: https://github.com/tuist/XcodeGraph/compare/1.23.9..1.23.10
 [1.23.9]: https://github.com/tuist/XcodeGraph/compare/1.23.8..1.23.9

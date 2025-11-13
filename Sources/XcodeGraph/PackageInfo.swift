@@ -13,6 +13,9 @@ public struct PackageInfo: Equatable, Hashable {
     /// The targets declared in the manifest.
     public let targets: [Target]
 
+    /// The traits the package supports
+    public let traits: [PackageTrait]?
+
     /// The declared platforms in the manifest.
     public let platforms: [Platform]
 
@@ -46,6 +49,7 @@ public struct PackageInfo: Equatable, Hashable {
         name: String,
         products: [Product],
         targets: [Target],
+        traits: [PackageTrait]?,
         platforms: [Platform],
         cLanguageStandard: String?,
         cxxLanguageStandard: String?,
@@ -55,6 +59,7 @@ public struct PackageInfo: Equatable, Hashable {
         self.name = name
         self.products = products
         self.targets = targets
+        self.traits = traits
         self.platforms = platforms
         self.cLanguageStandard = cLanguageStandard
         self.cxxLanguageStandard = cxxLanguageStandard
@@ -431,7 +436,7 @@ extension PackageInfo.Target {
     /// A namespace for target-specific build settings.
     public enum TargetBuildSettingDescription {
         /// The tool for which a build setting is declared.
-        public enum Tool: String, Codable, Hashable, CaseIterable {
+        public enum Tool: String, Codable, Hashable, CaseIterable, Sendable {
             case c
             case cxx
             case swift
@@ -449,6 +454,9 @@ extension PackageInfo.Target {
             case enableUpcomingFeature
             case enableExperimentalFeature
             case interoperabilityMode
+            case defaultIsolation
+            case strictMemorySafety
+            case disableWarning
         }
 
         /// An individual build setting.
@@ -499,6 +507,28 @@ extension PackageInfo.Target {
                 case enableUpcomingFeature(String)
                 case enableExperimentalFeature(String)
                 case interoperabilityMode(String)
+                case defaultIsolation(String)
+                case strictMemorySafety(String)
+                case disableWarning(String)
+            }
+
+            enum SettingDecodingError: LocalizedError {
+                case missingRequiredKeys(tool: Tool, availableKeys: [String], codingPath: [CodingKey])
+
+                var errorDescription: String? {
+                    switch self {
+                    case let .missingRequiredKeys(tool, availableKeys, codingPath):
+                        let path = codingPath.map(\.stringValue).joined(separator: ".")
+                        return """
+                        Failed to decode target build setting at '\(path)'.
+                        Expected either 'kind' (Xcode 14+ format) or 'name' (legacy format) key, but neither was found.
+                        Tool: \(tool)
+                        Available keys: \(availableKeys.joined(separator: ", "))
+
+                        This usually indicates a malformed Package.swift manifest or an unsupported Swift Package Manager version.
+                        """
+                    }
+                }
             }
 
             public init(from decoder: Decoder) throws {
@@ -535,10 +565,30 @@ extension PackageInfo.Target {
                     case let .swiftLanguageMode(value):
                         name = .swiftLanguageMode
                         self.value = [value]
+                    case let .defaultIsolation(value):
+                        name = .defaultIsolation
+                        self.value = [value]
+                    case let .strictMemorySafety(value):
+                        name = .strictMemorySafety
+                        self.value = [value]
+                    case let .disableWarning(value):
+                        name = .disableWarning
+                        self.value = [value]
                     }
                 } else {
-                    name = try container.decode(SettingName.self, forKey: .name)
-                    value = try container.decode([String].self, forKey: .value)
+                    // Legacy format - try to decode name
+                    do {
+                        name = try container.decode(SettingName.self, forKey: .name)
+                        value = try container.decode([String].self, forKey: .value)
+                    } catch {
+                        // Neither 'kind' nor 'name' was found - provide helpful error
+                        let availableKeys = container.allKeys.map(\.stringValue)
+                        throw SettingDecodingError.missingRequiredKeys(
+                            tool: tool,
+                            availableKeys: availableKeys,
+                            codingPath: decoder.codingPath
+                        )
+                    }
                 }
             }
 
@@ -566,6 +616,12 @@ extension PackageInfo.Target {
                     try container.encode(Kind.enableExperimentalFeature(value.first!), forKey: .kind)
                 case .swiftLanguageMode:
                     try container.encode(Kind.swiftLanguageMode(value.first!), forKey: .kind)
+                case .defaultIsolation:
+                    try container.encode(Kind.defaultIsolation(value.first!), forKey: .kind)
+                case .strictMemorySafety:
+                    try container.encode(Kind.strictMemorySafety(value.first!), forKey: .kind)
+                case .disableWarning:
+                    try container.encode(Kind.disableWarning(value.first!), forKey: .kind)
                 }
             }
         }
@@ -581,7 +637,8 @@ extension PackageInfo: Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case name, products, targets, platforms, cLanguageStandard, cxxLanguageStandard, swiftLanguageVersions, toolsVersion
+        case name, products, targets, platforms, cLanguageStandard, cxxLanguageStandard, swiftLanguageVersions, toolsVersion,
+             traits
     }
 
     public init(from decoder: Decoder) throws {
@@ -608,6 +665,7 @@ extension PackageInfo: Codable {
             )
         }
         self.toolsVersion = toolsVersion
+        traits = try values.decodeIfPresent([PackageTrait].self, forKey: .traits)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -616,6 +674,7 @@ extension PackageInfo: Codable {
         try container.encode(products, forKey: .products)
         try container.encode(targets, forKey: .targets)
         try container.encode(platforms, forKey: .platforms)
+        try container.encode(traits, forKey: .traits)
         try container.encodeIfPresent(cLanguageStandard, forKey: .cLanguageStandard)
         try container.encodeIfPresent(cxxLanguageStandard, forKey: .cxxLanguageStandard)
         try container.encodeIfPresent(swiftLanguageVersions, forKey: .swiftLanguageVersions)
@@ -788,6 +847,7 @@ extension PackageInfo.Target.TargetType {
             name: String = "Package",
             products: [Product] = [],
             targets: [Target] = [],
+            traits: [PackageTrait] = [],
             platforms: [Platform] = [],
             cLanguageStandard: String? = nil,
             cxxLanguageStandard: String? = nil,
@@ -798,6 +858,7 @@ extension PackageInfo.Target.TargetType {
                 name: name,
                 products: products,
                 targets: targets,
+                traits: traits,
                 platforms: platforms,
                 cLanguageStandard: cLanguageStandard,
                 cxxLanguageStandard: cxxLanguageStandard,
