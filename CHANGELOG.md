@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.29.43] - 2025-12-12
+### Details
+#### Chore
+- Update dependency tuist/filesystem to from: "0.13.52" by @renovate[bot] in [#424](https://github.com/tuist/XcodeGraph/pull/424)
+
 ## [1.29.42] - 2025-12-11
 ### Details
 #### Chore
@@ -1884,6 +1889,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.29.43]: https://github.com/tuist/XcodeGraph/compare/1.29.42..1.29.43
 [1.29.42]: https://github.com/tuist/XcodeGraph/compare/1.29.41..1.29.42
 [1.29.41]: https://github.com/tuist/XcodeGraph/compare/1.29.40..1.29.41
 [1.29.40]: https://github.com/tuist/XcodeGraph/compare/1.29.39..1.29.40
