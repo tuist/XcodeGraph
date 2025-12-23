@@ -97,7 +97,7 @@ struct PBXProjectMapper: PBXProjectMapping {
         }
         let localPackages = try pbxProject.localPackages.compactMap {
             try packageMapper.map(package: $0, sourceDirectory: sourceDirectory)
-        } + localPackagePaths.map { .local(path: $0) }
+        } + localPackagePaths.map { .local(config: .init(path: $0)) }
 
         // Create a files group for the main group
         let filesGroup = ProjectGroup.group(name: pbxProject.mainGroup?.name ?? "Project")
