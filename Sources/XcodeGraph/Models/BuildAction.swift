@@ -10,6 +10,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
     public var parallelizeBuild: Bool
     public var runPostActionsOnFailure: Bool
     public var findImplicitDependencies: Bool
+    public var overrideArchitectures: Architectures
 
     // MARK: - Init
 
@@ -19,7 +20,8 @@ public struct BuildAction: Equatable, Codable, Sendable {
         postActions: [ExecutionAction] = [],
         parallelizeBuild: Bool = true,
         runPostActionsOnFailure: Bool = false,
-        findImplicitDependencies: Bool = true
+        findImplicitDependencies: Bool = true,
+        overrideArchitectures: Architectures = .useTargetSettings
     ) {
         self.targets = targets
         self.preActions = preActions
@@ -27,6 +29,7 @@ public struct BuildAction: Equatable, Codable, Sendable {
         self.parallelizeBuild = parallelizeBuild
         self.runPostActionsOnFailure = runPostActionsOnFailure
         self.findImplicitDependencies = findImplicitDependencies
+        self.overrideArchitectures = overrideArchitectures
     }
 }
 
