@@ -7,7 +7,7 @@ import XCTest
 final class PackageTests: XCTestCase {
     func test_codable_local() {
         // Given
-        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/workspace"))
+        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/workspace"), groupPath: nil)
 
         // Then
         XCTAssertCodable(subject)
@@ -26,7 +26,7 @@ final class PackageTests: XCTestCase {
 
     func test_is_remote_local() {
         // Given
-        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/package"))
+        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/package"), groupPath: nil)
 
         // Then
         XCTAssertFalse(subject.isRemote)
