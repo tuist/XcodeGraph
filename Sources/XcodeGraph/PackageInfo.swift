@@ -113,15 +113,58 @@ extension PackageInfo {
 
 // MARK: - PackageDependency
 
+/// A trait enabled for a package dependency, optionally with a condition.
+public struct PackageDependencyTrait: Equatable, Hashable, Codable, Sendable {
+    /// The name of the trait.
+    public let name: String
+
+    /// The condition under which this trait is enabled.
+    /// When nil, the trait is unconditionally enabled.
+    /// When set, contains the names of traits that must be enabled for this trait to be active.
+    public let condition: Set<String>?
+
+    public init(name: String, condition: Set<String>? = nil) {
+        self.name = name
+        self.condition = condition
+    }
+
+    private struct TraitCondition: Codable {
+        let traits: Set<String>?
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case condition
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        if let conditionData = try container.decodeIfPresent(TraitCondition.self, forKey: .condition) {
+            condition = conditionData.traits
+        } else {
+            condition = nil
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        if let condition {
+            try container.encode(TraitCondition(traits: condition), forKey: .condition)
+        }
+    }
+}
+
 /// A package dependency with its identity and enabled traits.
 public struct PackageDependency: Equatable, Hashable, Codable, Sendable {
     /// The identity of the package dependency.
     public let identity: String
 
-    /// The traits enabled for this dependency.
-    public let traits: Set<String>
+    /// The traits enabled for this dependency, with optional conditions.
+    public let traits: [PackageDependencyTrait]
 
-    public init(identity: String, traits: Set<String>) {
+    public init(identity: String, traits: [PackageDependencyTrait]) {
         self.identity = identity
         self.traits = traits
     }
@@ -134,21 +177,17 @@ public struct PackageDependency: Equatable, Hashable, Codable, Sendable {
 
     private struct FileSystemDependency: Codable {
         let identity: String
-        let traits: [TraitEntry]?
+        let traits: [PackageDependencyTrait]?
     }
 
     private struct SourceControlDependency: Codable {
         let identity: String
-        let traits: [TraitEntry]?
+        let traits: [PackageDependencyTrait]?
     }
 
     private struct RegistryDependency: Codable {
         let identity: String
-        let traits: [TraitEntry]?
-    }
-
-    private struct TraitEntry: Codable {
-        let name: String
+        let traits: [PackageDependencyTrait]?
     }
 
     public init(from decoder: Decoder) throws {
@@ -158,17 +197,17 @@ public struct PackageDependency: Equatable, Hashable, Codable, Sendable {
            let dep = fileSystemDeps.first
         {
             identity = dep.identity
-            traits = Set(dep.traits?.map(\.name) ?? [])
+            traits = dep.traits ?? []
         } else if let sourceControlDeps = try container.decodeIfPresent([SourceControlDependency].self, forKey: .sourceControl),
                   let dep = sourceControlDeps.first
         {
             identity = dep.identity
-            traits = Set(dep.traits?.map(\.name) ?? [])
+            traits = dep.traits ?? []
         } else if let registryDeps = try container.decodeIfPresent([RegistryDependency].self, forKey: .registry),
                   let dep = registryDeps.first
         {
             identity = dep.identity
-            traits = Set(dep.traits?.map(\.name) ?? [])
+            traits = dep.traits ?? []
         } else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -181,8 +220,7 @@ public struct PackageDependency: Equatable, Hashable, Codable, Sendable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        let traitEntries = traits.map { TraitEntry(name: $0) }
-        try container.encode([FileSystemDependency(identity: identity, traits: traitEntries)], forKey: .fileSystem)
+        try container.encode([FileSystemDependency(identity: identity, traits: traits)], forKey: .fileSystem)
     }
 }
 
