@@ -16,6 +16,9 @@ public struct PackageInfo: Equatable, Hashable {
     /// The traits the package supports
     public let traits: [PackageTrait]?
 
+    /// The declared package dependencies.
+    public let dependencies: [PackageDependency]
+
     /// The declared platforms in the manifest.
     public let platforms: [Platform]
 
@@ -33,9 +36,6 @@ public struct PackageInfo: Equatable, Hashable {
 
     // Ignored fields
 
-    // /// The declared package dependencies.
-    //    let dependencies: [PackageDependencyDescription]
-
     // /// The pkg-config name of a system package.
     // let pkgConfig: String?
 
@@ -50,6 +50,7 @@ public struct PackageInfo: Equatable, Hashable {
         products: [Product],
         targets: [Target],
         traits: [PackageTrait]?,
+        dependencies: [PackageDependency],
         platforms: [Platform],
         cLanguageStandard: String?,
         cxxLanguageStandard: String?,
@@ -60,6 +61,7 @@ public struct PackageInfo: Equatable, Hashable {
         self.products = products
         self.targets = targets
         self.traits = traits
+        self.dependencies = dependencies
         self.platforms = platforms
         self.cLanguageStandard = cLanguageStandard
         self.cxxLanguageStandard = cxxLanguageStandard
@@ -106,6 +108,119 @@ extension PackageInfo {
             self.platformNames = platformNames
             self.config = config
         }
+    }
+}
+
+// MARK: - PackageDependency
+
+/// A trait enabled for a package dependency, optionally with a condition.
+public struct PackageDependencyTrait: Equatable, Hashable, Codable, Sendable {
+    /// The name of the trait.
+    public let name: String
+
+    /// The condition under which this trait is enabled.
+    /// When nil, the trait is unconditionally enabled.
+    /// When set, contains the names of traits that must be enabled for this trait to be active.
+    public let condition: Set<String>?
+
+    public init(name: String, condition: Set<String>? = nil) {
+        self.name = name
+        self.condition = condition
+    }
+
+    private struct TraitCondition: Codable {
+        let traits: Set<String>?
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case condition
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        if let conditionData = try container.decodeIfPresent(TraitCondition.self, forKey: .condition) {
+            condition = conditionData.traits
+        } else {
+            condition = nil
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        if let condition {
+            try container.encode(TraitCondition(traits: condition), forKey: .condition)
+        }
+    }
+}
+
+/// A package dependency with its identity and enabled traits.
+public struct PackageDependency: Equatable, Hashable, Codable, Sendable {
+    /// The identity of the package dependency.
+    public let identity: String
+
+    /// The traits enabled for this dependency, with optional conditions.
+    public let traits: [PackageDependencyTrait]
+
+    public init(identity: String, traits: [PackageDependencyTrait]) {
+        self.identity = identity
+        self.traits = traits
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case fileSystem
+        case sourceControl
+        case registry
+    }
+
+    private struct FileSystemDependency: Codable {
+        let identity: String
+        let traits: [PackageDependencyTrait]?
+    }
+
+    private struct SourceControlDependency: Codable {
+        let identity: String
+        let traits: [PackageDependencyTrait]?
+    }
+
+    private struct RegistryDependency: Codable {
+        let identity: String
+        let traits: [PackageDependencyTrait]?
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if let fileSystemDeps = try container.decodeIfPresent([FileSystemDependency].self, forKey: .fileSystem),
+           let dep = fileSystemDeps.first
+        {
+            identity = dep.identity
+            traits = dep.traits ?? []
+        } else if let sourceControlDeps = try container.decodeIfPresent([SourceControlDependency].self, forKey: .sourceControl),
+                  let dep = sourceControlDeps.first
+        {
+            identity = dep.identity
+            traits = dep.traits ?? []
+        } else if let registryDeps = try container.decodeIfPresent([RegistryDependency].self, forKey: .registry),
+                  let dep = registryDeps.first
+        {
+            identity = dep.identity
+            traits = dep.traits ?? []
+        } else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Expected fileSystem, sourceControl, or registry dependency"
+                )
+            )
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode([FileSystemDependency(identity: identity, traits: traits)], forKey: .fileSystem)
     }
 }
 
@@ -638,7 +753,7 @@ extension PackageInfo: Codable {
 
     private enum CodingKeys: String, CodingKey {
         case name, products, targets, platforms, cLanguageStandard, cxxLanguageStandard, swiftLanguageVersions, toolsVersion,
-             traits
+             traits, dependencies
     }
 
     public init(from decoder: Decoder) throws {
@@ -666,6 +781,7 @@ extension PackageInfo: Codable {
         }
         self.toolsVersion = toolsVersion
         traits = try values.decodeIfPresent([PackageTrait].self, forKey: .traits)
+        dependencies = try values.decodeIfPresent([PackageDependency].self, forKey: .dependencies) ?? []
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -675,6 +791,7 @@ extension PackageInfo: Codable {
         try container.encode(targets, forKey: .targets)
         try container.encode(platforms, forKey: .platforms)
         try container.encode(traits, forKey: .traits)
+        try container.encode(dependencies, forKey: .dependencies)
         try container.encodeIfPresent(cLanguageStandard, forKey: .cLanguageStandard)
         try container.encodeIfPresent(cxxLanguageStandard, forKey: .cxxLanguageStandard)
         try container.encodeIfPresent(swiftLanguageVersions, forKey: .swiftLanguageVersions)
@@ -848,6 +965,7 @@ extension PackageInfo.Target.TargetType {
             products: [Product] = [],
             targets: [Target] = [],
             traits: [PackageTrait] = [],
+            dependencies: [PackageDependency] = [],
             platforms: [Platform] = [],
             cLanguageStandard: String? = nil,
             cxxLanguageStandard: String? = nil,
@@ -859,6 +977,7 @@ extension PackageInfo.Target.TargetType {
                 products: products,
                 targets: targets,
                 traits: traits,
+                dependencies: dependencies,
                 platforms: platforms,
                 cLanguageStandard: cLanguageStandard,
                 cxxLanguageStandard: cxxLanguageStandard,

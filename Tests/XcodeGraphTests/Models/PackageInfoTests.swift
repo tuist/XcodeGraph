@@ -61,6 +61,7 @@ struct PackageInfoTests {
                     description: "This is the default Tuist trait"
                 ),
             ],
+            dependencies: [],
             platforms: [
                 PackageInfo.Platform(platformName: "iOS", version: "17.2", options: []),
             ],

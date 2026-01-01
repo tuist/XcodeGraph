@@ -1,4 +1,4 @@
-public struct PackageTrait: Equatable, Hashable, Codable {
+public struct PackageTrait: Equatable, Hashable, Codable, Sendable {
     /// The list of traits that are enabled by default.
     public let enabledTraits: [String]
 
@@ -7,4 +7,14 @@ public struct PackageTrait: Equatable, Hashable, Codable {
 
     /// Trait description
     public let description: String?
+
+    public init(
+        enabledTraits: [String],
+        name: String,
+        description: String?
+    ) {
+        self.enabledTraits = enabledTraits
+        self.name = name
+        self.description = description
+    }
 }
