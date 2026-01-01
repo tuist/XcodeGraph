@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2026-01-01
+### Details
+#### Feat
+- Add dependencies with traits to PackageInfo by @pepicrft in [#441](https://github.com/tuist/XcodeGraph/pull/441)
+
 ## [1.29.60] - 2025-12-31
 ### Details
 #### Chore
@@ -1974,6 +1979,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.30.0]: https://github.com/tuist/XcodeGraph/compare/1.29.60..1.30.0
 [1.29.60]: https://github.com/tuist/XcodeGraph/compare/1.29.59..1.29.60
 [1.29.59]: https://github.com/tuist/XcodeGraph/compare/1.29.58..1.29.59
 [1.29.58]: https://github.com/tuist/XcodeGraph/compare/1.29.57..1.29.58
