@@ -101,4 +101,15 @@ final class TargetTests: XCTestCase {
         // Then
         XCTAssertFalse(got)
     }
+
+    func test_supportsResources_returns_true_for_static_frameworks() {
+        // Given
+        let target = Target.test(product: .staticFramework)
+
+        // When
+        let got = target.supportsResources
+
+        // Then
+        XCTAssertTrue(got)
+    }
 }

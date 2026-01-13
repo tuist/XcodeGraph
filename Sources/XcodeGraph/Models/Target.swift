@@ -241,6 +241,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         switch product {
         case .app,
              .framework,
+             .staticFramework,
              .unitTests,
              .uiTests,
              .bundle,
@@ -259,7 +260,6 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
              .macro,
              .dynamicLibrary,
              .staticLibrary,
-             .staticFramework,
              .xpc:
             return false
         }
