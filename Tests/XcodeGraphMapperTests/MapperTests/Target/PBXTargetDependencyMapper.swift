@@ -13,7 +13,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps direct target dependencies correctly")
-    func testDirectTargetMapping() async throws {
+    func directTargetMapping() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -45,7 +45,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps package product dependencies to runtime package targets")
-    func testPackageProductMapping() async throws {
+    func packageProductMapping() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -68,7 +68,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps native target proxies referencing targets in the same project")
-    func testProxyNativeTarget() async throws {
+    func proxyNativeTarget() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -100,7 +100,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps proxy dependencies referencing other projects via file references")
-    func testProxyProjectReference() async throws {
+    func proxyProjectReference() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -136,7 +136,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps reference proxies to libraries when file type is a dylib")
-    func testProxyReferenceProxyLibrary() async throws {
+    func proxyReferenceProxyLibrary() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -192,7 +192,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps frameworks when encountered as proxy references")
-    func testProxyReferenceFileFramework() async throws {
+    func proxyReferenceFileFramework() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -236,7 +236,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps dependencies with platform filters to conditions")
-    func testPlatformConditions() async throws {
+    func platformConditions() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -268,7 +268,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Ignores dependencies that cannot be matched to targets, products, or proxies")
-    func testNoMatches() async throws {
+    func noMatches() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -291,7 +291,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Maps single-platform filter dependencies correctly")
-    func testSinglePlatformFilter() async throws {
+    func singlePlatformFilter() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -322,7 +322,7 @@ struct DependencyMapperTests {
     }
 
     @Test("Ignores invalid platform filters, mapping dependency without conditions")
-    func testInvalidPlatformFilter() async throws {
+    func invalidPlatformFilter() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 

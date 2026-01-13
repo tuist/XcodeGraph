@@ -8,7 +8,7 @@ struct PBXBuildRuleMapperTests {
     let mapper = PBXBuildRuleMapper()
 
     @Test("Maps build rules with known compiler spec and file type successfully")
-    func testMapBuildRulesWithKnownCompilerSpecAndFileType() async throws {
+    func mapBuildRulesWithKnownCompilerSpecAndFileType() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -48,7 +48,7 @@ struct PBXBuildRuleMapperTests {
     }
 
     @Test("Skips build rules when compiler spec is unknown")
-    func testMapBuildRulesWithUnknownCompilerSpec() async throws {
+    func mapBuildRulesWithUnknownCompilerSpec() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -71,7 +71,7 @@ struct PBXBuildRuleMapperTests {
     }
 
     @Test("Skips build rules when file type is unknown")
-    func testMapBuildRulesWithUnknownFileType() async throws {
+    func mapBuildRulesWithUnknownFileType() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -94,7 +94,7 @@ struct PBXBuildRuleMapperTests {
     }
 
     @Test("Individually handles valid and invalid rules, returning nil for invalid ones")
-    func testMapIndividualValidAndInvalidRules() async throws {
+    func mapIndividualValidAndInvalidRules() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj

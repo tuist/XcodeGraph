@@ -11,7 +11,7 @@ struct TargetDependencyExtensionsTests {
     let target = Target.test(platform: .iOS)
 
     @Test("Resolves a target dependency into a target graph dependency")
-    func testTargetGraphDependency_Target() async throws {
+    func targetGraphDependency_Target() async throws {
         // Given
         let dependency = TargetDependency.target(name: "App", status: .required, condition: nil)
 
@@ -26,7 +26,7 @@ struct TargetDependencyExtensionsTests {
     }
 
     @Test("Resolves a project-based framework dependency")
-    func testTargetGraphDependencyFramework_Project() async throws {
+    func targetGraphDependencyFramework_Project() async throws {
         // Given
         let dependency = TargetDependency.project(
             target: "MyProjectTarget",
@@ -53,7 +53,7 @@ struct TargetDependencyExtensionsTests {
     }
 
     @Test("Resolves a framework file dependency into a dynamic framework graph dependency")
-    func testTargetGraphDependency_Framework() async throws {
+    func targetGraphDependency_Framework() async throws {
         // Given
         let frameworkPath = sourceDirectory.appending(component: "xpm.framework")
         let dependency = TargetDependency.framework(path: frameworkPath, status: .required, condition: nil)
@@ -80,7 +80,7 @@ struct TargetDependencyExtensionsTests {
     }
 
     @Test("Resolves an XCFramework dependency to the correct .xcframework graph dependency")
-    func testTargetGraphDependency_XCFramework() async throws {
+    func targetGraphDependency_XCFramework() async throws {
         // Given
         let xcframeworkPath = sourceDirectory.appending(component: "MyFramework.xcframework")
         let dependency = TargetDependency.xcframework(
@@ -108,7 +108,7 @@ struct TargetDependencyExtensionsTests {
     }
 
     @Test("Resolves a static library dependency to a static library graph dependency")
-    func testTargetGraphDependency_Library() async throws {
+    func targetGraphDependency_Library() async throws {
         // Given
         let libPath = sourceDirectory.appending(component: "libStaticLibrary.a")
         let headersPath = sourceDirectory.parentDirectory
@@ -132,7 +132,7 @@ struct TargetDependencyExtensionsTests {
     }
 
     @Test("Resolves a package product dependency to a package product graph dependency")
-    func testTargetGraphDependency_Package() async throws {
+    func targetGraphDependency_Package() async throws {
         // Given
         let dependency = TargetDependency.package(product: "MyPackageProduct", type: .runtime, condition: nil)
 
@@ -146,7 +146,7 @@ struct TargetDependencyExtensionsTests {
     }
 
     @Test("Resolves an SDK dependency to the correct SDK graph dependency")
-    func testTargetGraphDependency_SDK() async throws {
+    func targetGraphDependency_SDK() async throws {
         // Given
         let dependency = TargetDependency.sdk(name: "MySDK", status: .optional, condition: nil)
 
@@ -167,7 +167,7 @@ struct TargetDependencyExtensionsTests {
     }
 
     @Test("Resolves an XCTest dependency to an XCFramework graph dependency")
-    func testTargetGraphDependency_XCTest() async throws {
+    func targetGraphDependency_XCTest() async throws {
         // Given
         let dependency = TargetDependency.xctest
         let developerDirectory = try await DeveloperDirectoryProvider().developerDirectory()

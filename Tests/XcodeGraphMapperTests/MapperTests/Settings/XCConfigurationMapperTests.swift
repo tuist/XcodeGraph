@@ -9,7 +9,7 @@ struct XCConfigurationMapperTests {
     let mapper = XCConfigurationMapper()
 
     @Test("Returns default settings when configuration list is nil")
-    func testNilConfigurationListReturnsDefault() async throws {
+    func nilConfigurationListReturnsDefault() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -21,7 +21,7 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Maps a single build configuration correctly")
-    func testSingleConfigurationMapping() async throws {
+    func singleConfigurationMapping() async throws {
         // Given
         let pbxProj = PBXProj()
         let config: XCBuildConfiguration = .testDebug().add(to: pbxProj)
@@ -47,7 +47,7 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Maps multiple build configurations correctly")
-    func testMultipleConfigurations() async throws {
+    func multipleConfigurations() async throws {
         // Given
         let pbxProj = PBXProj()
         let debugConfiguration: XCBuildConfiguration = .testDebug().add(to: pbxProj)
@@ -76,7 +76,7 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Resolves XCConfig file paths correctly")
-    func testXCConfigPathResolution() async throws {
+    func xCConfigPathResolution() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -109,7 +109,7 @@ struct XCConfigurationMapperTests {
     }
 
     @Test("Maps array values correctly in build settings")
-    func testArrayValueMapping() async throws {
+    func arrayValueMapping() async throws {
         // Given
         let pbxProj = PBXProj()
         let config: XCBuildConfiguration = .testDebug(

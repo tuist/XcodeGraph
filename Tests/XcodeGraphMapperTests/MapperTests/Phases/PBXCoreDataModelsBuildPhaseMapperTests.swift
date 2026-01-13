@@ -6,7 +6,7 @@ import XcodeProj
 @Suite
 struct PBXCoreDataModelsBuildPhaseMapperTests {
     @Test("Maps CoreData models from version groups within resources phase")
-    func testMapCoreDataModels() async throws {
+    func mapCoreDataModels() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj

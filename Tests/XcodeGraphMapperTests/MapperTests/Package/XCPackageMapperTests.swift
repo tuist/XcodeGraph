@@ -13,7 +13,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps a remote package with a valid URL and up-to-next-major requirement")
-    func testMapPackageWithValidURL() async throws {
+    func mapPackageWithValidURL() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -34,7 +34,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps an up-to-next-major version requirement correctly")
-    func testMapRequirementUpToNextMajor() async throws {
+    func mapRequirementUpToNextMajor() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -48,7 +48,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps an up-to-next-minor version requirement correctly")
-    func testMapRequirementUpToNextMinor() async throws {
+    func mapRequirementUpToNextMinor() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -63,7 +63,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps an exact version requirement correctly")
-    func testMapRequirementExact() async throws {
+    func mapRequirementExact() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -78,7 +78,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps a range version requirement correctly")
-    func testMapRequirementRange() async throws {
+    func mapRequirementRange() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -93,7 +93,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps a branch-based version requirement correctly")
-    func testMapRequirementBranch() async throws {
+    func mapRequirementBranch() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -108,7 +108,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps a revision-based version requirement correctly")
-    func testMapRequirementRevision() async throws {
+    func mapRequirementRevision() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -123,7 +123,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps a missing version requirement to up-to-next-major(0.0.0)")
-    func testMapRequirementNoVersionRequirement() async throws {
+    func mapRequirementNoVersionRequirement() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "https://github.com/example/package.git",
@@ -138,7 +138,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Maps a local package reference correctly")
-    func testMapLocalPackage() async throws {
+    func mapLocalPackage() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let localPackage = XCLocalSwiftPackageReference(relativePath: "Packages/Example")
@@ -154,7 +154,7 @@ struct XCPackageMapperTests {
     }
 
     @Test("Throws an error if remote package has no repository URL")
-    func testMapPackageWithoutURL() async throws {
+    func mapPackageWithoutURL() async throws {
         // Given
         let package = XCRemoteSwiftPackageReference(
             repositoryURL: "",

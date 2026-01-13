@@ -6,7 +6,7 @@ import XcodeProj
 @Suite
 struct PBXCopyFilesBuildPhaseMapperTests {
     @Test("Maps copy files actions, verifying code-sign-on-copy attributes")
-    func testMapCopyFiles() async throws {
+    func mapCopyFiles() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -64,7 +64,7 @@ struct PBXCopyFilesBuildPhaseMapperTests {
     }
 
     @Test("Maps copy files actions with a synchronized group")
-    func testMapCopyFilesWithSynchronizedGroup() async throws {
+    func mapCopyFilesWithSynchronizedGroup() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test(
             path: "/tmp/TestProject/Project.xcodeproj"

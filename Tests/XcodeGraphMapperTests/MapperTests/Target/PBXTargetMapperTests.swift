@@ -11,7 +11,7 @@ struct PBXTargetMapperTests: Sendable {
     private let fileSystem = FileSystem()
 
     @Test("Maps a basic target with a product bundle identifier")
-    func testMapBasicTarget() async throws {
+    func mapBasicTarget() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let target = createTarget(
@@ -43,7 +43,7 @@ struct PBXTargetMapperTests: Sendable {
     }
 
     @Test("Defaults to unknown if the target is missing a bundle identifier")
-    func testMapTargetWithMissingBundleId() async throws {
+    func mapTargetWithMissingBundleId() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -70,7 +70,7 @@ struct PBXTargetMapperTests: Sendable {
     }
 
     @Test("Maps a target with source files")
-    func testMapTargetWithSourceFiles() async throws {
+    func mapTargetWithSourceFiles() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -110,7 +110,7 @@ struct PBXTargetMapperTests: Sendable {
     }
 
     @Test("Maps a target with a buildable group")
-    func testMapTargetWithBuildableGroup() async throws {
+    func mapTargetWithBuildableGroup() async throws {
         try await fileSystem.runInTemporaryDirectory(prefix: "PBXTargetMapperTests") { appPath in
             // Given
             let xcodeProj = try await XcodeProj.test(
@@ -256,7 +256,7 @@ struct PBXTargetMapperTests: Sendable {
     }
 
     @Test("Maps entitlements when CODE_SIGN_ENTITLEMENTS is set")
-    func testMapEntitlements() async throws {
+    func mapEntitlements() async throws {
         // Given
 
         let xcodeProj = try await XcodeProj.test()
@@ -317,7 +317,7 @@ struct PBXTargetMapperTests: Sendable {
     }
 
     @Test("Throws noProjectsFound when pbxProj has no projects")
-    func testMapTarget_noProjectsFound() async throws {
+    func mapTarget_noProjectsFound() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let target = PBXNativeTarget.test()
@@ -344,7 +344,7 @@ struct PBXTargetMapperTests: Sendable {
     }
 
     @Test("Returns a plist path")
-    func testMapTarget_withPlist() async throws {
+    func mapTarget_withPlist() async throws {
         // Given
 
         let xcodeProj = try await XcodeProj.test()
@@ -393,7 +393,7 @@ struct PBXTargetMapperTests: Sendable {
     }
 
     @Test
-    func testMapAggregateTarget() async throws {
+    func mapAggregateTarget() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let target = PBXAggregateTarget(

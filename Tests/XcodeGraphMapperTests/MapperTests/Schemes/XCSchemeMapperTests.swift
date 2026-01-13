@@ -21,7 +21,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps shared project schemes correctly")
-    func testMapSharedProjectSchemes() async throws {
+    func mapSharedProjectSchemes() async throws {
         // Given
         let xcscheme = XCScheme.test(name: "SharedScheme")
 
@@ -34,7 +34,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps user (non-shared) project schemes correctly")
-    func testMapUserSchemes() async throws {
+    func mapUserSchemes() async throws {
         // Given
         let xcscheme = XCScheme.test(name: "UserScheme")
 
@@ -47,7 +47,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps a build action within a scheme")
-    func testMapBuildAction() async throws {
+    func mapBuildAction() async throws {
         // Given
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
@@ -80,7 +80,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps a test action with testable references, coverage, and environment")
-    func testMapTestAction() async throws {
+    func mapTestAction() async throws {
         // Given
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
@@ -130,7 +130,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps a test action with test plans")
-    func testMapTestActionWithTestPlans() async throws {
+    func mapTestActionWithTestPlans() async throws {
         try await fileSystem.runInTemporaryDirectory(prefix: "XCSchemeMapperTests") { temporaryPath in
             // Given
             let targetRef = XCScheme.BuildableReference(
@@ -223,7 +223,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps a run action with environment variables and launch arguments")
-    func testMapRunAction() async throws {
+    func mapRunAction() async throws {
         // Given
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
@@ -263,7 +263,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps an archive action with organizer reveal enabled")
-    func testMapArchiveAction() async throws {
+    func mapArchiveAction() async throws {
         // Given
         let archiveAction = XCScheme.ArchiveAction(
             buildConfiguration: "Release",
@@ -283,7 +283,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps a profile action to a runnable and configuration")
-    func testMapProfileAction() async throws {
+    func mapProfileAction() async throws {
         // Given
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
@@ -310,7 +310,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps an analyze action to the appropriate configuration")
-    func testMapAnalyzeAction() async throws {
+    func mapAnalyzeAction() async throws {
         // Given
         let analyzeAction = XCScheme.AnalyzeAction(buildConfiguration: "Debug")
 
@@ -326,7 +326,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Maps target references in a scheme's build action")
-    func testMapTargetReference() async throws {
+    func mapTargetReference() async throws {
         // Given
         let targetRef = XCScheme.BuildableReference(
             referencedContainer: "container:App.xcodeproj",
@@ -356,7 +356,7 @@ struct XCSchemeMapperTests: Sendable {
     }
 
     @Test("Handles schemes without any actions gracefully")
-    func testNilActions() async throws {
+    func nilActions() async throws {
         // Given
         let scheme = XCScheme.test(
             buildAction: nil,

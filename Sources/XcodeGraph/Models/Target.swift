@@ -213,12 +213,12 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         }
     }
 
+    /// Returns true if the target supports having sources.
     @available(*, deprecated, message: """
     Whether a target supports sources or not is not as binary decision as we originally assumed and codified in this getter.
     Because it's something that depends on other variables, we decided to pull this logic out of tuist/XcodeGraph into tuist/tuist.
     If you are interested in having a similar logic in your XcodeGraph-dependent project, you might want to check out tuist/tuist.
     """)
-    /// Returns true if the target supports having sources.
     public var supportsSources: Bool {
         switch product {
         case .stickerPackExtension, .watch2App:
@@ -241,6 +241,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         switch product {
         case .app,
              .framework,
+             .staticFramework,
              .unitTests,
              .uiTests,
              .bundle,
@@ -259,7 +260,6 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
              .macro,
              .dynamicLibrary,
              .staticLibrary,
-             .staticFramework,
              .xpc:
             return false
         }
