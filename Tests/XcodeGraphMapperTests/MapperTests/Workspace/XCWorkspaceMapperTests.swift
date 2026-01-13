@@ -9,7 +9,7 @@ import XcodeProj
 @Suite
 struct XCWorkspaceMapperTests {
     @Test("Maps workspace without any projects or schemes")
-    func testMap_NoProjectsOrSchemes() async throws {
+    func map_NoProjectsOrSchemes() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/MyWorkspace.xcworkspace")
         let xcworkspace: XCWorkspace = .test(files: ["ReadMe.md"], path: workspacePath.pathString)
@@ -25,7 +25,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Maps workspace with multiple projects")
-    func testMap_MultipleProjects() async throws {
+    func map_MultipleProjects() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/MyWorkspace.xcworkspace")
         let workspaceDir = workspacePath.parentDirectory
@@ -56,7 +56,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Maps workspace with shared schemes")
-    func testMap_WithSchemes() async throws {
+    func map_WithSchemes() async throws {
         // Given
         let tempDirectory = FileManager.default.temporaryDirectory
         let path = tempDirectory.appendingPathComponent("MyWorkspace.xcworkspace")
@@ -79,7 +79,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("No schemes directory results in no schemes mapped")
-    func testMap_NoSchemesDirectory() async throws {
+    func map_NoSchemesDirectory() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/MyWorkspace.xcworkspace")
         let xcworkspace = XCWorkspace.test(withElements: [
@@ -95,7 +95,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Workspace name is derived from the .xcworkspace file name")
-    func testMap_NameDerivation() async throws {
+    func map_NameDerivation() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/AnotherWorkspace.xcworkspace")
         let xcworkspace = XCWorkspace.test(withElements: [], path: workspacePath.pathString)
@@ -109,7 +109,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Resolves absolute path in XCWorkspaceDataFileRef")
-    func testMap_AbsolutePath() async throws {
+    func map_AbsolutePath() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/AbsWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
@@ -126,7 +126,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Resolves container path in XCWorkspaceDataFileRef")
-    func testMap_ContainerPath() async throws {
+    func map_ContainerPath() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/ContainerWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
@@ -143,7 +143,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Resolves developer path in XCWorkspaceDataFileRef")
-    func testMap_DeveloperPath() async throws {
+    func map_DeveloperPath() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/DevWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
@@ -160,7 +160,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Resolves group path in XCWorkspaceDataFileRef")
-    func testMap_GroupPath() async throws {
+    func map_GroupPath() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/GroupWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
@@ -179,7 +179,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Resolves current path in XCWorkspaceDataFileRef")
-    func testMap_CurrentPath() async throws {
+    func map_CurrentPath() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/CurrentWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [
@@ -196,7 +196,7 @@ struct XCWorkspaceMapperTests {
     }
 
     @Test("Resolves other path in XCWorkspaceDataFileRef")
-    func testMap_otherPath() async throws {
+    func map_otherPath() async throws {
         // Given
         let workspacePath = try AbsolutePath(validating: "/tmp/OtherWorkspace.xcworkspace")
         let elements: [XCWorkspaceDataElement] = [

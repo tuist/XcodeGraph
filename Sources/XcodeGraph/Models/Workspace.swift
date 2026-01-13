@@ -103,9 +103,9 @@ extension Workspace {
             let allSchemes = schemes + projects.flatMap(\.schemes)
             var resultTargets = Set<TargetReference>()
 
-            allSchemes.forEach { scheme in
+            for scheme in allSchemes {
                 // try to add code coverage targets only if code coverage is enabled
-                guard let testAction = scheme.testAction, testAction.coverage else { return }
+                guard let testAction = scheme.testAction, testAction.coverage else { continue }
 
                 let schemeCoverageTargets = testAction.codeCoverageTargets
 

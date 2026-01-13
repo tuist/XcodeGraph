@@ -12,7 +12,7 @@ struct XcodeGraphMapperTests {
     private let fileSystem = FileSystem()
 
     @Test("Maps a single project into a workspace graph")
-    func testSingleProjectGraph() async throws {
+    func singleProjectGraph() async throws {
         // Given
         let pbxProj = PBXProj()
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)
@@ -63,7 +63,7 @@ struct XcodeGraphMapperTests {
     }
 
     @Test("Maps a project with sanitizable target names")
-    func testProjectWithSanitizableTargetNames() async throws {
+    func projectWithSanitizableTargetNames() async throws {
         // Given
         let pbxProj = PBXProj()
 
@@ -113,7 +113,7 @@ struct XcodeGraphMapperTests {
     }
 
     @Test("Maps a project with custom target product names")
-    func testProjectWithCustomTargetProductNames() async throws {
+    func projectWithCustomTargetProductNames() async throws {
         // Given
         let pbxProj = PBXProj()
 
@@ -164,7 +164,7 @@ struct XcodeGraphMapperTests {
     }
 
     @Test("Maps a workspace with multiple projects into a single graph")
-    func testWorkspaceGraphMultipleProjects() async throws {
+    func workspaceGraphMultipleProjects() async throws {
         // Given
         let pbxProjA = PBXProj()
         let pbxProjB = PBXProj()
@@ -254,7 +254,7 @@ struct XcodeGraphMapperTests {
     }
 
     @Test("Maps a workspace with multiple projects in different directories into a single graph")
-    func testWorkspaceGraphMultipleProjectsInDifferentDirectories() async throws {
+    func workspaceGraphMultipleProjectsInDifferentDirectories() async throws {
         // Given
         //
         // A project structure like this:
@@ -329,7 +329,7 @@ struct XcodeGraphMapperTests {
     }
 
     @Test("Maps a project graph with dependencies between targets")
-    func testGraphWithDependencies() async throws {
+    func graphWithDependencies() async throws {
         // Given
         let pbxProj = PBXProj()
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)
@@ -395,7 +395,7 @@ struct XcodeGraphMapperTests {
     }
 
     @Test("Maps a project graph with local packages")
-    func testGraphWithLocalPackages() async throws {
+    func graphWithLocalPackages() async throws {
         // Given
         let pbxProj = PBXProj()
         let debug: XCBuildConfiguration = .testDebug().add(to: pbxProj)

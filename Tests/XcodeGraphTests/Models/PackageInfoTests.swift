@@ -6,7 +6,7 @@ import XcodeGraph
 
 struct PackageInfoTests {
     @Test
-    func test_packageInfo_codable() throws {
+    func packageInfo_codable() throws {
         // Given
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()

@@ -6,7 +6,7 @@ import XcodeProj
 @Suite
 struct PBXHeadersBuildPhaseMapperTests {
     @Test("Maps public, private, and project headers from headers phase")
-    func testMapHeaders() async throws {
+    func mapHeaders() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj

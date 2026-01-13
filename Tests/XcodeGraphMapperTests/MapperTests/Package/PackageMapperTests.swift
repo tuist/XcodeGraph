@@ -9,7 +9,7 @@ struct PackageMapperTests: Sendable {
     private let fileSystem = FileSystem()
 
     @Test
-    func test_map_package() async throws {
+    func map_package() async throws {
         try await fileSystem.runInTemporaryDirectory(prefix: "PackageMapperTests") { path in
             // Given
             let subject = PackageMapper()
