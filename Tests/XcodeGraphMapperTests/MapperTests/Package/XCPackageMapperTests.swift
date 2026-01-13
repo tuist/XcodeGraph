@@ -150,7 +150,7 @@ struct XCPackageMapperTests {
         let expectedPath = xcodeProj.srcPath.appending(
             try RelativePath(validating: "Packages/Example")
         )
-        #expect(result == .local(path: expectedPath))
+        #expect(result == .local(path: expectedPath, groupPath: nil))
     }
 
     @Test("Throws an error if remote package has no repository URL")
