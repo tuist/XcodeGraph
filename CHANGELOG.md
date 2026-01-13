@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.7] - 2026-01-13
+### Details
+#### Fix
+- Allow static frameworks to support resources by @pepicrft in [#451](https://github.com/tuist/XcodeGraph/pull/451)
+
 ## [1.30.6] - 2026-01-12
 ### Details
 #### Chore
@@ -2009,6 +2014,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.30.7]: https://github.com/tuist/XcodeGraph/compare/1.30.6..1.30.7
 [1.30.6]: https://github.com/tuist/XcodeGraph/compare/1.30.5..1.30.6
 [1.30.5]: https://github.com/tuist/XcodeGraph/compare/1.30.4..1.30.5
 [1.30.4]: https://github.com/tuist/XcodeGraph/compare/1.30.3..1.30.4
