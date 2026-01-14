@@ -253,14 +253,14 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
              .stickerPackExtension,
              .appClip,
              .systemExtension,
-             .extensionKitExtension:
+             .extensionKitExtension,
+             .commandLineTool,
+             .macro,
+             .xpc:
             return true
 
-        case .commandLineTool,
-             .macro,
-             .dynamicLibrary,
-             .staticLibrary,
-             .xpc:
+        case .dynamicLibrary,
+             .staticLibrary:
             return false
         }
     }
