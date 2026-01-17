@@ -143,7 +143,8 @@ struct PBXProjectMapper: PBXProjectMapping {
                     indentWidth: nil,
                     tabWidth: nil,
                     wrapsLines: nil
-                )
+                ),
+                folderSortingStrategy: .groupsBeforeFolderReferences
             ),
             settings: settings,
             filesGroup: filesGroup,

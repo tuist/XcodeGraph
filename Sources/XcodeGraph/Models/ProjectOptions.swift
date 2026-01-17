@@ -18,18 +18,22 @@ extension Project {
         /// Text settings to override user ones for current project
         public let textSettings: TextSettings
 
+        public let folderSortingStrategy: FolderSortingStrategy
+
         public init(
             automaticSchemesOptions: AutomaticSchemesOptions,
             disableBundleAccessors: Bool,
             disableShowEnvironmentVarsInScriptPhases: Bool,
             disableSynthesizedResourceAccessors: Bool,
-            textSettings: TextSettings
+            textSettings: TextSettings,
+            folderSortingStrategy: FolderSortingStrategy
         ) {
             self.automaticSchemesOptions = automaticSchemesOptions
             self.disableBundleAccessors = disableBundleAccessors
             self.disableShowEnvironmentVarsInScriptPhases = disableShowEnvironmentVarsInScriptPhases
             self.disableSynthesizedResourceAccessors = disableSynthesizedResourceAccessors
             self.textSettings = textSettings
+            self.folderSortingStrategy = folderSortingStrategy
         }
     }
 }
@@ -92,6 +96,14 @@ extension Project.Options {
             self.tabWidth = tabWidth
             self.wrapsLines = wrapsLines
         }
+    }
+
+    public enum FolderSortingStrategy: Codable, Equatable, Sendable {
+        /// Group folders are sorted before folder references
+        case groupsBeforeFolderReferences
+        
+        /// Group folders and folder references are sorted together alphabetically
+        case alphabetical
     }
 }
 

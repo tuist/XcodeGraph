@@ -57,7 +57,8 @@ struct PackageMapper: PackageMapping {
                     indentWidth: nil,
                     tabWidth: nil,
                     wrapsLines: nil
-                )
+                ),
+                folderSortingStrategy: .groupsBeforeFolderReferences
             ),
             settings: Settings(configurations: [:]),
             filesGroup: .group(name: packageInfo.name),

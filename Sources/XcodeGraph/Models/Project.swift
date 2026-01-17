@@ -278,14 +278,16 @@ public struct Project: Hashable, Equatable, CustomStringConvertible, CustomDebug
             disableBundleAccessors: Bool = false,
             disableShowEnvironmentVarsInScriptPhases: Bool = false,
             disableSynthesizedResourceAccessors: Bool = false,
-            textSettings: TextSettings = .init(usesTabs: nil, indentWidth: nil, tabWidth: nil, wrapsLines: nil)
+            textSettings: TextSettings = .init(usesTabs: nil, indentWidth: nil, tabWidth: nil, wrapsLines: nil),
+            folderSortingStrategy: FolderSortingStrategy = .groupsBeforeFolderReferences
         ) -> Self {
             .init(
                 automaticSchemesOptions: automaticSchemesOptions,
                 disableBundleAccessors: disableBundleAccessors,
                 disableShowEnvironmentVarsInScriptPhases: disableShowEnvironmentVarsInScriptPhases,
                 disableSynthesizedResourceAccessors: disableSynthesizedResourceAccessors,
-                textSettings: textSettings
+                textSettings: textSettings,
+                folderSortingStrategy: folderSortingStrategy
             )
         }
     }
