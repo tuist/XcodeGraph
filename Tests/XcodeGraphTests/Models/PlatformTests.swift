@@ -36,7 +36,7 @@ final class PlatformTests: XCTestCase {
 
     func test_caseInvalidPlatform_throws() {
         do {
-            let _ = try Platform.from(commandLineValue: "not_a_platform")
+            _ = try Platform.from(commandLineValue: "not_a_platform")
             XCTFail("Expected erro to be thrown")
         } catch let error as UnsupportedPlatformError {
             XCTAssertEqual(error, UnsupportedPlatformError(input: "not_a_platform"))

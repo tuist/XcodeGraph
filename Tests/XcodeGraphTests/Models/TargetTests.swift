@@ -101,4 +101,70 @@ final class TargetTests: XCTestCase {
         // Then
         XCTAssertFalse(got)
     }
+
+    func test_supportsResources_returns_true_for_static_frameworks() {
+        // Given
+        let target = Target.test(product: .staticFramework)
+
+        // When
+        let got = target.supportsResources
+
+        // Then
+        XCTAssertTrue(got)
+    }
+
+    func test_supportsResources_returns_true_for_command_line_tools() {
+        // Given
+        let target = Target.test(destinations: .macOS, product: .commandLineTool)
+
+        // When
+        let got = target.supportsResources
+
+        // Then
+        XCTAssertTrue(got)
+    }
+
+    func test_supportsResources_returns_true_for_macros() {
+        // Given
+        let target = Target.test(destinations: .macOS, product: .macro)
+
+        // When
+        let got = target.supportsResources
+
+        // Then
+        XCTAssertTrue(got)
+    }
+
+    func test_supportsResources_returns_true_for_xpc_services() {
+        // Given
+        let target = Target.test(destinations: .macOS, product: .xpc)
+
+        // When
+        let got = target.supportsResources
+
+        // Then
+        XCTAssertTrue(got)
+    }
+
+    func test_supportsResources_returns_false_for_static_libraries() {
+        // Given
+        let target = Target.test(product: .staticLibrary)
+
+        // When
+        let got = target.supportsResources
+
+        // Then
+        XCTAssertFalse(got)
+    }
+
+    func test_supportsResources_returns_false_for_dynamic_libraries() {
+        // Given
+        let target = Target.test(product: .dynamicLibrary)
+
+        // When
+        let got = target.supportsResources
+
+        // Then
+        XCTAssertFalse(got)
+    }
 }

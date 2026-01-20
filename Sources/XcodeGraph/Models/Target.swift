@@ -15,7 +15,9 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     ]
     public static let validResourceExtensions: [String] = [
         // Resource
-        "md", "xcstrings", "plist", "rtf", "tutorial", "sks", "xcprivacy", "gpx", "strings", "stringsdict", "geojson",
+        "md", "xcstrings", "plist", "rtf", "tutorial", "sks", "xcprivacy", "gpx", "strings", "stringsdict",
+        "geojson", "txt", "json", "js",
+
         // User interface
         "storyboard", "xib",
         // Other
@@ -68,7 +70,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public var metadata: TargetMetadata
     public let type: TargetType
     public let packages: [AbsolutePath]
-    public let buildableFolders: [BuildableFolder]
+    public var buildableFolders: [BuildableFolder]
 
     // MARK: - Init
 
@@ -211,12 +213,12 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         }
     }
 
+    /// Returns true if the target supports having sources.
     @available(*, deprecated, message: """
     Whether a target supports sources or not is not as binary decision as we originally assumed and codified in this getter.
     Because it's something that depends on other variables, we decided to pull this logic out of tuist/XcodeGraph into tuist/tuist.
     If you are interested in having a similar logic in your XcodeGraph-dependent project, you might want to check out tuist/tuist.
     """)
-    /// Returns true if the target supports having sources.
     public var supportsSources: Bool {
         switch product {
         case .stickerPackExtension, .watch2App:
@@ -239,6 +241,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         switch product {
         case .app,
              .framework,
+             .staticFramework,
              .unitTests,
              .uiTests,
              .bundle,
@@ -250,15 +253,14 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
              .stickerPackExtension,
              .appClip,
              .systemExtension,
-             .extensionKitExtension:
+             .extensionKitExtension,
+             .commandLineTool,
+             .macro,
+             .xpc:
             return true
 
-        case .commandLineTool,
-             .macro,
-             .dynamicLibrary,
-             .staticLibrary,
-             .staticFramework,
-             .xpc:
+        case .dynamicLibrary,
+             .staticLibrary:
             return false
         }
     }

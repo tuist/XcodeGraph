@@ -64,7 +64,6 @@ extension TargetDependency {
                     linking: metadata.linking,
                     mergeable: metadata.mergeable,
                     status: status,
-                    macroPath: metadata.macroPath,
                     swiftModules: metadata.swiftModules,
                     moduleMaps: metadata.moduleMaps,
                     expectedSignature: metadata.expectedSignature?.signatureString()

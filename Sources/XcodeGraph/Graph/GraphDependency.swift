@@ -3,14 +3,14 @@ import Path
 
 public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Codable, Sendable {
     public struct XCFramework: Hashable, CustomStringConvertible, Comparable, Codable, Sendable {
-        public let path: AbsolutePath
-        public let infoPlist: XCFrameworkInfoPlist
-        public let linking: BinaryLinking
-        public let mergeable: Bool
-        public let status: LinkingStatus
-        public let swiftModules: [AbsolutePath]
-        public let moduleMaps: [AbsolutePath]
-        public let expectedSignature: String?
+        public var path: AbsolutePath
+        public var infoPlist: XCFrameworkInfoPlist
+        public var linking: BinaryLinking
+        public var mergeable: Bool
+        public var status: LinkingStatus
+        public var swiftModules: [AbsolutePath]
+        public var moduleMaps: [AbsolutePath]
+        public var expectedSignature: String?
 
         public init(
             path: AbsolutePath,
@@ -18,7 +18,6 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             linking: BinaryLinking,
             mergeable: Bool,
             status: LinkingStatus,
-            macroPath _: AbsolutePath?,
             swiftModules: [AbsolutePath],
             moduleMaps: [AbsolutePath],
             expectedSignature: String? = nil
@@ -327,7 +326,6 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             linking: BinaryLinking = .dynamic,
             mergeable: Bool = false,
             status: LinkingStatus = .required,
-            macroPath: AbsolutePath? = nil,
             swiftModules: [AbsolutePath] = [],
             moduleMaps: [AbsolutePath] = []
         ) -> GraphDependency {
@@ -338,7 +336,6 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
                     linking: linking,
                     mergeable: mergeable,
                     status: status,
-                    macroPath: macroPath,
                     swiftModules: swiftModules,
                     moduleMaps: moduleMaps
                 )

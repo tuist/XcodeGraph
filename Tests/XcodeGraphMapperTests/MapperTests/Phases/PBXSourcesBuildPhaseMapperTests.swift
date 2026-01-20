@@ -6,7 +6,7 @@ import XcodeProj
 @Suite
 struct PBXSourcesBuildPhaseMapperTests {
     @Test("Maps Swift source files with compiler flags from sources phase")
-    func testMapSources() async throws {
+    func mapSources() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -53,7 +53,7 @@ struct PBXSourcesBuildPhaseMapperTests {
     }
 
     @Test("Handles source files without file references gracefully")
-    func testMapSourceFile_missingFileRef() async throws {
+    func mapSourceFile_missingFileRef() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -75,7 +75,7 @@ struct PBXSourcesBuildPhaseMapperTests {
     }
 
     @Test("Gracefully handles non-existent file paths for source files")
-    func testMapSourceFile_unresolvableFullPath() async throws {
+    func mapSourceFile_unresolvableFullPath() async throws {
         // Given
         // Use a provider with an invalid source directory to simulate missing files.
         let xcodeProj = try await XcodeProj.test(
@@ -107,7 +107,7 @@ struct PBXSourcesBuildPhaseMapperTests {
         "Correctly identifies code generation attributes for source files",
         arguments: [FileCodeGen.public, .private, .project, .disabled]
     )
-    func testCodeGenAttributes(_ fileCodeGen: FileCodeGen) async throws {
+    func codeGenAttributes(_ fileCodeGen: FileCodeGen) async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj

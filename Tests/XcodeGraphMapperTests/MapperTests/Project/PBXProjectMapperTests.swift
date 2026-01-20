@@ -11,7 +11,7 @@ struct PBXProjectMapperTests: Sendable {
     private let fileSystem = FileSystem()
 
     @Test("Maps a basic project with default attributes")
-    func testMapBasicProject() async throws {
+    func mapBasicProject() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let mapper = PBXProjectMapper()
@@ -28,7 +28,7 @@ struct PBXProjectMapperTests: Sendable {
     }
 
     @Test("Maps a project with custom attributes (org name, class prefix, upgrade check)")
-    func testMapProjectWithCustomAttributes() async throws {
+    func mapProjectWithCustomAttributes() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
 
@@ -52,7 +52,7 @@ struct PBXProjectMapperTests: Sendable {
     }
 
     @Test("Maps a project with local packages")
-    func testMapProjectWithLocalPackages() async throws {
+    func mapProjectWithLocalPackages() async throws {
         try await fileSystem.runInTemporaryDirectory(prefix: "PBXProjectMapperTests") { path in
             // Given
             let xcodeProj = try await XcodeProj.test(
@@ -128,7 +128,7 @@ struct PBXProjectMapperTests: Sendable {
     }
 
     @Test("Maps a project with remote package dependencies")
-    func testMapProjectWithRemotePackages() async throws {
+    func mapProjectWithRemotePackages() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -155,7 +155,7 @@ struct PBXProjectMapperTests: Sendable {
     }
 
     @Test("Maps a project with known regions")
-    func testMapProjectWithKnownRegions() async throws {
+    func mapProjectWithKnownRegions() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         try xcodeProj.mainPBXProject().knownRegions = ["en", "es", "fr"]
@@ -172,7 +172,7 @@ struct PBXProjectMapperTests: Sendable {
     }
 
     @Test("Maps a project with a custom development region")
-    func testMapProjectWithDevelopmentRegion() async throws {
+    func mapProjectWithDevelopmentRegion() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         try xcodeProj.mainPBXProject().developmentRegion = "fr"
@@ -186,7 +186,7 @@ struct PBXProjectMapperTests: Sendable {
     }
 
     @Test("Maps a project with default resource synthesizers")
-    func testMapProjectWithResourceSynthesizers() async throws {
+    func mapProjectWithResourceSynthesizers() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let mapper = PBXProjectMapper()
@@ -217,7 +217,7 @@ struct PBXProjectMapperTests: Sendable {
     }
 
     @Test("Maps a project with associated schemes")
-    func testMapProjectWithSchemes() async throws {
+    func mapProjectWithSchemes() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let scheme = XCScheme.test(name: "TestScheme")

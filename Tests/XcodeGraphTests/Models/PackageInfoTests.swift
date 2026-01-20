@@ -6,7 +6,7 @@ import XcodeGraph
 
 struct PackageInfoTests {
     @Test
-    func test_packageInfo_codable() throws {
+    func packageInfo_codable() throws {
         // Given
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()
@@ -54,6 +54,14 @@ struct PackageInfoTests {
                     checksum: nil
                 ),
             ],
+            traits: [
+                PackageTrait(
+                    enabledTraits: ["Tuist"],
+                    name: "Tuist",
+                    description: "This is the default Tuist trait"
+                ),
+            ],
+            dependencies: [],
             platforms: [
                 PackageInfo.Platform(platformName: "iOS", version: "17.2", options: []),
             ],

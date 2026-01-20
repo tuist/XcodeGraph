@@ -6,7 +6,7 @@ import XcodeProj
 @Suite
 struct PBXScriptsBuildPhaseMapperTests {
     @Test("Maps embedded run scripts with specified input/output paths")
-    func testMapScripts() async throws {
+    func mapScripts() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
@@ -44,7 +44,7 @@ struct PBXScriptsBuildPhaseMapperTests {
     }
 
     @Test("Maps raw script build phases not covered by other categories")
-    func testMapRawScriptBuildPhases() async throws {
+    func mapRawScriptBuildPhases() async throws {
         // Given
         let xcodeProj = try await XcodeProj.test()
         let pbxProj = xcodeProj.pbxproj
