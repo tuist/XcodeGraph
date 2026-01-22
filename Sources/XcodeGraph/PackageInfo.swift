@@ -100,13 +100,16 @@ extension PackageInfo {
     public struct PackageConditionDescription: Codable, Hashable {
         public let platformNames: [String]
         public let config: String?
+        public let traits: [String]?
 
         public init(
             platformNames: [String],
-            config: String?
+            config: String?,
+            traits: [String]? = nil
         ) {
             self.platformNames = platformNames
             self.config = config
+            self.traits = traits
         }
     }
 }
