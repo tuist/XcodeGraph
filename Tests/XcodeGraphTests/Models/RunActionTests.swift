@@ -32,6 +32,7 @@ final class RunActionTests: XCTestCase {
                 mainThreadCheckerEnabled: true,
                 performanceAntipatternCheckerEnabled: true
             ),
+            askForAppToLaunch: true,
             appClipInvocationURL: URL(string: "https://app-clips-url.com/example")
         )
 

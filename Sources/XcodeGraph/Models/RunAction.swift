@@ -16,6 +16,7 @@ public struct RunAction: Equatable, Codable, Sendable {
     public let diagnosticsOptions: SchemeDiagnosticsOptions
     public let metalOptions: MetalOptions?
     public let expandVariableFromTarget: TargetReference?
+    public let askForAppToLaunch: Bool
     public let launchStyle: LaunchStyle
     public let appClipInvocationURL: URL?
     public var customWorkingDirectory: AbsolutePath?
@@ -36,6 +37,7 @@ public struct RunAction: Equatable, Codable, Sendable {
         diagnosticsOptions: SchemeDiagnosticsOptions,
         metalOptions: MetalOptions? = nil,
         expandVariableFromTarget: TargetReference? = nil,
+        askForAppToLaunch: Bool = false,
         launchStyle: LaunchStyle = .automatically,
         appClipInvocationURL: URL? = nil,
         customWorkingDirectory: AbsolutePath? = nil,
@@ -53,6 +55,7 @@ public struct RunAction: Equatable, Codable, Sendable {
         self.diagnosticsOptions = diagnosticsOptions
         self.metalOptions = metalOptions
         self.expandVariableFromTarget = expandVariableFromTarget
+        self.askForAppToLaunch = askForAppToLaunch
         self.launchStyle = launchStyle
         self.appClipInvocationURL = appClipInvocationURL
         self.customWorkingDirectory = customWorkingDirectory
@@ -81,6 +84,7 @@ public struct RunAction: Equatable, Codable, Sendable {
                 apiValidation: true
             ),
             expandVariableFromTarget: TargetReference? = nil,
+            askForAppToLaunch: Bool = false,
             launchStyle: LaunchStyle = .automatically,
             appClipInvocationURL: URL? = nil,
             customWorkingDirectory: AbsolutePath? = nil,
@@ -99,6 +103,7 @@ public struct RunAction: Equatable, Codable, Sendable {
                 diagnosticsOptions: diagnosticsOptions,
                 metalOptions: metalOptions,
                 expandVariableFromTarget: expandVariableFromTarget,
+                askForAppToLaunch: askForAppToLaunch,
                 launchStyle: launchStyle,
                 appClipInvocationURL: appClipInvocationURL,
                 customWorkingDirectory: customWorkingDirectory,
