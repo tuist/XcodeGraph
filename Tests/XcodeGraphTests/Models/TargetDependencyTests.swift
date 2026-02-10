@@ -36,6 +36,28 @@ final class TargetDependencyTests: XCTestCase {
         XCTAssertCodable(subject)
     }
 
+    func test_codable_foreignBuild() {
+        // Given
+        let subject = TargetDependency.foreignBuild(
+            name: "SharedKMP",
+            script: "./gradlew build",
+            output: .xcframework(
+                path: try! AbsolutePath(validating: "/path/to/output.xcframework"),
+                expectedSignature: nil,
+                status: .required
+            ),
+            cacheInputs: [
+                .file(try! AbsolutePath(validating: "/path/to/input.kt")),
+                .folder(try! AbsolutePath(validating: "/path/to/src")),
+                .glob("**/*.kt"),
+                .script("git rev-parse HEAD"),
+            ]
+        )
+
+        // Then
+        XCTAssertCodable(subject)
+    }
+
     func test_filtering() {
         let expected: PlatformCondition? = .when([.macos])
 
@@ -57,6 +79,17 @@ final class TargetDependencyTests: XCTestCase {
                 condition: expected
             ),
             .project(target: "", path: try! AbsolutePath(validating: "/"), condition: expected),
+            .foreignBuild(
+                name: "KMP",
+                script: "./build.sh",
+                output: .xcframework(
+                    path: try! AbsolutePath(validating: "/output.xcframework"),
+                    expectedSignature: nil,
+                    status: .required
+                ),
+                cacheInputs: [.file(try! AbsolutePath(validating: "/input.kt"))],
+                condition: expected
+            ),
         ]
 
         for subject in subjects {

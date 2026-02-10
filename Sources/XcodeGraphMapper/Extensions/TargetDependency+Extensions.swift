@@ -20,6 +20,8 @@ extension TargetDependency {
             return path.basenameWithoutExt
         case .xctest:
             return "xctest"
+        case let .foreignBuild(name, _, _, _, _):
+            return name
         }
     }
 }
