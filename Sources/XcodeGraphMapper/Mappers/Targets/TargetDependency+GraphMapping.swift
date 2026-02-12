@@ -101,17 +101,6 @@ extension TargetDependency {
                 source: .developer
             )
 
-        case let .foreignBuild(_, _, output, _, _):
-            return try await output.graphDependency(
-                sourceDirectory: sourceDirectory,
-                target: target,
-                xcframeworkMetadataProvider: xcframeworkMetadataProvider,
-                libraryMetadataProvider: libraryMetadataProvider,
-                frameworkMetadataProvider: frameworkMetadataProvider,
-                systemFrameworkMetadataProvider: systemFrameworkMetadataProvider,
-                developerDirectoryProvider: developerDirectoryProvider
-            )
-
         // MARK: - XCTest (System Provided)
 
         case .xctest:

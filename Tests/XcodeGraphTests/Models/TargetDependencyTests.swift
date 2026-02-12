@@ -41,17 +41,16 @@ final class TargetDependencyTests: XCTestCase {
         let subject = TargetDependency.foreignBuild(
             name: "SharedKMP",
             script: "./gradlew build",
-            output: .xcframework(
-                path: try! AbsolutePath(validating: "/path/to/output.xcframework"),
-                expectedSignature: nil,
-                status: .required
-            ),
-            cacheInputs: [
+            inputs: [
                 .file(try! AbsolutePath(validating: "/path/to/input.kt")),
                 .folder(try! AbsolutePath(validating: "/path/to/src")),
                 .glob("**/*.kt"),
                 .script("git rev-parse HEAD"),
-            ]
+            ],
+            output: .xcframework(
+                path: try! AbsolutePath(validating: "/path/to/output.xcframework"),
+                linking: .dynamic
+            )
         )
 
         // Then
@@ -82,12 +81,11 @@ final class TargetDependencyTests: XCTestCase {
             .foreignBuild(
                 name: "KMP",
                 script: "./build.sh",
+                inputs: [.file(try! AbsolutePath(validating: "/input.kt"))],
                 output: .xcframework(
                     path: try! AbsolutePath(validating: "/output.xcframework"),
-                    expectedSignature: nil,
-                    status: .required
+                    linking: .dynamic
                 ),
-                cacheInputs: [.file(try! AbsolutePath(validating: "/input.kt"))],
                 condition: expected
             ),
         ]

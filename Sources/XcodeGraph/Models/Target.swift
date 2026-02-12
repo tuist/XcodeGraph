@@ -71,6 +71,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public let type: TargetType
     public let packages: [AbsolutePath]
     public var buildableFolders: [BuildableFolder]
+    public var foreignBuild: ForeignBuildInfo?
 
     // MARK: - Init
 
@@ -105,7 +106,8 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         metadata: TargetMetadata = .metadata(tags: []),
         type: TargetType = .local,
         packages: [AbsolutePath] = [],
-        buildableFolders: [BuildableFolder] = []
+        buildableFolders: [BuildableFolder] = [],
+        foreignBuild: ForeignBuildInfo? = nil
     ) {
         self.name = name
         self.product = product
@@ -138,6 +140,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         self.type = type
         self.packages = packages
         self.buildableFolders = buildableFolders
+        self.foreignBuild = foreignBuild
     }
 
     /// Given a target name, it obtains the product name by turning "-" characters into "_" and "/" into "_"
@@ -146,6 +149,10 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public static func sanitizedProductNameFrom(targetName: String) -> String {
         targetName.replacingOccurrences(of: "-", with: "_")
             .replacingOccurrences(of: "/", with: "_")
+    }
+
+    public var isAggregate: Bool {
+        foreignBuild != nil
     }
 
     /// Target can be included in the link phase of other targets
@@ -451,7 +458,8 @@ extension Sequence<Target> {
             mergedBinaryType: MergedBinaryType = .disabled,
             mergeable: Bool = false,
             metadata: TargetMetadata = .test(),
-            buildableFolders: [BuildableFolder] = []
+            buildableFolders: [BuildableFolder] = [],
+            foreignBuild: ForeignBuildInfo? = nil
         ) -> Target {
             Target(
                 name: name,
@@ -480,7 +488,8 @@ extension Sequence<Target> {
                 mergedBinaryType: mergedBinaryType,
                 mergeable: mergeable,
                 metadata: metadata,
-                buildableFolders: buildableFolders
+                buildableFolders: buildableFolders,
+                foreignBuild: foreignBuild
             )
         }
 
@@ -513,7 +522,8 @@ extension Sequence<Target> {
             mergedBinaryType: MergedBinaryType = .disabled,
             mergeable: Bool = false,
             metadata: TargetMetadata = .test(),
-            buildableFolders: [BuildableFolder] = []
+            buildableFolders: [BuildableFolder] = [],
+            foreignBuild: ForeignBuildInfo? = nil
         ) -> Target {
             Target(
                 name: name,
@@ -542,7 +552,8 @@ extension Sequence<Target> {
                 mergedBinaryType: mergedBinaryType,
                 mergeable: mergeable,
                 metadata: metadata,
-                buildableFolders: buildableFolders
+                buildableFolders: buildableFolders,
+                foreignBuild: foreignBuild
             )
         }
 

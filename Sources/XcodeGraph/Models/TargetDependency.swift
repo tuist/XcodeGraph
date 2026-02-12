@@ -50,13 +50,6 @@ public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
     case package(product: String, type: PackageType, condition: PlatformCondition? = nil)
     case sdk(name: String, status: LinkingStatus, condition: PlatformCondition? = nil)
     case xctest
-    indirect case foreignBuild(
-        name: String,
-        script: String,
-        output: TargetDependency,
-        cacheInputs: [ForeignBuildCacheInput],
-        condition: PlatformCondition? = nil
-    )
 
     public var condition: PlatformCondition? {
         switch self {
@@ -75,8 +68,6 @@ public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
         case .sdk(name: _, status: _, condition: let condition):
             condition
         case .xctest: nil
-        case .foreignBuild(name: _, script: _, output: _, cacheInputs: _, condition: let condition):
-            condition
         }
     }
 
@@ -97,8 +88,6 @@ public enum TargetDependency: Equatable, Hashable, Codable, Sendable {
         case .sdk(name: let name, status: let status, condition: _):
             return .sdk(name: name, status: status, condition: condition)
         case .xctest: return .xctest
-        case .foreignBuild(name: let name, script: let script, output: let output, cacheInputs: let cacheInputs, condition: _):
-            return .foreignBuild(name: name, script: script, output: output, cacheInputs: cacheInputs, condition: condition)
         }
     }
 }
