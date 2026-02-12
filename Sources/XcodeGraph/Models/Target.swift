@@ -71,7 +71,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     public let type: TargetType
     public let packages: [AbsolutePath]
     public var buildableFolders: [BuildableFolder]
-    public var foreignBuild: ForeignBuildInfo?
+    public var foreignBuild: ForeignBuild?
 
     // MARK: - Init
 
@@ -107,7 +107,7 @@ public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
         type: TargetType = .local,
         packages: [AbsolutePath] = [],
         buildableFolders: [BuildableFolder] = [],
-        foreignBuild: ForeignBuildInfo? = nil
+        foreignBuild: ForeignBuild? = nil
     ) {
         self.name = name
         self.product = product
@@ -459,7 +459,7 @@ extension Sequence<Target> {
             mergeable: Bool = false,
             metadata: TargetMetadata = .test(),
             buildableFolders: [BuildableFolder] = [],
-            foreignBuild: ForeignBuildInfo? = nil
+            foreignBuild: ForeignBuild? = nil
         ) -> Target {
             Target(
                 name: name,
@@ -523,7 +523,7 @@ extension Sequence<Target> {
             mergeable: Bool = false,
             metadata: TargetMetadata = .test(),
             buildableFolders: [BuildableFolder] = [],
-            foreignBuild: ForeignBuildInfo? = nil
+            foreignBuild: ForeignBuild? = nil
         ) -> Target {
             Target(
                 name: name,
