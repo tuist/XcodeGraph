@@ -2,7 +2,6 @@ import Path
 import Testing
 import XcodeGraph
 import XcodeProj
-
 @testable import XcodeGraphMapper
 
 @Suite

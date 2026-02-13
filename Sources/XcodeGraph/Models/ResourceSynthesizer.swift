@@ -26,7 +26,10 @@ public struct ResourceSynthesizer: Equatable, Hashable, Codable, Sendable {
         case files
 
         public struct Option: Equatable, Hashable, Codable, Sendable {
-            public var value: Any { anyCodableValue.value }
+            public var value: Any {
+                anyCodableValue.value
+            }
+
             private let anyCodableValue: AnyCodable
 
             public init(value: some Any) {

@@ -1,7 +1,5 @@
 import Foundation
 import Testing
-import XcodeGraph
-
 @testable import XcodeGraph
 
 struct PackageInfoTests {

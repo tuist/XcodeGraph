@@ -45,7 +45,7 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProj.rootObject)
 
         let projectPath = xcodeProj.projectPath
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
         let mapper = XcodeGraphMapper()
         // When
         let graph = try await mapper.buildGraph(from: .project(xcodeProj))
@@ -90,7 +90,7 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
         let mapper = XcodeGraphMapper(
             projectMapper: projectMapper
         )
@@ -141,7 +141,7 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
         let mapper = XcodeGraphMapper(
             projectMapper: projectMapper
         )
@@ -229,8 +229,8 @@ struct XcodeGraphMapperTests {
             path: .init(projectAPath.appending("/Workspace.xcworkspace"))
         )
 
-        try projectA.write(path: projectA.path!)
-        try projectB.write(path: projectB.path!)
+        try projectA.write(path: try #require(projectA.path))
+        try projectB.write(path: try #require(projectB.path))
         let mapper = XcodeGraphMapper()
 
         // When
@@ -308,8 +308,8 @@ struct XcodeGraphMapperTests {
             path: .init("/tmp/Workspace.xcworkspace")
         )
 
-        try projectA.write(path: projectA.path!)
-        try projectB.write(path: projectB.path!)
+        try projectA.write(path: try #require(projectA.path))
+        try projectB.write(path: try #require(projectB.path))
         let mapper = XcodeGraphMapper()
 
         // When
@@ -380,7 +380,7 @@ struct XcodeGraphMapperTests {
         )
         .add(to: pbxProj)
         appTarget.dependencies.append(dep)
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
         let mapper = XcodeGraphMapper()
 
         // When
@@ -420,7 +420,7 @@ struct XcodeGraphMapperTests {
         .add(to: pbxProj)
         .add(to: pbxProj.rootObject)
 
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
         let packageMapper = MockPackageMapping()
         let packageInfoLoader = MockPackageInfoLoading()
         let projectMapper = MockPBXProjectMapping()

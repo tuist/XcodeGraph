@@ -42,7 +42,7 @@ struct XCConfigurationMapperTests {
         #expect(configKey?.name == "Debug")
         #expect(configKey?.variant == .debug)
 
-        let debugConfig = try #require(settings.configurations[configKey!])
+        let debugConfig = try #require(settings.configurations[try #require(configKey)])
         #expect(debugConfig?.settings["PRODUCT_BUNDLE_IDENTIFIER"] == "com.example.debug")
     }
 

@@ -1,16 +1,15 @@
 import Foundation
 import Path
 import XCTest
-
 @testable import XcodeGraph
 
 final class ProfileActionTests: XCTestCase {
-    func test_codable() {
+    func test_codable() throws {
         // Given
         let subject = ProfileAction(
             configurationName: "name",
             executable: .init(
-                projectPath: try! AbsolutePath(validating: "/path/to/project"),
+                projectPath: try AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
             arguments: .init(

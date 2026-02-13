@@ -1,21 +1,20 @@
 import Foundation
 import Path
 import XCTest
-
 @testable import XcodeGraph
 
 final class RunActionTests: XCTestCase {
-    func test_codable() {
+    func test_codable() throws {
         // Given
         let subject = RunAction(
             configurationName: "name",
             attachDebugger: true,
-            customLLDBInitFile: try! AbsolutePath(validating: "/path/to/project"),
+            customLLDBInitFile: try AbsolutePath(validating: "/path/to/project"),
             executable: .init(
-                projectPath: try! AbsolutePath(validating: "/path/to/project"),
+                projectPath: try AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
-            filePath: try! AbsolutePath(validating: "/path/to/file"),
+            filePath: try AbsolutePath(validating: "/path/to/file"),
             arguments: .init(
                 environmentVariables: [
                     "key": EnvironmentVariable(value: "value", isEnabled: true),

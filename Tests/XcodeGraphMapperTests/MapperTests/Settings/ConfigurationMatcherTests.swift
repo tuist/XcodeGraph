@@ -11,7 +11,7 @@ struct ConfigurationMatcherTests {
     }
 
     @Test("Detects 'Debug' variants from configuration names")
-    func variantDetectionForDebug() async throws {
+    func variantDetectionForDebug() {
         // Given
         // The configurationMatcher is already set up by the initializer.
 
@@ -27,7 +27,7 @@ struct ConfigurationMatcherTests {
     }
 
     @Test("Detects 'Release' variants from configuration names")
-    func variantDetectionForRelease() async throws {
+    func variantDetectionForRelease() {
         // Given
         // The configurationMatcher is already set up by the initializer.
 
@@ -43,7 +43,7 @@ struct ConfigurationMatcherTests {
     }
 
     @Test("Falls back to 'Debug' variant for unrecognized configuration names")
-    func variantFallbackToDebug() async throws {
+    func variantFallbackToDebug() {
         // Given
         // The configurationMatcher is already set up by the initializer.
 
@@ -57,7 +57,7 @@ struct ConfigurationMatcherTests {
     }
 
     @Test("Validates configuration names based on allowed patterns")
-    func testValidateConfigurationName() async throws {
+    func testValidateConfigurationName() {
         // Given
         // The configurationMatcher is already set up by the initializer.
 

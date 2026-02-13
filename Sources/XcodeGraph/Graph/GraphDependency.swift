@@ -67,7 +67,9 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
             self.linking = linking
         }
 
-        public var description: String { "foreign build output '\(name)'" }
+        public var description: String {
+            "foreign build output '\(name)'"
+        }
 
         public static func < (lhs: ForeignBuildOutput, rhs: ForeignBuildOutput) -> Bool {
             lhs.description < rhs.description
