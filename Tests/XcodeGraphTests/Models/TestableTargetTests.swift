@@ -1,15 +1,14 @@
 import Foundation
 import Path
 import XCTest
-
 @testable import XcodeGraph
 
 final class TestableTargetTests: XCTestCase {
-    func test_codable_with_deprecated_parallelizable() {
+    func test_codable_with_deprecated_parallelizable() throws {
         // Given
         let subject = TestableTarget.test(
             target: .init(
-                projectPath: try! AbsolutePath(validating: "/path/to/project"),
+                projectPath: try AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
             skipped: true,
@@ -21,11 +20,11 @@ final class TestableTargetTests: XCTestCase {
         XCTAssertCodable(subject)
     }
 
-    func test_codable() {
+    func test_codable() throws {
         // Given
         let subject = TestableTarget(
             target: .init(
-                projectPath: try! AbsolutePath(validating: "/path/to/project"),
+                projectPath: try AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
             skipped: true,

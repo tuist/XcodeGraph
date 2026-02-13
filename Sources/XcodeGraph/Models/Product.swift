@@ -11,7 +11,7 @@ public enum Product: String, CustomStringConvertible, CaseIterable, Codable, Sen
     case bundle
     case commandLineTool
     case appExtension = "app_extension"
-    //    case watchApp = "watch_app"
+    ///    case watchApp = "watch_app"
     case watch2App = "watch_2_app"
     //    case watchExtension = "watch_extension"
     case watch2Extension = "watch_2_extension"

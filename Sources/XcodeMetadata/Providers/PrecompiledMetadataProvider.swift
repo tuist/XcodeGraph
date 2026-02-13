@@ -45,7 +45,7 @@ public protocol PrecompiledMetadataProviding {
 
 /// Reads Mach-O metadata (arches, linking type, UUIDs) without calling deprecated swap_* APIs.
 public class PrecompiledMetadataProvider: PrecompiledMetadataProviding {
-    // A local struct for arch/linking/UUID data
+    /// A local struct for arch/linking/UUID data
     typealias Metadata = (BinaryArchitecture, BinaryLinking, UUID?)
 
     public func architectures(binaryPath: AbsolutePath) throws -> [BinaryArchitecture] {

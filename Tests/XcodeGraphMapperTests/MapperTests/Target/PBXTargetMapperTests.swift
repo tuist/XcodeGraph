@@ -21,7 +21,7 @@ struct PBXTargetMapperTests: Sendable {
             buildSettings: ["PRODUCT_BUNDLE_IDENTIFIER": "com.example.app"]
         )
         try xcodeProj.mainPBXProject().targets.append(target)
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
 
         // When
         let mapper = PBXTargetMapper()
@@ -323,7 +323,7 @@ struct PBXTargetMapperTests: Sendable {
         let target = PBXNativeTarget.test()
 
         try xcodeProj.mainPBXProject().targets.append(target)
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
 
         let mapper = PBXTargetMapper()
 
@@ -370,7 +370,7 @@ struct PBXTargetMapperTests: Sendable {
             ]
         )
 
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
         let mapper = PBXTargetMapper()
 
         // When
@@ -400,7 +400,7 @@ struct PBXTargetMapperTests: Sendable {
             name: "App"
         )
 
-        try xcodeProj.write(path: xcodeProj.path!)
+        try xcodeProj.write(path: try #require(xcodeProj.path))
         let mapper = PBXTargetMapper()
 
         // When
@@ -444,7 +444,7 @@ struct PBXTargetMapperTests: Sendable {
         xcodeProj.pbxproj.add(object: releaseConfig)
         xcodeProj.pbxproj.add(object: configurationList)
 
-        let target = PBXNativeTarget.test(
+        return PBXNativeTarget.test(
             name: name,
             buildConfigurationList: configurationList,
             buildRules: [],
@@ -452,7 +452,5 @@ struct PBXTargetMapperTests: Sendable {
             dependencies: dependencies,
             productType: productType
         )
-
-        return target
     }
 }

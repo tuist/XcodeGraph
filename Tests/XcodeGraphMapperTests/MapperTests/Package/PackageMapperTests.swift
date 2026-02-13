@@ -2,7 +2,6 @@ import FileSystem
 import Foundation
 import Testing
 import XcodeGraph
-
 @testable import XcodeGraphMapper
 
 struct PackageMapperTests: Sendable {
