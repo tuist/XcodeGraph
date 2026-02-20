@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.33.0] - 2026-02-20
+### Details
+#### Feat
+- Add platformFilters to BuildableFolderException by @fortmarek in [#507](https://github.com/tuist/XcodeGraph/pull/507)
+
 ## [1.32.11] - 2026-02-20
 ### Details
 #### Chore
@@ -2270,6 +2275,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.33.0]: https://github.com/tuist/XcodeGraph/compare/1.32.11..1.33.0
 [1.32.11]: https://github.com/tuist/XcodeGraph/compare/1.32.10..1.32.11
 [1.32.10]: https://github.com/tuist/XcodeGraph/compare/1.32.9..1.32.10
 [1.32.9]: https://github.com/tuist/XcodeGraph/compare/1.32.8..1.32.9
