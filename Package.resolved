@@ -1,5 +1,5 @@
 {
-  "originHash" : "e64a631d84155fa1dd47d1dbcfb085ffbdfbc60ee0792fee2a2320579e19f568",
+  "originHash" : "da11843ba7e29e33f591112f543436ce10d051f103b9cd34c43cbec663d3951e",
   "pins" : [
     {
       "identity" : "aexml",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/FileSystem.git",
       "state" : {
-        "revision" : "ed76b19034f6a04a266319ed5c460377e8e91fb8",
-        "version" : "0.14.25"
+        "revision" : "807653a9814c42cdfa5d555cc48a009fe0341797",
+        "version" : "0.14.36"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "e969f8469667382af3cbf6e457b2e771e70745f3",
-        "version" : "0.6.0"
+        "revision" : "92523c3c0623402e9600dcf99f63603f52a889d8",
+        "version" : "0.6.1"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-docc-plugin",
       "state" : {
-        "revision" : "3e4f133a77e644a5812911a0513aeb7288b07d06",
-        "version" : "1.4.5"
+        "revision" : "e977f65879f82b375a044c8837597f690c067da6",
+        "version" : "1.4.6"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log",
       "state" : {
-        "revision" : "2778fd4e5a12a8aaa30a3ee8285f4ce54c5f3181",
-        "version" : "1.9.1"
+        "revision" : "bbd81b6725ae874c69e9b8c8804d462356b55523",
+        "version" : "1.10.1"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/XcodeProj",
       "state" : {
-        "revision" : "31712ec42e9cbc46e7fd25ea55c2730cb3476097",
-        "version" : "9.7.2"
+        "revision" : "a41b0637a995d81e086ce7ec9a50d469a542115c",
+        "version" : "9.8.0"
       }
     },
     {

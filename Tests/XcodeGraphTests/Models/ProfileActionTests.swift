@@ -12,6 +12,7 @@ final class ProfileActionTests: XCTestCase {
                 projectPath: try AbsolutePath(validating: "/path/to/project"),
                 name: "name"
             ),
+            askForAppToLaunch: true,
             arguments: .init(
                 environmentVariables: [
                     "key": EnvironmentVariable(value: "value", isEnabled: true),
