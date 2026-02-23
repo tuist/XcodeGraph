@@ -80,12 +80,12 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.7")),
         .package(url: "https://github.com/tuist/Path.git", .upToNextMajor(from: "0.3.8")),
-        .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "9.7.2")),
+        .package(url: "https://github.com/tuist/XcodeProj", .upToNextMajor(from: "9.8.0")),
         .package(url: "https://github.com/tuist/Command.git", from: "0.13.0"),
-        .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.14.10")),
-        .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.6.0")),
-        .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.45.0")),
-        .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.4.5"),
+        .package(url: "https://github.com/tuist/FileSystem.git", .upToNextMajor(from: "0.14.35")),
+        .package(url: "https://github.com/Kolos65/Mockable.git", .upToNextMajor(from: "0.6.1")),
+        .package(url: "https://github.com/p-x9/MachOKit", .upToNextMajor(from: "0.46.1")),
+        .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.4.6"),
     ],
     targets: targets
 )

@@ -56,6 +56,28 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         }
     }
 
+    public struct ForeignBuildOutput: Hashable, CustomStringConvertible, Comparable, Codable, Sendable {
+        public var name: String
+        public var path: AbsolutePath
+        public var linking: BinaryLinking
+
+        public init(name: String, path: AbsolutePath, linking: BinaryLinking) {
+            self.name = name
+            self.path = path
+            self.linking = linking
+        }
+
+        public var description: String {
+            "foreign build output '\(name)'"
+        }
+
+        public static func < (lhs: ForeignBuildOutput, rhs: ForeignBuildOutput) -> Bool {
+            lhs.description < rhs.description
+        }
+    }
+
+    case foreignBuildOutput(ForeignBuildOutput)
+
     case xcframework(GraphDependency.XCFramework)
 
     /// A dependency that represents a pre-compiled framework.
@@ -97,6 +119,9 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         switch self {
         case let .macro(path):
             hasher.combine(path)
+        case let .foreignBuildOutput(output):
+            hasher.combine("foreignBuildOutput")
+            hasher.combine(output)
         case let .xcframework(xcframework):
             hasher.combine(xcframework)
         case let .framework(path, _, _, _, _, _, _):
@@ -129,6 +154,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public var isTarget: Bool {
         switch self {
         case .macro: return false
+        case .foreignBuildOutput: return false
         case .xcframework: return false
         case .framework: return false
         case .library: return false
@@ -145,6 +171,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public var isStaticPrecompiled: Bool {
         switch self {
         case .macro: return false
+        case let .foreignBuildOutput(output): return output.linking == .static
         case let .xcframework(xcframework):
             return xcframework.linking == .static
         case let .framework(_, _, _, _, linking, _, _),
@@ -162,6 +189,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public var isDynamicPrecompiled: Bool {
         switch self {
         case .macro: return false
+        case let .foreignBuildOutput(output): return output.linking == .dynamic
         case let .xcframework(xcframework):
             return xcframework.linking == .dynamic
         case let .framework(_, _, _, _, linking, _, _),
@@ -176,6 +204,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public var isPrecompiled: Bool {
         switch self {
         case .macro: return true
+        case .foreignBuildOutput: return true
         case .xcframework: return true
         case .framework: return true
         case .library: return true
@@ -189,6 +218,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public var isLinkable: Bool {
         switch self {
         case .macro: return false
+        case .foreignBuildOutput: return true
         case .xcframework: return true
         case .framework: return true
         case .library: return true
@@ -202,6 +232,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public var isPrecompiledMacro: Bool {
         switch self {
         case .macro: return true
+        case .foreignBuildOutput: return false
         case .xcframework: return false
         case .framework: return false
         case .library: return false
@@ -215,6 +246,7 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
     public var isPrecompiledDynamicAndLinkable: Bool {
         switch self {
         case .macro: return false
+        case let .foreignBuildOutput(output): return output.linking == .dynamic
         case let .xcframework(xcframework):
             return xcframework.linking == .dynamic
         case let .framework(_, _, _, _, linking, _, _),
@@ -245,6 +277,8 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         switch self {
         case .macro:
             return "macro '\(name)'"
+        case let .foreignBuildOutput(output):
+            return output.description
         case .xcframework:
             return "xcframework '\(name)'"
         case .framework:
@@ -266,6 +300,8 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
         switch self {
         case let .macro(path):
             return path.basename
+        case let .foreignBuildOutput(output):
+            return output.name
         case let .xcframework(xcframework):
             return xcframework.path.basename
         case let .framework(path, _, _, _, _, _, _):
@@ -380,6 +416,18 @@ public enum GraphDependency: Hashable, CustomStringConvertible, Comparable, Coda
                 architectures: architectures,
                 swiftModuleMap: swiftModuleMap
             )
+        }
+
+        public static func testForeignBuildOutput(
+            name: String = "SharedKMP",
+            path: AbsolutePath = AbsolutePath.root.appending(try! RelativePath(validating: "SharedKMP.xcframework")),
+            linking: BinaryLinking = .dynamic
+        ) -> GraphDependency {
+            .foreignBuildOutput(GraphDependency.ForeignBuildOutput(
+                name: name,
+                path: path,
+                linking: linking
+            ))
         }
 
         public static func testBundle(path: AbsolutePath = .root.appending(component: "test.bundle")) -> GraphDependency {
