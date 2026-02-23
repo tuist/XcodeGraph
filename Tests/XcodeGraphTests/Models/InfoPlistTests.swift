@@ -1,13 +1,12 @@
 import Foundation
 import Path
 import XCTest
-
 @testable import XcodeGraph
 
 final class InfoPlistTests: XCTestCase {
-    func test_codable_file() {
+    func test_codable_file() throws {
         // Given
-        let subject = InfoPlist.file(path: try! AbsolutePath(validating: "/path/to/file"))
+        let subject = InfoPlist.file(path: try AbsolutePath(validating: "/path/to/file"))
 
         // Then
         XCTAssertCodable(subject)
@@ -25,9 +24,9 @@ final class InfoPlistTests: XCTestCase {
         XCTAssertCodable(subject)
     }
 
-    func test_path_when_file() {
+    func test_path_when_file() throws {
         // Given
-        let path = try! AbsolutePath(validating: "/path/Info.list")
+        let path = try AbsolutePath(validating: "/path/Info.list")
         let subject: InfoPlist = .file(path: path)
 
         // Then

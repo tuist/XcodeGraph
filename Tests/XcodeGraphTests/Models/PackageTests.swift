@@ -1,13 +1,12 @@
 import Foundation
 import Path
 import XCTest
-
 @testable import XcodeGraph
 
 final class PackageTests: XCTestCase {
-    func test_codable_local() {
+    func test_codable_local() throws {
         // Given
-        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/workspace"))
+        let subject = Package.local(path: try AbsolutePath(validating: "/path/to/workspace"))
 
         // Then
         XCTAssertCodable(subject)
@@ -24,9 +23,9 @@ final class PackageTests: XCTestCase {
         XCTAssertCodable(subject)
     }
 
-    func test_is_remote_local() {
+    func test_is_remote_local() throws {
         // Given
-        let subject = Package.local(path: try! AbsolutePath(validating: "/path/to/package"))
+        let subject = Package.local(path: try AbsolutePath(validating: "/path/to/package"))
 
         // Then
         XCTAssertFalse(subject.isRemote)

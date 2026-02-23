@@ -7,7 +7,9 @@ public struct GraphTargetReference: Equatable, Comparable, Hashable, CustomDebug
     /// Path to the directory that contains the project where the target is defined.
     public let graphTarget: GraphTarget
 
-    public var target: Target { graphTarget.target }
+    public var target: Target {
+        graphTarget.target
+    }
 
     /// Platforms the target is conditionally deployed to.
     public let condition: PlatformCondition?

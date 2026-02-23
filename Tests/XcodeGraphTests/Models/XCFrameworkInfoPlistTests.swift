@@ -4,7 +4,7 @@ import XCTest
 @testable import XcodeGraph
 
 final class XCFrameworkInfoPlistTests: XCTestCase {
-    func test_codable() throws {
+    func test_codable() {
         // Given
         let subject: XCFrameworkInfoPlist = .test()
 

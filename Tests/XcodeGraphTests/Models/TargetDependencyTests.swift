@@ -1,14 +1,13 @@
 import Foundation
 import Path
 import XCTest
-
 @testable import XcodeGraph
 
 final class TargetDependencyTests: XCTestCase {
-    func test_codable_framework() {
+    func test_codable_framework() throws {
         // Given
         let subject = TargetDependency.framework(
-            path: try! AbsolutePath(validating: "/path/to/framework"),
+            path: try AbsolutePath(validating: "/path/to/framework"),
             status: .required
         )
 
@@ -16,47 +15,47 @@ final class TargetDependencyTests: XCTestCase {
         XCTAssertCodable(subject)
     }
 
-    func test_codable_project() {
+    func test_codable_project() throws {
         // Given
-        let subject = TargetDependency.project(target: "target", path: try! AbsolutePath(validating: "/path/to/target"))
+        let subject = TargetDependency.project(target: "target", path: try AbsolutePath(validating: "/path/to/target"))
 
         // Then
         XCTAssertCodable(subject)
     }
 
-    func test_codable_library() {
+    func test_codable_library() throws {
         // Given
         let subject = TargetDependency.library(
-            path: try! AbsolutePath(validating: "/path/to/library"),
-            publicHeaders: try! AbsolutePath(validating: "/path/to/publicheaders"),
-            swiftModuleMap: try! AbsolutePath(validating: "/path/to/swiftModuleMap")
+            path: try AbsolutePath(validating: "/path/to/library"),
+            publicHeaders: try AbsolutePath(validating: "/path/to/publicheaders"),
+            swiftModuleMap: try AbsolutePath(validating: "/path/to/swiftModuleMap")
         )
 
         // Then
         XCTAssertCodable(subject)
     }
 
-    func test_filtering() {
+    func test_filtering() throws {
         let expected: PlatformCondition? = .when([.macos])
 
         let subjects: [TargetDependency] = [
-            .framework(path: try! AbsolutePath(validating: "/"), status: .required, condition: expected),
+            .framework(path: try AbsolutePath(validating: "/"), status: .required, condition: expected),
             .library(
-                path: try! AbsolutePath(validating: "/"),
-                publicHeaders: try! AbsolutePath(validating: "/"),
-                swiftModuleMap: try! AbsolutePath(validating: "/"),
+                path: try AbsolutePath(validating: "/"),
+                publicHeaders: try AbsolutePath(validating: "/"),
+                swiftModuleMap: try AbsolutePath(validating: "/"),
                 condition: expected
             ),
             .sdk(name: "", status: .required, condition: expected),
             .package(product: "", type: .plugin, condition: expected),
             .target(name: "", condition: expected),
             .xcframework(
-                path: try! AbsolutePath(validating: "/"),
+                path: try AbsolutePath(validating: "/"),
                 expectedSignature: nil,
                 status: .required,
                 condition: expected
             ),
-            .project(target: "", path: try! AbsolutePath(validating: "/"), condition: expected),
+            .project(target: "", path: try AbsolutePath(validating: "/"), condition: expected),
         ]
 
         for subject in subjects {

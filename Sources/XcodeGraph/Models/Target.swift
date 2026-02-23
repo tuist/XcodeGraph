@@ -5,8 +5,8 @@ import Path
 public struct Target: Equatable, Hashable, Comparable, Codable, Sendable {
     // MARK: - Static
 
-    // Note: The `.docc` file type is technically both a valid source extension and folder extension
-    //       in order to compile the documentation archive (including Tutorials, Articles, etc.)
+    /// Note: The `.docc` file type is technically both a valid source extension and folder extension
+    ///       in order to compile the documentation archive (including Tutorials, Articles, etc.)
     public static let validSourceCompatibleFolderExtensions: [String] = [
         "playground", "rcproject", "mlpackage", "docc",
     ]
@@ -595,7 +595,7 @@ extension Sequence<Target> {
             )
         }
 
-        // Maps a platform to a set of Destinations.  For migration purposes
+        /// Maps a platform to a set of Destinations.  For migration purposes
         private static func destinationsFrom(_ platform: Platform) -> Destinations {
             switch platform {
             case .iOS:

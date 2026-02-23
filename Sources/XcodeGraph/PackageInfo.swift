@@ -614,7 +614,7 @@ extension PackageInfo.Target {
                 case tool, name, condition, value, kind
             }
 
-            // Xcode 14 format
+            /// Xcode 14 format
             private enum Kind: Codable, Equatable {
                 case swiftLanguageMode(String)
                 case headerSearchPath(String)
