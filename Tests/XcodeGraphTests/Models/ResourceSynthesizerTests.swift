@@ -12,7 +12,23 @@ final class ResourceSynthesizerTests: XCTestCase {
                 "extension1",
                 "extension2",
             ],
-            template: .defaultTemplate("template")
+            template: .defaultTemplate("template"),
+            templateParameters: [
+                "someInt": 1,
+                "someDouble": 1.2,
+                "someString": "string",
+                "someBool": true,
+                "someArrayOfString": ["a", "b", "c"],
+                "someArrayOfInt": [1, 2, 3],
+                "someDictionary": [
+                    "someInt": 1,
+                    "someDouble": 1.2,
+                    "someString": "string",
+                    "someBool": true,
+                    "someArrayOfString": ["a", "b", "c"],
+                    "someArrayOfInt": [1, 2, 3],
+                ],
+            ]
         )
 
         // Then
