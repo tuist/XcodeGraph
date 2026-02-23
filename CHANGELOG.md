@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.34.0] - 2026-02-23
+### Details
+#### Feat
+- Add askForAppToLaunch property to RunAction and ProfileAction by @FelixLisczyk in [#491](https://github.com/tuist/XcodeGraph/pull/491)
+
+## New Contributors
+* @FelixLisczyk made their first contribution in [#491](https://github.com/tuist/XcodeGraph/pull/491)
 ## [1.33.5] - 2026-02-23
 ### Details
 #### Chore
@@ -2300,6 +2307,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @darrarski made their first contribution
+[1.34.0]: https://github.com/tuist/XcodeGraph/compare/1.33.5..1.34.0
 [1.33.5]: https://github.com/tuist/XcodeGraph/compare/1.33.4..1.33.5
 [1.33.4]: https://github.com/tuist/XcodeGraph/compare/1.33.3..1.33.4
 [1.33.3]: https://github.com/tuist/XcodeGraph/compare/1.33.2..1.33.3
